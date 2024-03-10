@@ -63,6 +63,8 @@ export default function IdentityOrAddr({
     link = `https://explorer.katla.taiko.xyz/address/${address}`;
   } else if (evm.linea === network) {
     link = `https://lineascan.build/address/${address}`;
+  } else if (evm.blast === network) {
+    link = `https://blastexplorer.io/address/${address}`;
   } else if ("creditcoin" === network) {
     link = `https://explorer.creditcoin.org/Account/RecentExtrinsics/${address}`;
   }

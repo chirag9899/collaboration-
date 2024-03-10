@@ -13,6 +13,7 @@ export const networks = Object.freeze({
   moonriver: "moonriver",
   taiko: "taiko",
   linea: "linea",
+  blast: "blast",
   acala: "acala",
   turing: "turing",
   crust: "crust",

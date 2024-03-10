@@ -64,13 +64,15 @@ export const evm = {
   moonriver: "moonriver",
   ethereum: "ethereum",
   taiko: "taiko",
-  linea: "linea"
+  linea: "linea",
+  blast: "blast"
 };
-export const evmChains = [evm.moonbeam, evm.moonriver, evm.ethereum, evm.taiko, evm.linea];
+export const evmChains = [evm.moonbeam, evm.moonriver, evm.ethereum, evm.taiko, evm.linea, evm.blast];
 export const evmChainId = Object.freeze({
   [evm.moonbeam]: 1284,
   [evm.moonriver]: 1285,
   [evm.ethereum]: 1,
   [evm.taiko]: 167008,
   [evm.linea]: 59144,
+  [evm.blast]: 81457,
 });
