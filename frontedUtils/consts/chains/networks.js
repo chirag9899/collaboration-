@@ -14,6 +14,7 @@ export const networks = Object.freeze({
   taiko: "taiko",
   linea: "linea",
   blast: "blast",
+  berachain: "berachain",
   acala: "acala",
   turing: "turing",
   crust: "crust",
