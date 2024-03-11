@@ -162,6 +162,24 @@ const ExternalLink = styled.a`
   }
 `;
 
+const Logo = styled.div`
+  color: #ebb600;
+  font-size:1.5rem;
+  font-weight:bold;
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
+  cursor: pointer;
+
+  svg {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    color: #506176;
+  }
+`;
+
 const InternalLink = ExternalLink;
 
 const AccountAndBell = styled.div`
@@ -188,7 +206,7 @@ export default function Header({ networks }) {
     <OsnHeader
       logoRender={(logo) => (
         <Link href="/" passHref>
-          {logo}
+         <Logo>Quicksnap</Logo> 
         </Link>
       )}
     >
