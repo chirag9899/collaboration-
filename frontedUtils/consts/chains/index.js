@@ -66,9 +66,10 @@ export const evm = {
   taiko: "taiko",
   linea: "linea",
   blast: "blast",
-  berachain: "berachain"
+  berachain: "berachain",
+  merlin: "merlin"
 };
-export const evmChains = [evm.moonbeam, evm.moonriver, evm.ethereum, evm.taiko, evm.linea, evm.blast, evm.berachain];
+export const evmChains = [evm.moonbeam, evm.moonriver, evm.ethereum, evm.taiko, evm.linea, evm.blast, evm.berachain, evm.merlin];
 export const evmChainId = Object.freeze({
   [evm.moonbeam]: 1284,
   [evm.moonriver]: 1285,
@@ -76,5 +77,6 @@ export const evmChainId = Object.freeze({
   [evm.taiko]: 167008,
   [evm.linea]: 59144,
   [evm.blast]: 81457,
-  [evm.berachain]: 80085
+  [evm.berachain]: 80085,
+  [evm.merlin]: 4200
 });
