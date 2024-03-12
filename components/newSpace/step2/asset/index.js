@@ -93,6 +93,7 @@ export default function Asset({
     <CommonAssetConfig
       count={count}
       chain={asset.chain}
+      name={asset.name}
       nativeTokenInfo={chainInfo}
       asset={asset}
       setPartialAsset={setPartialAsset}
@@ -104,6 +105,7 @@ export default function Asset({
       <StatemineAssetConfig
         count={count}
         chain={asset.chain}
+        name={asset.name}
         asset={asset}
         nativeTokenInfo={chainInfo}
         setPartialAsset={setPartialAsset}
