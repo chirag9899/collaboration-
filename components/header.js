@@ -14,19 +14,30 @@ import {
   setShowHeaderMenu,
   showHeaderMenuSelector,
 } from "../store/reducers/showConnectSlice";
+import { Header as OsnHeader } from "@osn/common-ui";
 import { ReactComponent as Plus } from "../public/imgs/icons/plus.svg";
 import { ReactComponent as Discussions } from "../public/imgs/icons/discussions.svg";
 import { Flex } from "@osn/common-ui";
 import Menu from "@/components/menu";
 import NotificationBell from "./notification/bell";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right-s.svg";
-import React from "react";
-import { MOBILE_SIZE } from "@osn/constants";
-import LogoImg from "../public/imgs/logo.svg";
-import LogoIcon from "../public/imgs/logoIcon.svg";
 
 const CaretRightIcon = styled(CaretRight)`
   margin-left: 16px;
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  > svg {
+    margin: 20px -20px;
+    @media screen and (min-width: 800px) {
+      display: none;
+    }
+  }
 `;
 
 const AppWrapper = styled.div`
@@ -151,54 +162,6 @@ const ExternalLink = styled.a`
   }
 `;
 
-const Wrapper = styled.header`
-  position: relative;
-  flex: 0 0 auto;
-  background: #ffffff;
-  border-bottom: solid 1px #f0f3f8;
-`;
-
-const ContentWrapper = styled.div`
-  max-width: 1440px;
-  margin: 0 auto;
-  min-height: 80px;
-  padding: 20px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  @media screen and (max-width: ${MOBILE_SIZE}px) {
-    min-height: 62px;
-    padding: 15px 20px;
-  }
-`;
-
-const Logo = styled.div`
-  width: 200px;
-  height: 36px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-image: url(${LogoImg});
-  @media screen and (max-width: ${MOBILE_SIZE}px) {
-    width: 48px;
-    height: 32px;
-    background-image: url("${LogoIcon}");
-  }
-`;
-
-const Divider = styled.div`
-  width: 1px;
-  height: 16px;
-  margin: 0 16px;
-  background: #e2e8f0;
-`;
-
-const ChildWrapper = styled(Flex)`
-  flex: 1;
-  justify-content: space-between;
-`;
-
 const InternalLink = ExternalLink;
 
 const AccountAndBell = styled.div`
@@ -222,80 +185,78 @@ export default function Header({ networks }) {
   const isHomePage = router.pathname === "/";
 
   return (
-    <Wrapper>
+    <OsnHeader
+      logoRender={(logo) => (
+        <Link href="/" passHref>
+          {logo}
+        </Link>
+      )}
+    >
       <ContentWrapper ref={ref}>
-        <Flex>
-          <Link href="/">
-            <Logo />
-          </Link>
-          <Divider />
-        </Flex>
-        <ChildWrapper>
-          <AppWrapper>
-            <span>Voting</span>
-            <img
-              className="onHoverReverse"
-              src="/imgs/icons/caret-down-s.svg"
-              alt=""
-            />
-            <HoverMenu className="hoverMenu">
-              <MenuItem href="/">
-                <img src="/imgs/icons/voting.svg" alt="" />
-                <p>Off-chain Voting</p>
-                <CaretRightIcon />
-                <span>
-                  Multi-chain assets off-chain voting platform for Polkadot
-                  ecosystem
-                </span>
-              </MenuItem>
-              <MenuItem href="https://bounties.opensquare.io/">
-                <img src="/imgs/icons/short-term-employment.svg" alt="" />
-                <p>Bounties</p>
-                <CaretRightIcon />
-                <span>Decentralized bounty collaboration platform</span>
-              </MenuItem>
-            </HoverMenu>
-          </AppWrapper>
-          <IconWrapper
-            onClick={() => {
-              dispatch(setShowHeaderMenu(!showMenu));
-            }}
-          >
-            <img
-              src={showMenu ? "/imgs/icons/close.svg" : "/imgs/icons/menu.svg"}
-              alt=""
-            />
-          </IconWrapper>
-          <HeaderItemWrapper>
-            {isHomePage && (
-              <ExternalLinkWrapper>
-                <Link href="/space/new" passHref legacyBehavior>
-                  <InternalLink>
-                    <Plus />
-                    Add a Space
-                  </InternalLink>
-                </Link>
-                <ExternalLink
-                  target="_blank"
-                  href="https://github.com/opensquare-network/collaboration/discussions"
-                >
-                  <Discussions />
-                  Discussions
-                </ExternalLink>
-              </ExternalLinkWrapper>
-            )}
-            <AccountAndBell>
-              <Account networks={networks} />
-              <NotificationBell />
-            </AccountAndBell>
-          </HeaderItemWrapper>
-          {showMenu && (
-            <SecondaryHeaderItemWrapper>
-              <Menu />
-            </SecondaryHeaderItemWrapper>
+        <AppWrapper>
+          <span>Voting</span>
+          <img
+            className="onHoverReverse"
+            src="/imgs/icons/caret-down-s.svg"
+            alt=""
+          />
+          <HoverMenu className="hoverMenu">
+            <MenuItem href="/">
+              <img src="/imgs/icons/voting.svg" alt="" />
+              <p>Off-chain Voting</p>
+              <CaretRightIcon />
+              <span>
+                Multi-chain assets off-chain voting platform for Polkadot
+                ecosystem
+              </span>
+            </MenuItem>
+            <MenuItem href="https://bounties.opensquare.io/">
+              <img src="/imgs/icons/short-term-employment.svg" alt="" />
+              <p>Bounties</p>
+              <CaretRightIcon />
+              <span>Decentralized bounty collaboration platform</span>
+            </MenuItem>
+          </HoverMenu>
+        </AppWrapper>
+        <IconWrapper
+          onClick={() => {
+            dispatch(setShowHeaderMenu(!showMenu));
+          }}
+        >
+          <img
+            src={showMenu ? "/imgs/icons/close.svg" : "/imgs/icons/menu.svg"}
+            alt=""
+          />
+        </IconWrapper>
+        <HeaderItemWrapper>
+          {isHomePage && (
+            <ExternalLinkWrapper>
+              <Link href="/space/new" passHref legacyBehavior>
+                <InternalLink>
+                  <Plus />
+                  Add a Space
+                </InternalLink>
+              </Link>
+              <ExternalLink
+                target="_blank"
+                href="https://github.com/opensquare-network/collaboration/discussions"
+              >
+                <Discussions />
+                Discussions
+              </ExternalLink>
+            </ExternalLinkWrapper>
           )}
-        </ChildWrapper>
+          <AccountAndBell>
+            <Account networks={networks} />
+            <NotificationBell />
+          </AccountAndBell>
+        </HeaderItemWrapper>
+        {showMenu && (
+          <SecondaryHeaderItemWrapper>
+            <Menu />
+          </SecondaryHeaderItemWrapper>
+        )}
       </ContentWrapper>
-    </Wrapper>
+    </OsnHeader>
   );
 }
