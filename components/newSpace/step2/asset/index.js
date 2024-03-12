@@ -140,7 +140,7 @@ export default function Asset({
         )}
       </Header>
       <MyFieldWrapper>
-        <Title>Chain</Title>
+        <Title>Chain </Title>
         <ChainSelector chains={chainsDef} onSelect={onSelectChain} />
       </MyFieldWrapper>
       {assetConfig}
