@@ -127,6 +127,7 @@ export default function Asset({
       <Erc20TokenConfig
         count={count}
         chain={asset.chain}
+        name={asset.name}
         nativeTokenInfo={chainInfo}
         asset={asset}
         setPartialAsset={setPartialAsset}
