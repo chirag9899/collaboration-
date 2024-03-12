@@ -67,6 +67,7 @@ export default function Asset({
 
       setPartialAsset({
         chain: chain?.network,
+        name: chain?.name || chain?.network,
         type: undefined,
         assetId: undefined,
         contract: undefined,
