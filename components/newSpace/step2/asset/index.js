@@ -147,7 +147,7 @@ export default function Asset({
         <Title>Chain</Title>
         <ChainSelector chains={chainsDef} onSelect={onSelectChain} />
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
-        <Title>ChainID: {chainInfo?.ss58Format || asset?.ss58Format}</Title>
+        <Title>ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}</Title>
       </MyFieldWrapper>
       {assetConfig}
     </Wrapper>
