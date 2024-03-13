@@ -14,6 +14,7 @@ import {
 import nextApi from "../services/nextApi";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useIsMountedBool } from "../frontedUtils/hooks";
+import { bg_white } from "./styles/colors";
 
 const Wrapper = styled.div`
   position: relative;
@@ -25,7 +26,7 @@ const DialogWrapper = styled.div`
   right: 0;
   padding: 24px;
   width: 328px;
-  background: #ffffff;
+  background:${bg_white};
   box-shadow: 0 4px 31px rgba(26, 33, 44, 0.06),
     0 0.751293px 8px rgba(26, 33, 44, 0.04);
   input {

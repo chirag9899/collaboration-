@@ -9,6 +9,7 @@ import { ReactComponent as TwitterSvg } from "../../public/imgs/icons/twitter.sv
 import { ReactComponent as SubsocialSvg } from "../../public/imgs/icons/subsocial.svg";
 import { ReactComponent as MailSvg } from "../../public/imgs/icons/mail.svg";
 import footerItems from "./items";
+import { bg_dark, text_light_major } from "../styles/colors";
 
 const SvgMap = new Map([
   ["github.svg", GithubSvg],
@@ -20,7 +21,7 @@ const SvgMap = new Map([
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
-  background:#211f24;
+  background:${bg_dark};
 `;
 
 const ContentWrapper = styled.div`
@@ -67,7 +68,7 @@ const Label = styled.div`
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 24px;
-  color: #ffffff;
+  color: ${text_light_major};
 `;
 
 const ItemsWrapper = styled.div`

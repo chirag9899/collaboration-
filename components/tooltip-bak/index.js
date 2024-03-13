@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import copy from "copy-to-clipboard";
 
 import { newSuccessToast } from "store/reducers/toastSlice";
+import { text_light_major } from "../styles/colors";
 
 const PopupWrapper = styled.div`
   cursor: auto;
@@ -29,7 +30,7 @@ const Popup = styled.div`
   padding: 6px 12px;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: ${text_light_major};
   word-wrap: break-word;
   text-align: left;
 `;
@@ -61,7 +62,7 @@ const TitleWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: ${text_light_major};
   white-space: nowrap;
 `;
 

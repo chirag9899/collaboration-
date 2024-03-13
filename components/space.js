@@ -10,9 +10,11 @@ import { loginAddressSelector } from "store/reducers/accountSlice";
 import SpaceListItem from "./spaceListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchJoinedSpace } from "store/reducers/accountSlice";
+import { text_light_major } from "./styles/colors";
 
 const Title = styled.div`
   ${h3_36_bold};
+  color:${text_light_major};
 `;
 
 const ItemsWrapper = styled.div`
@@ -45,7 +47,7 @@ const TitleWrapper = styled.div`
 const SpaceButton = styled.div`
   cursor: pointer;
   ${p_16_semibold};
-  color: #506176;
+  color: #8b949e;
 `;
 
 const ButtonWrapper = styled.div`

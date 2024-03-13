@@ -1,13 +1,14 @@
 import styled, { css } from "styled-components";
 import { ReactComponent as DropSVG } from "./drop.svg";
 import { noop } from "@osn/common-ui";
+import { bg_white } from "../styles/colors";
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: #ffffff;
+  background:${bg_white};
   border: 1px solid #b7c0cc;
   gap: 8px;
 `;

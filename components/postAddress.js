@@ -28,6 +28,7 @@ import {
 } from "../store/reducers/statusSlice";
 import encodeAddressByChain from "../frontedUtils/chain/addr";
 import { Flex } from "@osn/common-ui";
+import { bg_white } from "./styles/colors";
 
 const FETCH_BALANCE_ERROR =
   "something went wrong while querying balance, please try again later.";
@@ -106,7 +107,7 @@ const Input = styled.input`
 const ItemWrapper = styled(Flex)`
   padding: 11px 15px;
   border: 1px solid #e2e8f0;
-  background: #ffffff;
+  background:${bg_white};
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;

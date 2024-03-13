@@ -12,6 +12,7 @@ import { p_18_semibold } from "../../styles/textStyles";
 import SpaceLogo from "@/components/spaceLogo";
 import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
+import { border_primary } from "../styles/colors";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -70,9 +71,9 @@ const ActiveCount = styled(Count)`
 const Wrapper = styled.div`
   position: relative;
   flex: 0 0 auto;
-  border: 1px solid #f0f3f8;
+  border: 1px solid ${border_primary};
+  border-radius: 10px;
   ${shadow_100};
-  background: #ffffff;
   padding: 24px;
   cursor: pointer;
   width: 200px;

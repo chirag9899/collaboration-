@@ -7,11 +7,12 @@ import ValueDisplay from "../valueDisplay";
 import { votesSelector, fetchVote } from "store/reducers/voteSlice";
 import { ReactComponent as LoadingSvg } from "public/imgs/icons/loading.svg";
 import BigNumber from "bignumber.js";
+import { bg_white } from "../styles/colors";
 
 const ResultWrapper = styled.div`
   z-index: 999;
   position: absolute;
-  background: #ffffff;
+  background:${bg_white};
   filter: drop-shadow(0px 4px 31px rgba(26, 33, 44, 0.06))
     drop-shadow(0px 0.751293px 8px rgba(26, 33, 44, 0.04));
   padding: 24px;

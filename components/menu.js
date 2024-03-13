@@ -13,7 +13,6 @@ const MenuWrapper = styled.div`
   position: absolute;
   right: 0;
   top: 100%;
-  background: #ffffff;
   border: 1px solid #f0f3f8;
   ${shadow_200};
   padding: 20px;

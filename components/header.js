@@ -24,6 +24,7 @@ import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
 import LogoImg from "../public/imgs/logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
+import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
 
 const CaretRightIcon = styled(CaretRight)`
   margin-left: 16px;
@@ -34,10 +35,11 @@ const AppWrapper = styled.div`
   align-items: center;
   ${p_18_semibold};
   height: 36px;
-
+  color: ${text_light_major};
   cursor: pointer;
 
   &:hover {
+    color: ${primary_text_color};
     .hoverMenu {
       display: flex;
       flex-wrap: wrap;
@@ -62,6 +64,7 @@ const HoverMenu = styled.div`
   position: absolute;
   display: none;
   gap: 24px;
+  background-color: ${dark_violet};
   &:hover {
     display: flex;
     flex-wrap: wrap;
@@ -71,7 +74,6 @@ const HoverMenu = styled.div`
   width: 360px;
   box-shadow: 0 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
-  background: white;
 `;
 
 const MenuItem = styled.a`
@@ -90,7 +92,7 @@ const MenuItem = styled.a`
   }
   span {
     ${p_12_normal};
-    color: #a1a8b3;
+    color: ${text_light_major};
   }
 `;
 
@@ -109,10 +111,10 @@ const HeaderItemWrapper = styled.div`
     left: 0;
     right: 0;
   }
-  background-color: white;
 `;
 
 const SecondaryHeaderItemWrapper = styled(HeaderItemWrapper)`
+  background-color: #1e2134;
   @media screen and (min-width: 800px) {
     display: none;
   }
@@ -135,7 +137,7 @@ const ExternalLinkWrapper = styled(Flex)`
 
 const ExternalLink = styled.a`
   ${p_16_semibold};
-  color: #506176;
+  color: ${text_light_major};
   display: none;
   @media screen and (min-width: 800px) {
     display: flex;
@@ -147,15 +149,13 @@ const ExternalLink = styled.a`
   }
 
   &:hover {
-    color: #506176;
+    color: ${primary_text_color};
   }
 `;
 
 const Wrapper = styled.header`
   position: relative;
   flex: 0 0 auto;
-  background: #ffffff;
-  border-bottom: solid 1px #f0f3f8;
 `;
 
 const ContentWrapper = styled.div`
@@ -183,7 +183,7 @@ const Logo = styled.div`
   @media screen and (max-width: ${MOBILE_SIZE}px) {
     width: 48px;
     height: 32px;
-    background-image: url("${LogoIcon}");
+    background-image: url(${LogoIcon});
   }
 `;
 

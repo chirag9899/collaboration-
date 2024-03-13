@@ -12,6 +12,7 @@ import { MOBILE_SIZE } from "@osn/constants";
 import { useState } from "react";
 import { OnlyDesktop, OnlyMobile } from "@osn/common-ui";
 import { getSpaceIconUrl } from "frontedUtils/space";
+import { bg_white } from "../styles/colors";
 
 const NotificationItemWrapper = styled.div`
   &:hover {
@@ -34,7 +35,7 @@ const Head = styled(Flex)`
   padding: 24px;
   gap: 24px;
 
-  background: #ffffff;
+  background:${bg_white};
   border: 1px solid #f0f3f8;
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.04),
     0px 0.751293px 3.88168px rgba(26, 33, 44, 0.03);

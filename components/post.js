@@ -15,9 +15,10 @@ import { findNetworkConfig } from "../services/util";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import { p_14_medium } from "../styles/componentCss";
 import { getSpaceIconUrl } from "frontedUtils/space";
+import { bg_white } from "./styles/colors";
 
 const Wrapper = styled.div`
-  background: #ffffff;
+  background:${bg_white};
   border: 1px solid #f0f3f8;
   ${shadow_100}
   ${p_24};

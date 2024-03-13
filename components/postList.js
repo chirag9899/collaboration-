@@ -3,11 +3,13 @@ import styled from "styled-components";
 import Post from "./post";
 import { p_20_semibold } from "../styles/textStyles";
 import Pagination from "@/components/pagination";
-import NoData from "@osn/common-ui/es/NoData";
+import NoData from "./NoData";
+import { text_light_major } from "./styles/colors";
 
 const Title = styled.div`
   ${p_20_semibold};
   margin-bottom: 20px;
+  color: ${text_light_major};
 `;
 
 const PostsWrapper = styled.div`
@@ -37,7 +39,7 @@ export default function PostList({
             spaces={spaces}
           />
         ))}
-        {items.length === 0 && <NoData message="No current active proposals" />}
+        {items.length === 0 && <NoData  message="No current active proposals" />}
         {posts?.page && (
           <Pagination
             page={posts?.page}
