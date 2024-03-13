@@ -12,7 +12,7 @@ import { p_18_semibold } from "../../styles/textStyles";
 import SpaceLogo from "@/components/spaceLogo";
 import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
-import { border_primary } from "../styles/colors";
+import { border_primary, netural_grey_100 } from "../styles/colors";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ const Icon = styled.div`
 const Name = styled.div`
   white-space: nowrap;
   ${p_18_semibold};
-  color: #2e343d;
+  color: ${netural_grey_100};
   text-transform: capitalize;
 `;
 
@@ -84,12 +84,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const JoinButtonWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 15px;
-`;
-
 export default function SpaceListItem({ name, space }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
@@ -139,7 +133,25 @@ export default function SpaceListItem({ name, space }) {
         <Name>{space.name}</Name>
         <Symbol>{space.symbol ?? "-"}</Symbol>
       </IconWrapper>
-      <Divider />
+      {!isSpaceJoined(name) ? (
+        <JoinButton
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            joinSpace(name);
+          }}
+          title="join"
+        />
+      ) : (
+        <JoinButton
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            leaveSpace(name);
+          }}
+          title="leave"
+        />
+      )}
       <ActiveWrapper>
         <ActiveCircle />
         <InternalLink href={`/space/${name}?tab=active`}>Active</InternalLink>
@@ -148,18 +160,6 @@ export default function SpaceListItem({ name, space }) {
           {space.proposalsCount}
         </Count>
       </ActiveWrapper>
-      <JoinButtonWrapper
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        {!isSpaceJoined(name) ? (
-          <JoinButton joined={false} onClick={() => joinSpace(name)} />
-        ) : (
-          <JoinButton joined={true} onClick={() => leaveSpace(name)} />
-        )}
-      </JoinButtonWrapper>
     </Wrapper>
   );
 }
