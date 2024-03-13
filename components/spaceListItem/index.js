@@ -13,6 +13,7 @@ import SpaceLogo from "@/components/spaceLogo";
 import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
 import { border_primary, netural_grey_100 } from "../styles/colors";
+import { ReactComponent as Verified } from "../../public/imgs/icons/verified.svg";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -130,7 +131,7 @@ export default function SpaceListItem({ name, space }) {
         <Icon>
           <SpaceLogo space={space} />
         </Icon>
-        <Name>{space.name}</Name>
+        <Name>{space.name}<Verified/></Name>
         <Symbol>{space.symbol ?? "-"}</Symbol>
       </IconWrapper>
       {!isSpaceJoined(name) ? (
