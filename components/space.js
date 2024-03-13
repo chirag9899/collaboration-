@@ -11,10 +11,13 @@ import SpaceListItem from "./spaceListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchJoinedSpace } from "store/reducers/accountSlice";
 import { text_light_major } from "./styles/colors";
+import SearchBar from "./searchBar";
+import useSearch from "hooks/useSearch";
+import { formatNumber } from "services/util";
 
 const Title = styled.div`
   ${h3_36_bold};
-  color:${text_light_major};
+  color: ${text_light_major};
 `;
 
 const ItemsWrapper = styled.div`
@@ -59,6 +62,11 @@ export default function Space({ spaces, showAllSpace }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
 
+  const sortedSpaces = Object.entries(spaces).sort(([, a], [, b]) => {
+    return b.proposalsCount - a.proposalsCount;
+  });
+  const { search, onSearchChange, filtredData } = useSearch(sortedSpaces);
+
   useEffect(() => {
     if (!address) {
       return;
@@ -68,10 +76,6 @@ export default function Space({ spaces, showAllSpace }) {
 
   const [show, setShow] = useState(showAllSpace === "1");
   const [showCount, setShowCount] = useState(5);
-
-  const sortedSpaces = Object.entries(spaces).sort(([, a], [, b]) => {
-    return b.proposalsCount - a.proposalsCount;
-  });
 
   const windowSize = useWindowSize();
 
@@ -96,12 +100,19 @@ export default function Space({ spaces, showAllSpace }) {
           <SpaceButton onClick={() => setShowAllSpace(!show)}>
             {sortedSpaces.length > showCount && show
               ? "Hide Spaces"
-              : `All Spaces(${sortedSpaces.length})`}
+              : `${formatNumber(sortedSpaces.length)} Space(s)`}
           </SpaceButton>
         </ButtonWrapper>
       </TitleWrapper>
+      <TitleWrapper>
+        <SearchBar
+          placeholder="Search..."
+          search={search}
+          onSearchChange={onSearchChange}
+        />
+      </TitleWrapper>
       <ItemsWrapper>
-        {(show ? sortedSpaces : sortedSpaces.slice(0, showCount)).map(
+        {(show ? filtredData : filtredData.slice(0, showCount)).map(
           ([name, space], index) => (
             <InternalLink href={`/space/${name}`} key={index}>
               <SpaceListItem name={name} space={space} />
