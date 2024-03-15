@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DropdownButton,
   DropdownContainer,
@@ -11,6 +11,21 @@ import { ReactComponent as DropDownCarret } from "../../public/imgs/icons/caret-
 const DropDown = ({ options = ["none"], onSelect, Icon }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0].label);
+  const dropdownRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -23,7 +38,7 @@ const DropDown = ({ options = ["none"], onSelect, Icon }) => {
   };
 
   return (
-    <DropdownContainer>
+    <DropdownContainer ref={dropdownRef}>
       <DropdownButton onClick={toggleDropdown}>
         {Icon && Icon} {selectedOption}
         <DropDownCarret />
