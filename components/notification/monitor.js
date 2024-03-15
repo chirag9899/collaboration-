@@ -5,6 +5,7 @@ import { loginAddressSelector } from "store/reducers/accountSlice";
 import { connect } from "services/websocket";
 import { toPublicKey } from "@osn/common";
 
+
 export default function NotificationMonitor() {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
@@ -14,10 +15,17 @@ export default function NotificationMonitor() {
     setSocket(connect());
   }, []);
 
-  // Fetch unread notifications on websocket push
   useEffect(() => {
     if (socket && address) {
-      const publicKey = toPublicKey(address);
+
+      let publicKey;
+     if (address.startsWith('bc1')) {
+      // Bech32 decoding for Bitcoin addresses
+      publicKey = address;
+    } else {
+      // Base58 decoding for other addresses
+      publicKey = toPublicKey(address);
+    }
 
       const onNotification = () => {
         dispatch(fetchUnread(address));
@@ -40,6 +48,33 @@ export default function NotificationMonitor() {
       };
     }
   }, [dispatch, socket, address]);
+
+  // Fetch unread notifications on websocket push
+  // useEffect(() => {
+  //   if (socket && address) {
+  //     const publicKey = toPublicKey(address);
+
+  //     const onNotification = () => {
+  //       dispatch(fetchUnread(address));
+  //     };
+
+  //     const subscribe = () => {
+  //       socket.emit("subscribe", { event: "notification", publicKey });
+  //       socket.on("notification", onNotification);
+  //     };
+
+  //     if (socket.connected) {
+  //       subscribe();
+  //     } else {
+  //       socket.on("connect", subscribe);
+  //     }
+
+  //     return () => {
+  //       socket.emit("unsubscribe", { event: "notification", publicKey });
+  //       socket.off("notification", onNotification);
+  //     };
+  //   }
+  // }, [dispatch, socket, address]);
 
   // Fetch unread notifications on logged in or mounted
   useEffect(() => {

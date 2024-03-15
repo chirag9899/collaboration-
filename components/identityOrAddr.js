@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import { addressEllipsis, getExplorer } from "../frontedUtils";
 import { useIsMounted } from "frontedUtils/hooks";
-import { evm, evmChains, getChainConfigs } from "../frontedUtils/consts/chains";
+import { btcChains, evm, evmChains, getChainConfigs } from "../frontedUtils/consts/chains";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "@osn/common-ui";
@@ -74,9 +74,10 @@ export default function IdentityOrAddr({
   }
 
   const isEvm = evmChains.includes(network);
+  const isBtc = btcChains.includes(network);
 
   useEffect(() => {
-    if (!address || !network || isEvm) {
+    if (!address || !network || isEvm || isBtc) {
       return;
     }
 
@@ -91,7 +92,7 @@ export default function IdentityOrAddr({
         }
       })
       .catch(() => {});
-  }, [network, address, isMounted, isEvm]);
+  }, [network, address, isMounted, isEvm, isBtc]);
 
   let identityChild =
     identity?.info && identity?.info?.status !== "NO_ID" ? (

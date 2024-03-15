@@ -12,9 +12,10 @@ import NoExtension from "@/components/connect/noExtension";
 import NoAccount from "@/components/connect/noAccount";
 import Closeable from "@/components/connect/closeable";
 import useExtension from "../../frontedUtils/hooks/useExtension";
-import { evmChains } from "../../frontedUtils/consts/chains";
+import { btcChains, evmChains } from "../../frontedUtils/consts/chains";
 import ConnectButton from "@/components/connect/connectButton";
 import { getMetamaskElement } from "@/components/connect/metamask";
+import { getUnisatElement } from "@/components/connect/unisat";
 
 const Wrapper = styled.div``;
 
@@ -45,6 +46,7 @@ export default function Connect({ networks }) {
   }, [accounts]);
 
   const isEvmChain = evmChains.includes(chain?.network);
+  const isBtcChain = btcChains.includes(chain?.network);
 
   useEffect(() => {
     if (!chain) {
@@ -57,6 +59,15 @@ export default function Connect({ networks }) {
       });
       return;
     }
+
+    // added btc in element 
+    if (isBtcChain) {
+      getUnisatElement(chain.network).then((element) => {
+        setElement(element);
+      })
+      return;
+    }
+
 
     if (detecting) {
       return setElement(null);
@@ -108,7 +119,8 @@ export default function Connect({ networks }) {
         <StyledText>Chain</StyledText>
         <ChainSelector
           chains={availableNetworks}
-          onSelect={(chain) => setChain(chain)}
+          onSelect={(chain) =>  {console.log(chain) 
+              setChain(chain)}}
         />
         {element}
       </Closeable>

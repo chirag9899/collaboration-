@@ -45,7 +45,7 @@ export async function getServerSideProps(context) {
   ]);
 
   const showAllSpace = context.req.cookies.showallspace;
-
+  
   return {
     props: {
       spaces: spaces || {},

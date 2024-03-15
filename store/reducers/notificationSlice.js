@@ -22,6 +22,7 @@ export const fetchUnread = (address) => async (dispatch) => {
     .fetch(`account/${address}/notifications/unread`)
     .then(({ result }) => {
       if (result) {
+        console.log("mil gyaaaaa",result)
         dispatch(setUnread(result.count));
       }
     });

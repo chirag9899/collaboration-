@@ -1,6 +1,7 @@
-import { evmChains, getChainConfigs } from "../consts/chains";
+import { btcChains, evmChains, getChainConfigs } from "../consts/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { ethers } from "ethers";
+
 
 /**
  * Make sure the origin and chain is correct to call this function
@@ -8,7 +9,8 @@ import { ethers } from "ethers";
  * @param chain
  */
 export default function encodeAddressByChain(origin, chain) {
-  if (evmChains.includes(chain) || ethers.utils.isAddress(origin)) {
+  console.log(origin, chain)
+  if (evmChains.includes(chain) || ethers.utils.isAddress(origin) || btcChains.includes(chain)) {
     return origin;
   }
 

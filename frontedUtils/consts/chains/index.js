@@ -80,3 +80,12 @@ export const evmChainId = Object.freeze({
   [evm.berachain]: 80085,
   [evm.merlin]: 4200
 });
+
+// Add BTC chain
+export const btc = {
+  brc20: "brc20"
+}
+export const btcChains = [btc.brc20];
+export const btcChainId = Object.freeze({
+  [btc.brc20]: 12123
+});

@@ -2,7 +2,7 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 
 import { clearCookie, getCookie, setCookie } from "frontedUtils/cookie";
 import { isAddress } from "@polkadot/util-crypto";
-import { chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
+import { btcChains, chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
 import encodeAddressByChain from "../../frontedUtils/chain/addr";
 import nextApi from "services/nextApi";
 
@@ -113,7 +113,7 @@ export const initAccount = () => async (dispatch) => {
   const [network, address] = data.split("/");
   if (
     !isAddress(address) ||
-    !(network in chainConfigsMap || evmChains.includes(network))
+    !(network in chainConfigsMap || evmChains.includes(network) || btcChains.includes(network))
   ) {
     return;
   }
@@ -142,6 +142,32 @@ export const initAccount = () => async (dispatch) => {
     }
     return;
   }
+
+  // added btc chain
+  if (
+    btcChains.includes(network) && 
+    window.unisat 
+  ) {
+    try {
+      let accounts = await window.unisat.requestAccounts();
+      if (accounts.length > 0) {
+        dispatch(
+          setAccount({
+            accounts: accounts[0],
+            network,
+          }),
+        );
+      } else {
+        dispatch(setAccount(""));
+      }
+      
+    } catch (error) {
+      dispatch(setAccount(""));
+    }
+    return;
+
+  }
+  
 
   dispatch(
     setAccount({
@@ -182,17 +208,31 @@ export const loginAccountSelector = createSelector(
   },
 );
 
-export const loginAddressSelector = createSelector(
-  loginNetworkSelector,
-  accountSelector,
-  (network, account) => {
-    if (!network || !account) {
-      return null;
-    }
 
-    return encodeAddressByChain(account.address, network.network);
-  },
-);
+// export const loginAddressSelector = createSelector(
+//   loginNetworkSelector,
+//   accountSelector,
+//   (network, account) => {
+//     if (!network || !account) {
+//       return null;
+//     }
+//     return encodeAddressByChain(account.address, network.network);
+//   },
+// );
+
+  export const loginAddressSelector = createSelector(
+    loginNetworkSelector,
+    accountSelector,
+    (network, account) => {
+      if (!network || !account) {
+        return null;
+      }
+  
+      let encodedAddress = encodeAddressByChain(account.address, network.network);
+      console.log(encodedAddress);
+      return encodedAddress;
+    },
+  );
 
 export const proxySelector = createSelector(
   loginNetworkSelector,
@@ -209,6 +249,11 @@ export const proxySelector = createSelector(
 export const isEvmSelector = createSelector(loginNetworkSelector, (network) => {
   return evmChains.includes(network?.network);
 });
+
+export const isBtcSelector = createSelector(loginNetworkSelector, (network) => {
+  return btcChains.includes(network?.network);
+});
+
 
 export const canUseProxySelector = createSelector(
   loginNetworkSelector,
