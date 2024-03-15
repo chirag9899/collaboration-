@@ -5,7 +5,7 @@ import {
 } from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
-import { btcValidate } from "bitcoin-address-validation";
+import { validate } from 'bitcoin-address-validation';
 
 async function singByUnisat(text) {
   if (!window.unisat) {
@@ -34,9 +34,10 @@ export const signMessage = async (text, address) => {
     return singByMetaMask(text, address);
   }
 
-  if (btcValidate(address)) {
-    console.log(singByUnisat(text));
-    return singByUnisat(text);
+  if (validate(address)) {
+    const result = await singByUnisat(text);
+    console.log(result);
+    return result;
   }
 
   if (!isWeb3Injected) {
