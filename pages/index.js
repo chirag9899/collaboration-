@@ -15,7 +15,7 @@ export default function Index({
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setAvailableNetworks(allNetworks || []));
-  }, [dispatch, allNetworks]);
+      }, [dispatch, allNetworks]);
 
   const desc =
     "One of the governance products powered by Quicksnap. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
@@ -25,6 +25,7 @@ export default function Index({
       <Layout bgHeight="183px" networks={allNetworks}>
         <Home
           spaces={spaces}
+          allNetworks={allNetworks}
           hottestProposals={hottestProposals}
           showAllSpace={showAllSpace}
         />

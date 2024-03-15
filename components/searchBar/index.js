@@ -32,7 +32,11 @@ function SearchBar(props) {
       <Search />
       {dropdown && (
         <SearchDropdownWrapper>
-          <DropDown options={dropDownOptions} onSelect={onSelectOption} />
+          <DropDown
+            options={dropDownOptions}
+            onSelect={onSelectOption}
+            selected={dropDownOptions[0].label}
+          />
         </SearchDropdownWrapper>
       )}
       {suffix && <Suffix>{suffix}</Suffix>}

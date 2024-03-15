@@ -4,6 +4,7 @@ const useSearch = (data) => {
   const [search, setSearch] = useState("");
   const [filtredData, setFiltredData] = useState(data);
 
+
   const onSearchChange = (event) => {
     const { value } = event.target;
     setSearch(value);
@@ -11,7 +12,7 @@ const useSearch = (data) => {
     if (searchVal === "") {
       setFiltredData(data);
     } else {
-      const result = data.filter(([key, value]) => key.match(searchVal));
+      const result = data.filter(({name}) => name.match(searchVal));
       setFiltredData(result);
     }
   };

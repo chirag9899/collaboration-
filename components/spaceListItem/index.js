@@ -39,35 +39,10 @@ const Symbol = styled.div`
   color: #a1a8b3;
 `;
 
-const Divider = styled.div`
-  min-width: 116px;
-  height: 1px;
-  background: #f0f3f8;
-  margin: 12px 0;
-`;
-
-const ActiveWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  line-height: 24px;
-  color: #a1a8b3;
-`;
-
-const ActiveCircle = styled.div`
-  ${makeSquare(6)};
-  border-radius: 50%;
-  background: #56ca2f;
-  margin-right: 8px;
-`;
-
 const Count = styled.span`
   margin-left: auto;
 `;
 
-const ActiveCount = styled(Count)`
-  color: #506176;
-`;
 
 const Wrapper = styled.div`
   position: relative;
@@ -153,14 +128,6 @@ export default function SpaceListItem({ name, space }) {
           title="leave"
         />
       )}
-      <ActiveWrapper>
-        <ActiveCircle />
-        <InternalLink href={`/space/${name}?tab=active`}>Active</InternalLink>
-        <Count>
-          <ActiveCount>{space.activeProposalsCount ?? 0}</ActiveCount>/
-          {space.proposalsCount}
-        </Count>
-      </ActiveWrapper>
     </Wrapper>
   );
 }

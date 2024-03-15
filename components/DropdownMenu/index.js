@@ -8,9 +8,11 @@ import {
 } from "./styled";
 import { ReactComponent as DropDownCarret } from "../../public/imgs/icons/caret-down-s.svg";
 
-const DropDown = ({ options = ["none"], onSelect, Icon }) => {
+const DropDown = ({ options = ["none"], onSelect, Icon, selected, label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(options[0].label);
+  const [selectedOption, setSelectedOption] = useState(
+    !selected ? label :selected,
+  );
   const dropdownRef = useRef();
 
   useEffect(() => {
