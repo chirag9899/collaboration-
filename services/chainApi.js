@@ -5,6 +5,16 @@ import {
 } from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
+import { btcValidate } from "bitcoin-address-validation";
+
+async function singByUnisat(text) {
+  if (!window.unisat) {
+    throw new Error("No UniSat detected");
+  }
+
+  const hex = stringToHex(text);
+  return await window.unisat.signMessage(hex);
+}
 
 async function singByMetaMask(text, address) {
   if (!window.ethereum || !window.ethereum.isMetaMask) {
@@ -20,7 +30,13 @@ async function singByMetaMask(text, address) {
 
 export const signMessage = async (text, address) => {
   if (ethers.utils.isAddress(address)) {
+    console.log(singByMetaMask(text, address));
     return singByMetaMask(text, address);
+  }
+
+  if (btcValidate(address)) {
+    console.log(singByUnisat(text));
+    return singByUnisat(text);
   }
 
   if (!isWeb3Injected) {
@@ -28,7 +44,7 @@ export const signMessage = async (text, address) => {
   }
 
   if (!address) {
-    throw new Error("Sign addres is missing");
+    throw new Error("Sign address is missing");
   }
 
   await web3Enable("opensquare.io");
