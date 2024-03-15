@@ -10,10 +10,13 @@ import { loginAddressSelector } from "store/reducers/accountSlice";
 import SpaceListItem from "./spaceListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchJoinedSpace } from "store/reducers/accountSlice";
-import { text_light_major } from "./styles/colors";
+import { netural_grey_100, text_light_major } from "./styles/colors";
 import SearchBar from "./searchBar";
 import useSearch from "hooks/useSearch";
 import { formatNumber } from "services/util";
+import DropDown from "./DropdownMenu";
+import useDropDown from "hooks/useDropDown";
+import { ReactComponent as Grid } from "../public/imgs/icons/grid.svg";
 
 const Title = styled.div`
   ${h3_36_bold};
@@ -46,6 +49,11 @@ const TitleWrapper = styled.div`
   justify-content: space-between;
   margin-bottom: 24px;
 `;
+const SubTitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+`;
 
 const SpaceButton = styled.div`
   cursor: pointer;
@@ -58,6 +66,13 @@ const ButtonWrapper = styled.div`
   gap: 40px;
 `;
 
+const FilterDropDownWrapper = styled.div`
+  border: 1px solid ${netural_grey_100};
+  border-radius: 30px;
+  margin-left: 20px;
+  min-width: 150px;
+`;
+
 export default function Space({ spaces, showAllSpace }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
@@ -66,6 +81,12 @@ export default function Space({ spaces, showAllSpace }) {
     return b.proposalsCount - a.proposalsCount;
   });
   const { search, onSearchChange, filtredData } = useSearch(sortedSpaces);
+  const { options, handleSelect } = useDropDown([
+    { label: "Spaces", value: "Spaces" },
+    { label: "Networks", value: "Networks" },
+    { label: "Strategies", value: "Strategies" },
+    { label: "Plugins", value: "Plugins" },
+  ]);
 
   useEffect(() => {
     if (!address) {
@@ -104,13 +125,35 @@ export default function Space({ spaces, showAllSpace }) {
           </SpaceButton>
         </ButtonWrapper>
       </TitleWrapper>
-      <TitleWrapper>
+      <SubTitleWrapper>
         <SearchBar
           placeholder="Search..."
           search={search}
           onSearchChange={onSearchChange}
+          dropdown={true}
+          dropDownOptions={options}
+          onSelectOption={handleSelect}
         />
-      </TitleWrapper>
+        <FilterDropDownWrapper>
+          <DropDown
+            options={[
+              { label: "Category" },
+              { label: "All", value: "All", badge: "123" },
+              { label: "Social", value: "Social", badge: "123" },
+              { label: "Social", value: "Social", badge: "123" },
+              { label: "Investment", value: "Investment", badge: "123" },
+              { label: "Creator", value: "Creator", badge: "123" },
+              { label: "Service", value: "Service", badge: "123" },
+              { label: "Media", value: "Media", badge: "123" },
+              { label: "Collector", value: "Collector", badge: "123" },
+              { label: "grant", value: "grant", badge: "123" },
+            ]}
+            onSelect={handleSelect}
+            Icon={<Grid />}
+            label="Category"
+          />
+        </FilterDropDownWrapper>
+      </SubTitleWrapper>
       <ItemsWrapper>
         {(show ? filtredData : filtredData.slice(0, showCount)).map(
           ([name, space], index) => (

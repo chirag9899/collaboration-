@@ -12,8 +12,8 @@ export const SearchBarWrapper = styled(FlexCenter)`
   box-sizing: border-box;
   border: 1px solid ${netural_grey_300};
   border-radius: 20px;
-  width: 350px;
-  padding: 0px 10px;
+  width: 450px;
+  padding: 0px 0px 0px 10px;
   :hover,
   :focus,
   :focus-within,
@@ -27,11 +27,11 @@ export const SearchBarInput = styled.input`
   color: White;
   box-sizing: border-box;
   padding: 5px 0px;
-  width: 90%;
+  flex: 0 0 75%;
   border: none;
   background: none;
   outline: none;
- 
+
   ::placeholder {
     color: ${text_dark_accessory};
   }
@@ -47,13 +47,13 @@ export const SearchBarButton = styled.button`
   ${p_14_normal};
   color: White;
   box-sizing: border-box;
-  width: 10%;
+  flex: 0 0 10%;
   border: none;
   background: none;
   outline: none;
   display: flex;
   align-items: center;
-   :hover{
+  :hover {
     cursor: pointer;
   }
 
@@ -66,6 +66,12 @@ export const SearchBarButton = styled.button`
     -webkit-appearance: none;
     margin: 0;
   }
+`;
+
+export const SearchDropdownWrapper = styled.div`
+  flex: 1;
+  border-left: 1px solid ${netural_grey_300};
+  margin-left: 10px;
 `;
 
 export const Suffix = styled.span`
