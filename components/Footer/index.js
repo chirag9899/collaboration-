@@ -21,7 +21,6 @@ const SvgMap = new Map([
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
-  background:${bg_dark};
 `;
 
 const ContentWrapper = styled.div`

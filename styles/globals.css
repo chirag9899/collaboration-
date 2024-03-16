@@ -45,7 +45,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter, -apple-system, "Helvetica Neue", Helvetica, Arial,
+  font-family: Montserrat, Inter, din, -apple-system, "Helvetica Neue", Helvetica, Arial,
     "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei",
     "WenQuanYi Micro Hei", sans-serif;
   color: #1e2134;
@@ -53,6 +53,10 @@ body {
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   background-color: #211f24; 
+}
+
+button, input{
+  font-family: inherit;
 }
 
 a {

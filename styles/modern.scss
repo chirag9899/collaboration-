@@ -1,0 +1,19 @@
+@import './colours.scss';
+@import './fonts.scss';
+
+body{
+  background-color: var(--background);
+}
+
+a,button{
+  display:flex;
+  flex-direction: row;
+  gap:5px;
+  align-items: center;
+  justify-content: center;
+}
+
+footer{
+  background: var(--background-2) !important;
+
+}

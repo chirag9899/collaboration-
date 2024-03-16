@@ -8,7 +8,7 @@ import {
   logout,
 } from "store/reducers/accountSlice";
 import Avatar from "./avatar";
-import { p_14_medium } from "../styles/textStyles";
+import { p_14_medium, p_16_semibold } from "../styles/textStyles";
 import { ReactComponent as UserIcon } from "../public/imgs/icons/user.svg";
 import { shadow_200 } from "../styles/globalCss";
 import { useWindowSize } from "../frontedUtils/hooks";
@@ -91,6 +91,7 @@ const AccountWrapperPC = styled(AccountWrapper)`
       border: 1px solid #b7c0cc;
     `}
   padding: 7px 15px;
+  font-size:16px;
   @media screen and (max-width: 800px) {
     display: none;
   }
@@ -148,6 +149,12 @@ const LogoutWrapper = styled.div`
 `;
 
 const DarkButton = styled(ButtonPrimary)`
+${p_16_semibold};
+border-radius:100px;
+background: var(--red);
+:hover{
+  background:orange;
+}
   @media screen and (max-width: 800px) {
     padding: 8px 16px;
     margin: auto;
@@ -193,7 +200,7 @@ function Account({ networks }) {
           onClick={() => dispatch(popUpConnect())}
           className="button"
         >
-          Connect Wallet
+         <i class="icon-target"></i> Connect Wallet
         </DarkButton>
       )}
     </div>

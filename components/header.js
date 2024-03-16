@@ -22,7 +22,7 @@ import NotificationBell from "./notification/bell";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right-s.svg";
 import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
-import LogoImg from "../public/imgs/logo.svg";
+import LogoImg from "../public/imgs/quicksnap.finance.logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
 import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
 
@@ -271,16 +271,14 @@ export default function Header({ networks }) {
               <ExternalLinkWrapper>
                 <Link href="/space/new" passHref legacyBehavior>
                   <InternalLink>
-                    <Plus />
+                  <i class="icon-plus"></i>
                     Add a Space
                   </InternalLink>
                 </Link>
                 <ExternalLink
                   target="_blank"
                   href="https://github.com/opensquare-network/collaboration/discussions"
-                >
-                  <Discussions />
-                  Discussions
+                ><i class="icon-message-circle"></i> Discussions
                 </ExternalLink>
               </ExternalLinkWrapper>
             )}
