@@ -67,6 +67,8 @@ export default function IdentityOrAddr({
     link = `https://blastexplorer.io/address/${address}`;
   } else if (evm.berachain === network) {
     link = `https://artio.beratrail.io/address/${address}`;
+  } else if (evm.melin === network) {
+    link = `https://scan.merlinchain.io/address/${address}`;
   } else if ("creditcoin" === network) {
     link = `https://explorer.creditcoin.org/Account/RecentExtrinsics/${address}`;
   }

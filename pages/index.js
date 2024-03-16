@@ -18,7 +18,7 @@ export default function Index({
       }, [dispatch, allNetworks]);
 
   const desc =
-    "One of the governance products powered by Quicksnap. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
+    "One of the governance products powered by OpenSquare. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
   return (
     <>
       <Seo desc={desc} />

@@ -67,6 +67,7 @@ export default function Asset({
 
       setPartialAsset({
         chain: chain?.network,
+        name: chain?.name || chain?.network,
         type: undefined,
         assetId: undefined,
         contract: undefined,
@@ -92,6 +93,7 @@ export default function Asset({
     <CommonAssetConfig
       count={count}
       chain={asset.chain}
+      name={asset.name}
       nativeTokenInfo={chainInfo}
       asset={asset}
       setPartialAsset={setPartialAsset}
@@ -103,6 +105,7 @@ export default function Asset({
       <StatemineAssetConfig
         count={count}
         chain={asset.chain}
+        name={asset.name}
         asset={asset}
         nativeTokenInfo={chainInfo}
         setPartialAsset={setPartialAsset}
@@ -124,6 +127,7 @@ export default function Asset({
       <Erc20TokenConfig
         count={count}
         chain={asset.chain}
+        name={asset.name}
         nativeTokenInfo={chainInfo}
         asset={asset}
         setPartialAsset={setPartialAsset}
@@ -142,6 +146,8 @@ export default function Asset({
       <MyFieldWrapper>
         <Title>Chain</Title>
         <ChainSelector chains={chainsDef} onSelect={onSelectChain} />
+        <Title>Network: {chainInfo?.name || asset?.name}</Title>
+        <Title>ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}</Title>
       </MyFieldWrapper>
       {assetConfig}
     </Wrapper>
