@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-// import ExternalLink from "../ExternalLink";
-import { ExternalLink } from "@osn/common-ui";
+import ExternalLink from "../ExternalLink";
+// import { ExternalLink } from "@osn/common-ui";
 
 import { ReactComponent as FooterLogoSvg } from "../../public/imgs/logoIcon.svg";
 import { ReactComponent as GithubSvg } from "../../public/imgs/icons/github.svg";
