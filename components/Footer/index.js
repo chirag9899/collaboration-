@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 import ExternalLink from "../ExternalLink";
-// import { ExternalLink } from "@osn/common-ui";
-
 import { ReactComponent as FooterLogoSvg } from "../../public/imgs/logoIcon.svg";
 import { ReactComponent as GithubSvg } from "../../public/imgs/icons/github.svg";
 import { ReactComponent as TelegramSvg } from "../../public/imgs/icons/telegram.svg";
@@ -23,6 +21,7 @@ const SvgMap = new Map([
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
+  background:${bg_dark};
 `;
 
 const ContentWrapper = styled.div`
