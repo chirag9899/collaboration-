@@ -1,31 +1,13 @@
 import styled from "styled-components";
-import Tooltip from "../tooltip";
-import { ReactComponent as JoinedSVG } from "./joined.svg";
-import { ReactComponent as NotJoinedSVG } from "./not-joined.svg";
+import Button from "../button";
 
-const NotJoinedMark = styled(NotJoinedSVG)`
-  &:hover {
-    path {
-      fill: #B7C0CC;
-    }
-  }
+const JoinBtnWrapper = styled(Button)`
+  margin: 7px 0px;
+  font-weight: bold;
 `;
 
-const JoinedMark = styled(JoinedSVG)``;
-
-
-export default function JoinButton({ joined, onClick = ()=>{} }) {
-  if (!joined) {
-    return (
-      <Tooltip content={"Join space"}>
-        <NotJoinedMark onClick={onClick} />
-      </Tooltip>
-    );
-  }
-
-  return (
-    <Tooltip content={"Leave space"}>
-      <JoinedMark onClick={onClick} />
-    </Tooltip>
-  );
+function JoinButton({ onClick = () => {}, title }) {
+  return <JoinBtnWrapper onClick={onClick} title={title} />;
 }
+
+export default JoinButton;

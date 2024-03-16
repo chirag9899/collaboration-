@@ -16,6 +16,7 @@ import {
   p_16_semibold,
 } from "../styles/textStyles";
 import { Flex, FlexBetween } from "@osn/common-ui";
+import { bg_white } from "./styles/colors";
 
 const Wrapper = styled.div`
   position: relative;
@@ -56,7 +57,7 @@ const DateWrapper = styled.div`
   z-index: 1;
   right: 0;
   padding: 24px;
-  background: #ffffff;
+  background:${bg_white};
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
 
@@ -165,7 +166,7 @@ const TimeWrapper = styled.div`
   position: absolute;
   right: 0;
   padding: 24px;
-  background: #ffffff;
+  background:${bg_white};
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
 `;

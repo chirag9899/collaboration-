@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { bg_white, text_light_major } from "../styles/colors";
 
 const PopupWrapper = styled.div`
   cursor: auto;
@@ -18,13 +19,13 @@ const PopupWrapper = styled.div`
 
 const Pop = styled.div`
   position: relative;
-  background: #ffffff;
+  background:${bg_white};
   max-width: 320px;
   min-width: ${(p) => (p.noMinWidth ? "none" : "120px")};
   padding: 16px;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color:${text_light_major};
   word-wrap: break-word;
   text-align: left;
 `;
@@ -57,7 +58,7 @@ const TitleWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: ${text_light_major};
   white-space: nowrap;
 `;
 

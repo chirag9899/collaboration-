@@ -22,6 +22,7 @@ import {
 import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
+import { bg_white } from "./styles/colors";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -101,7 +102,7 @@ const MenuWrapper = styled.div`
   position: absolute;
   right: 0;
   top: 100%;
-  background: #ffffff;
+  background:${bg_white};
   border: 1px solid #f0f3f8;
   ${shadow_200};
   padding: 16px;
