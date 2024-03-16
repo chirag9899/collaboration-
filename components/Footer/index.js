@@ -10,7 +10,7 @@ import { ReactComponent as TelegramSvg } from "../../public/imgs/icons/telegram.
 import { ReactComponent as TwitterSvg } from "../../public/imgs/icons/twitter.svg";
 import { ReactComponent as SubsocialSvg } from "../../public/imgs/icons/subsocial.svg";
 import { ReactComponent as MailSvg } from "../../public/imgs/icons/mail.svg";
-// import footerItems from "./items";
+import footerItems from "./items";
 import { bg_dark, text_light_major } from "../styles/colors";
 
 const SvgMap = new Map([
