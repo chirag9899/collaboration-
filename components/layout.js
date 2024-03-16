@@ -2,7 +2,7 @@ import styled, { ThemeProvider } from "styled-components";
 
 import Header from "./header";
 import Main from "./main";
-import { Footer } from "@osn/common-ui";
+import { Footer } from "components/Footer";
 import Toast from "components/toast";
 import Shade from "components/shade";
 import theme from "../styles/theme";
