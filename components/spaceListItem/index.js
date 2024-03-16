@@ -12,6 +12,8 @@ import { p_18_semibold } from "../../styles/textStyles";
 import SpaceLogo from "@/components/spaceLogo";
 import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
+import { border_primary, netural_grey_100 } from "../styles/colors";
+import { ReactComponent as Verified } from "../../public/imgs/icons/verified.svg";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -27,7 +29,7 @@ const Icon = styled.div`
 const Name = styled.div`
   white-space: nowrap;
   ${p_18_semibold};
-  color: #2e343d;
+  color: ${netural_grey_100};
   text-transform: capitalize;
 `;
 
@@ -37,42 +39,17 @@ const Symbol = styled.div`
   color: #a1a8b3;
 `;
 
-const Divider = styled.div`
-  min-width: 116px;
-  height: 1px;
-  background: #f0f3f8;
-  margin: 12px 0;
-`;
-
-const ActiveWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  line-height: 24px;
-  color: #a1a8b3;
-`;
-
-const ActiveCircle = styled.div`
-  ${makeSquare(6)};
-  border-radius: 50%;
-  background: #56ca2f;
-  margin-right: 8px;
-`;
-
 const Count = styled.span`
   margin-left: auto;
 `;
 
-const ActiveCount = styled(Count)`
-  color: #506176;
-`;
 
 const Wrapper = styled.div`
   position: relative;
   flex: 0 0 auto;
-  border: 1px solid #f0f3f8;
+  border: 1px solid ${border_primary};
+  border-radius: 10px;
   ${shadow_100};
-  background: #ffffff;
   padding: 24px;
   cursor: pointer;
   width: 200px;
@@ -81,12 +58,6 @@ const Wrapper = styled.div`
     border-color: #e2e8f0;
     ${shadow_200}
   }
-`;
-
-const JoinButtonWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 15px;
 `;
 
 export default function SpaceListItem({ name, space }) {
@@ -135,30 +106,28 @@ export default function SpaceListItem({ name, space }) {
         <Icon>
           <SpaceLogo space={space} />
         </Icon>
-        <Name>{space.name}</Name>
+        <Name>{space.name}<Verified/></Name>
         <Symbol>{space.symbol ?? "-"}</Symbol>
       </IconWrapper>
-      <Divider />
-      <ActiveWrapper>
-        <ActiveCircle />
-        <InternalLink href={`/space/${name}?tab=active`}>Active</InternalLink>
-        <Count>
-          <ActiveCount>{space.activeProposalsCount ?? 0}</ActiveCount>/
-          {space.proposalsCount}
-        </Count>
-      </ActiveWrapper>
-      <JoinButtonWrapper
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        {!isSpaceJoined(name) ? (
-          <JoinButton joined={false} onClick={() => joinSpace(name)} />
-        ) : (
-          <JoinButton joined={true} onClick={() => leaveSpace(name)} />
-        )}
-      </JoinButtonWrapper>
+      {!isSpaceJoined(name) ? (
+        <JoinButton
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            joinSpace(name);
+          }}
+          title="join"
+        />
+      ) : (
+        <JoinButton
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            leaveSpace(name);
+          }}
+          title="leave"
+        />
+      )}
     </Wrapper>
   );
 }

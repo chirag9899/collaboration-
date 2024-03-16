@@ -4,6 +4,7 @@ import copy from "copy-to-clipboard";
 
 import { newSuccessToast } from "store/reducers/toastSlice";
 import { p_14_normal } from "../styles/textStyles";
+import { text_light_major } from "./styles/colors";
 
 const Wrapper = styled.div`
   display: inline-flex;
@@ -69,7 +70,7 @@ const Popup = styled.div`
   white-space: nowrap;
   padding: 8px 12px;
   ${p_14_normal};
-  color: #ffffff;
+  color: ${text_light_major};
   word-wrap: break-word;
 `;
 
@@ -126,7 +127,7 @@ const TitleWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: ${text_light_major};
 `;
 
 const TooltipIcon = styled.img`
