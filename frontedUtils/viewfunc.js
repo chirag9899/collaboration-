@@ -39,38 +39,24 @@ export function validateProposal(formData) {
 
 export async function createProposal(proposal) {
   const { address, ...data } = proposal;
-  if (validate(address)) {
-    const pubkey = await window.unisat.getPublicKey();
-    const signedData = await signApiData(
-      {
-        ...data,
-        // Version 2: multi space network support
-        // Version 3: banner supported
-        // Version 4: multi assets support
-        version: "4",
-      },
-      pubkey,
-    );
+  const signedData = await signApiData(
+    {
+      ...data,
+      // Version 2: multi space network support
+      // Version 3: banner supported
+      // Version 4: multi assets support
+      version: "4",
+    },
+    address,
+  );
 
-    return await nextApi.post(`${proposal.space}/proposals`, signedData);
-  } else {
-    const signedData = await signApiData(
-      {
-        ...data,
-        // Version 2: multi space network support
-        // Version 3: banner supported
-        // Version 4: multi assets support
-        version: "4",
-      },
-      address,
-    );
-
-    return await nextApi.post(`${proposal.space}/proposals`, signedData);
-  }
+  return await nextApi.post(`${proposal.space}/proposals`, signedData);
 }
 
 export async function signProposal(proposal) {
   const { address, ...data } = proposal;
+  if (validate(address)) {
+  const pubkey = await window.unisat.getPublicKey();
   return await signApiData(
     {
       ...data,
@@ -79,9 +65,23 @@ export async function signProposal(proposal) {
       // Version 4: multi assets support
       // Version 5, add networks configuration
       version: "5",
+      pubkey: pubkey
     },
     address,
   );
+  } else {
+    return await signApiData(
+      {
+        ...data,
+        // Version 2: multi space network support
+        // Version 3: banner supported
+        // Version 4: multi assets support
+        // Version 5, add networks configuration
+        version: "5",
+      },
+      address,
+    );
+  }
 }
 
 export async function addComment(

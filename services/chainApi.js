@@ -11,8 +11,8 @@ async function singByUnisat(text) {
   if (!window.unisat) {
     throw new Error("No UniSat detected");
   }
-
   const hex = stringToHex(text);
+  console.log(hex)
   return await window.unisat.signMessage(hex);
 }
 
@@ -36,27 +36,27 @@ export const signMessage = async (text, address) => {
   if (validate(address)) {
     const result = await singByUnisat(text);
     return result;
+  } else {
+    if (!isWeb3Injected) {
+      throw new Error("Polkadot Extension is not installed");
+    }
+
+    if (!address) {
+      throw new Error("Sign address is missing");
+    }
+
+    await web3Enable("opensquare.io");
+    const injector = await web3FromAddress(address);
+
+    const data = stringToHex(text);
+    const result = await injector.signer.signRaw({
+      type: "bytes",
+      data,
+      address,
+    });
+
+    return result.signature;
   }
-
-  if (!isWeb3Injected) {
-    throw new Error("Polkadot Extension is not installed");
-  }
-
-  if (!address) {
-    throw new Error("Sign address is missing");
-  }
-
-  await web3Enable("opensquare.io");
-  const injector = await web3FromAddress(address);
-
-  const data = stringToHex(text);
-  const result = await injector.signer.signRaw({
-    type: "bytes",
-    data,
-    address,
-  });
-
-  return result.signature;
 };
 
 export const signApiData = async (data, address) => {
