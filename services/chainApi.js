@@ -30,13 +30,11 @@ async function singByMetaMask(text, address) {
 
 export const signMessage = async (text, address) => {
   if (ethers.utils.isAddress(address)) {
-    console.log(singByMetaMask(text, address));
     return singByMetaMask(text, address);
   }
 
   if (validate(address)) {
     const result = await singByUnisat(text);
-    console.log(result);
     return result;
   }
 
