@@ -1,13 +1,13 @@
 // primary
-export const primary_turquoise_500 = "#04D2C5";
+export const primary_turquoise_500 = "var(--yellow)";
 export const primary_purple_500 = "#6848FF";
 export const primary_yellow_100 = "#FFF2D9";
 export const primary_yellow_500 = "#F2B12F";
 
 // netural
-export const netural_grey_100 = "#FBFCFE";
+export const netural_grey_100 = "var(--background-0)";
 export const netural_grey_200 = "#F0F3F8";
-export const netural_grey_300 = "#e2e8f0";
+export const netural_grey_300 = "var(--background)";
 export const netural_grey_500 = "#b7c0cc";
 export const netural_grey_800 = "#404753";
 export const netural_grey_900 = "#191E27";
@@ -22,8 +22,8 @@ export const secondary_blue_500 = "#1f70c7";
 //colors 
 export const black = '#000000';
 export const bg_dark = 'var(--background-2)';
-export const bg_white = "#ffffff";
-export const dark_violet = '#1e2134';
+export const bg_white = "var(--background-0)";
+export const dark_violet = 'var(--sumset)';
 
 // text
 export const text_light_major = "#fff";

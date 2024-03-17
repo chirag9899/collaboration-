@@ -64,7 +64,7 @@ const StrategyAboutDetail = styled.span`
 const AboutDivider = styled.div`
   width: 1px;
   height: 16px;
-  background: #e2e8f0;
+  background: var(--background);
   margin: 0 40px;
 `;
 

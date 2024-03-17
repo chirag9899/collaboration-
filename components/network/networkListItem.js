@@ -17,7 +17,7 @@ const Icon = styled.div`
 const Name = styled.div`
   white-space: nowrap;
   ${p_18_semibold};
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
   text-transform: capitalize;
   font-size: 1rem;
 `;
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   width: 200px;
 
   :hover {
-    border-color: #e2e8f0;
+    border-color: var(--background);
     ${shadow_200}
   }
 `;

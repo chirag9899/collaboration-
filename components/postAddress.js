@@ -35,7 +35,7 @@ const FETCH_BALANCE_ERROR =
 
 const Wrapper = styled.div`
   padding: 20px;
-  background: #fbfcfe;
+  background: var(--background-0);
   ${(p) =>
     p.size === "small" &&
     css`
@@ -79,7 +79,7 @@ const InputWrapper = styled.div`
 const Input = styled.input`
   all: unset;
   background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 0;
   padding: 23px 47px 23px 71px;
   ${p_14_normal};
   ::placeholder {
@@ -106,7 +106,7 @@ const Input = styled.input`
 
 const ItemWrapper = styled(Flex)`
   padding: 11px 15px;
-  border: 1px solid #e2e8f0;
+  border: 0;
   background:${bg_white};
   cursor: pointer;
   overflow: hidden;

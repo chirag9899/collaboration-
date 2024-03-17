@@ -3,9 +3,9 @@ import { Index } from "./styled";
 import { text_light_major } from "../styles/colors";
 
 const Wrapper = styled(Index)`
-  background: #04d2c5;
+  background: #ebb600;
   color: ${text_light_major};
-  border-color: #04d2c5;
+  border-color: #ebb600;
 `;
 
 export default function CurrentIndex({ children }) {

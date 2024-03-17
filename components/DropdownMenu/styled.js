@@ -14,9 +14,9 @@ const DropdownButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
   padding: 10px 15px;
-  border: 1px solid ${netural_grey_100};
+  border-width:0px;
   border-radius: 4px;
   cursor: pointer;
   border: none;
@@ -38,7 +38,7 @@ const DropdownMenu = styled.ul`
   list-style: none;
   display: ${({ isOpen }) => (isOpen ? "block" : "none")};
   z-index: 99;
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
 `;
 
 const DropdownListItem = styled.li`
@@ -56,7 +56,7 @@ const DropdownListItem = styled.li`
 
 const BadgeWrapper = styled.span`
   background-color: #8B949E;
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
   border-radius: 30px;
   padding: 0px 5px;
 `;

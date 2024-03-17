@@ -79,7 +79,7 @@ const AccountWrapper = styled.div`
 `;
 
 const AccountWrapperPC = styled(AccountWrapper)`
-  border: 1px solid #e2e8f0;
+  border: 0;
 
   :hover {
     border: 1px solid #b7c0cc;

@@ -49,7 +49,7 @@ body {
     "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei",
     "WenQuanYi Micro Hei", sans-serif;
   color: #1e2134;
-  background: #fbfcfe;
+  background: var(--background-0);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   background-color: #211f24; 
