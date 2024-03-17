@@ -6,6 +6,9 @@
 }
 
 :root {
+  --gauze: rgba(255,255,255,0.1);
+  --shadow: rgba(0,0,0,0.1);
+
   --neutral-9: #101011;
   --neutral-8: #151416;
   --neutral-7: #262626;
@@ -20,7 +23,7 @@
   --primary: #ebb600;
   --accent: #0037eb;
   --secondary: #ebb600;
-  --accent: #d97919;
+  // --accent: #d97919;
 
   --yellow: #ebb400;
   --sunset: #e27e35;
@@ -28,7 +31,7 @@
   --plum: #8e3950;
   --vino: #562944;
 
-  --persistent-black: #000;
+  --black: #000;
   --persistent-white: #fff;
   --indigo: #586ada;
   --bg-indigo: #d5daf6;
@@ -74,6 +77,7 @@
 
   --green-0: #42d187;
 
-  --background: #211b22;
+  --background-0: #171218;
+  --background: #201821;
   --background-2: #1d1024;
 }

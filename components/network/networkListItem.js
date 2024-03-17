@@ -6,11 +6,11 @@ import NetworkLogo from "./networkLogo";
 
 const IconWrapper = styled.div`
   display: flex;
+  gap: 10px;
 `;
 
 const Icon = styled.div`
   ${makeSquare(28)};
-  margin-bottom: 16px;
   align-self: flex-start;
 `;
 
@@ -24,8 +24,10 @@ const Name = styled.div`
 
 const Wrapper = styled.div`
   position: relative;
-  flex: 0 0 auto;
-  border: 1px solid ${border_primary};
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  background-color: var(--shadow);
+  border: 0;
   border-radius: 10px;
   ${shadow_100};
   padding: 24px;

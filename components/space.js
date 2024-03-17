@@ -9,13 +9,14 @@ import { fetchJoinedSpace } from "store/reducers/accountSlice";
 
 const ItemsWrapper = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 34px;
   justify-content: start;
   overflow: visible;
   min-height: 227px;
   ${no_scroll_bar};
+  flex-wrap: wrap;
 
-  @media screen and (max-width: 1144px) {
+  @media screen and (max-width: 1200px) {
     margin: 0 -32px;
     padding: 0 32px;
   }
@@ -23,8 +24,6 @@ const ItemsWrapper = styled.div`
     margin: 0 -20px;
     padding: 0 20px;
   }
-
-  flex-wrap: wrap;
 `;
 
 export default function Space({ spaces, show, showCount }) {

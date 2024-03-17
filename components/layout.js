@@ -2,7 +2,7 @@ import styled, { ThemeProvider } from "styled-components";
 
 import Header from "./header";
 import Main from "./main";
-import { Footer } from "components/Footer";
+
 import Toast from "components/toast";
 import Shade from "components/shade";
 import theme from "../styles/theme";
@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { initAccount } from "store/reducers/accountSlice";
 import { useDispatch } from "react-redux";
 import NotificationMonitor from "./notification/monitor";
+import Footer from "./Footer";
 
 const Wrapper = styled.div`
   min-height: 100vh;

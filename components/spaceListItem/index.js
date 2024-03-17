@@ -15,6 +15,7 @@ import JoinButton from "./joinButton";
 import { border_primary, netural_grey_100 } from "../styles/colors";
 import { ReactComponent as Verified } from "../../public/imgs/icons/verified.svg";
 
+
 const IconWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,6 +61,7 @@ const Wrapper = styled.div`
   }
 `;
 
+
 export default function SpaceListItem({ name, space }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
@@ -100,10 +102,12 @@ export default function SpaceListItem({ name, space }) {
     [dispatch, address],
   );
 
+Wrapper.xyz=isSpaceJoined(name)
   return (
-    <Wrapper>
+    <Wrapper data-joined={ `${isSpaceJoined(name)}`}>
       <IconWrapper>
         <Icon>
+          <SpaceLogo space={space} />
           <SpaceLogo space={space} />
         </Icon>
         <Name>{space.name}<Verified/></Name>

@@ -10,15 +10,20 @@ import { p_14_normal } from "../styles/textStyles";
 
 export const SearchBarWrapper = styled(FlexCenter)`
   box-sizing: border-box;
-  border: 1px solid ${netural_grey_300};
-  border-radius: 20px;
-  width: 450px;
-  padding: 0px 0px 0px 10px;
+  border: 0;
+  border-radius: 200px;
+  width: max-content;
+  padding: 0 0 0 10px;
+  color: var(--neutral-3);
+  background-color: var(--shadow);
+  gap: 10px;
+  box-shadow: 0 0 0 1px;
+  transition: 200ms ease;
   :hover,
   :focus,
   :focus-within,
   :active {
-    border-color: ${netural_grey_500};
+    color: var(--neutral-0);
   }
 `;
 
@@ -27,13 +32,23 @@ export const SearchBarInput = styled.input`
   color: White;
   box-sizing: border-box;
   padding: 5px 0px;
-  flex: 0 0 75%;
   border: none;
   background: none;
   outline: none;
+  width: 300px;
+  max-width: 80vw;
 
   ::placeholder {
-    color: ${text_dark_accessory};
+    color: var(--neutral-3);
+    transition: 200ms ease;
+
+  }
+  :focus,
+  :active {
+    ::placeholder {
+      opacity:0;
+    }
+
   }
 
   ::-webkit-outer-spin-button,
@@ -47,7 +62,6 @@ export const SearchBarButton = styled.button`
   ${p_14_normal};
   color: White;
   box-sizing: border-box;
-  flex: 0 0 10%;
   border: none;
   background: none;
   outline: none;
@@ -69,9 +83,9 @@ export const SearchBarButton = styled.button`
 `;
 
 export const SearchDropdownWrapper = styled.div`
-  flex: 1;
-  border-left: 1px solid ${netural_grey_300};
-  margin-left: 10px;
+  box-shadow: -1px 0 0 0;
+  padding: 0 0 0 10px;
+  color: var(--neutral-3);
 `;
 
 export const Suffix = styled.span`

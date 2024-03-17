@@ -149,14 +149,8 @@ const LogoutWrapper = styled.div`
 `;
 
 const DarkButton = styled(ButtonPrimary)`
-${p_16_semibold};
-border-radius:100px;
-background: var(--red);
-:hover{
-  background:orange;
-}
   @media screen and (max-width: 800px) {
-    padding: 8px 16px;
+    padding: 8px 22px;
     margin: auto;
     width: 100%;
     text-align: center;
@@ -198,9 +192,9 @@ function Account({ networks }) {
         <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
-          className="button"
+          className="button button-modern"
         >
-         <i class="icon-target"></i> Connect Wallet
+          <i class="icon-target"></i> Connect Wallet
         </DarkButton>
       )}
     </div>

@@ -23,13 +23,13 @@ function SearchBar(props) {
   } = props ?? {};
   return (
     <SearchBarWrapper>
+      <i class="icon-search"></i>
       <SearchBarInput
         type="search"
         value={search}
         onChange={onSearchChange}
         {...restProps}
       />
-      <Search />
       {dropdown && (
         <SearchDropdownWrapper>
           <DropDown
