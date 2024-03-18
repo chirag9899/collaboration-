@@ -232,7 +232,7 @@ export default function Header({ networks }) {
         </Flex>
         <ChildWrapper>
           <AppWrapper>
-            <span>Voting</span>
+            {/* <span>Voting</span>
             <img
               className="onHoverReverse"
               src="/imgs/icons/caret-down-s.svg"
@@ -254,7 +254,7 @@ export default function Header({ networks }) {
                 <CaretRightIcon />
                 <span>Decentralized bounty collaboration platform</span>
               </MenuItem>
-            </HoverMenu>
+            </HoverMenu> */}
           </AppWrapper>
           <IconWrapper
             onClick={() => {
@@ -275,11 +275,11 @@ export default function Header({ networks }) {
                     Add a Space
                   </InternalLink>
                 </Link>
-                <ExternalLink
+                {/* <ExternalLink
                   target="_blank"
                   href="https://github.com/opensquare-network/collaboration/discussions"
                 ><i class="icon-message-circle"></i> Discussions
-                </ExternalLink>
+                </ExternalLink> */}
               </ExternalLinkWrapper>
             )}
             <AccountAndBell>

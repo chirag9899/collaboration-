@@ -73,8 +73,8 @@ const Title = styled.div`
 const searchOptions = [
   { label: "spaces", value: "spaces" },
   { label: "networks", value: "networks" },
-  { label: "strategies", value: "strategies" },
-  { label: "plugins", value: "plugins" },
+  // { label: "strategies", value: "strategies" },
+  // { label: "plugins", value: "plugins" },
 ];
 
 const categoriesOptions = [
@@ -156,7 +156,7 @@ export default function Home({
           dropDownOptions={options}
           onSelectOption={handleSelect}
         />
-        {isSpaces && (
+        {/* {isSpaces && (
           <FilterDropDownWrapper>
             <DropDown
               options={categoriesOptions}
@@ -166,7 +166,7 @@ export default function Home({
               label="Category"
             />
           </FilterDropDownWrapper>
-        )}
+        )} */}
         <ButtonWrapper>
           <SpaceButton onClick={() => setShowAllSpace(!show)}>
             {sortedData.length > showCount && show
@@ -187,12 +187,12 @@ export default function Home({
       {isNetworks && (
         <Networks show={show} networks={networks} showCount={showCount} />
       )}
-      <PostList
+      {/* <PostList
         title="Hottest Proposals"
         posts={hottestProposals}
         showSpace={true}
         spaces={spaces}
-      />
+      /> */}
     </Wrapper>
   );
 }
