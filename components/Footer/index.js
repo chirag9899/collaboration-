@@ -159,7 +159,7 @@ export default function Footer({ github }) {
           </RightWrapper>
         </ContentWrapper>
         <BottomWrapper>
-          {`© ${new Date().getFullYear()} QuickSnap. All Rights Reserved.`}
+          {`© ${new Date().getFullYear()} dVote. All Rights Reserved.`}
         </BottomWrapper>
       </Container>
     </Wrapper>

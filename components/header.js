@@ -22,7 +22,7 @@ import NotificationBell from "./notification/bell";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right-s.svg";
 import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
-import LogoImg from "../public/imgs/quicksnap.finance.logo.svg";
+import LogoImg from "../public/imgs/dvote.logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
 import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
 
@@ -174,8 +174,8 @@ const ContentWrapper = styled.div`
 `;
 
 const Logo = styled.div`
-  width: 200px;
-  height: 36px;
+  width: 140px;
+  height: 28px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;

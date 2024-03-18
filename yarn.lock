@@ -1586,6 +1586,7 @@ __metadata:
     identity-obj-proxy: ^3.0.0
     jest: ^27.3.0
     jest-environment-node: ^27.3.0
+    lodash: ^4.17.21
     lodash.debounce: ^4.0.8
     lodash.isempty: ^4.4.0
     lodash.isnil: ^4.0.0
