@@ -1,23 +1,21 @@
 const footerItems = [
   {
-    label: "Product",
+    label: "Apps",
     items: [
-      { name: "doTreasury", link: "https://www.dotreasury.com" },
-      { name: "Statescan", link: "https://statescan.io" },
-      { name: "Subsquare", link: "https://www.subsquare.io" },
-      { name: "CoinAsk", link: "https://www.coinask.io" },
+      { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
+      { name: "Dvote.ai", link: "https://dvote.ai/" },
     ],
   },
   {
     label: "Resources",
     items: [
       {
-        name: "Lightpaper",
-        link: "https://github.com/opensquare-network/papers",
+        name: "Documentation",
+        link: "https://quicksnap.gitbook.io/",
       },
       {
-        name: "Media Kits",
-        link: "https://drive.google.com/drive/folders/1nA6PTJJYfnpvB8wu9cgQaHopMRM4bqQg?usp=sharing",
+        name: "Medium",
+        link: "https://medium.com/@quicksnap-finance",
       },
     ],
   },
@@ -28,31 +26,31 @@ const footerItems = [
         key: "github",
         name: "Github",
         icon: "github.svg",
-        link: "https://github.com/opensquare-network",
+        link: "https://github.com/quicksnap-io/",
       },
-      {
-        name: "Telegram",
-        icon: "telegram.svg",
-        link: "https://t.me/opensquare",
-      },
+      // {
+      //   name: "Telegram",
+      //   icon: "telegram.svg",
+      //   link: "https://t.me/opensquare",
+      // },
       {
         name: "Twitter",
         icon: "twitter.svg",
-        link: "https://twitter.com/OpensquareN",
+        link: "https://twitter.com/QuickSnap_Lab",
       },
       {
-        name: "Subsocial",
-        icon: "subsocial.svg",
-        link: "https://app.subsocial.network/@opensquare",
+        name: "Discord",
+        icon: "discord.svg",
+        link: "https://discord.gg/HMYeVRJgDC",
       },
     ],
   },
-  {
-    label: "Contact",
-    items: [
-      { name: "Email", icon: "mail.svg", link: "mailto:hi@opensquare.network" },
-    ],
-  },
+  // {
+  //   label: "Contact",
+  //   items: [
+  //     { name: "Email", icon: "mail.svg", link: "mailto:hi@opensquare.network" },
+  //   ],
+  // },
 ];
 
 export default footerItems;

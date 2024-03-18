@@ -31,7 +31,7 @@ export default function Layout({ bgHeight, children, networks }) {
       <Wrapper>
         <Header networks={networks} />
         <Main bgHeight={bgHeight}>{children}</Main>
-        <Footer github="https://github.com/opensquare-network/collaboration/" />
+        <Footer github="https://github.com/quicksnap-io/" />
         <Toast />
         <Shade />
         <NotificationMonitor />
