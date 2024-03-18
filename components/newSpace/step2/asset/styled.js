@@ -7,13 +7,13 @@ export const FieldWrapper = styled.div`
 `;
 
 export const Title = styled.span`
-  font-family: "Inter";
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
 
-  color: #1e2134;
+  /* color: #1e2134; */
 `;
 
 export const Wrapper = styled.div`

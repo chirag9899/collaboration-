@@ -1,8 +1,9 @@
 import { ActionBar, StyledDescription } from "@/components/connect/styled";
 import { Fragment, memo } from "react";
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import { useDispatch } from "react-redux";
 import { closeConnect } from "../../store/reducers/showConnectSlice";
+import Button from "../Button";
 
 function NoAccount() {
   const dispatch = useDispatch();

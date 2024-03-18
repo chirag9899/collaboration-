@@ -4,7 +4,7 @@ import SubTitle from "@osn/common-ui/es/styled/SubTitle";
 import Datetime from "@/components/datetime";
 import Divider from "@/components/styled/divider";
 import BlockHeightInput from "@/components/chain/blockHeightInput";
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import {
@@ -15,6 +15,7 @@ import nextApi from "../services/nextApi";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useIsMountedBool } from "../frontedUtils/hooks";
 import { bg_white } from "./styles/colors";
+import Button from "./Button";
 
 const Wrapper = styled.div`
   position: relative;

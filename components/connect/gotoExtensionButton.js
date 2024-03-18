@@ -1,5 +1,6 @@
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import { memo } from "react";
+import Button from "../Button";
 
 function GoToExtension({ text, link = "https://polkadot.js.org/extension/" }) {
   return (

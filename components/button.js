@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { netural_grey_100, primary_text_color } from "./styles/colors";
 
 const BtnWrapper = styled.button`
-  color: ${netural_grey_100};
-  border: 1px solid ${netural_grey_100};
+  color: var(--neutral-1);
+  border-width:0px;
+  box-shadow: 0 0 0 1px;
   padding: 10px 20px;
   border-radius: 20px;
   background: none;
@@ -11,7 +12,6 @@ const BtnWrapper = styled.button`
   text-transform: capitalize;
   &:hover {
     color: ${primary_text_color};
-    border: 1px solid ${primary_text_color} !important;
     cursor: pointer;
   }
 `;

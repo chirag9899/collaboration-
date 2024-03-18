@@ -19,7 +19,7 @@ const Background = styled.div`
 
 const ChildrenWrapper = styled.div`
   position: relative;
-  max-width: 1144px;
+  max-width: 1200px;
   padding: 0 32px;
   margin: 0 auto;
   @media screen and (max-width: 800px) {

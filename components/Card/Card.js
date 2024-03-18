@@ -16,7 +16,9 @@ const CardWrapper = styled(Flex)`
   ${(p) =>
     p.$bordered &&
     css`
-      border: 1px solid ${border_primary};
+      border: 0px solid ${border_primary};
+      background-color: var(--shadow);
+      border-radius: 15px;
     `}
 
   ${(p) =>

@@ -138,7 +138,7 @@ export default function Asset({
   return (
     <Wrapper>
       <Header>
-        <Title>Asset #{index + 1}</Title>
+        <Title>Vote Tokens#{index + 1}</Title>
         {count > 1 && (
           <DeleteWrapper onClick={removeAsset}>Delete</DeleteWrapper>
         )}

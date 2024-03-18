@@ -2,7 +2,7 @@ import styled, { ThemeProvider } from "styled-components";
 
 import Header from "./header";
 import Main from "./main";
-import { Footer } from "@osn/common-ui";
+
 import Toast from "components/toast";
 import Shade from "components/shade";
 import theme from "../styles/theme";
@@ -10,6 +10,7 @@ import { useEffect } from "react";
 import { initAccount } from "store/reducers/accountSlice";
 import { useDispatch } from "react-redux";
 import NotificationMonitor from "./notification/monitor";
+import Footer from "./Footer";
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -30,7 +31,7 @@ export default function Layout({ bgHeight, children, networks }) {
       <Wrapper>
         <Header networks={networks} />
         <Main bgHeight={bgHeight}>{children}</Main>
-        <Footer github="https://github.com/opensquare-network/collaboration/" />
+        <Footer github="https://github.com/quicksnap-io/" />
         <Toast />
         <Shade />
         <NotificationMonitor />

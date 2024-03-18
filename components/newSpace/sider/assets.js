@@ -60,7 +60,7 @@ export default function Assets({ assets = [] }) {
 
   return (
     <Wrapper>
-      <Name>Assets({assets.length || 0})</Name>
+      <Name>Tokens({assets.length || 0})</Name>
       <Value>{assetsList}</Value>
     </Wrapper>
   );

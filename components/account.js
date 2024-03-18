@@ -8,11 +8,11 @@ import {
   logout,
 } from "store/reducers/accountSlice";
 import Avatar from "./avatar";
-import { p_14_medium } from "../styles/textStyles";
+import { p_14_medium, p_16_semibold } from "../styles/textStyles";
 import { ReactComponent as UserIcon } from "../public/imgs/icons/user.svg";
 import { shadow_200 } from "../styles/globalCss";
 import { useWindowSize } from "../frontedUtils/hooks";
-import ButtonPrimary from "@osn/common-ui/es/styled/Button";
+// import ButtonPrimary from "@osn/common-ui/es/styled/Button";
 import {
   popUpConnect,
   setShowHeaderMenu,
@@ -23,6 +23,7 @@ import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
 import { bg_white } from "./styles/colors";
+import Button from "./Button";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -79,7 +80,7 @@ const AccountWrapper = styled.div`
 `;
 
 const AccountWrapperPC = styled(AccountWrapper)`
-  border: 1px solid #e2e8f0;
+  border: 0;
 
   :hover {
     border: 1px solid #b7c0cc;
@@ -91,6 +92,7 @@ const AccountWrapperPC = styled(AccountWrapper)`
       border: 1px solid #b7c0cc;
     `}
   padding: 7px 15px;
+  font-size:16px;
   @media screen and (max-width: 800px) {
     display: none;
   }
@@ -147,9 +149,9 @@ const LogoutWrapper = styled.div`
   }
 `;
 
-const DarkButton = styled(ButtonPrimary)`
+const DarkButton = styled(Button)`
   @media screen and (max-width: 800px) {
-    padding: 8px 16px;
+    padding: 8px 22px;
     margin: auto;
     width: 100%;
     text-align: center;
@@ -191,9 +193,9 @@ function Account({ networks }) {
         <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
-          className="button"
+          className="button button-modern"
         >
-          Connect Wallet
+          <i class="icon-target"></i> Connect Wallet
         </DarkButton>
       )}
     </div>

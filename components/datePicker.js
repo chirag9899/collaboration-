@@ -8,7 +8,7 @@ import { useOnClickOutside } from "frontedUtils/hooks";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right.svg";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { ReactComponent as ArrowRight } from "/public/imgs/icons/arrow-right.svg";
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import {
   p_14_medium,
   p_14_normal,
@@ -17,6 +17,7 @@ import {
 } from "../styles/textStyles";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import { bg_white } from "./styles/colors";
+import Button from "./Button";
 
 const Wrapper = styled.div`
   position: relative;
@@ -26,7 +27,7 @@ const DateTimeWrapper = styled.div``;
 
 const DateButton = styled.div`
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
+  border: 0;
   :hover {
     border-color: #b7c0cc;
   }
@@ -69,7 +70,7 @@ const DateWrapper = styled.div`
 
   .react-datepicker__day-name {
     width: 40px;
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ${p_14_medium};
     text-align: center;
     color: #506176;
@@ -92,7 +93,7 @@ const DateWrapper = styled.div`
   .react-datepicker__day {
     width: 40px;
     height: 40px;
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ${p_14_normal};
     color: #1e2134;
     display: inline-flex;
@@ -107,7 +108,7 @@ const DateWrapper = styled.div`
 
   .react-datepicker__day--today {
     font-weight: 600;
-    border: 1px solid #e2e8f0;
+    border: 0;
   }
 
   .react-datepicker__day--selected {
@@ -133,7 +134,7 @@ const DateWrapper = styled.div`
 
 const DateHeader = styled(Flex)`
   > div {
-    font-family: Inter, sans-serif;
+    font-family: Montserrat, sans-serif;
     ${p_16_semibold};
     text-align: center;
     color: #1e2134;
@@ -189,9 +190,9 @@ const TimeInputWrapper = styled(FlexBetween)`
   padding: 12px 4px;
   width: 280px;
   height: 48px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 0;
   ${p_14_normal};
-  background: #fbfcfe;
+  background: var(--background-0);
 `;
 
 const TimeInput = styled.input`

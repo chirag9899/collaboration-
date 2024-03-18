@@ -41,7 +41,7 @@ const Item = styled.div`
   ${(p) =>
     p.active &&
     css`
-      border-bottom: 3px solid #04d2c5;
+      border-bottom: 3px solid #ebb600;
       padding-bottom: 17px;
     `}
   > div:last-child {
@@ -53,7 +53,7 @@ const Item = styled.div`
 const NewPostLink = styled(Flex)`
   cursor: pointer;
   ${p_16_semibold};
-  color: #04d2c5;
+  color: #ebb600;
   margin-left: 40px;
   > img {
     width: 24px;
@@ -119,7 +119,7 @@ export default function ListTab({
       </Flex>
       <a href={`/space/${spaceId}/create`}>
         <NewPostLink>
-          <img src="/imgs/icons/add.svg" alt="" />
+          <i class="icon-plus"></i>&nbsp;
           New Proposal
         </NewPostLink>
       </a>

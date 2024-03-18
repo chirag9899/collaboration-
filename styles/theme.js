@@ -1,7 +1,7 @@
 const theme = {
-  primaryTurquoise500: "#04D2C5",
+  primaryTurquoise500: "#ebb600",
   darkMinor: "#506176",
-  neutralGrey300: "#E2E8F0",
+  neutralGrey300: "var(--background)",
 };
 
 export default theme;

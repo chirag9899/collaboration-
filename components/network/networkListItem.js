@@ -6,26 +6,28 @@ import NetworkLogo from "./networkLogo";
 
 const IconWrapper = styled.div`
   display: flex;
+  gap: 10px;
 `;
 
 const Icon = styled.div`
   ${makeSquare(28)};
-  margin-bottom: 16px;
   align-self: flex-start;
 `;
 
 const Name = styled.div`
   white-space: nowrap;
   ${p_18_semibold};
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
   text-transform: capitalize;
   font-size: 1rem;
 `;
 
 const Wrapper = styled.div`
   position: relative;
-  flex: 0 0 auto;
-  border: 1px solid ${border_primary};
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+  background-color: var(--shadow);
+  border: 0;
   border-radius: 10px;
   ${shadow_100};
   padding: 24px;
@@ -33,7 +35,7 @@ const Wrapper = styled.div`
   width: 200px;
 
   :hover {
-    border-color: #e2e8f0;
+    border-color: var(--background);
     ${shadow_200}
   }
 `;

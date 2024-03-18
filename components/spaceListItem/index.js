@@ -15,6 +15,7 @@ import JoinButton from "./joinButton";
 import { border_primary, netural_grey_100 } from "../styles/colors";
 import { ReactComponent as Verified } from "../../public/imgs/icons/verified.svg";
 
+
 const IconWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -29,7 +30,7 @@ const Icon = styled.div`
 const Name = styled.div`
   white-space: nowrap;
   ${p_18_semibold};
-  color: ${netural_grey_100};
+  color: var(--neutral-1);
   text-transform: capitalize;
 `;
 
@@ -55,10 +56,11 @@ const Wrapper = styled.div`
   width: 200px;
 
   :hover {
-    border-color: #e2e8f0;
+    border-color: var(--background);
     ${shadow_200}
   }
 `;
+
 
 export default function SpaceListItem({ name, space }) {
   const dispatch = useDispatch();
@@ -100,10 +102,12 @@ export default function SpaceListItem({ name, space }) {
     [dispatch, address],
   );
 
+Wrapper.xyz=isSpaceJoined(name)
   return (
-    <Wrapper>
+    <Wrapper data-joined={ `${isSpaceJoined(name)}`}>
       <IconWrapper>
         <Icon>
+          <SpaceLogo space={space} />
           <SpaceLogo space={space} />
         </Icon>
         <Name>{space.name}<Verified/></Name>

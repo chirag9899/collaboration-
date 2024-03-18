@@ -115,7 +115,7 @@ export default function Details({ space }) {
         </DetailsItem>
 
         <DetailsItem>
-          <DetailsLabel>Assets({assets.length})</DetailsLabel>
+          <DetailsLabel>Tokens({assets.length})</DetailsLabel>
           <AssetList assets={assets} />
         </DetailsItem>
       </DetailSections>
