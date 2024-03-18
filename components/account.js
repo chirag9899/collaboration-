@@ -189,13 +189,14 @@ function Account({ networks }) {
 
   const ConnectWalletButton = (
     <div className="connect">
+      
       {!account && (
         <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
-          className="button button-modern"
+          className="button button-modern icon-target"
+          title="Connect Wallet"
         >
-          <i class="icon-target"></i> Connect Wallet
         </DarkButton>
       )}
     </div>
