@@ -4,9 +4,9 @@ const Wrapper = styled.div`
   width: 64px;
   height: 64px;
 
-  border: 1px solid #e2e8f0;
+  border: 0;
   border-radius: 50%;
-  background: #fbfcfe;
+  background: var(--background-0);
 
   overflow: hidden;
 `;

@@ -21,7 +21,7 @@ const SvgMap = new Map([
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
-  background:${bg_dark};
+  background:var(--background);
 `;
 
 const ContentWrapper = styled.div`
@@ -29,7 +29,7 @@ const ContentWrapper = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  @media screen and (max-width: 1144px) {
+  @media screen and (max-width: 1200px) {
     padding: 80px 32px;
   }
   @media screen and (max-width: 900px) {
@@ -159,7 +159,7 @@ export default function Footer({ github }) {
           </RightWrapper>
         </ContentWrapper>
         <BottomWrapper>
-          {`© ${new Date().getFullYear()} Quicksnap. All Rights Reserved.`}
+          {`© ${new Date().getFullYear()} dVote. All Rights Reserved.`}
         </BottomWrapper>
       </Container>
     </Wrapper>

@@ -1,0 +1,103 @@
+@import "./colours.scss";
+
+$icon-size: 100px;
+[class*="space__ItemsWrapper"] {
+  [class*="internalLink__Wrapper"] {
+    opacity: 0;
+    transform: scale(.9);
+    transform-origin: 50% 50%;
+    animation: popIn 200ms ease forwards 1;
+    // transition: 200ms ease;
+
+    @for $i from 0 through 50 {
+      &:nth-of-type(#{$i}) {
+        animation-delay: $i * 100ms;
+      }
+    }
+  }
+
+  [class*="spaceListItem__Wrapper"] {
+    border: 0 !important;
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
+    background-color: var(--shadow);
+    border-radius: 15px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    [class*="__Icon"] {
+      &:not([class*="Wrapper"]) {
+        width: $icon-size;
+        height: $icon-size;
+        position: relative;
+        overflow: hidden;
+        border-radius: 100px;
+        img {
+          background: unset;
+          &:first-child {
+            width: $icon-size;
+            height: $icon-size;
+            padding: $icon-size * 0.2;
+            position: relative;
+            z-index: 2;
+          }
+          &:last-child {
+            width: $icon-size;
+            height: $icon-size;
+            padding: $icon-size * 0.1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            filter: blur($icon-size * 0.4);
+            z-index: 1;
+          }
+        }
+      }
+    }
+    [class*="spaceListItem__Name"] {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+    }
+    &[data-joined="false"] {
+      position: relative;
+        transition: 400ms ease;
+        [class*="spaceListItem__IconWrapper"] {
+        transform: translateY(20px);
+        transition: 400ms ease;
+      }
+      button {
+        &[class*="joinButton"] {
+          opacity: 0;
+          transform: translateY(20px);
+          transition: 400ms ease;
+        }
+      }
+      &:hover {
+        z-index: 2;
+        // box-shadow: 0 10px 50px -30px var(--black);
+        [class*="spaceListItem__IconWrapper"] {
+          transform: translateY(0px);
+        }
+        button {
+          &[class*="joinButton"] {
+            opacity: 1;
+            transform: translateY(0px);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes popIn {
+  from{
+    opacity: 0;
+    transform: scale(.9);
+  }
+  to{
+    opacity: 1;
+    transform: scale(1);
+  }
+}

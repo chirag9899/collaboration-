@@ -7,6 +7,9 @@ import "nprogress/nprogress.css";
 import { store } from "../store";
 import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
+import "../styles/modern.scss";
+import "../styles/spaceListItem.scss";
+
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 NProgress.configure({
@@ -33,7 +36,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <Head>
-        <title>OpenSquare Network Off-chain Voting</title>
+        <title>dVote Network Off-chain Voting</title>
         <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
       <Component {...pageProps} />

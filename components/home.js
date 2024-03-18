@@ -15,21 +15,31 @@ import Networks from "./network";
 import { setCookie } from "frontedUtils/cookie";
 
 const Wrapper = styled.div`
-  > :not(:first-child) {
-    margin-top: 24px;
-  }
+display: flex;
+flex-direction: column;
+gap: 40px;
 `;
 
 const SubTitleWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
+  gap: 30px;
+  > :last-child{
+    flex-shrink:0;
+    flex-grow: 1;
+    justify-content: right;
+  }
 `;
 
 const FilterDropDownWrapper = styled.div`
-  border: 1px solid ${netural_grey_100};
-  border-radius: 30px;
-  margin-left: 20px;
+color: var(--neutral-3);
+background-color: var(--shadow);
+box-shadow: 0 0 0 1px;
+transition: 200ms ease;
+:hover {
+  color: var(--neutral-0);
+}
+  border-radius: 100px;
   min-width: 150px;
 `;
 
@@ -43,7 +53,11 @@ const TitleWrapper = styled.div`
 const SpaceButton = styled.div`
   cursor: pointer;
   ${p_16_semibold};
-  color: #8b949e;
+  color: var(--neutral-3);
+  &:hover{
+  color: var(--peach);
+
+  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -131,13 +145,7 @@ export default function Home({
     <Wrapper>
       <TitleWrapper>
         <Title>{selectedOption}</Title>
-        <ButtonWrapper>
-          <SpaceButton onClick={() => setShowAllSpace(!show)}>
-            {sortedData.length > showCount && show
-              ? "Hide Spaces"
-              : `${formatNumber(sortedData.length)} ${selectedOption}`}
-          </SpaceButton>
-        </ButtonWrapper>
+
       </TitleWrapper>
       <SubTitleWrapper>
         <SearchBar
@@ -159,6 +167,14 @@ export default function Home({
             />
           </FilterDropDownWrapper>
         )}
+        <ButtonWrapper>
+          <SpaceButton onClick={() => setShowAllSpace(!show)}>
+            {sortedData.length > showCount && show
+              ? "Show less "
+              : `See all (${formatNumber(sortedData.length)}) ${selectedOption} `}
+            <i className={show ? "icon-more-horizontal" : ''}></i>
+          </SpaceButton>
+        </ButtonWrapper>
       </SubTitleWrapper>
       {isSpaces && (
         <Space

@@ -1,0 +1,304 @@
+@import "./colours.scss";
+@import "./fonts.scss";
+
+body {
+  background-color: var(--background);
+  color: var(--neutral-0);
+  div {
+    [class*="layout"] {
+      header {
+        position: relative;
+        z-index: 3;
+        backdrop-filter: blur(50px);
+        -webkit-backdrop-filter: blur(50px);
+        &::after {
+          // content: "";
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(to right, var(--yellow), var(--plum));
+          bottom: 1px;
+          left: 0;
+          position: absolute;
+          opacity: 0.2;
+        }
+        .hoverMenu {
+          background: var(--background-0);
+          box-shadow: 0 20px 80px var(--black);
+          border-radius: 10px;
+          opacity: 0;
+          animation: menuIn 200ms ease forwards 1;
+        }
+      }
+      main {
+        min-height: calc(100vh - 80px);
+        position: relative;
+        z-index: 2;
+        background-color: var(--background-1);
+
+        &::after {
+          content: "";
+          width: 100%;
+          height: 100%;
+          // background: url(/imgs/blur2.svg);
+          top: 50%;
+          left: 50%;
+          position: absolute;
+          z-index: -1;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: 50% 50%;
+          transform: translate(-50%, -50%);
+          filter: blur(80px);
+          opacity: 0.1;
+        }
+      }
+    }
+  }
+}
+
+@keyframes menuIn {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+a,
+button {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+// button{
+//   background: linear-gradient(60deg, var(--yellow), var(--peach));
+// :hover{
+//   background:var(--peach);
+// }
+// }
+
+.ui {
+  &.modal {
+    background: var(--background-0);
+    box-shadow: 0 20px 80px var(--black) !important;
+    border-radius: 10px !important;
+    opacity: 0;
+    animation: menuIn 200ms ease forwards 1;
+    * {
+      color: var(--neutral-0) !important;
+    }
+  }
+  &.selection {
+    &.dropdown {
+      cursor: pointer;
+      word-wrap: break-word;
+      line-height: 1em;
+      white-space: normal;
+      outline: 0;
+      transform: rotateZ(0);
+      min-width: 14em;
+      min-height: 2.71428571em;
+      background: var(--background) !important;
+      display: inline-block;
+      padding: 0.78571429em 2.1em 0.78571429em 1em;
+      box-shadow: none;
+      border: 0;
+      border-radius: 10px !important;
+      transition:
+        box-shadow 0.1s ease,
+        width 0.1s ease;
+      &[aria-expanded="true"] {
+        border-radius: 10px 10px 0 0 !important;
+      }
+      .menu {
+        background: var(--background) !important;
+        border: 0;
+        border-radius: 0 0 10px 10px !important;
+        opacity: 0;
+        animation: menuIn 200ms ease forwards 1;
+        [role="option"] {
+          &[aria-selected="true"] {
+            background: var(--peach) !important;
+          }
+          &:not([aria-selected="true"]) {
+            &:hover {
+              background: var(--plum) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.ui.modal button:not([class*="CloseButton"]),
+.button-modern {
+  background: transparent !important;
+  border-radius: 100px;
+  color: var(--background) !important;
+  padding: 8px 22px;
+  font-style: normal;
+  font-weight: 600 !important;
+  font-size: 16px;
+  line-height: 24px;
+  border: 0 !important;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  transition: 200ms ease;
+
+  &::after {
+    z-index: -1;
+    content: "";
+    height: 100%;
+    width: 300%;
+    background: linear-gradient(-60deg, var(--peach) 0%, var(--yellow) 50%, var(--sunset));
+    top: 0;
+    right: 0;
+    position: absolute;
+    transition: 200ms ease;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+    // color: var(--neutral-0) !important;
+
+    &::after {
+      transform: translateX(50%);
+    }
+  }
+}
+
+footer {
+  position: relative;
+  z-index: 4;
+  // background: var(--background-2) !important;
+  .footer-logo {
+    border-radius: 5px;
+    max-height: 80px;
+    aspect-ratio: 1/1;
+  }
+  a {
+    justify-content: left;
+  }
+}
+
+ul {
+  &[class*="Dropdown"] {
+    margin-top: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: max-content;
+    background-color: var(--background-2);
+    border: 0;
+    border-radius: 10px;
+    box-shadow: none;
+    padding: 0;
+    list-style: none;
+    z-index: 99;
+    color: var(--neutral-2);
+    opacity: 0;
+    animation: menuIn 200ms ease forwards 1;
+    overflow: hidden;
+    box-shadow: 0 20px 80px var(--black);
+
+    li {
+      padding: 10px 15px;
+      &[data-selected="true"] {
+        color: var(--neutral-0);
+        background-color: var(--peach);
+        font-weight: 600;
+      }
+      &[data-selected="false"],
+      &:not([data-selected="true"]) {
+        &:hover {
+          color: var(--neutral-0);
+          background-color: var(--plum);
+        }
+      }
+    }
+  }
+}
+
+[class*="CloseButton"] {
+  path {
+    transition: 200ms ease;
+    fill: var(--neutral-2);
+  }
+  &:hover {
+    path {
+      fill: var(--sunset);
+    }
+  }
+}
+
+[class*="CrumbsWrapper"] {
+  color: var(--neutral-3);
+  li {
+    display: flex;
+    &:hover {
+      a {
+        color: var(--yellow);
+        text-decoration: none;
+      }
+    }
+    &:last-of-type,
+    span[disabled] {
+      color: var(--peach);
+    }
+  }
+}
+[class*="listInfo__About"] {
+  &[class*="Divider"] {
+    height: 4rem;
+    background: var(--neutral-4);
+    margin: 0 2rem;
+  }
+  div {
+  }
+}
+
+[class*="postCreate"] {
+  * {
+    border-width: 0px !important;
+  }
+  [class*="__Wrapper"] {
+    border-radius: 15px;
+  }
+  [class*="__InputWrapper"],
+  textarea {
+    border-radius: 5px;
+    background: var(--background);
+    color: var(--neutral-1);
+  }
+  [class*="DropdownSelector"] {
+    color: var(--neutral-1);
+    div {
+      color: var(--neutral-1);
+    }
+  }
+  .dropdown {
+    &.icon {
+      color: var(--neutral-1);
+    }
+  }
+  .ui {
+    &.dropdown {
+      .menu {
+        .item {
+          color: var(--neutral-1);
+          div {
+            color: var(--neutral-1);
+          }
+        }
+      }
+    }
+  }
+}

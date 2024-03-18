@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   ${p_24};
 
   :hover {
-    border-color: #e2e8f0;
+    border-color: var(--background);
 
     ${shadow_200}
     .icon > svg {
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h3`
-  font-family: Inter, serif;
+  font-family: Montserrat, serif;
   font-style: normal;
   display: inline-block;
   ${p_16_semibold};

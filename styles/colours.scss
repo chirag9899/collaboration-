@@ -1,0 +1,84 @@
+:not(.light),
+.dark {
+}
+
+.light {
+}
+
+:root {
+  --gauze: rgba(255,255,255,0.1);
+  --shadow: rgba(0,0,0,0.1);
+
+  --neutral-9: #101011;
+  --neutral-8: #151416;
+  --neutral-7: #262626;
+  --neutral-6: #2e2e2e;
+  --neutral-5: #434343;
+  --neutral-4: #727272;
+  --neutral-3: #979797;
+  --neutral-2: #c4c4c4;
+  --neutral-1: #dddddd;
+  --neutral-0: #fafafa;
+
+  --primary: #ebb600;
+  --accent: #0037eb;
+  --secondary: #ebb600;
+  // --accent: #d97919;
+
+  --yellow: #ebb400;
+  --sunset: #e27e35;
+  --peach: #c1544b;
+  --plum: #8e3950;
+  --vino: #562944;
+
+  --black: #000;
+  --persistent-white: #fff;
+  --indigo: #586ada;
+  --bg-indigo: #d5daf6;
+  --light-indigo: #678ef1;
+  --cerulean: #ceedfd;
+  --bg-cerulean: #067ab8;
+  --light-cerulean: #3a97d4;
+  --moss: #09815c;
+  --bg-moss: #cffcee;
+  --light-moss: #1ba672;
+  --lime: #0d9900;
+  --bg-lime: #cffcdc;
+  --light-lime: #02d602;
+  --amber: #bb5506;
+  --bg-amber: #fde2ce;
+  --light-amber: #d97919;
+  --red: #c44c35;
+  --bg-red: #f4dcd7;
+  --light-red: #e56f49;
+  --crimson: #cd3d64;
+  --bg-crimson: #f5d6de;
+  --light-crimson: #ed5f74;
+  --purple: #a44fb5;
+  --bg-purple: #ecdbf0;
+  --light-purple: #c66bce;
+  --violet: #825fc3;
+  --bg-violet: #e2daf1;
+  --light-violet: #9c82db;
+
+  --orange: rgb(223, 110, 73);
+  --red: rgb(226, 73, 134);
+  --yellow: #ebb600;
+  --green: rgb(138, 201, 94);
+  --blue: rgb(100, 156, 248);
+  --purple: rgb(117, 108, 246);
+  --light-blue: #48c1fa;
+  --z0: #162153;
+  --z1: #212a50;
+  --z2: #4f5371;
+  --z3: #878eb2;
+  --z4: #a8adc7;
+  --z5: #f0f2ff;
+
+  --green-0: #42d187;
+
+  --background-0: #171218;
+  --background-1: #271f28;
+  --background: #201821;
+  --background-2: #1d1024;
+}

@@ -4,13 +4,13 @@ import NetworkListItem from "./networkListItem";
 
 const ItemsWrapper = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 34px;
   justify-content: start;
   overflow: visible;
   min-height: 100px;
   ${no_scroll_bar};
 
-  @media screen and (max-width: 1144px) {
+  @media screen and (max-width: 1200px) {
     margin: 0 -32px;
     padding: 0 32px;
   }

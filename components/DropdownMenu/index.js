@@ -49,6 +49,7 @@ const DropDown = ({ options = ["none"], onSelect, Icon, selected, label }) => {
       <DropdownMenu isOpen={isOpen}>
         {options.map(({ label, badge }, index) => (
           <DropdownListItem
+            data-selected={selectedOption===label?true: false}
             key={index}
             onClick={() => handleSelectOption(label)}
           >

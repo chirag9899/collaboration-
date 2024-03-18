@@ -22,7 +22,7 @@ import NotificationBell from "./notification/bell";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right-s.svg";
 import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
-import LogoImg from "../public/imgs/logo.svg";
+import LogoImg from "../public/imgs/dvote.logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
 import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
 
@@ -174,8 +174,8 @@ const ContentWrapper = styled.div`
 `;
 
 const Logo = styled.div`
-  width: 200px;
-  height: 36px;
+  width: 140px;
+  height: 28px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -191,7 +191,7 @@ const Divider = styled.div`
   width: 1px;
   height: 16px;
   margin: 0 16px;
-  background: #e2e8f0;
+  background: var(--background);
 `;
 
 const ChildWrapper = styled(Flex)`
@@ -271,16 +271,14 @@ export default function Header({ networks }) {
               <ExternalLinkWrapper>
                 <Link href="/space/new" passHref legacyBehavior>
                   <InternalLink>
-                    <Plus />
+                  <i class="icon-plus"></i>
                     Add a Space
                   </InternalLink>
                 </Link>
                 <ExternalLink
                   target="_blank"
                   href="https://github.com/opensquare-network/collaboration/discussions"
-                >
-                  <Discussions />
-                  Discussions
+                ><i class="icon-message-circle"></i> Discussions
                 </ExternalLink>
               </ExternalLinkWrapper>
             )}
