@@ -83,7 +83,7 @@ export default function StatemineAssetConfig({
   return (
     <Wrapper>
       <FieldWrapper>
-        <Title>Asset Type</Title>
+        <Title>Token Type</Title>
         <AssetTypeSelector onSelect={setAssetType} />
       </FieldWrapper>
 

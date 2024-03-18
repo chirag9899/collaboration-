@@ -86,7 +86,7 @@ export default function Content({ chainsDef, tokensDef }) {
 
   const steps = [
     { title: "Space profile" },
-    { title: "Assets" },
+    { title: "Vote Tokens" },
     { title: "Strategies" },
   ];
 

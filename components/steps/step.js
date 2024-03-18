@@ -19,7 +19,7 @@ const Title = styled.span`
   font-size: 16px;
   line-height: 24px;
 
-  color: ${({ isCurrent }) => (isCurrent ? "#ebb600" : "#000000")};
+  color: ${({ isCurrent }) => (isCurrent ? "#ebb600" : "#FFFFFF")};
 `;
 
 export default function Step({ step, index = 0, currentStep = 0, isLast }) {
