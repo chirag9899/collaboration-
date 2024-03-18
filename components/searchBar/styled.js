@@ -41,14 +41,12 @@ export const SearchBarInput = styled.input`
   ::placeholder {
     color: var(--neutral-3);
     transition: 200ms ease;
-
   }
   :focus,
   :active {
     ::placeholder {
-      opacity:0;
+      opacity: 0;
     }
-
   }
 
   ::-webkit-outer-spin-button,
@@ -56,6 +54,9 @@ export const SearchBarInput = styled.input`
     -webkit-appearance: none;
     margin: 0;
   }
+  @media screen and (max-width: 800px) {
+      width: auto;
+    }
 `;
 
 export const SearchBarButton = styled.button`

@@ -8,7 +8,7 @@ import { useOnClickOutside } from "frontedUtils/hooks";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right.svg";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { ReactComponent as ArrowRight } from "/public/imgs/icons/arrow-right.svg";
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import {
   p_14_medium,
   p_14_normal,
@@ -17,6 +17,7 @@ import {
 } from "../styles/textStyles";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import { bg_white } from "./styles/colors";
+import Button from "./Button";
 
 const Wrapper = styled.div`
   position: relative;

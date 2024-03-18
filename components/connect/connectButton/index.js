@@ -1,5 +1,5 @@
 import { memo } from "react";
-import Button from "@osn/common-ui/es/styled/Button";
+// import Button from "@osn/common-ui/es/styled/Button";
 import { ReactComponent as Metamask } from "./metamask.svg";
 import { ReactComponent as Polkadot } from "./polkadot.svg";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import {
   closeConnect,
   setShowHeaderMenu,
 } from "../../../store/reducers/showConnectSlice";
+import Button from "@/components/Button";
 
 const Wrapper = styled.span`
   display: flex;

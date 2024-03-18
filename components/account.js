@@ -12,7 +12,7 @@ import { p_14_medium, p_16_semibold } from "../styles/textStyles";
 import { ReactComponent as UserIcon } from "../public/imgs/icons/user.svg";
 import { shadow_200 } from "../styles/globalCss";
 import { useWindowSize } from "../frontedUtils/hooks";
-import ButtonPrimary from "@osn/common-ui/es/styled/Button";
+// import ButtonPrimary from "@osn/common-ui/es/styled/Button";
 import {
   popUpConnect,
   setShowHeaderMenu,
@@ -23,6 +23,7 @@ import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
 import { bg_white } from "./styles/colors";
+import Button from "./Button";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -148,7 +149,7 @@ const LogoutWrapper = styled.div`
   }
 `;
 
-const DarkButton = styled(ButtonPrimary)`
+const DarkButton = styled(Button)`
   @media screen and (max-width: 800px) {
     padding: 8px 22px;
     margin: auto;
