@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { Hint, SectionTitle } from "../styled";
-import { Input } from "@osn/common-ui";
+// import { Input } from "@osn/common-ui";
 import { ErrorMessage } from "@/components/styled/errorMessage";
+import Input from "@/components/Input";
 
 const Wrapper = styled.div``;
 

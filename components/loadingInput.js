@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as Loading } from "public/imgs/icons/loading.svg";
-import { Input } from "@osn/common-ui";
+import Input from "./Input";
+// import { Input } from "@osn/common-ui";
 
 const Wrapper = styled.div`
   position: relative;

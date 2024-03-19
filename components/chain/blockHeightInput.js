@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Input from "@osn/common-ui/es/styled/Input";
+// import Input from "@osn/common-ui/es/styled/Input";
 import { ChainIcon } from "@osn/common-ui";
 import { ReactComponent as Loading } from "public/imgs/icons/loading.svg";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +7,7 @@ import {
   setSnapshotHeights,
   snapshotHeightsSelector,
 } from "../../store/reducers/authoringSlice";
+import Input from "../Input";
 
 const Wrapper = styled.div`
   position: relative;

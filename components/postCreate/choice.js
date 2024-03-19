@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { ReactComponent as Substract } from "public/imgs/icons/substract.svg";
 import { p_14_medium } from "../../styles/textStyles";
 import { FlexBetween } from "@osn/common-ui";
+import { white_text_color } from "../styles/colors";
 
 const Wrapper = styled(FlexBetween)`
   padding: 12px 24px;
@@ -26,7 +27,7 @@ const Input = styled.input`
   min-width: 0;
   text-align: center;
   ${p_14_medium};
-  color: #1e2134;
+  color: ${white_text_color};
 `;
 
 const SubstractButtonWrapper = styled.div`

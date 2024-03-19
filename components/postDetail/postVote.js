@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-
-import { Input, Button, Flex } from "@osn/common-ui";
+// import { Input, Button, Flex } from "@osn/common-ui";
 import { useViewfunc } from "frontedUtils/hooks";
 import {
   canUseProxySelector,
@@ -40,6 +39,9 @@ import { useTerminate } from "./terminate";
 import Tooltip from "../tooltip";
 import VoteBalanceDetail from "./VoteBalanceDetail";
 import DelegationInfo from "./delegationInfo";
+import Input from "../Input";
+import Flex from "../styled/Flex";
+import Button from "../Button";
 
 const Wrapper = styled.div`
   > :not(:first-child) {
