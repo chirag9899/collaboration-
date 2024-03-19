@@ -70,7 +70,7 @@ const Title = styled.div`
     font-size: 12px;
     line-height: 16px;
     text-align: right;
-    color: #a1a8b3;
+    color: var(--neutral-3);
     text-transform: capitalize;
   }
 `;

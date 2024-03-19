@@ -53,7 +53,7 @@ const InfoWrapper = styled(FlexBetween)`
 
 const LeftWrapper = styled(Flex)`
   line-height: 24px;
-  color: #a1a8b3;
+  color: var(--neutral-3);
   flex-wrap: wrap;
 
   > :not(:first-child)::before {
@@ -72,7 +72,7 @@ const SpaceName = styled.a`
   text-transform: capitalize;
   margin-left: 6px;
   ${p_14_medium};
-  color: #1e2134 !important;
+  color: var(--neutral-1); !important;
 
   :hover {
     text-decoration-line: underline;

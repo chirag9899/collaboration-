@@ -11,6 +11,8 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
+  [class*="Index"]
+  {border-radius: 5px;}
 `;
 
 const Title = styled.span`

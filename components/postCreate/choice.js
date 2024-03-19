@@ -26,7 +26,7 @@ const Input = styled.input`
   min-width: 0;
   text-align: center;
   ${p_14_medium};
-  color: #1e2134;
+  color: var(--neutral-1);;
 `;
 
 const SubstractButtonWrapper = styled.div`

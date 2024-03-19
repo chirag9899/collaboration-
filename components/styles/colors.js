@@ -28,9 +28,9 @@ export const dark_violet = 'var(--sumset)';
 // text
 export const text_light_major = "#fff";
 export const text_light_minor = "rgba(255, 255, 255, 0.8);";
-export const text_dark_major = "#1e2134";
-export const text_dark_minor = "#506176";
-export const text_dark_accessory = "#a1a8b3";
+export const text_dark_major = "var(--neutral-1);";
+export const text_dark_minor = "var(--neutral-4)";
+export const text_dark_accessory = "var(--neutral-3)";
 export const primary_text_color = "#ebb600";
 
 //border

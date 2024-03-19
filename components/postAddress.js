@@ -47,6 +47,7 @@ const InputWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  
   > img {
     position: absolute;
     width: 40px;
@@ -83,7 +84,7 @@ const Input = styled.input`
   padding: 23px 47px 23px 71px;
   ${p_14_normal};
   ::placeholder {
-    color: #a1a8b3;
+    color: var(--neutral-3);
   }
   :focus {
     border-color: #b7c0cc;
@@ -132,7 +133,7 @@ const DetailWrapper = styled.div`
   > :last-child {
     font-size: 14px;
     line-height: 24px;
-    color: #506176;
+    color: var(--neutral-4);
   }
   ${(p) =>
     p.size === "small" &&

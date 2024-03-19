@@ -14,16 +14,17 @@ const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  ${p_14_medium};
-  color: ${text_dark_major};
   padding: 7px 15px;
-  border: 1px solid ${netural_grey_500};
-  background-color: #fff;
+  border: 0px;
+  background-color: transparent;
+  border-radius: 100px;
+  color: var(--sunset);
   cursor: pointer;
   user-select: none;
-
+  box-shadow: 0 0 0 1px;
+  transition: 200ms ease;
   :hover {
-    border-color: ${netural_grey_800};
+    color: var(--peach);
   }
 
   ${(p) =>

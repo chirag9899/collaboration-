@@ -18,7 +18,7 @@ const Wrapper = styled(Panel)`
 
 const Divider = styled.div`
   height: 1px;
-  background: #f0f3f8;
+  background: var(--gauze);
   margin: 12px 0;
 `;
 
@@ -31,7 +31,7 @@ const InfoItem = styled.div`
   line-height: 24px;
 
   > :first-child {
-    color: #506176;
+    color: var(--neutral-4);
     margin-right: 8px;
   }
 
@@ -53,7 +53,7 @@ const TimestampItem = styled.div`
   line-height: 24px;
 
   > :first-child {
-    color: #506176;
+    color: var(--neutral-4);
   }
 
   span {

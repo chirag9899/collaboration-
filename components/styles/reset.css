@@ -2,7 +2,7 @@ body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #1e2134;
+  color: var(--neutral-1);;
   background: var(--background-0);
 }
 

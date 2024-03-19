@@ -6,6 +6,7 @@ import { ErrorMessage } from "@/components/styled/errorMessage";
 const Wrapper = styled.div``;
 
 const InputWrapper = styled.div`
+
   display: flex;
   flex-direction: column;
   gap: 8px;

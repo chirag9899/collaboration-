@@ -9,6 +9,8 @@ const Wrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+border-bottom-width: 0px;
+
   display: flex;
   flex-direction: column;
   gap: 8px;

@@ -68,12 +68,12 @@ const Snapshot = styled(FlexBetween)`
 
 const NetworkName = styled.div`
   ${p_14_medium};
-  color: #506176;
+  color: var(--neutral-4);
   text-transform: capitalize;
 `;
 
 const TextGrey = styled.span`
-  color: #a1a8b3;
+  color: var(--neutral-3);
 `;
 
 const ChoiceWrapper = styled.div`
@@ -81,7 +81,7 @@ const ChoiceWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  color: #1e2134;
+  color: var(--neutral-1);;
 `;
 
 export default function More({ onPublish, space }) {
