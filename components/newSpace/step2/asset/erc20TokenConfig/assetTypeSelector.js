@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
 import { useEffect, useState } from "react";
+import DropdownSelector from "@/components/DropdownSelector";
 
 const Wrapper = styled.div`
   display: flex;

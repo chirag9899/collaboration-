@@ -18,8 +18,9 @@ import {
 import Publish from "@/components/postCreate/publish";
 import SideSectionTitle from "@/components/sideBar/sideSectionTitle";
 import { FlexBetween } from "@osn/common-ui";
-import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
 import { bg_white } from "../styles/colors";
+import DropdownSelector from "../DropdownSelector";
 
 const Wrapper = styled.div`
   min-width: 302px;
