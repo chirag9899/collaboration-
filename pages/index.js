@@ -12,6 +12,21 @@ export default function Index({
   showAllSpace,
   allNetworks,
 }) {
+  const allSpaces = Object.entries(spaces)
+    .map((item) => {
+      return {
+        name: item[0],
+        space: item[1],
+      };
+    })
+    .sort((a, b) => a.space.proposalsCount - b.space.proposalsCount);
+
+  const networks = allNetworks.map((item) => {
+    return {
+      name: item.network,
+      ...item,
+    };
+  });
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setAvailableNetworks(allNetworks || []));
@@ -24,8 +39,8 @@ export default function Index({
       <Seo desc={desc} />
       <Layout bgHeight="183px" networks={allNetworks}>
         <Home
-          spaces={spaces}
-          allNetworks={allNetworks}
+          spaces={allSpaces}
+          networks={networks}
           hottestProposals={hottestProposals}
           showAllSpace={showAllSpace}
         />

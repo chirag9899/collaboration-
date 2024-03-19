@@ -4,12 +4,12 @@ import PostList from "./postList";
 import SearchBar from "./searchBar";
 import DropDown from "./DropdownMenu";
 import { ReactComponent as Grid } from "../public/imgs/icons/grid.svg";
-import useSearch from "hooks/useSearch";
 import useDropDown from "hooks/useDropDown";
 import { netural_grey_100, text_light_major } from "./styles/colors";
 import { h3_36_bold, p_16_semibold } from "styles/textStyles";
 import { formatNumber } from "services/util";
 import Networks from "./network";
+import { useEffect, useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -86,22 +86,11 @@ const categoriesOptions = [
   { label: "grant", value: "grant", badge: "123" },
 ];
 
-export default function Home({ allNetworks, spaces, hottestProposals }) {
-  const allSpaces = Object.entries(spaces)
-    .map((item) => {
-      return {
-        name: item[0],
-        space: item[1],
-      };
-    })
-    .sort((a, b) => a.space.proposalsCount - b.space.proposalsCount);
+export default function Home({ networks, spaces, hottestProposals }) {
+  const [allSpaces, setAllSpaces] = useState(spaces);
+  const [allNetworks, setAllNetworks] = useState(networks);
+  const [search, setSearch] = useState("");
 
-  const networks = allNetworks.map((item) => {
-    return {
-      name: item.network,
-      ...item,
-    };
-  });
   const {
     options,
     handleSelect,
@@ -112,9 +101,30 @@ export default function Home({ allNetworks, spaces, hottestProposals }) {
   const isSpaces = selectedOption === "spaces";
   const isNetworks = selectedOption === "networks";
 
-  const sortedData = isSpaces ? allSpaces : isNetworks ? networks : [];
+  const onSearchChange = (event) => {
+    const { value } = event.target;
+    setSearch(value);
+    const searchVal = value.toLowerCase();
+    if (isSpaces && searchVal === "") {
+      setAllSpaces(spaces);
+    } else {
+      const result = spaces.filter(({ name }) => name.match(searchVal));
+      setAllSpaces(result);
+    }
 
-  const { search, onSearchChange, filtredData } = useSearch(sortedData);
+    if (isNetworks && searchVal === "") {
+      setAllNetworks(networks);
+    } else {
+      const result = networks.filter(({ name }) => name.match(searchVal));
+      setAllNetworks(result);
+    }
+  };
+
+  const totalCount = isSpaces
+    ? spaces.length
+    : isNetworks
+    ? networks.length
+    : [];
 
   return (
     <Wrapper>
@@ -143,12 +153,12 @@ export default function Home({ allNetworks, spaces, hottestProposals }) {
         )} */}
         <TotalCountWrapper>
           <TotalCount>
-            {`(${formatNumber(sortedData.length)}) ${selectedOption}`}
+            {`(${formatNumber(totalCount)}) ${selectedOption}`}
           </TotalCount>
         </TotalCountWrapper>
       </SubTitleWrapper>
-      {isSpaces && <Space spaces={filtredData} limit={5} />}
-      {isNetworks && <Networks networks={networks} limit={5} />}
+      {isSpaces && <Space spaces={allSpaces} limit={5} />}
+      {isNetworks && <Networks networks={allNetworks} limit={5} />}
       {/* <PostList
         title="Hottest Proposals"
         posts={hottestProposals}
