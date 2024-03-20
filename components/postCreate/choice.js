@@ -1,14 +1,13 @@
 import styled, { css } from "styled-components";
 import { useRef, useState } from "react";
-
 import { ReactComponent as Substract } from "public/imgs/icons/substract.svg";
 import { p_14_medium } from "../../styles/textStyles";
 import { FlexBetween } from "@osn/common-ui";
-import { white_text_color } from "../styles/colors";
 
 const Wrapper = styled(FlexBetween)`
   padding: 12px 24px;
   border: 0;
+  background-color: var(--background) !important;
   ${p_14_medium};
   :hover {
     border-color: #b7c0cc;
