@@ -1,5 +1,6 @@
 import nextApi from "../services/nextApi";
 import { signApiData } from "../services/chainApi";
+import { validate } from 'bitcoin-address-validation';
 
 export function validateProposal(formData) {
   const fields = [
@@ -54,6 +55,8 @@ export async function createProposal(proposal) {
 
 export async function signProposal(proposal) {
   const { address, ...data } = proposal;
+  if (validate(address)) {
+  const pubkey = await window.unisat.getPublicKey();
   return await signApiData(
     {
       ...data,
@@ -62,9 +65,23 @@ export async function signProposal(proposal) {
       // Version 4: multi assets support
       // Version 5, add networks configuration
       version: "5",
+      pubkey: pubkey
     },
     address,
   );
+  } else {
+    return await signApiData(
+      {
+        ...data,
+        // Version 2: multi space network support
+        // Version 3: banner supported
+        // Version 4: multi assets support
+        // Version 5, add networks configuration
+        version: "5",
+      },
+      address,
+    );
+  }
 }
 
 export async function addComment(

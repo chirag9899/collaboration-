@@ -46,7 +46,6 @@ export default function List({
 
 
   useEffect(()=>{
-    console.log("first")
     dispatch(initAccount());
   },[dispatch, space])
 

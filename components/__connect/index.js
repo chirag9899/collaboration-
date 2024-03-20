@@ -55,7 +55,6 @@ export default function Connect({ networks }) {
 
     if (isEvmChain) {
       getMetamaskElement(chain.network).then((element) => {
-        console.log("ye rha me", "chain network ",element)
         setElement(element);
       });
       return;

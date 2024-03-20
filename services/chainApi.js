@@ -5,6 +5,16 @@ import {
 } from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
+import { validate } from 'bitcoin-address-validation';
+
+async function singByUnisat(text) {
+  if (!window.unisat) {
+    throw new Error("No UniSat detected");
+  }
+  const hex = stringToHex(text);
+  console.log(hex)
+  return await window.unisat.signMessage(hex);
+}
 
 async function singByMetaMask(text, address) {
   if (!window.ethereum || !window.ethereum.isMetaMask) {
@@ -23,25 +33,30 @@ export const signMessage = async (text, address) => {
     return singByMetaMask(text, address);
   }
 
-  if (!isWeb3Injected) {
-    throw new Error("Polkadot Extension is not installed");
+  if (validate(address)) {
+    const result = await singByUnisat(text);
+    return result;
+  } else {
+    if (!isWeb3Injected) {
+      throw new Error("Polkadot Extension is not installed");
+    }
+
+    if (!address) {
+      throw new Error("Sign address is missing");
+    }
+
+    await web3Enable("opensquare.io");
+    const injector = await web3FromAddress(address);
+
+    const data = stringToHex(text);
+    const result = await injector.signer.signRaw({
+      type: "bytes",
+      data,
+      address,
+    });
+
+    return result.signature;
   }
-
-  if (!address) {
-    throw new Error("Sign addres is missing");
-  }
-
-  await web3Enable("opensquare.io");
-  const injector = await web3FromAddress(address);
-
-  const data = stringToHex(text);
-  const result = await injector.signer.signRaw({
-    type: "bytes",
-    data,
-    address,
-  });
-
-  return result.signature;
 };
 
 export const signApiData = async (data, address) => {
