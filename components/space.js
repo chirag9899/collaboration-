@@ -56,6 +56,7 @@ const ButtonWrapper = styled.div`
 export default function Space({ spaces, showAllSpace }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
+  
 
   useEffect(() => {
     if (!address) {

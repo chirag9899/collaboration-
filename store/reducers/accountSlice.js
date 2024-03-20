@@ -73,6 +73,8 @@ export const {
 } = accountSlice.actions;
 
 export const logout = () => async (dispatch) => {
+  clearCookie("connectedWallet");
+  clearCookie("addressV3");
   dispatch(setAccount(""));
 };
 
@@ -104,70 +106,13 @@ export const initAccount = () => async (dispatch) => {
   if (typeof window === "undefined") {
     return;
   }
-
+  
   const data = getCookie("addressV3");
   if (!data) {
     return;
   }
-
-  const [network, address] = data.split("/");
-  if (
-    !isAddress(address) ||
-    !(network in chainConfigsMap || evmChains.includes(network) || btcChains.includes(network))
-  ) {
-    return;
-  }
-
-  if (
-    evmChains.includes(network) &&
-    window.ethereum &&
-    window.ethereum.isMetaMask
-  ) {
-    try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      if (accounts.includes(address)) {
-        dispatch(
-          setAccount({
-            address,
-            network,
-          }),
-        );
-      } else {
-        dispatch(setAccount(""));
-      }
-    } catch (e) {
-      dispatch(setAccount(""));
-    }
-    return;
-  }
-
-  // added btc chain
-  if (
-    btcChains.includes(network) && 
-    window.unisat 
-  ) {
-    try {
-      let accounts = await window.unisat.requestAccounts();
-      if (accounts.length > 0) {
-        dispatch(
-          setAccount({
-            accounts: accounts[0],
-            network,
-          }),
-        );
-      } else {
-        dispatch(setAccount(""));
-      }
-      
-    } catch (error) {
-      dispatch(setAccount(""));
-    }
-    return;
-
-  }
   
+  const [network, address] = data.split("/");
 
   dispatch(
     setAccount({
@@ -229,7 +174,6 @@ export const loginAccountSelector = createSelector(
       }
   
       let encodedAddress = encodeAddressByChain(account.address, network.network);
-      console.log(encodedAddress);
       return encodedAddress;
     },
   );
@@ -246,13 +190,13 @@ export const proxySelector = createSelector(
   },
 );
 
-export const isEvmSelector = createSelector(loginNetworkSelector, (network) => {
-  return evmChains.includes(network?.network);
-});
+// export const isEvmSelector = createSelector(loginNetworkSelector, (network) => {
+//   return evmChains.includes(network?.network);
+// });
 
-export const isBtcSelector = createSelector(loginNetworkSelector, (network) => {
-  return btcChains.includes(network?.network);
-});
+// export const isBtcSelector = createSelector(loginNetworkSelector, (network) => {
+//   return btcChains.includes(network?.network);
+// });
 
 
 export const canUseProxySelector = createSelector(

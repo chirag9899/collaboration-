@@ -27,11 +27,3 @@ export async function getUnisatElement(network) {
       );
 }
 
-// network livenet or testnet
-export async function switchNetwork (network) {
-  try {
-      await window.unisat.switchNetwork(network);
-  } catch (error) {
-      console.log(error)
-  }
-}

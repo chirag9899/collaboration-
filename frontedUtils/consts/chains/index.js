@@ -89,3 +89,27 @@ export const btcChains = [btc.brc20];
 export const btcChainId = Object.freeze({
   [btc.brc20]: 12123
 });
+
+export const chains = [
+  { id: '0x1', chainName: 'ethereum' },
+  { id: '0x4fc', chainName: 'moonbeam' },
+  { id: '0x505', chainName: 'moonriver' },
+  { id: '0x28c80', chainName: 'taiko' },
+  { id: '0xe708', chainName: 'linea' },
+  { id: '0x13E31', chainName: 'blast' },
+  { id: '0x13955', chainName: 'berachain' },
+  { id: '0x1068', chainName: 'merlin' },
+  { id: '2f7b', chainName: 'brc20' },
+];
+
+export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, id: chain.id }]));
+
+const walletToChains = {
+  'metamask' : ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast','merlin','berachain', 'moonriver'],
+  'unisat' : ['brc20'],
+  'walletconnect' : ['ethereum', 'brc20'],
+}
+
+export function supportedChains(selectedWallet) { 
+  return  walletToChains[selectedWallet];
+}

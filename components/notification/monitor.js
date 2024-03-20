@@ -4,10 +4,14 @@ import { setUnread, fetchUnread } from "store/reducers/notificationSlice";
 import { loginAddressSelector } from "store/reducers/accountSlice";
 import { connect } from "services/websocket";
 import { toPublicKey } from "@osn/common";
+import {
+  connectedWalletSelector
+} from "../../store/reducers/showConnectSlice";
 
 
 export default function NotificationMonitor() {
   const dispatch = useDispatch();
+  const wallet = useSelector(connectedWalletSelector);
   const address = useSelector(loginAddressSelector);
   const [socket, setSocket] = useState(null);
 
@@ -16,10 +20,10 @@ export default function NotificationMonitor() {
   }, []);
 
   useEffect(() => {
-    if (socket && address) {
+    if (socket && address != undefined) {
 
       let publicKey;
-     if (address.startsWith('bc1')) {
+     if (wallet === "unisat") {
       // Bech32 decoding for Bitcoin addresses
       publicKey = address;
     } else {
