@@ -38,7 +38,7 @@ const DividerWrapper = styled.div`
   display: flex;
   align-items: center;
   line-height: 24px;
-  color: #a1a8b3;
+  color: var(--neutral-3);
   > :not(:first-child) {
     ::before {
       content: "·";

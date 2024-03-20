@@ -5,7 +5,8 @@ const styledInput = styled.input`
   all: unset;
   padding: 12px 16px;
   background: var(--background-0);
-  border-bottom: 0;
+  border: 0;
+  border-radius: 10px;
   :hover,
   :focus,
   :active {
@@ -13,7 +14,7 @@ const styledInput = styled.input`
   }
   ${p_14_normal};
   display: block;
-  color: #1e2134;
+  color: var(--neutral-1);;
   ::placeholder {
     color: #9da9bb;
   }

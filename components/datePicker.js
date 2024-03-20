@@ -44,7 +44,7 @@ const DateButton = styled.div`
   }
   > svg {
     flex: 0 0 24px;
-    fill: #506176;
+    fill: var(--neutral-4);
   }
   ${(p) =>
     p.active &&
@@ -73,7 +73,7 @@ const DateWrapper = styled.div`
     font-family: Montserrat, sans-serif;
     ${p_14_medium};
     text-align: center;
-    color: #506176;
+    color: var(--neutral-4);
     margin: 0 !important;
   }
 
@@ -95,7 +95,7 @@ const DateWrapper = styled.div`
     height: 40px;
     font-family: Montserrat, sans-serif;
     ${p_14_normal};
-    color: #1e2134;
+    color: var(--neutral-1);;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -137,13 +137,13 @@ const DateHeader = styled(Flex)`
     font-family: Montserrat, sans-serif;
     ${p_16_semibold};
     text-align: center;
-    color: #1e2134;
+    color: var(--neutral-1);;
     flex: 1 1 auto;
   }
   > svg {
     cursor: pointer;
     path {
-      fill: #506176;
+      fill: var(--neutral-4);
     }
   }
 `;
@@ -177,7 +177,7 @@ const TimeHeaderWrapper = styled(FlexBetween)`
   white-space: nowrap;
   > :first-child {
     font-weight: 600;
-    color: #1e2134;
+    color: var(--neutral-1);;
   }
   > :last-child {
     color: #9da9bb;
@@ -190,7 +190,6 @@ const TimeInputWrapper = styled(FlexBetween)`
   padding: 12px 4px;
   width: 280px;
   height: 48px;
-  border-bottom: 0;
   ${p_14_normal};
   background: var(--background-0);
 `;

@@ -142,10 +142,10 @@ const LogoutWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   ${p_14_medium};
-  color: #506176;
+  color: var(--neutral-4);
 
   :hover {
-    color: #1e2134;
+    color: var(--neutral-1);;
   }
 `;
 

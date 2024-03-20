@@ -27,7 +27,7 @@ export const p_14_medium = css`
 `;
 
 export const text_primary = css`
-  color: #1e2134;
+  color: var(--neutral-1);;
 `;
 
 export const text_accessory = css`

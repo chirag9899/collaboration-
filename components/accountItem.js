@@ -8,7 +8,7 @@ import encodeAddressByChain from "../frontedUtils/chain/addr";
 
 const Text = styled.p`
   ${p_16_semibold};
-  color: #1e2134;
+  color: var(--neutral-1);;
   margin: 0;
 `;
 

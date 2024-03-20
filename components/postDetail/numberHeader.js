@@ -11,7 +11,7 @@ const Wrapper = styled.h3`
 
   span {
     margin-left: 4px;
-    color: #a1a8b3;
+    color: var(--neutral-3);
     font-weight: 500;
   }
 `;

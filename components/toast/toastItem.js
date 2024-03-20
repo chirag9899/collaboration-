@@ -48,7 +48,7 @@ const Title = styled.div`
 const Content = styled.div`
   font-size: 14px;
   line-height: 24px;
-  color: #506176;
+  color: var(--neutral-4);
   word-wrap: break-word;
   word-break: break-all;
 `;

@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 `;
 
 const TextMinor = styled.span`
-  color: #506176;
+  color: var(--neutral-4);
   word-break: break-all;
 `;
 
@@ -21,7 +21,7 @@ const PopupCard = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 288px;
-  color: #1e2134;
+  color: var(--neutral-1);;
   > div:first-child {
     display: flex;
     align-items: center;

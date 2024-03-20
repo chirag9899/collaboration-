@@ -13,8 +13,7 @@ const Wrapper = styled.div`
 const Text = styled.p`
   ${p_14_medium};
   text-transform: capitalize;
-  /* color: #1e2134; */
-  color: ${white_text_color};
+  color: var(--neutral-1);
   margin: 0;
 `;
 

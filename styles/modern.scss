@@ -3,7 +3,6 @@
 
 body {
   background-color: var(--background);
-  color: var(--neutral-0);
   div {
     [class*="layout"] {
       header {
@@ -302,6 +301,78 @@ ul {
           }
         }
       }
+    }
+  }
+}
+
+[class*="InputWrapper"] {
+  background: transparent !important;
+  padding: 0 !important;
+  border-bottom-width: 0px !important;
+  input {
+    color: var(--neutral-0);
+    background: var(--background) !important;
+    padding: 10px 20px;
+    border-radius: 10px;
+    &:focus {
+      background: var(--background-1) !important;
+
+      &::placeholder {
+        opacity: 0;
+      }
+    }
+  }
+}
+[class*="logo__LogoWrapper"] {
+  svg {
+    path {
+      fill: var(--neutral-1) !important;
+    }
+  }
+}
+[class*="StyledButton"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 25px !important;
+  border: 0px !important;
+  background-color: transparent !important;
+  border-radius: 100px;
+  color: var(--yellow) !important;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 0 0 1px;
+  transition: 200ms ease;
+  width: max-content !important;
+  svg {
+    path {
+      transition: 200ms ease;
+      fill: var(--yellow) !important;
+    }
+  }
+  &:hover {
+    color: var(--peach) !important;
+    svg {
+      path {
+        fill: var(--peach) !important;
+      }
+    }
+  }
+}
+
+[class*="Panel"] {
+  border-width: 0px !important;
+  border-radius: 15px;
+}
+[class*="SpaceName"] {
+  line-break: anywhere;
+}
+[class*="BackButton"] {
+  background-color: var(--background-0) !important;
+  border: 0 !important;
+  svg {
+    path {
+      fill: var(--neutral-1) !important;
     }
   }
 }

@@ -80,7 +80,7 @@ const MyVoteTag = styled.div`
   display: flex;
   align-items: center;
   background: #f0f3f8;
-  color: #506176;
+  color: var(--neutral-4);
   border-radius: 9px;
   padding: 2px 10px;
   font-weight: 600;
@@ -106,7 +106,7 @@ const DelegationTag = styled.div`
   font-size: 10px;
   line-height: 14px;
 
-  color: #a1a8b3;
+  color: var(--neutral-3);
 
   margin-top: 3px;
   margin-bottom: 3px;

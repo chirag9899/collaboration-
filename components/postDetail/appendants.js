@@ -50,7 +50,7 @@ const StyledDividerWrapper = styled(DividerWrapper)`
     font-weight: 500;
   }
   > :nth-child(2) {
-    color: #a1a8b3;
+    color: var(--neutral-3);
   }
 `;
 
@@ -71,7 +71,7 @@ const AddButton = styled(FlexCenter)`
 const EditorWrapper = styled.div``;
 
 const Count = styled.div`
-  color: #a1a8b3;
+  color: var(--neutral-3);
 `;
 
 const MarkdownPreviewWrapper = styled.div`
