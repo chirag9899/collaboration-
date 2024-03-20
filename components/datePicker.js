@@ -84,6 +84,7 @@ const DateWrapper = styled.div`
   .react-datepicker {
     border-radius: 0;
     border: none;
+    background-color: transparent !important;
   }
 
   .react-datepicker__month {
@@ -102,7 +103,7 @@ const DateWrapper = styled.div`
     border-radius: 0;
     margin: 0 !important;
     :hover {
-      background: #f0f3f8;
+      background: var(--plum);
     }
   }
 
@@ -112,7 +113,7 @@ const DateWrapper = styled.div`
   }
 
   .react-datepicker__day--selected {
-    background: #f0f3f8;
+    background: var(--peach);
   }
 
   .react-datepicker__day--outside-month {
