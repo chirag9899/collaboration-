@@ -27,7 +27,6 @@ const ItemsWrapper = styled.div`
 
 export default function Networks({ networks, limit }) {
   const [showCount, setShowCount] = useState(limit);
-
   return (
     <div>
       {networks.length === 0 ? (

@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { availableNetworksSelector } from "store/reducers/accountSlice";
-
 import AccountSelector from "../accountSelector";
-
 import styled from "styled-components";
 import ChainSelector from "@/components/chainSelector";
 import { ActionBar, StyledText } from "@/components/connect/styled";
