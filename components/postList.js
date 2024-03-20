@@ -1,10 +1,9 @@
 import styled from "styled-components";
-
 import Post from "./post";
 import { p_20_semibold } from "../styles/textStyles";
-import Pagination from "@/components/pagination";
 import NoData from "./NoData";
 import { text_light_major } from "./styles/colors";
+import Pagination from "./pagination";
 
 const Title = styled.div`
   ${p_20_semibold};

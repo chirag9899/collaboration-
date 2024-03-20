@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { SectionTitle } from "../styled";
-import { Flex, Input } from "@osn/common-ui";
+// import { Flex, Input } from "@osn/common-ui";
 import Tooltip from "@/components/tooltip";
+import Input from "@/components/Input";
+import Flex from "@/components/styled/Flex";
 
 const Wrapper = styled.div`
   display: flex;
@@ -9,6 +11,8 @@ const Wrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
+border-bottom-width: 0px;
+
   display: flex;
   flex-direction: column;
   gap: 8px;

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import OsnPagination from "@osn/common-ui/es/styled/Pagination";
+import PaginationComp from "./pagination";
 
-import { encodeURIQuery } from "../frontedUtils/index";
+import { encodeURIQuery } from "../../frontedUtils/index";
 
 const Wrapper = styled.div`
   a {
@@ -41,7 +41,7 @@ export default function Pagination({
 
   return (
     <Wrapper>
-      <OsnPagination
+      <PaginationComp
         page={page}
         pageSize={pageSize}
         total={total}

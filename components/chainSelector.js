@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { p_14_medium } from "../styles/textStyles";
-import { ChainIcon } from "@osn/common-ui";
-import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+// import { ChainIcon } from "@osn/common-ui";
+// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+import { netural_grey_100, white_text_color } from "./styles/colors";
+import DropdownSelector from "./DropdownSelector";
+import ChainIcon from "./chain/ChainIcon";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -11,7 +14,7 @@ const Wrapper = styled.div`
 const Text = styled.p`
   ${p_14_medium};
   text-transform: capitalize;
-  color: #1e2134;
+  color: var(--neutral-1);
   margin: 0;
 `;
 

@@ -1,7 +1,9 @@
 import styled from "styled-components";
-import { Input, noop } from "@osn/common-ui";
+// import {Input, noop } from "@osn/common-ui";
 import { FieldWrapper, Title } from "./styled";
 import { useEffect } from "react";
+import { noop } from "utils";
+import Input from "@/components/Input";
 
 const Wrapper = styled.div`
   display: flex;

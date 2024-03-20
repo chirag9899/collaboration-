@@ -114,7 +114,7 @@ const HeaderItemWrapper = styled.div`
 `;
 
 const SecondaryHeaderItemWrapper = styled(HeaderItemWrapper)`
-  background-color: #1e2134;
+  background-color: var(--neutral-1);;
   @media screen and (min-width: 800px) {
     display: none;
   }

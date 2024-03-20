@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FlexBetween } from "@osn/common-ui";
-import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+import DropdownSelector from "@/components/DropdownSelector";
+// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
 
 const Wrapper = styled.div`
   display: flex;

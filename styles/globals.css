@@ -48,7 +48,7 @@ body {
   font-family: Montserrat, Inter, din, -apple-system, "Helvetica Neue", Helvetica, Arial,
     "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei",
     "WenQuanYi Micro Hei", sans-serif;
-  color: #1e2134;
+  color: var(--neutral-0);
   background: var(--background-0);
   font-size: 14px;
   -webkit-font-smoothing: antialiased;

@@ -25,7 +25,7 @@ const LogoName = styled.div`
 
 const LogoSymbol = styled.div`
   ${p_14_normal};
-  color: #a1a8b3;
+  color: var(--neutral-3);
 `;
 
 const AboutItem = styled.div`
@@ -52,12 +52,12 @@ const AboutName = styled.div`
 
 const AboutDetail = styled.div`
   ${p_14_normal};
-  color: #a1a8b3;
+  color: var(--neutral-3);
 `;
 
 const StrategyAboutDetail = styled.span`
   ${p_14_normal};
-  color: #a1a8b3;
+  color: var(--neutral-3);
   max-width: 240px;
 `;
 
@@ -70,7 +70,7 @@ const AboutDivider = styled.div`
 
 const ChainIconsWrapper = styled.div`
   ${p_14_normal};
-  color: #a1a8b3;
+  color: var(--neutral-3);
   display: flex;
 `;
 

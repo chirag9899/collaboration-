@@ -1,12 +1,14 @@
 import AssetTypeSelector from "./assetTypeSelector";
 import { useEffect, useMemo, useState } from "react";
 import { FieldWrapper, Title, Wrapper } from "../styled";
-import { Input, noop } from "@osn/common-ui";
+// import { Input, noop } from "@osn/common-ui";
 import AssetDetail from "../assetDetail";
 import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import debounce from "lodash.debounce";
+import { noop } from "utils";
+import Input from "@/components/Input";
 
 export default function StatemineAssetConfig({
   count,

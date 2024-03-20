@@ -27,14 +27,17 @@ const ItemsWrapper = styled.div`
 
 export default function Networks({ networks, limit }) {
   const [showCount, setShowCount] = useState(limit);
-
   return (
     <div>
-      <ItemsWrapper>
-        {networks.slice(0, showCount).map((network, index) => {
-          return <NetworkListItem key={index} network={network} />;
-        })}
-      </ItemsWrapper>
+      {networks.length === 0 ? (
+        <NoData message="No Data Found" />
+      ) : (
+        <ItemsWrapper>
+          {networks.slice(0, showCount).map((network, index) => {
+            return <NetworkListItem key={index} network={network} />;
+          })}
+        </ItemsWrapper>
+      )}
       <LoadButtons
         data={networks}
         showCount={showCount}

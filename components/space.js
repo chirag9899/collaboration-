@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchJoinedSpace } from "store/reducers/accountSlice";
 import LoadButtons from "./LoadButtons/LoadButtons";
 import { useWindowSize } from "frontedUtils/hooks";
+import NoData from "./NoData";
 
 const ItemsWrapper = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const ItemsWrapper = styled.div`
   }
 `;
 
-export default function Space({ spaces,limit }) {
+export default function Space({ spaces, limit }) {
   const [showCount, setShowCount] = useState(limit);
 
   const dispatch = useDispatch();
@@ -54,13 +55,18 @@ export default function Space({ spaces,limit }) {
 
   return (
     <div>
-      <ItemsWrapper>
-        {spaces.slice(0, showCount).map(({ name, space }, index) => (
-          <InternalLink href={`/space/${name}`} key={index}>
-            <SpaceListItem name={name} space={space} />
-          </InternalLink>
-        ))}
-      </ItemsWrapper>
+      {" "}
+      {spaces.length === 0 ? (
+        <NoData message="No Data Found" />
+      ) : (
+        <ItemsWrapper>
+          {spaces.slice(0, showCount).map(({ name, space }, index) => (
+            <InternalLink href={`/space/${name}`} key={index}>
+              <SpaceListItem name={name} space={space} />
+            </InternalLink>
+          ))}
+        </ItemsWrapper>
+      )}
       <LoadButtons
         data={spaces}
         showCount={showCount}

@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import { useRef, useState } from "react";
-
 import { ReactComponent as Substract } from "public/imgs/icons/substract.svg";
 import { p_14_medium } from "../../styles/textStyles";
 import { FlexBetween } from "@osn/common-ui";
@@ -8,6 +7,7 @@ import { FlexBetween } from "@osn/common-ui";
 const Wrapper = styled(FlexBetween)`
   padding: 12px 24px;
   border: 0;
+  background-color: var(--background) !important;
   ${p_14_medium};
   :hover {
     border-color: #b7c0cc;
@@ -26,7 +26,7 @@ const Input = styled.input`
   min-width: 0;
   text-align: center;
   ${p_14_medium};
-  color: #1e2134;
+  color: var(--neutral-1);
 `;
 
 const SubstractButtonWrapper = styled.div`

@@ -72,7 +72,7 @@ const VoteItem = styled.div`
   ${p_14_medium};
 
   > :first-child {
-    color: #506176;
+    color: var(--neutral-4);
   }
 `;
 
@@ -100,7 +100,7 @@ const ProgressBar = styled.div`
 
 const OptionIndex = styled.div`
   ${p_14_medium};
-  color: #a1a8b3;
+  color: var(--neutral-3);
 `;
 
 const OptionChoice = styled.div`

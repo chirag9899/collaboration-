@@ -14,7 +14,7 @@ export const VoteItem = styled.div`
   ${p_14_medium};
 
   > :first-child {
-    color: #506176;
+    color: var(--neutral-4);
   }
 `;
 
@@ -46,7 +46,7 @@ export const ProgressBar = styled.div`
 export const OptionIndex = styled.div`
   max-width: 118px;
   ${p_14_medium};
-  color: #a1a8b3;
+  color: var(--neutral-3);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -71,14 +71,14 @@ export const ResultName = styled.span`
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
-  color: #1e2134;
+  color: var(--neutral-1);;
 `;
 
 export const StatusResultName = styled.span`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  color: #506176;
+  color: var(--neutral-4);
 `;
 
 export const SubtitleWrapper = styled.div`
@@ -92,11 +92,11 @@ export const Subtitle = styled.div`
   justify-self: flex-start;
   margin-left: 8px;
   svg {
-    fill: #a1a8b3;
+    fill: var(--neutral-3);
   }
   :hover {
     svg {
-      fill: #506176;
+      fill: var(--neutral-4);
     }
   }
 `;
