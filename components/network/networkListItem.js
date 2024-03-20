@@ -77,7 +77,7 @@ export default function NetworkListItem({ network }) {
           <SubTitle>Chain #1</SubTitle>
         </TitleWrapper>
       </IconWrapper>
-      <Footer>In 66K space(s)</Footer>
+      {/* <Footer>In 66K space(s)</Footer> */}
     </Wrapper>
   );
 }
