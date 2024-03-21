@@ -2,7 +2,7 @@ import { createSelector, createSlice } from "@reduxjs/toolkit";
 
 import { clearCookie, getCookie, setCookie } from "frontedUtils/cookie";
 import { isAddress } from "@polkadot/util-crypto";
-import { chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
+import { btcChains, chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
 import encodeAddressByChain from "../../frontedUtils/chain/addr";
 import nextApi from "services/nextApi";
 
@@ -73,6 +73,8 @@ export const {
 } = accountSlice.actions;
 
 export const logout = () => async (dispatch) => {
+  clearCookie("connectedWallet");
+  clearCookie("addressV3");
   dispatch(setAccount(""));
 };
 
@@ -104,44 +106,13 @@ export const initAccount = () => async (dispatch) => {
   if (typeof window === "undefined") {
     return;
   }
-
+  
   const data = getCookie("addressV3");
   if (!data) {
     return;
   }
-
+  
   const [network, address] = data.split("/");
-  if (
-    !isAddress(address) ||
-    !(network in chainConfigsMap || evmChains.includes(network))
-  ) {
-    return;
-  }
-
-  if (
-    evmChains.includes(network) &&
-    window.ethereum &&
-    window.ethereum.isMetaMask
-  ) {
-    try {
-      const accounts = await window.ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      if (accounts.includes(address)) {
-        dispatch(
-          setAccount({
-            address,
-            network,
-          }),
-        );
-      } else {
-        dispatch(setAccount(""));
-      }
-    } catch (e) {
-      dispatch(setAccount(""));
-    }
-    return;
-  }
 
   dispatch(
     setAccount({
@@ -182,17 +153,19 @@ export const loginAccountSelector = createSelector(
   },
 );
 
-export const loginAddressSelector = createSelector(
-  loginNetworkSelector,
-  accountSelector,
-  (network, account) => {
-    if (!network || !account) {
-      return null;
-    }
 
-    return encodeAddressByChain(account.address, network.network);
-  },
-);
+  export const loginAddressSelector = createSelector(
+    loginNetworkSelector,
+    accountSelector,
+    (network, account) => {
+      if (!network || !account) {
+        return null;
+      }
+  
+      let encodedAddress = encodeAddressByChain(account.address, network.network);
+      return encodedAddress;
+    },
+  );
 
 export const proxySelector = createSelector(
   loginNetworkSelector,
@@ -206,9 +179,14 @@ export const proxySelector = createSelector(
   },
 );
 
-export const isEvmSelector = createSelector(loginNetworkSelector, (network) => {
-  return evmChains.includes(network?.network);
-});
+// export const isEvmSelector = createSelector(loginNetworkSelector, (network) => {
+//   return evmChains.includes(network?.network);
+// });
+
+// export const isBtcSelector = createSelector(loginNetworkSelector, (network) => {
+//   return btcChains.includes(network?.network);
+// });
+
 
 export const canUseProxySelector = createSelector(
   loginNetworkSelector,

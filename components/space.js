@@ -35,6 +35,7 @@ export default function Space({ spaces, limit }) {
 
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
+  
 
   const windowSize = useWindowSize();
 

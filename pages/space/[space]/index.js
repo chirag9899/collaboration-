@@ -12,6 +12,8 @@ import Seo from "@/components/seo";
 import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import pick from "lodash.pick";
+import { initAccount } from "store/reducers/accountSlice";
+
 
 const HeaderWrapper = styled.div`
   > :not(:first-child) {
@@ -41,6 +43,11 @@ export default function List({
 }) {
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
+
+
+  useEffect(()=>{
+    dispatch(initAccount());
+  },[dispatch, space])
 
   useEffect(() => {
     dispatch(

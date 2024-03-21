@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import { addressEllipsis, getExplorer } from "../frontedUtils";
 import { useIsMounted } from "frontedUtils/hooks";
-import { evm, evmChains, getChainConfigs } from "../frontedUtils/consts/chains";
+import { btcChains, chainMap, evm, evmChains, getChainConfigs } from "../frontedUtils/consts/chains";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "@osn/common-ui";
@@ -54,29 +54,46 @@ export default function IdentityOrAddr({
 
   const isLink = !noLink;
 
+  let chain = chainMap.get(network);
   let link = `https://${network}.${explorer}.io/account/${address}`;
-  if (evm.moonriver === network) {
-    link = `https://moonriver.moonscan.io/address/${address}`;
-  } else if (evm.moonbeam === network) {
-    link = `https://moonscan.io/address/${address}`;
-  } else if (evm.taiko === network) {
-    link = `https://explorer.katla.taiko.xyz/address/${address}`;
-  } else if (evm.linea === network) {
-    link = `https://lineascan.build/address/${address}`;
-  } else if (evm.blast === network) {
-    link = `https://blastexplorer.io/address/${address}`;
-  } else if (evm.berachain === network) {
-    link = `https://artio.beratrail.io/address/${address}`;
-  } else if (evm.melin === network) {
-    link = `https://scan.merlinchain.io/address/${address}`;
-  } else if ("creditcoin" === network) {
-    link = `https://explorer.creditcoin.org/Account/RecentExtrinsics/${address}`;
+  if (chain) {
+    switch (chain.chainName) {
+      case 'moonriver':
+        link = `https://moonriver.moonscan.io/address/${address}`;
+        break;
+      case 'moonbeam':
+        link = `https://moonscan.io/address/${address}`;
+        break;
+      case 'taiko':
+        link = `https://explorer.katla.taiko.xyz/address/${address}`;
+        break;
+      case 'linea':
+        link = `https://lineascan.build/address/${address}`;
+        break;
+      case 'blast':
+        link = `https://blastexplorer.io/address/${address}`;
+        break;
+      case 'berachain':
+        link = `https://artio.beratrail.io/address/${address}`;
+        break;
+      case 'merlin':
+        link = `https://scan.merlinchain.io/address/${address}`;
+        break;
+      case 'creditcoin':
+        link = `https://explorer.creditcoin.org/Account/RecentExtrinsics/${address}`;
+        break;
+      default:
+        link = `https://${network}.${explorer}.io/account/${address}`;
+    }
+  } else {
+    console.error(`Unknown network: ${network}`);
   }
 
-  const isEvm = evmChains.includes(network);
+  const isEvm = chain.chainType == 'evm';
+  const isBtc = chain.chainType == 'btc';
 
   useEffect(() => {
-    if (!address || !network || isEvm) {
+    if (!address || !network || isEvm || isBtc ) {
       return;
     }
 
@@ -91,7 +108,7 @@ export default function IdentityOrAddr({
         }
       })
       .catch(() => {});
-  }, [network, address, isMounted, isEvm]);
+  }, [network, address, isMounted]);
 
   let identityChild =
     identity?.info && identity?.info?.status !== "NO_ID" ? (

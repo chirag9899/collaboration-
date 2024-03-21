@@ -2,6 +2,7 @@ import { memo } from "react";
 // import Button from "@osn/common-ui/es/styled/Button";
 import { ReactComponent as Metamask } from "./metamask.svg";
 import { ReactComponent as Polkadot } from "./polkadot.svg";
+import { ReactComponent as Unisat } from "./unisat.svg";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { setAccount } from "../../../store/reducers/accountSlice";
@@ -20,7 +21,7 @@ const Wrapper = styled.span`
   }
 `;
 
-function ConnectButton({ address, network, isMetamask = false }) {
+function ConnectButton({ address, network, isMetamask = false , isUnisat = false}) {
   const dispatch = useDispatch();
 
   return (
@@ -39,7 +40,9 @@ function ConnectButton({ address, network, isMetamask = false }) {
       style={{ height: 42 }}
     >
       <Wrapper>
-        {isMetamask ? <Metamask /> : <Polkadot />}
+        {
+          isMetamask ? (<Metamask/>) : isUnisat ? (<Unisat/>) : (<Polkadot/>)
+        }
         Connect
       </Wrapper>
     </Button>

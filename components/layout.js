@@ -8,9 +8,12 @@ import Shade from "components/shade";
 import theme from "../styles/theme";
 import { useEffect } from "react";
 import { initAccount } from "store/reducers/accountSlice";
+import { initWallet } from "store/reducers/showConnectSlice";
 import { useDispatch } from "react-redux";
 import NotificationMonitor from "./notification/monitor";
 import Footer from "./Footer";
+import { usePathname } from 'next/navigation'
+
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -22,9 +25,12 @@ const Wrapper = styled.div`
 
 export default function Layout({ bgHeight, children, networks }) {
   const dispatch = useDispatch();
+  const pathname = usePathname()
+
   useEffect(() => {
     dispatch(initAccount());
-  }, [dispatch]);
+    dispatch(initWallet())
+  }, [dispatch,pathname, networks]);
 
   return (
     <ThemeProvider theme={theme}>

@@ -1,6 +1,6 @@
 import { ActionBar, StyledDescription } from "@/components/connect/styled";
 import { Fragment, memo } from "react";
-import GoToExtension from "@/components/connect/gotoExtensionButton";
+// import GoToExtension from "@/components/connect/gotoExtensionButton";
 
 function NoExtension() {
   return (

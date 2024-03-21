@@ -1,6 +1,7 @@
-import { evmChains, getChainConfigs } from "../consts/chains";
+import { btcChains, chainMap, chains, evmChains, getChainConfigs } from "../consts/chains";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { ethers } from "ethers";
+
 
 /**
  * Make sure the origin and chain is correct to call this function
@@ -8,17 +9,22 @@ import { ethers } from "ethers";
  * @param chain
  */
 export default function encodeAddressByChain(origin, chain) {
-  if (evmChains.includes(chain) || ethers.utils.isAddress(origin)) {
+  // if (evmChains.includes(chain) || ethers.utils.isAddress(origin) || btcChains.includes(chain)) {
+  //   return origin;
+  // }
+
+  if( chains.some(currChain => currChain.chainName === chain) ){
     return origin;
-  }
+}
 
   const configs = getChainConfigs(chain);
   try {
     return encodeAddress(origin, configs.ss58Format);
-  } catch (e) {
-    console.error(
-      `Can not encode ${origin} with ss58Format ${configs.ss58Format}`
-    );
+  } catch (error) {
+    console.log(error)
+    // console.error(
+    //   `Can not encode ${origin} with ss58Format ${configs.ss58Format}`
+    // );
     return origin;
   }
 }

@@ -271,7 +271,7 @@ export default function Header({ networks }) {
               <ExternalLinkWrapper>
                 <Link href="/space/new" passHref legacyBehavior>
                   <InternalLink>
-                  <i class="icon-plus"></i>
+                  <i className="icon-plus"></i>
                     Add a Space
                   </InternalLink>
                 </Link>

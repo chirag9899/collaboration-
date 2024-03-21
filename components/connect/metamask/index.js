@@ -5,6 +5,8 @@ import { evmChainId } from "../../../frontedUtils/consts/chains";
 import WrongNetwork from "@/components/connect/metamask/wrongNetwork";
 import MetamaskNoAccount from "@/components/connect/metamask/noAccount";
 
+
+
 export async function getMetamaskElement(network) {
   if (!window.ethereum || !window.ethereum.isMetaMask) {
     return <NoMetamask />;
@@ -31,4 +33,21 @@ export async function getMetamaskElement(network) {
       />
     </ActionBar>
   );
+}
+
+
+// chainId in hex
+export async function switchChain (chainID) {
+  try {
+    await window.ethereum.request({
+      "method": "wallet_switchEthereumChain",
+      "params": [
+        {
+          "chainId": chainID
+        }
+      ]
+    });
+  } catch (error) {
+    throw error;
+  }
 }

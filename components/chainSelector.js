@@ -1,48 +1,59 @@
 import React, { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { p_14_medium } from "../styles/textStyles";
-// import { ChainIcon } from "@osn/common-ui";
-// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
-import { netural_grey_100, white_text_color } from "./styles/colors";
-import DropdownSelector from "./DropdownSelector";
-import ChainIcon from "./chain/ChainIcon";
+import { ChainIcon } from "@osn/common-ui";
+import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+import { newErrorToast } from "store/reducers/toastSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 `;
 
 const Text = styled.p`
   ${p_14_medium};
   text-transform: capitalize;
-  color: var(--neutral-1);
-  margin: 0;
+  color: #1e2134;
+  margin: 3px;
+  padding: 3px;
 `;
 
 const ItemWrapper = styled.div`
   display: flex;
   align-items: center;
-
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 5px;
+  border: 1px solid #f0f0f0;
+  &:hover {
+    background-color: #f0f0f0;
+  }
   & > div:first-child {
     margin-right: 16px;
   }
 
-  ${(p) =>
-    p.header &&
-    css`
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 100;
-      pointer-events: none;
-    `}
   img, svg {
     margin-right: 8px;
   }
 `;
 
-const ChainItem = ({ header, chainName }) => {
+const ChainItem = ({ chainName, onClick }) => {
   return (
-    <ItemWrapper header={header}>
+    <ItemWrapper onClick={onClick}>
       <ChainIcon chainName={chainName} />
       <div>
         <Text>{chainName}</Text>
@@ -51,26 +62,27 @@ const ChainItem = ({ header, chainName }) => {
   );
 };
 
-const ChainSelector = ({ chains = [], onSelect = () => {} }) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+const ChainSelector = ({ chains = [], onSelect }) => {
 
-  useEffect(() => {
-    onSelect(chains[selectedIndex]);
-  }, [chains, onSelect, selectedIndex]);
-
-  const options = chains.map((item, index) => ({
-    key: index,
-    value: index,
-    content: <ChainItem chainName={item.network} />,
-  }));
+  const dispatch = useDispatch();
+  const handleSelect = (index) => {
+    try {
+      onSelect(chains[index]);
+    } catch (error) {
+      console.log(error)
+      dispatch(newErrorToast(error));
+    }
+  };
 
   return (
     <Wrapper>
-      <DropdownSelector
-        options={options}
-        value={selectedIndex}
-        onSelect={setSelectedIndex}
-      />
+      {chains.map((item, index) => (
+        <ChainItem
+          key={index}
+          chainName={item.network}
+          onClick={() => handleSelect(index)}
+        />
+      ))}
     </Wrapper>
   );
 };
