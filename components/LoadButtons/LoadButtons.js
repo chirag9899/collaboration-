@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Button from "../Button";
+import { black } from "../styles/colors";
 
 const LoadBtnWrapper = styled.div`
   width: 100%;
@@ -11,6 +12,10 @@ const LoadBtnWrapper = styled.div`
 
 const LoadButton = styled(Button)`
   margin-left: 20px;
+  color: ${black} !important;
+  &:hover {
+    color: ${black} !important;
+  }
   @media screen and (max-width: 800px) {
     padding: 8px 22px;
     margin: auto;
@@ -19,7 +24,7 @@ const LoadButton = styled(Button)`
   }
 `;
 
-const LoadButtons = ({ limit=5, data, showCount, setShowCount }) => {
+const LoadButtons = ({ limit = 5, data, showCount, setShowCount }) => {
   const handleLoadMore = () => {
     setShowCount((prevCount) => prevCount + limit);
   };
@@ -33,19 +38,19 @@ const LoadButtons = ({ limit=5, data, showCount, setShowCount }) => {
       {showCount < data.length && (
         <LoadButton
           primary
-          className="button button-modern icon-chevron-down"
+          className="button button-modern"
           onClick={handleLoadMore}
-          title="Load More"
         >
+          Load More
         </LoadButton>
       )}
       {showCount > limit && (
         <LoadButton
           primary
-          className="button button-modern icon-chevron-up"
-          title="Show Fewer"
+          className="button button-modern"
           onClick={handleLoadLess}
         >
+          Load Less
         </LoadButton>
       )}
     </LoadBtnWrapper>
