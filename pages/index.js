@@ -1,10 +1,12 @@
 import Layout from "components/layout";
-import Home from "components/home";
+// import Home from "components/home";
 import { ssrNextApi } from "services/nextApi";
 import Seo from "@/components/seo";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
+import dynamic from "next/dynamic";
+const Home = dynamic(() => import('components/home'));
 
 export default function Index({
   spaces,
