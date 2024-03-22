@@ -34,10 +34,12 @@ import Button from "./button";
 import ChainSelector from "@/components/chainSelector";
 import { switchChain }  from "@/components/connect/metamask/index"
 import { switchNetwork } from "@/components/connect/unisat/index"
-import { chainMap, supportedChains } from "../frontedUtils/consts/chains/index";
+import { chainMap, getChainName, supportedChains } from "../frontedUtils/consts/chains/index";
 import { setAccount } from "../store/reducers/accountSlice";
 import { newErrorToast } from "store/reducers/toastSlice";
-
+import { useWeb3ModalAccount, useDisconnect, useWeb3ModalEvents } from "@web3modal/ethers5/react";
+import { accountSelector } from "store/reducers/accountSlice";
+import { clearCookie, getCookie } from "frontedUtils/cookie";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -170,7 +172,9 @@ const DarkButton = styled(Button)`
   }
 `;
 
+
 function Account({ networks }) {
+  const event = useWeb3ModalEvents()
   const dispatch = useDispatch();
   const windowSize = useWindowSize();
   const connectedWallet = useSelector(connectedWalletSelector);
@@ -185,7 +189,8 @@ function Account({ networks }) {
   const availableNetworks = useSelector(availableNetworksSelector);
   const spaceSupportMultiChain = networks?.length > 1;
   const dropdownRef = useRef(null);
-
+  const { address: web3Address, chainId, isConnected } = useWeb3ModalAccount()
+  const { disconnect } = useDisconnect()
 
   useMetaMaskEventHandlers();
 
@@ -195,6 +200,19 @@ function Account({ networks }) {
     return null;
   }
 
+
+  useEffect(() => {
+    if( chainId && isConnected && event.data.event === "CONNECT_SUCCESS") {
+      dispatch(setConnectedWallet("walletConnect"))
+      let chainName = getChainName('0x' + chainId.toString(16))
+      dispatch(
+        setAccount({
+          address: web3Address,
+          network:  chainName,
+        }));
+    }
+  },[connectedWallet,dispatch,web3Address, chainId, isConnected,event])
+
   const onSwitch = () => {
     dispatch(setShowNetworkSelector(!showNetwork));
     dispatch(setShowHeaderMenu(false));
@@ -202,6 +220,7 @@ function Account({ networks }) {
 
   const onLogout = () => {
     dispatch(logout());
+    connectedWallet == "walletConnect" && disconnect()
     dispatch(setConnectedWallet(null))
     dispatch(setShowHeaderMenu(false));
   };
@@ -221,8 +240,7 @@ function Account({ networks }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dispatch]);
-
-
+  
   const ConnectWalletButton = (
     <div className="connect">
       {
@@ -231,12 +249,14 @@ function Account({ networks }) {
           primary
           onClick={() => dispatch(popUpConnect())}
           className="button button-modern icon-target"
-          title={ connectedWallet ? "Switch Chain" : "Connect Wallet"}
+          title={ (connectedWallet ) ? "Switch Chain" : "Connect Wallet"}
         >
         </DarkButton>
       )}
     </div>
   );
+
+
 
   const handleChainSelect = async (chain) => {
     try {

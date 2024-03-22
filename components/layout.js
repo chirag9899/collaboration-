@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import NotificationMonitor from "./notification/monitor";
 import Footer from "./Footer";
 import { usePathname } from 'next/navigation'
+import { Web3Modal } from '@/components/connect/walletConnect/web3Modal'
 
 
 const Wrapper = styled.div`
@@ -30,18 +31,20 @@ export default function Layout({ bgHeight, children, networks }) {
   useEffect(() => {
     dispatch(initAccount());
     dispatch(initWallet())
-  }, [dispatch,pathname, networks]);
+  }, [dispatch, pathname, networks]);
 
   return (
     <ThemeProvider theme={theme}>
-      <Wrapper>
-        <Header networks={networks} />
-        <Main bgHeight={bgHeight}>{children}</Main>
-        <Footer github="https://github.com/quicksnap-io/" />
-        <Toast />
-        <Shade />
-        <NotificationMonitor />
-      </Wrapper>
+      <Web3Modal>
+        <Wrapper>
+          <Header networks={networks} />
+          <Main bgHeight={bgHeight}>{children}</Main>
+          <Footer github="https://github.com/quicksnap-io/" />
+          <Toast />
+          <Shade />
+          <NotificationMonitor />
+        </Wrapper>
+      </Web3Modal>
     </ThemeProvider>
   );
 }

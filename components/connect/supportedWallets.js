@@ -17,7 +17,7 @@ import {
 const supportedWallets = [
   { name: 'Metamask', id: 'metamask', icon: Metamask },
   { name: 'Unisat', id: 'unisat', icon: Unisat },
-  { name: 'WalletConnect', id: 'walletconnect', icon: walletConnect },
+  { name: 'WalletConnect', id: 'walletConnect', icon: walletConnect },
   { name: 'Polkadot', id: 'polkadot', icon: Polkadot },
 ];
 

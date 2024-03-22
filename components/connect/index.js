@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector , useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { availableNetworksSelector, initAccount } from "store/reducers/accountSlice";
-
 import AccountSelector from "../accountSelector";
 import styled from "styled-components";
 import ChainSelector from "@/components/chainSelector";
@@ -17,7 +16,7 @@ import WalletSelector from "@/components/connect/supportedWallets"
 import { getMetamaskElement, switchChain } from "@/components/connect/metamask";
 import { getUnisatElement } from "@/components/connect/unisat";
 import { setAccount } from "../../store/reducers/accountSlice";
-import { setConnectedWallet } from "../../store/reducers/showConnectSlice"; 
+import { setConnectedWallet } from "../../store/reducers/showConnectSlice";
 import {
   closeConnect,
   setShowHeaderMenu,
@@ -26,10 +25,13 @@ import {
 import { loginAccountSelector } from "store/reducers/accountSlice";
 import { getCookie } from "frontedUtils/cookie";
 import { newErrorToast } from "store/reducers/toastSlice";
+import { useWeb3Modal, useDisconnect,useWeb3ModalAccount,useWeb3ModalEvents, useWeb3ModalState } from "@web3modal/ethers5/react";
 
 const Wrapper = styled.div``;
 
 export default function Connect({ networks }) {
+  const { open, close } = useWeb3Modal()
+  const { address: web3Address, chainId, isConnected } = useWeb3ModalAccount()
   const dispatch = useDispatch();
   const account = useSelector(loginAccountSelector);
   const wallet = useSelector(connectedWalletSelector);
@@ -42,20 +44,20 @@ export default function Connect({ networks }) {
   const availableNetworks = useSelector(availableNetworksSelector);
   const { accounts, hasExtension, extensionAccessible, detecting } =
     useExtension();
-
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
-  // useEffect(() => {
-  //   if (!window.ethereum || !window.ethereum.isMetaMask) {
-  //     return;
-  //   }
-
-  //   window.ethereum.on("chainChanged", () => {
-  //     setMetaMaskNetworkChangeCount(metaMaskNetworkChangeCount + 1);
-  //   });
-  // }, [metaMaskNetworkChangeCount]);
+    // useEffect(() => {
+      //   if (!window.ethereum || !window.ethereum.isMetaMask) {
+        //     return;
+        //   }
+        
+        //   window.ethereum.on("chainChanged", () => {
+          //     setMetaMaskNetworkChangeCount(metaMaskNetworkChangeCount + 1);
+          //   });
+          // }, [metaMaskNetworkChangeCount]);
 
   const handleWalletSelect = async (selectedWallet) => {
+    
     // Implement the connection logic for each wallet
     switch (selectedWallet.id) {
       case 'metamask':
@@ -71,7 +73,7 @@ export default function Connect({ networks }) {
                 address: accounts[0],
                 network: "ethereum",
               }));
-            dispatch( setConnectedWallet(selectedWallet.id) ) 
+            dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
           } catch (error) {
@@ -93,13 +95,25 @@ export default function Connect({ networks }) {
                 address: res[0],
                 network: "brc20",
               }));
-            dispatch( setConnectedWallet(selectedWallet.id) ) 
+            dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
           } catch (e) {
             console.log(e);
           }
         }
+        break;
+      case 'walletConnect':
+        await open()
+        dispatch(closeConnect());
+        // dispatch(setConnectedWallet(selectedWallet.id))
+        // dispatch(
+        //   setAccount({
+        //     address: "0x0000000000000000000000000000000000000000",
+        //     network: "ethereum",
+        //   }));
+
+        // await new Promise(resolve => setTimeout(resolve, 10000));
         break;
 
       default:
@@ -136,21 +150,21 @@ export default function Connect({ networks }) {
       setElement(
         <ChainSelector
           chains={availableNetworks}
-          onSelect={async(selectedChain) => {
+          onSelect={async (selectedChain) => {
             const chainID = chainMap.get(chain.network).id;
             try {
               await switchChain(chainID)
               dispatch(
                 setAccount({
-                  address: address ,
+                  address: address,
                   network: selectedChain.network
                 }));
-                
-              } catch (error) {
-                dispatch(newErrorToast(error.message));
-              }
-              dispatch(closeConnect());
-        
+
+            } catch (error) {
+              dispatch(newErrorToast(error.message));
+            }
+            dispatch(closeConnect());
+
           }}
         />
       );
@@ -228,13 +242,7 @@ export default function Connect({ networks }) {
 
   return (
     <Wrapper>
-      <Closeable open={!detecting}>
-        {/* <StyledText>Chain</StyledText>
-        <ChainSelector
-          chains={availableNetworks}
-          onSelect={(chain) =>  {console.log(chain) 
-            setChain(chain)}}
-        /> */}
+      <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
     </Wrapper>
