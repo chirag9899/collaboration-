@@ -25,6 +25,7 @@ import { MOBILE_SIZE } from "@osn/constants";
 import LogoImg from "../public/imgs/dvote.logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
 import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
+import Image from "next/image";
 
 const CaretRightIcon = styled(CaretRight)`
   margin-left: 16px;
@@ -261,9 +262,11 @@ export default function Header({ networks }) {
               dispatch(setShowHeaderMenu(!showMenu));
             }}
           >
-            <img
+            <Image
               src={showMenu ? "/imgs/icons/close.svg" : "/imgs/icons/menu.svg"}
               alt=""
+              height={24}
+              width={24}
             />
           </IconWrapper>
           <HeaderItemWrapper>

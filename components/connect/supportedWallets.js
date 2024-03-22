@@ -12,6 +12,7 @@ import {
   closeConnect,
   setShowHeaderMenu,
 } from "../../store/reducers/showConnectSlice";
+import Image from 'next/image';
 
 
 const supportedWallets = [
@@ -63,7 +64,7 @@ export default function WalletSelector({ onSelect }) {
     <WalletSelectorWrapper>
       {supportedWallets.map((wallet) => (
         <WalletButton key={wallet.id} onClick={() => onSelect(wallet)}>
-          <img src={wallet.icon} alt={wallet.name} />
+          <Image src={wallet.icon} alt={wallet.name} width={30} height={30} />
           {wallet.name}
         </WalletButton>
       ))}

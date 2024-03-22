@@ -4,7 +4,9 @@ import Layout from "components/layout";
 import Seo from "@/components/seo";
 import { ssrNextApi } from "services/nextApi";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
-import NewSpace from "@/components/newSpace";
+import dynamic from "next/dynamic";
+// import NewSpace from "@/components/newSpace";
+const NewSpace = dynamic(() => import('@/components/newSpace'));
 
 export default function Index({ allNetworks, chainsDef, tokensDef }) {
   const dispatch = useDispatch();

@@ -6,6 +6,7 @@ import { p_16_semibold } from "../styles/textStyles";
 import { useRouter } from "next/router";
 import Tooltip from "@/components/tooltip";
 import { Flex, FlexBetween } from "@osn/common-ui";
+import Link from "next/link";
 
 const Wrapper = styled(FlexBetween)`
   align-items: flex-start;
@@ -28,7 +29,8 @@ const Wrapper = styled(FlexBetween)`
 `;
 
 const Item = styled.div`
-  @media screen and (max-width: 800px) {
+margin-right: 15px;
+@media screen and (max-width: 800px) {
     position: relative;
   }
   overflow: visible;
@@ -117,12 +119,12 @@ export default function ListTab({
           </Item>
         ))}
       </Flex>
-      <a href={`/space/${spaceId}/create`}>
+      <Link href={`/space/${spaceId}/create`}>
         <NewPostLink>
           <i class="icon-plus"></i>&nbsp;
           New Proposal
         </NewPostLink>
-      </a>
+      </Link>
     </Wrapper>
   );
 }

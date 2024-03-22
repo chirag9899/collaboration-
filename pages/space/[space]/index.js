@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Layout from "components/layout";
 import Breadcrumb from "components/breadcrumb";
-import ListInfo from "components/listInfo";
+// import ListInfo from "components/listInfo";
 import ListTab from "components/listTab";
 import PostList from "components/postList";
 import { EmptyQuery } from "frontedUtils/constants";
@@ -13,7 +13,8 @@ import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
-
+import dynamic from "next/dynamic";
+const ListInfo = dynamic("components/listInfo");
 
 const HeaderWrapper = styled.div`
   > :not(:first-child) {
@@ -44,10 +45,9 @@ export default function List({
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(initAccount());
-  },[dispatch, space])
+  }, [dispatch, space]);
 
   useEffect(() => {
     dispatch(

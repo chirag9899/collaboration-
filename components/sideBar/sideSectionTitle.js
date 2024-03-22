@@ -5,6 +5,7 @@ import { Flex, FlexBetween } from "@osn/common-ui";
 import SubTitle from "@osn/common-ui/es/styled/SubTitle";
 import Tooltip from "@/components/tooltip";
 import { ReactComponent as QuestionMark } from "../../public/imgs/icons/question-mark.svg";
+import Image from "next/image";
 
 const TitleWrapper = styled(FlexBetween)`
   ${p_16_semibold};
@@ -26,7 +27,7 @@ function SideSectionTitle({ title, tooltip, img }) {
   return (
     <TitleWrapper>
       {info}
-      <img src={img} alt="" />
+      <Image src={img} alt={title} width={24} height={24} />
     </TitleWrapper>
   );
 }
