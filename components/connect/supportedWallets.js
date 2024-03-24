@@ -18,7 +18,7 @@ const supportedWallets = [
   { name: 'Metamask', id: 'metamask', icon: Metamask },
   { name: 'Unisat', id: 'unisat', icon: Unisat },
   { name: 'WalletConnect', id: 'walletConnect', icon: walletConnect },
-  { name: 'Polkadot', id: 'polkadot', icon: Polkadot },
+  // { name: 'Polkadot', id: 'polkadot', icon: Polkadot },
 ];
 
 
@@ -26,29 +26,31 @@ const WalletSelectorWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%; 
   gap: 10px;
+  background-color: #271F27; // Dark background for the wrapper
+  color: #fff; // Light text color
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #979797;
   border-radius: 10px;
-  background-color: #f5f5f5;
 `;
 
 const WalletButton = styled.button`
   display: flex;
   align-items: center;
   padding: 10px ;
-  border: 1px solid #ccc;
+  border: 1px solid #979797;
   border-radius: 5px;
-  background-color: #fff;
   cursor: pointer;
+  background-color: #271F27;
+  width: 100% !important;
   transition: background-color 0.3s, transform 0.3s;
-  width: 100%;
   gap: 30px;
   justify-content: start; // Distribute space evenly between the items
   padding-left: 20px;
 
   &:hover {
-    background-color: #eee;
+    background-color: #271F27;
     transform: scale(1.02); // Slightly enlarge the button when hovered over
   }
 

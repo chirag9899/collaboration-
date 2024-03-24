@@ -37,7 +37,7 @@ import { switchNetwork } from "@/components/connect/unisat/index"
 import { chainMap, getChainName, supportedChains } from "../frontedUtils/consts/chains/index";
 import { setAccount } from "../store/reducers/accountSlice";
 import { newErrorToast } from "store/reducers/toastSlice";
-import { useWeb3ModalAccount, useDisconnect, useWeb3ModalEvents } from "@web3modal/ethers5/react";
+import { useWeb3ModalAccount, useDisconnect, useWeb3ModalEvents, useWeb3Modal } from "@web3modal/ethers5/react";
 import { accountSelector } from "store/reducers/accountSlice";
 import { clearCookie, getCookie } from "frontedUtils/cookie";
 
@@ -190,6 +190,7 @@ function Account({ networks }) {
   const spaceSupportMultiChain = networks?.length > 1;
   const dropdownRef = useRef(null);
   const { address: web3Address, chainId, isConnected } = useWeb3ModalAccount()
+  const { open, close } = useWeb3Modal()
   const { disconnect } = useDisconnect()
 
   useMetaMaskEventHandlers();
@@ -212,6 +213,12 @@ function Account({ networks }) {
         }));
     }
   },[connectedWallet,dispatch,web3Address, chainId, isConnected,event])
+
+  useEffect(() => {
+    if (showNetwork && connectedWallet === "walletConnect") {
+      open({ view: 'Networks' })
+    }
+  }, [showNetwork, connectedWallet]);
 
   const onSwitch = () => {
     dispatch(setShowNetworkSelector(!showNetwork));
@@ -281,7 +288,6 @@ function Account({ networks }) {
     }
     // Dispatch closeNetworkSelector when a chain is selected
     dispatch(setShowNetworkSelector(false));
-    console.log(account.address, chain.network);
     dispatch(
       setAccount({
         address: account.address,
@@ -375,7 +381,7 @@ function Account({ networks }) {
         </AccountWrapperPC>
         {!showNetwork && showMenu && Menu}
         {
-        showNetwork && dropdown
+        showNetwork && connectedWallet !== "walletConnect" && dropdown
         }
       </Wrapper>
     );
