@@ -1,6 +1,7 @@
 'use client'
 
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers5/react'
+import { chains } from 'frontedUtils/consts/chains';
 
 
 // 1. Get projectId at https://cloud.walletconnect.com
@@ -14,6 +15,16 @@ const mainnet = {
   explorerUrl: 'https://etherscan.io',
   rpcUrl: 'https://cloudflare-eth.com'
 }
+const evmChains = chains.filter(chain => chain.chainType === 'evm');
+
+
+const walletConnectChains = evmChains.map(chain => ({
+  chainId: parseInt(chain.id, 16), // Convert the chain ID from hex to decimal
+  name: chain.name,
+  currency: chain?.nativeCurrency?.symbol,
+  explorerUrl: chain.blockExplorerUrl,
+  rpcUrl: chain.rpc
+}));
 
 // 3. Create a metadata object
 const metadata = {
@@ -39,7 +50,7 @@ const ethersConfig = defaultConfig({
 // 5. Create a Web3Modal instance
 createWeb3Modal({
   ethersConfig,
-  chains: [mainnet],
+  chains: walletConnectChains,
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
