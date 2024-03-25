@@ -35,6 +35,7 @@ import Stafi from "../../public/imgs/icons/chain/stafi.png";
 import Creditcoin from "../../public/imgs/icons/chain/creditcoin.png";
 import styled from "styled-components";
 import Tooltip from "../Tooltip";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   position: relative;
@@ -94,7 +95,7 @@ function ResolveChainIcon({ chainName = "", size = 24 }) {
     Icon = <SvgIcon viewBox="0 0 24 24" width={size} height={size} />;
   } else if (pngs[chainName]) {
     Icon = (
-      <img src={resolvePngs(pngs[chainName])} width={size} alt={chainName} />
+      <Image src={resolvePngs(pngs[chainName])} width={size} height={size} alt={chainName} />
     );
   }
 

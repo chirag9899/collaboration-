@@ -6,14 +6,13 @@ import {
   joinedSpacesSelector,
   loginAddressSelector,
 } from "store/reducers/accountSlice";
-import InternalLink from "../internalLink";
 import { shadow_100, shadow_200, makeSquare } from "../../styles/globalCss";
 import { p_18_semibold } from "../../styles/textStyles";
 import SpaceLogo from "@/components/spaceLogo";
 import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
-import { border_primary, netural_grey_100 } from "../styles/colors";
-import { ReactComponent as Verified } from "../../public/imgs/icons/verified.svg";
+import { border_primary } from "../styles/colors";
+import Image from "next/image";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -103,7 +102,7 @@ export default function SpaceListItem({ name, space }) {
         </Icon>
         <Name>
           {space.name}
-          <Verified />
+          <Image src="./imgs/icons/verified.svg" width={20} height={20}/>
         </Name>
       </IconWrapper>
       {!isSpaceJoined(name) ? (

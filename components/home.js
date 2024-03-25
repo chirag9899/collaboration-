@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Space from "./space";
 import PostList from "./postList";
 import SearchBar from "./searchBar";
 import DropDown from "./DropdownMenu";
@@ -8,8 +7,12 @@ import useDropDown from "hooks/useDropDown";
 import { netural_grey_100, text_light_major } from "./styles/colors";
 import { h3_36_bold, p_16_semibold } from "styles/textStyles";
 import { formatNumber } from "services/util";
-import Networks from "./network";
+// import Space from "./space";
+// import Networks from "./network";
 import { useEffect, useState } from "react";
+import dynamic from 'next/dynamic';
+const Networks = dynamic(() => import('./network'));
+const Space = dynamic(() => import('./space'));
 
 const Wrapper = styled.div`
   display: flex;

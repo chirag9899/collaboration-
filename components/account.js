@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { memo, useEffect, useState,useRef } from "react";
+import { memo, useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,7 +7,7 @@ import {
   loginAddressSelector,
   logout,
   availableNetworksSelector,
-  initAccount
+  initAccount,
 } from "store/reducers/accountSlice";
 import Avatar from "./avatar";
 import { p_14_medium, p_16_semibold } from "../styles/textStyles";
@@ -24,7 +24,7 @@ import {
   showNetworkSelector,
   connectedWalletSelector,
   initWallet,
-  setConnectedWallet
+  setConnectedWallet,
 } from "../store/reducers/showConnectSlice";
 import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
@@ -40,6 +40,7 @@ import { newErrorToast } from "store/reducers/toastSlice";
 import { useWeb3ModalAccount, useDisconnect, useWeb3ModalEvents, useWeb3Modal } from "@web3modal/ethers5/react";
 import { accountSelector } from "store/reducers/accountSlice";
 import { clearCookie, getCookie } from "frontedUtils/cookie";
+import Image from "next/image";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -98,15 +99,13 @@ const AccountWrapper = styled.div`
 const AccountWrapperPC = styled(AccountWrapper)`
   border: 0;
 
- 
-
   ${(p) =>
     p.show &&
     css`
       border: 1px solid #b7c0cc;
     `}
   padding: 7px 15px;
-  font-size:16px;
+  font-size: 16px;
   @media screen and (max-width: 800px) {
     display: none;
   }
@@ -118,7 +117,7 @@ const MenuWrapper = styled.div`
   position: absolute;
   right: 0;
   top: 100%;
-  background:${bg_white};
+  background: ${bg_white};
   border: 1px solid #f0f3f8;
   ${shadow_200};
   padding: 16px;
@@ -159,7 +158,7 @@ const LogoutWrapper = styled.div`
   color: var(--neutral-4);
 
   :hover {
-    color: var(--neutral-1);;
+    color: var(--neutral-1);
   }
 `;
 
@@ -178,12 +177,12 @@ function Account({ networks }) {
   const dispatch = useDispatch();
   const windowSize = useWindowSize();
   const connectedWallet = useSelector(connectedWalletSelector);
-  
+
   const account = useSelector(loginAccountSelector);
   const showConnect = useSelector(showConnectSelector);
   const showNetwork = useSelector(showNetworkSelector);
   const showMenu = useSelector(showHeaderMenuSelector);
-  
+
   const [pageMounted, setPageMounted] = useState(false);
   const address = useSelector(loginAddressSelector);
   const availableNetworks = useSelector(availableNetworksSelector);
@@ -232,14 +231,13 @@ function Account({ networks }) {
     dispatch(setShowHeaderMenu(false));
   };
 
-
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         dispatch(setShowNetworkSelector(false));
       }
     }
-  
+
     // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -247,11 +245,10 @@ function Account({ networks }) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dispatch]);
-  
+
   const ConnectWalletButton = (
     <div className="connect">
-      {
-      !account && (
+      {!account && (
         <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
@@ -268,23 +265,20 @@ function Account({ networks }) {
   const handleChainSelect = async (chain) => {
     try {
       const chainID = chainMap.get(chain.network).id;
-      if (connectedWallet == 'metamask') {
+      if (connectedWallet == "metamask") {
         try {
-          await switchChain(chainID)
+          await switchChain(chainID);
         } catch (error) {
           dispatch(newErrorToast(error.message));
         }
-      }
-      else if ( connectedWallet == 'unisat' ) {
-        await switchNetwork("livenet")
-      }
-      else {
+      } else if (connectedWallet == "unisat") {
+        await switchNetwork("livenet");
+      } else {
         dispatch(newErrorToast("No wallet connected"));
-        
       }
     } catch (error) {
-      console.log(error)
-      return error
+      console.log(error);
+      return error;
     }
     // Dispatch closeNetworkSelector when a chain is selected
     dispatch(setShowNetworkSelector(false));
@@ -292,31 +286,30 @@ function Account({ networks }) {
       setAccount({
         address: account.address,
         network: chain.network,
-      }));
-
+      }),
+    );
   };
 
   let selectedNetworks = connectedWallet && supportedChains(connectedWallet);
-  let supportedAvailableNetworks = availableNetworks.filter(network => 
-    selectedNetworks?.includes(network.network)
+  let supportedAvailableNetworks = availableNetworks.filter((network) =>
+    selectedNetworks?.includes(network.network),
   );
-  
 
-    const dropdown = (
-      <MenuWrapper ref={dropdownRef} onClick={(e) => e.stopPropagation()} >
+  const dropdown = (
+    <MenuWrapper ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
       <ChainSelector
         chains={supportedAvailableNetworks}
         onSelect={handleChainSelect}
       />
     </MenuWrapper>
-  )
+  );
 
   const Menu = (
     <MenuWrapper onClick={(e) => e.stopPropagation()}>
       {/*The dark connect button For Mobile only*/}
       {!account && windowSize.width <= 800 && ConnectWalletButton}
       {/*The dark connect button For Mobile only*/}
-      {  address && (
+      {address && (
         <>
           <AccountWrapper>
             <div>
@@ -336,20 +329,29 @@ function Account({ networks }) {
           <MenuItem>
             <LogoutWrapper onClick={onSwitch}>
               Switch Network
-              <img src="/imgs/icons/switch.svg" alt="" />
+              <Image
+                src="/imgs/icons/switch.svg"
+                alt="switch network"
+                width={24}
+                height={24}
+              />
             </LogoutWrapper>
           </MenuItem>
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
-              <img src="/imgs/icons/logout.svg" alt="" />
+              <Image
+                src="/imgs/icons/logout.svg"
+                alt="logout"
+                width={24}
+                height={24}
+              />
             </LogoutWrapper>
           </MenuItem>
         </>
       )}
     </MenuWrapper>
   );
-
 
   // show ConnectModal on first priority if  showConnect = true
   if (showConnect) {
@@ -359,12 +361,12 @@ function Account({ networks }) {
   // if already connected, show address on right top corner
   if (address && pageMounted) {
     return (
-      <Wrapper >
+      <Wrapper>
         <AccountWrapperPC
           show={showMenu}
           onClick={() => {
             dispatch(setShowHeaderMenu(!showMenu));
-            dispatch(setShowNetworkSelector(false)); 
+            dispatch(setShowNetworkSelector(false));
           }}
         >
           <div>
@@ -386,8 +388,6 @@ function Account({ networks }) {
       </Wrapper>
     );
   }
-
-
 
   // if no address connected, show ConnectButton on right top corner(PC only)
   if (windowSize.width > 800 && !account) {
