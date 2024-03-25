@@ -11,6 +11,8 @@ const Wrapper = styled.div`
   border-radius: 4px;
   max-height: 200px;
   overflow-y: auto;
+  background-color: #201821; // Dark background for the wrapper
+  color: #fff; // Light text color
   ::-webkit-scrollbar {
     width: 6px;
   }
@@ -26,7 +28,7 @@ const Wrapper = styled.div`
 const Text = styled.p`
   ${p_14_medium};
   text-transform: capitalize;
-  color: #1e2134;
+  color: #fff; // Light text color
   margin: 3px;
   padding: 3px;
 `;
@@ -38,9 +40,9 @@ const ItemWrapper = styled.div`
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 5px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #666; // Darker border color
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #444; // Darker hover background color
   }
   & > div:first-child {
     margin-right: 16px;
