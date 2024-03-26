@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { ReactComponent as AddAvg } from "./add.svg";
 import { noop } from "@osn/common-ui";
+import { primary_color } from "@/components/styles/colors";
 
 const Wrapper = styled.div`
   display: flex;
@@ -13,7 +14,7 @@ const Text = styled.span`
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
-  color: #ebb600;
+  color: ${primary_color};
 `;
 
 export default function NewAssetButton({ onClick = noop }) {

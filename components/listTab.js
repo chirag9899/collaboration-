@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import Tooltip from "@/components/tooltip";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import Link from "next/link";
+import { primary_color } from "./styles/colors";
 
 const Wrapper = styled(FlexBetween)`
   align-items: flex-start;
@@ -43,7 +44,7 @@ margin-right: 15px;
   ${(p) =>
     p.active &&
     css`
-      border-bottom: 3px solid #ebb600;
+      border-bottom: 3px solid ${primary_color};
       padding-bottom: 17px;
     `}
   > div:last-child {
@@ -55,7 +56,7 @@ margin-right: 15px;
 const NewPostLink = styled(Flex)`
   cursor: pointer;
   ${p_16_semibold};
-  color: #ebb600;
+  color: ${primary_color};
   margin-left: 40px;
   > img {
     width: 24px;

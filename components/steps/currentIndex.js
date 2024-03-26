@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { Index } from "./styled";
-import { text_light_major } from "../styles/colors";
+import { primary_color, text_light_major } from "../styles/colors";
 
 const Wrapper = styled(Index)`
-  background: #ebb600;
+  background: ${primary_color};
   color: ${text_light_major};
-  border-color: #ebb600;
+  border-color: ${primary_color};
   border-radius: 5px;
   color: var(--background);
 `;

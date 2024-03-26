@@ -9,7 +9,19 @@ import {
 } from "store/reducers/newSpaceSlice";
 import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
-import { identicon } from "minidenticons";
+// import { identicon } from "minidenticons";
+
+let identicon=()=>{}
+// Import minidenticons only in the browser environment
+if (typeof window !== 'undefined') {
+  import('minidenticons').then(minidenticons => {
+      // Your code that uses minidenticons
+      identicon = minidenticons.identicon 
+  }).catch(error => {
+      console.error("Error importing minidenticons:", error);
+  });
+}
+
 
 const Wrapper = styled.div`
   display: flex;

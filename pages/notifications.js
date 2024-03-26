@@ -6,7 +6,7 @@ import Seo from "@/components/seo";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
-import { Pagination, Container, List, Flex } from "@osn/common-ui";
+// import { Pagination, Container, List, Flex } from "@osn/common-ui";
 import { clearUnread } from "store/reducers/notificationSlice";
 import { accountSelector } from "store/reducers/accountSlice";
 import NotificationItem from "../components/notification/notificationItem";
@@ -16,6 +16,10 @@ import { text_dark_minor } from "@osn/common-ui/es/styles/colors";
 import { p_14_medium } from "@osn/common-ui/es/styles/textStyles";
 import { useNotifications } from "hooks/notification/useNotifications";
 import ListLoader from "@/components/notification/listLoader";
+import List from "@/components/List";
+import Container from "@/components/styled/container";
+import Flex from "@/components/styled/Flex";
+import Pagination from "@/components/pagination";
 
 const Wrapper = styled.div`
   position: relative;

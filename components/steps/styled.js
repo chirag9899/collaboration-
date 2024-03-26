@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { primary_color } from "../styles/colors";
 
 export const Index = styled.div`
   display: flex;
@@ -22,8 +23,7 @@ export const NavigationLine = styled.div`
   flex-grow: 1;
   min-width: 30px;
   height: 0px;
-
-  border: 2px solid #ebb600;
+  border: 2px solid ${primary_color};
 
   ${({ isHidden }) =>
     isHidden &&
