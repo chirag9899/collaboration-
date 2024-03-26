@@ -6,7 +6,9 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
-const Home = dynamic(() => import('components/home'));
+const Home = dynamic(() => import('components/home'),{
+  ssr: true
+});
 
 export default function Index({
   spaces,
