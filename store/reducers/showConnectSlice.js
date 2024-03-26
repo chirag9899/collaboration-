@@ -21,7 +21,7 @@ const showConnectSlice = createSlice({
       if (payload) {
         state.connectedWallet = payload;
         if (typeof window !== "undefined") {
-          setCookie("connectedWallet", `${payload}`, 7);
+          setCookie("connectedWallet", `${payload}`);
         }
       } else {
         state.connectedWallet = null;

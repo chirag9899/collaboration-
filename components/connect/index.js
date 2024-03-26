@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector , useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { availableNetworksSelector, initAccount } from "store/reducers/accountSlice";
-
 import AccountSelector from "../accountSelector";
 import styled from "styled-components";
 import ChainSelector from "@/components/chainSelector";
@@ -15,9 +14,9 @@ import { btcChains, chainMap, evmChains } from "../../frontedUtils/consts/chains
 import WalletSelector from "@/components/connect/supportedWallets"
 // import ConnectButton from "@/components/connect/connectButton";
 import { getMetamaskElement, switchChain } from "@/components/connect/metamask";
-import { getUnisatElement } from "@/components/connect/unisat";
+import { getUnisatElement, switchNetwork } from "@/components/connect/unisat";
 import { setAccount } from "../../store/reducers/accountSlice";
-import { setConnectedWallet } from "../../store/reducers/showConnectSlice"; 
+import { setConnectedWallet } from "../../store/reducers/showConnectSlice";
 import {
   closeConnect,
   setShowHeaderMenu,
@@ -26,10 +25,13 @@ import {
 import { loginAccountSelector } from "store/reducers/accountSlice";
 import { getCookie } from "frontedUtils/cookie";
 import { newErrorToast } from "store/reducers/toastSlice";
+import { useWeb3Modal, useDisconnect,useWeb3ModalAccount,useWeb3ModalEvents, useWeb3ModalState } from "@web3modal/ethers5/react";
 
 const Wrapper = styled.div``;
 
 export default function Connect({ networks }) {
+  const { open, close } = useWeb3Modal()
+  const { address: web3Address, chainId, isConnected } = useWeb3ModalAccount()
   const dispatch = useDispatch();
   const account = useSelector(loginAccountSelector);
   const wallet = useSelector(connectedWalletSelector);
@@ -42,20 +44,20 @@ export default function Connect({ networks }) {
   const availableNetworks = useSelector(availableNetworksSelector);
   const { accounts, hasExtension, extensionAccessible, detecting } =
     useExtension();
-
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
-  // useEffect(() => {
-  //   if (!window.ethereum || !window.ethereum.isMetaMask) {
-  //     return;
-  //   }
-
-  //   window.ethereum.on("chainChanged", () => {
-  //     setMetaMaskNetworkChangeCount(metaMaskNetworkChangeCount + 1);
-  //   });
-  // }, [metaMaskNetworkChangeCount]);
+    // useEffect(() => {
+      //   if (!window.ethereum || !window.ethereum.isMetaMask) {
+        //     return;
+        //   }
+        
+        //   window.ethereum.on("chainChanged", () => {
+          //     setMetaMaskNetworkChangeCount(metaMaskNetworkChangeCount + 1);
+          //   });
+          // }, [metaMaskNetworkChangeCount]);
 
   const handleWalletSelect = async (selectedWallet) => {
+    
     // Implement the connection logic for each wallet
     switch (selectedWallet.id) {
       case 'metamask':
@@ -71,7 +73,7 @@ export default function Connect({ networks }) {
                 address: accounts[0],
                 network: "ethereum",
               }));
-            dispatch( setConnectedWallet(selectedWallet.id) ) 
+            dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
           } catch (error) {
@@ -93,13 +95,17 @@ export default function Connect({ networks }) {
                 address: res[0],
                 network: "brc20",
               }));
-            dispatch( setConnectedWallet(selectedWallet.id) ) 
+            dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
           } catch (e) {
             console.log(e);
           }
         }
+        break;
+      case 'walletConnect':
+        await open()
+        dispatch(closeConnect());
         break;
 
       default:
@@ -123,6 +129,34 @@ export default function Connect({ networks }) {
   // const isEvmChain = evmChains.includes(chain?.network);
   // const isBtcChain = btcChains.includes(chain?.network);
 
+  const handleChainSelect = async (selectedChain) => {
+    let chainID = chainMap.get(chain.network).id;
+    let chainType = chainMap.get(chain.network).chainType;
+    try {
+      if (wallet === "metamask" ) {
+        await switchChain(chainID)
+      } else if (wallet === "unisat" ) {
+        if (chainType === "evm") {
+          throw new Error("Chain not supported on this wallet"); // Create a new error object
+        }
+        await switchNetwork(chain.network)
+      } else if (wallet === "walletConnect") {
+        console.log("first")
+        open({ view: 'Networks' })
+      }
+
+      dispatch(
+        setAccount({
+          address: address,
+          network: selectedChain.network
+        }));
+
+    } catch (error) {
+      console.log(error)
+      dispatch(newErrorToast(error.message));
+    }
+    dispatch(closeConnect());
+  }
 
   useEffect(() => {
     if (wallet == null) {
@@ -136,49 +170,30 @@ export default function Connect({ networks }) {
       setElement(
         <ChainSelector
           chains={availableNetworks}
-          onSelect={async(selectedChain) => {
-            const chainID = chainMap.get(chain.network).id;
-            try {
-              await switchChain(chainID)
-              dispatch(
-                setAccount({
-                  address: address ,
-                  network: selectedChain.network
-                }));
-                
-              } catch (error) {
-                dispatch(newErrorToast(error.message));
-              }
-              dispatch(closeConnect());
-        
-          }}
+          onSelect={handleChainSelect}
         />
       );
       return;
     }
 
+
     // Rest of your code...
   }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
 
 
-  useEffect(() => {
-    if (!chain) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (!chain || !wallet) {
+  //     return;
+  //   }
+    
+    // let currChain = chainMap.get(chain);
+    // const isEvm = currChain?.chainType == 'evm';
+    // const isBtc = currChain?.chainType == 'btc';
 
-
-    // if (isEvmChain) {
-    //   getMetamaskElement(chain.network).then((element) => {
-    //     setElement(element);
-    //   });
-    //   return;
+    // if(isBtc && wallet === "metamask") {
+    //   return setElement(<NotAccessible />);
     // }
-
-    // added btc in element 
-    // if (isBtcChain) {
-    //   getUnisatElement(chain.network).then((element) => {
-    //     setElement(element);
-    //   })
+    // if (isEvm || isBtc) {
     //   return;
     // }
 
@@ -215,26 +230,20 @@ export default function Connect({ networks }) {
     //     </ActionBar>
     //   </>,
     // );
-  }, [
-    extensionAccessible,
-    accounts,
-    hasExtension,
-    detecting,
-    chain,
-    address,
-    chain?.network,
-    metaMaskNetworkChangeCount,
-  ]);
+  // }, [
+  //   extensionAccessible,
+  //   accounts,
+  //   hasExtension,
+  //   detecting,
+  //   chain,
+  //   address,
+  //   chain?.network,
+  //   metaMaskNetworkChangeCount,
+  // ]);
 
   return (
     <Wrapper>
-      <Closeable open={!detecting}>
-        {/* <StyledText>Chain</StyledText>
-        <ChainSelector
-          chains={availableNetworks}
-          onSelect={(chain) =>  {console.log(chain) 
-            setChain(chain)}}
-        /> */}
+      <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
     </Wrapper>
