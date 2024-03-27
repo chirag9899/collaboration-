@@ -23,7 +23,6 @@
     "@polkadot/util-crypto": "10.1.9",
     "@reduxjs/toolkit": "^1.6.1",
     "@svgr/webpack": "^6.3.1",
-    "@walletconnect/ethereum-provider": "^2.11.3",
     "@web3modal/ethers5": "^4.1.1",
     "bignumber.js": "^9.0.1",
     "bitcoin-address-validation": "^2.2.3",

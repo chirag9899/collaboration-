@@ -30,7 +30,7 @@ import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
 import { bg_white } from "./styles/colors";
-import Button from "./button";
+import Button from "./Button";
 import ChainSelector from "@/components/chainSelector";
 import { switchChain }  from "@/components/connect/metamask/index"
 import { switchNetwork } from "@/components/connect/unisat/index"
@@ -202,9 +202,10 @@ function Account({ networks }) {
 
 
   useEffect(() => {
-    if( chainId && isConnected && event.data.event === "CONNECT_SUCCESS") {
+    if( chainId && isConnected && web3Address ) {
       dispatch(setConnectedWallet("walletConnect"))
-      let chainName = getChainName('0x' + chainId.toString(16))
+      let chainName = getChainName('0x' + chainId?.toString(16))
+      console.log(chainId, '0x' + chainId?.toString(16))
       dispatch(
         setAccount({
           address: web3Address,
@@ -253,7 +254,7 @@ function Account({ networks }) {
           primary
           onClick={() => dispatch(popUpConnect())}
           className="button button-modern icon-target"
-          title={ (connectedWallet ) ? "Switch Chain" : "Connect Wallet"}
+          title={ connectedWallet  ? "Switch Chain" : "Connect Wallet"}
         >
         </DarkButton>
       )}
@@ -355,8 +356,14 @@ function Account({ networks }) {
 
   // show ConnectModal on first priority if  showConnect = true
   if (showConnect) {
+    if (connectedWallet == "walletConnect") {
+      open({ view: 'Networks' })
+      return
+    }
     return <ConnectModal networks={networks} />;
   }
+  
+
 
   // if already connected, show address on right top corner
   if (address && pageMounted) {
