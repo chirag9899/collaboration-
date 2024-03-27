@@ -11,8 +11,12 @@ import { formatNumber } from "services/util";
 // import Networks from "./network";
 import { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
-const Networks = dynamic(() => import('./network'));
-const Space = dynamic(() => import('./space'));
+const Networks = dynamic(() => import('./network'),{
+  ssr: true
+});
+const Space = dynamic(() => import('./space'),{
+  ssr: true
+});
 
 const Wrapper = styled.div`
   display: flex;

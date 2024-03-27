@@ -212,6 +212,7 @@ export function abbreviateBigNumber(x, fixed = 2) {
 
 export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
+// set explorer in fe
 export function getExplorer(network) {
   return network === "statemine" ? "statescan" : "subscan";
 }

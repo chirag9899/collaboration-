@@ -1,7 +1,6 @@
 import styled from "styled-components";
-// import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
+import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
 import { useEffect, useState } from "react";
-import DropdownSelector from "@/components/DropdownSelector";
 
 const Wrapper = styled.div`
   display: flex;
@@ -13,11 +12,11 @@ const Wrapper = styled.div`
 `;
 
 export default function AssetTypeSelector({ onSelect = () => {} }) {
-  const [selectedIndex, setSelectedIndex] = useState("contract");
+  const [selectedIndex, setSelectedIndex] = useState("ticker");
 
   const options = [
     // { key: "native", value: "native", content: "Native" },
-    { key: "contract", value: "contract", content: "Contract" },
+    { key: "ticker", value: "ticker", content: "Ticker" },
   ];
 
   useEffect(() => {

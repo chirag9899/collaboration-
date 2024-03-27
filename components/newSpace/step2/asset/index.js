@@ -6,6 +6,7 @@ import { FieldWrapper, Title, Wrapper } from "./styled";
 import CommonAssetConfig from "./commonAssetConfig";
 import OrmlTokenConfig from "./ormlTokenConfig";
 import Erc20TokenConfig from "./erc20TokenConfig";
+import Brc20TokenConfig from "./brc20TokenConfig";
 import styled from "styled-components";
 import useStateChanged from "hooks/useStateChanged";
 import { AssetTypes } from "./constants";
@@ -125,6 +126,17 @@ export default function Asset({
   } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.EVM_ERC20)) {
     assetConfig = (
       <Erc20TokenConfig
+        count={count}
+        chain={asset.chain}
+        name={asset.name}
+        nativeTokenInfo={chainInfo}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
+      />
+    );
+  } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.ORD_BRC20)) {
+    assetConfig = (
+      <Brc20TokenConfig
         count={count}
         chain={asset.chain}
         name={asset.name}
