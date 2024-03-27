@@ -4,6 +4,7 @@ import { setUnread, fetchUnread } from "store/reducers/notificationSlice";
 import { loginAddressSelector } from "store/reducers/accountSlice";
 import { connect } from "services/websocket";
 import { toPublicKey } from "@osn/common";
+import { validate } from 'bitcoin-address-validation';
 import {
   connectedWalletSelector
 } from "../../store/reducers/showConnectSlice";
@@ -19,13 +20,12 @@ export default function NotificationMonitor() {
     setSocket(connect());
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (socket && address != undefined) {
 
-      let publicKey;
-     if (wallet === "unisat") {
-      // Bech32 decoding for Bitcoin addresses
-      publicKey = address;
+    let publicKey;
+    if (validate(address)) {
+       publicKey = await window.unisat.getPublicKey();
     } else {
       // Base58 decoding for other addresses
       publicKey = toPublicKey(address);
