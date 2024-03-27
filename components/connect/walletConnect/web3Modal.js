@@ -5,7 +5,7 @@ import { chains } from 'frontedUtils/consts/chains';
 
 
 // 1. Get projectId at https://cloud.walletconnect.com
-const projectId = '5c8acd7cc7204a13dcae35e6456e0590'
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
 
 // 2. Set chains
 const mainnet = {
