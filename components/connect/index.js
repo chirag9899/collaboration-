@@ -46,18 +46,8 @@ export default function Connect({ networks }) {
     useExtension();
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
-    // useEffect(() => {
-      //   if (!window.ethereum || !window.ethereum.isMetaMask) {
-        //     return;
-        //   }
-        
-        //   window.ethereum.on("chainChanged", () => {
-          //     setMetaMaskNetworkChangeCount(metaMaskNetworkChangeCount + 1);
-          //   });
-          // }, [metaMaskNetworkChangeCount]);
 
   const handleWalletSelect = async (selectedWallet) => {
-    
     // Implement the connection logic for each wallet
     switch (selectedWallet.id) {
       case 'metamask':
@@ -126,8 +116,6 @@ export default function Connect({ networks }) {
     }
   }, [accounts]);
 
-  // const isEvmChain = evmChains.includes(chain?.network);
-  // const isBtcChain = btcChains.includes(chain?.network);
 
   const handleChainSelect = async (selectedChain) => {
     let chainID = chainMap.get(chain.network).id;
@@ -141,7 +129,6 @@ export default function Connect({ networks }) {
         }
         await switchNetwork(chain.network)
       } else if (wallet === "walletConnect") {
-        console.log("first")
         open({ view: 'Networks' })
       }
 
@@ -180,69 +167,12 @@ export default function Connect({ networks }) {
     // Rest of your code...
   }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
 
-
-  // useEffect(() => {
-  //   if (!chain || !wallet) {
-  //     return;
-  //   }
-    
-    // let currChain = chainMap.get(chain);
-    // const isEvm = currChain?.chainType == 'evm';
-    // const isBtc = currChain?.chainType == 'btc';
-
-    // if(isBtc && wallet === "metamask") {
-    //   return setElement(<NotAccessible />);
-    // }
-    // if (isEvm || isBtc) {
-    //   return;
-    // }
-
-
-    // if (detecting) {
-    //   return setElement(null);
-    // }
-
-    // if (!hasExtension) {
-    //   return setElement(<NoExtension />);
-    // }
-
-    // if (!extensionAccessible) {
-    //   return setElement(<NotAccessible />);
-    // }
-
-    // if (accounts.length <= 0) {
-    //   return setElement(<NoAccount />);
-    // }
-
-    // setElement(
-    //   <>
-    //     <StyledText>Account</StyledText>
-    //     <AccountSelector
-    //       accounts={accounts}
-    //       onSelect={(account) => {
-    //         setAddress(account?.address);
-    //       }}
-    //       chain={chain}
-    //     />
-
-    //     <ActionBar>
-    //       <ConnectButton address={address} network={chain.network} />
-    //     </ActionBar>
-    //   </>,
-    // );
-  // }, [
-  //   extensionAccessible,
-  //   accounts,
-  //   hasExtension,
-  //   detecting,
-  //   chain,
-  //   address,
-  //   chain?.network,
-  //   metaMaskNetworkChangeCount,
-  // ]);
-
+  if ( wallet == "walletConnect" ) {
+    return;
+  }
+  
   return (
-    <Wrapper>
+   <Wrapper>
       <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
