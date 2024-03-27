@@ -30,7 +30,7 @@ import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
 import { bg_white } from "./styles/colors";
-import Button from "./button";
+import Button from "./Button";
 import ChainSelector from "@/components/chainSelector";
 import { switchChain }  from "@/components/connect/metamask/index"
 import { switchNetwork } from "@/components/connect/unisat/index"
@@ -202,9 +202,9 @@ function Account({ networks }) {
 
 
   useEffect(() => {
-    if( chainId && isConnected && event.data.event === "CONNECT_SUCCESS") {
+    if( chainId && isConnected && event.data.event === "CONNECT_SUCCESS" || web3Address) {
       dispatch(setConnectedWallet("walletConnect"))
-      let chainName = getChainName('0x' + chainId.toString(16))
+      let chainName = getChainName('0x' + chainId?.toString(16))
       dispatch(
         setAccount({
           address: web3Address,
