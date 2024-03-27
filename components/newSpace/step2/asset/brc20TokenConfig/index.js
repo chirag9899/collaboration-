@@ -8,90 +8,60 @@ import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
 
-export default function Erc20TokenConfig({
+export default function Brc20TokenConfig({
   count,
   chain,
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
 }) {
-  const [assetType, setAssetType] = useState("contract");
-  const [contractAddress, setContractAddress] = useState("");
-  const [symbol, setSymbol] = useState("");
-  const [decimals, setDecimals] = useState(0);
+  const [assetType, setAssetType] = useState("ticker");
+  const [contractAddress, setContractAddress] = useState("ticker");
+  const [symbol, setSymbol] = useState("ticker");
+  const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
-  const fetchErc20TokenMetadata = useCallback(
-    async (contractAddress) => {
-      setIsLoadingMetadata(true);
-      try {
-        const { result, error } = await nextApi.fetch(
-          `evm/chain/${chain}/erc20/contract/${contractAddress}`,
-        );
-        if (error) {
-          return;
-        }
-        if (isMounted.current) {
-          setSymbol(result?.symbol);
-          setDecimals(result?.decimals);
-        }
-      } finally {
-        setIsLoadingMetadata(false);
-      }
-    },
-    [chain, isMounted],
-  );
-
   useEffect(() => {
-    if (assetType === "native") {
-      setSymbol(nativeTokenInfo?.symbol);
-      setDecimals(nativeTokenInfo?.decimals);
-      setContractAddress("");
-    } else if (!contractAddress) {
-      setSymbol("");
-      setDecimals(0);
-    } else {
-      setSymbol("");
-      setDecimals(0);
-      fetchErc20TokenMetadata(contractAddress);
-    }
-  }, [fetchErc20TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
+    setSymbol(contractAddress);
+    setContractAddress(contractAddress);
+    setDecimals(18)
+  }, [false, assetType, contractAddress, nativeTokenInfo]);
 
   useEffect(() => {
     if (contractAddress) {
-      if (asset?.type === "erc20" && asset?.contract === contractAddress) {
+      if (asset?.type === "brc20" && asset?.ticker === contractAddress) {
         return;
       }
 
       setPartialAsset({
-        type: "erc20",
-        contract: contractAddress,
+        type: "brc20",
+        ticker: contractAddress,
       });
     } else {
-      if (asset?.type === undefined && asset?.contract === undefined) {
+      if (asset?.type === undefined && asset?.ticker === undefined) {
         return;
       }
 
       setPartialAsset({
         type: undefined,
-        contract: undefined,
+        ticker: undefined,
       });
     }
-  }, [contractAddress, asset?.type, asset?.contract, setPartialAsset]);
+  }, [contractAddress, asset?.type, asset?.ticker, setPartialAsset]);
 
   return (
     <Wrapper>
       <FieldWrapper>
-        <Title>Token Type</Title>
+        <Title>Asset Type</Title>
         <AssetTypeSelector onSelect={setAssetType} />
       </FieldWrapper>
 
-      {assetType === "contract" && (
+      {assetType === "ticker" && (
         <FieldWrapper>
-          <Title>Asset Contract</Title>
+          <Title>Asset ticker</Title>
           <LoadingInput
-            placeholder="Enter an contract address"
+            placeholder="Enter an ticker address"
             onBlur={(e) => setContractAddress(e.target.value)}
             isLoading={isLoadingMetadata}
           />

@@ -114,16 +114,31 @@ export async function signComment(
   address,
   commenterNetwork,
 ) {
-  return await signApiData(
-    {
-      proposalCid,
-      content,
-      contentType,
-      commenterNetwork,
-      version: "2",
-    },
-    address,
-  );
+  if (validate(address)) {
+    const pubkey = await window.unisat.getPublicKey();
+    return await signApiData(
+      {
+        proposalCid,
+        content,
+        contentType,
+        commenterNetwork,
+        version: "2",
+        pubkey: pubkey
+      },
+      address,
+    );
+  } else {
+    return await signApiData(
+      {
+        proposalCid,
+        content,
+        contentType,
+        commenterNetwork,
+        version: "2",
+      },
+      address,
+    );
+  }
 }
 
 export async function addVote(
@@ -159,20 +174,39 @@ export async function signVote(
   realVoter,
   voterNetwork,
 ) {
-  return await signApiData(
-    {
-      proposalCid,
-      choices,
-      remark,
-      realVoter,
-      voterNetwork,
-      // Version 2: multi space network support
-      // Version 3: multi choices support
-      // Version 4: multi assets support
-      version: "4",
-    },
-    address,
-  );
+  if (validate(address)) {
+    const pubkey = await window.unisat.getPublicKey();
+    return await signApiData(
+      {
+        proposalCid,
+        choices,
+        remark,
+        realVoter,
+        voterNetwork,
+        // Version 2: multi space network support
+        // Version 3: multi choices support
+        // Version 4: multi assets support
+        version: "4",
+        pubkey: pubkey
+      },
+      address,
+    );
+  } else {
+    return await signApiData(
+      {
+        proposalCid,
+        choices,
+        remark,
+        realVoter,
+        voterNetwork,
+        // Version 2: multi space network support
+        // Version 3: multi choices support
+        // Version 4: multi assets support
+        version: "4",
+      },
+      address,
+    );
+  }
 }
 
 export async function signTerminate({
@@ -180,15 +214,29 @@ export async function signTerminate({
   terminatorNetwork,
   address,
 }) {
-  return await signApiData(
-    {
-      action: "terminate",
-      proposalCid,
-      terminatorNetwork,
-      version: "2",
-    },
-    address,
-  );
+  if (validate(address)) {
+    const pubkey = await window.unisat.getPublicKey();
+    return await signApiData(
+      {
+        action: "terminate",
+        proposalCid,
+        terminatorNetwork,
+        version: "2",
+        pubkey: pubkey
+      },
+      address,
+    );
+  } else {
+    return await signApiData(
+      {
+        action: "terminate",
+        proposalCid,
+        terminatorNetwork,
+        version: "2",
+      },
+      address,
+    );
+  }
 }
 
 export async function signAppendant(
@@ -199,14 +247,29 @@ export async function signAppendant(
   address,
   appenderNetwork,
 ) {
-  return await signApiData(
-    {
-      proposalCid,
-      content,
-      contentType,
-      appenderNetwork,
-      version: "2",
-    },
-    address,
-  );
+  if (validate(address)) {
+    const pubkey = await window.unisat.getPublicKey();
+    return await signApiData(
+      {
+        proposalCid,
+        content,
+        contentType,
+        appenderNetwork,
+        version: "2",
+        pubkey: pubkey
+      },
+      address,
+    );
+  } else {
+    return await signApiData(
+      {
+        proposalCid,
+        content,
+        contentType,
+        appenderNetwork,
+        version: "2",
+      },
+      address,
+    );
+  }
 }

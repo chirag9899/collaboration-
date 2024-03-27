@@ -76,7 +76,7 @@ export default function Information({ space }) {
     hint = <Hint>Link an address to create proposal.</Hint>;
   } else if (loadBalanceError) {
     hint = <Hint>{loadBalanceError}</Hint>;
-  } else if (belowThreshold) {
+  } else if (belowThreshold && threshold !== 0) {
     hint = (
       <Hint>
         You need to have a minimum of {toPrecision(threshold, decimals)}{" "}
