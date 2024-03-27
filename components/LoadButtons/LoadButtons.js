@@ -35,23 +35,22 @@ const LoadButtons = ({ limit = 5, data, showCount, setShowCount }) => {
 
   return (
     <LoadBtnWrapper>
-      {showCount < data.length && (
-        <LoadButton
-          primary
-          className="button button-modern"
-          onClick={handleLoadMore}
-        >
-          Load More
-        </LoadButton>
-      )}
       {showCount > limit && (
         <LoadButton
           primary
           className="button button-modern"
           onClick={handleLoadLess}
-        >
-          Load Less
-        </LoadButton>
+          title={"Load Less"}
+        />
+      )}
+      {showCount < data.length && (
+        <LoadButton
+          primary
+          className="button button-modern"
+          onClick={handleLoadMore}
+          title={"Load More"}
+        />
+     
       )}
     </LoadBtnWrapper>
   );
