@@ -108,7 +108,6 @@ export default function Connect({ networks }) {
 
   useEffect(() => {
     if (accounts && accounts.length > 0) {
-      console.log(address)
       setAddress(accounts[0].address);
     }
     if (address == null) {
@@ -146,10 +145,17 @@ export default function Connect({ networks }) {
   }
 
   useEffect(() => {
+  
+
     if (wallet == null) {
       // Show all wallet options to the user
       setElement(<WalletSelector onSelect={handleWalletSelect} />);
       return;
+    }
+
+    else if (wallet === "walletConnect") {
+      open({ view: 'Networks' });
+      return; // Return early to prevent setting the element state
     }
 
     else if (wallet) {
@@ -167,15 +173,14 @@ export default function Connect({ networks }) {
     // Rest of your code...
   }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
 
-  if ( wallet == "walletConnect" ) {
-    return;
-  }
   
   return (
-   <Wrapper>
+    <Wrapper>
+    {wallet === "walletConnect" ? null : (
       <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
-    </Wrapper>
+    )}
+  </Wrapper>
   );
 }

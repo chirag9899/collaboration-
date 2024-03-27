@@ -1,5 +1,3 @@
-'use client'
-
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers5/react'
 import { chains } from 'frontedUtils/consts/chains';
 
