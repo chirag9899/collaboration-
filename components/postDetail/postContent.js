@@ -16,6 +16,7 @@ import { loginAddressSelector } from "store/reducers/accountSlice";
 import { proposalStatus } from "frontedUtils/consts/proposal";
 import { MarkdownPreviewer } from "@osn/previewer";
 import PostBanner from "@/components/postDetail/postBanner";
+import { black, white_text_color } from "../styles/colors";
 
 const Title = styled.div`
   ${p_semibold};
@@ -41,7 +42,7 @@ const LeftWrapper = styled.div`
     content: "·";
     margin: 0 8px;
   }
-`;
+ `;
 
 const Divider = styled.div`
   height: 1px;
@@ -56,7 +57,15 @@ const Divider = styled.div`
 
 const Content = styled.div`
   ${p_14_normal};
-  color: var(--neutral-1);;
+  color: var(--neutral-1);
+  .osn-previewer{
+    .markdown-body{
+      >p{
+        color: ${white_text_color};
+      }
+    }
+  }
+
 `;
 
 export default function PostContent({ data, space }) {

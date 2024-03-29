@@ -1,6 +1,6 @@
-import MultiSelect from "@/components/multiSelect";
 import styled from "styled-components";
 import { SectionTitle } from "../styled";
+import Select from "@/components/Select";
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,8 +14,8 @@ export default function Strategies({
 }) {
   return (
     <Wrapper>
-      <SectionTitle>Strategies</SectionTitle>
-      <MultiSelect
+      <SectionTitle>Strategy</SectionTitle>
+      <Select
         options={options}
         selectedOptions={selectedOptions}
         setSelectedOptions={setSelectedOptions}

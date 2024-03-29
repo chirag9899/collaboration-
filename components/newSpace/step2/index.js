@@ -32,7 +32,7 @@ export default function Step2({
 
   const nextStep = useCallback(() => {
     if (!assets.length) {
-      dispatch(newErrorToast("At least one asset is required"));
+      dispatch(newErrorToast("Please add asset first"));
       return;
     }
 
@@ -44,7 +44,7 @@ export default function Step2({
       }
 
       if (!asset.symbol) {
-        dispatch(newErrorToast("Asset symbol is required"));
+        dispatch(newErrorToast("Asset symbol address is required"));
         return;
       }
 
@@ -132,27 +132,29 @@ export default function Step2({
                 setAssets(newAssets);
               }}
             />
-            <MyDivider />
+            {assets.length < 1 && <MyDivider />}
           </Fragment>
         ))}
       </Sections>
-      <Sections>
-        <NewAssetButton
-          onClick={() =>
-            setAssets((value) => [
-              ...value,
-              {
-                id: Date.now(),
-                symbol: "",
-                decimals: 10,
-                votingThreshold: "1",
-                votingWeight: "1",
-              },
-            ])
-          }
-        />
-      </Sections>
-      <MyDivider />
+      {assets.length < 1 && (
+        <Sections>
+          <NewAssetButton
+            onClick={() =>
+              setAssets((value) => [
+                ...value,
+                {
+                  id: Date.now(),
+                  symbol: "",
+                  decimals: 10,
+                  votingThreshold: "1",
+                  votingWeight: "1",
+                },
+              ])
+            }
+          />
+        </Sections>
+      )}
+      {assets.length < 1 && <MyDivider />}
       <ButtonsWrapper>
         <BackButton />
         <Button block onClick={nextStep}>

@@ -7,6 +7,18 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
+import AssetAdditionalDetail from "../assetAdditionalDetail";
+import { urlCreator } from "utils";
+import { newErrorToast } from "store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
+
+const initAdditioanlDetail = {
+  holdersCount: null,
+  historyCount: null,
+  inscriptionNumber: null,
+  creator: null,
+  txid: null,
+};
 
 export default function Brc20TokenConfig({
   count,
@@ -21,12 +33,61 @@ export default function Brc20TokenConfig({
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [additionalDetail, setAdditionalDetail] =
+    useState(initAdditioanlDetail);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSymbol(contractAddress);
     setContractAddress(contractAddress);
-    setDecimals(18)
+    setDecimals(18);
   }, [false, assetType, contractAddress, nativeTokenInfo]);
+
+  const fetchBrc20TokenMetadata = useCallback(
+    async (ticker) => {
+      setIsLoadingMetadata(true);
+      try {
+        const { result, error } = await nextApi.fetch(
+          `chain/brc20/token/${ticker}`,
+        );
+        if (error) {
+          dispatch(newErrorToast("Please enter a valid ticker"));
+          setAdditionalDetail(initAdditioanlDetail);
+          return;
+        }
+        if (isMounted.current) {
+          setSymbol(result?.ticker);
+          setDecimals(result?.decimal);
+          setAdditionalDetail({
+            holdersCount: result.holdersCount,
+            historyCount: result.historyCount,
+            inscriptionNumber: result.inscriptionNumber,
+            creator: urlCreator("address", result.creator),
+            txid: urlCreator("transaction", result.txid),
+          });
+        }
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    },
+    [chain, isMounted],
+  );
+
+  useEffect(() => {
+    if (assetType === "native") {
+      setSymbol(nativeTokenInfo?.symbol);
+      setDecimals(nativeTokenInfo?.decimals);
+      setContractAddress("");
+    } else if (!contractAddress) {
+      setSymbol("");
+      setDecimals(0);
+      setAdditionalDetail(initAdditioanlDetail);
+    } else {
+      setSymbol("");
+      setDecimals(0);
+    }
+  }, [fetchBrc20TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
 
   useEffect(() => {
     if (contractAddress) {
@@ -50,6 +111,12 @@ export default function Brc20TokenConfig({
     }
   }, [contractAddress, asset?.type, asset?.ticker, setPartialAsset]);
 
+  const onBlurHandler = (e) => {
+    const { value } = e.target;
+    setContractAddress(value);
+    fetchBrc20TokenMetadata(value);
+  };
+
   return (
     <Wrapper>
       <FieldWrapper>
@@ -62,7 +129,7 @@ export default function Brc20TokenConfig({
           <Title>Asset ticker</Title>
           <LoadingInput
             placeholder="Enter an ticker address"
-            onBlur={(e) => setContractAddress(e.target.value)}
+            onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
           />
         </FieldWrapper>
@@ -71,6 +138,11 @@ export default function Brc20TokenConfig({
       <AssetDetail
         symbol={symbol}
         decimals={decimals}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
+      />
+      <AssetAdditionalDetail
+        additionalDetail={additionalDetail}
         asset={asset}
         setPartialAsset={setPartialAsset}
       />

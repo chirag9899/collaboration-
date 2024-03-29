@@ -13,6 +13,7 @@ import nextApi from "services/nextApi";
 import JoinButton from "./joinButton";
 import { border_primary } from "../styles/colors";
 import Image from "next/image";
+import { stringElipsis } from "utils";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -100,8 +101,8 @@ export default function SpaceListItem({ name, space }) {
           <SpaceLogo space={space} />
           <SpaceLogo space={space} />
         </Icon>
-        <Name>
-          {space.name}
+        <Name title={space.name}>
+          {stringElipsis(space.name,12)} 
           <Image src="./imgs/icons/verified.svg" width={20} height={20}/>
         </Name>
       </IconWrapper>
