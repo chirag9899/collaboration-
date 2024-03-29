@@ -44,7 +44,7 @@ export default function Step2({
       }
 
       if (!asset.symbol) {
-        dispatch(newErrorToast("Asset ticker is required"));
+        dispatch(newErrorToast("Asset symbol address is required"));
         return;
       }
 

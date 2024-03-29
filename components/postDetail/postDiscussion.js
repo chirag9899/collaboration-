@@ -95,6 +95,7 @@ const NoCommentWrapper = styled.div`
     border: none;
     box-shadow: none;
     height: 100%;
+    background-color: transparent;
   }
 `;
 
