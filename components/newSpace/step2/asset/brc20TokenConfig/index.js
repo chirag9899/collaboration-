@@ -9,6 +9,16 @@ import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
 import AssetAdditionalDetail from "../assetAdditionalDetail";
 import { urlCreator } from "utils";
+import { newErrorToast } from "store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
+
+const initAdditioanlDetail = {
+  holdersCount: null,
+  historyCount: null,
+  inscriptionNumber: null,
+  creator: null,
+  txid: null,
+};
 
 export default function Brc20TokenConfig({
   count,
@@ -23,13 +33,10 @@ export default function Brc20TokenConfig({
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
-  const [additionalDetail, setAdditionalDetail] = useState({
-    holdersCount: null,
-    historyCount: null,
-    inscriptionNumber: null,
-    creator: null,
-    txid: null,
-  });
+  const [additionalDetail, setAdditionalDetail] =
+    useState(initAdditioanlDetail);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSymbol(contractAddress);
@@ -45,14 +52,8 @@ export default function Brc20TokenConfig({
           `chain/brc20/token/${ticker}`,
         );
         if (error) {
-          console.log(error, "error");
-          setAdditionalDetail({
-            holdersCount: null,
-            historyCount: null,
-            inscriptionNumber: null,
-            creator: null,
-            txid: null,
-          });
+          dispatch(newErrorToast("Please enter a valid ticker"));
+          setAdditionalDetail(initAdditioanlDetail);
           return;
         }
         if (isMounted.current) {
@@ -81,6 +82,7 @@ export default function Brc20TokenConfig({
     } else if (!contractAddress) {
       setSymbol("");
       setDecimals(0);
+      setAdditionalDetail(initAdditioanlDetail);
     } else {
       setSymbol("");
       setDecimals(0);
