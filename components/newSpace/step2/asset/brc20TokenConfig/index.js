@@ -7,6 +7,8 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
+import AssetAdditionalDetail from "../assetAdditionalDetail";
+import { urlCreator } from "utils";
 
 export default function Brc20TokenConfig({
   count,
@@ -21,12 +23,70 @@ export default function Brc20TokenConfig({
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [additionalDetail, setAdditionalDetail] = useState({
+    holdersCount: null,
+    historyCount: null,
+    inscriptionNumber: null,
+    creator: null,
+    txid: null,
+  });
 
   useEffect(() => {
     setSymbol(contractAddress);
     setContractAddress(contractAddress);
-    setDecimals(18)
+    setDecimals(18);
   }, [false, assetType, contractAddress, nativeTokenInfo]);
+
+  const fetchBrc20TokenMetadata = useCallback(
+    async (ticker) => {
+      setIsLoadingMetadata(true);
+      try {
+        const { result, error } = await nextApi.fetch(
+          `chain/brc20/token/${ticker}`,
+        );
+        if (error) {
+          console.log(error, "error");
+          setAdditionalDetail({
+            holdersCount: null,
+            historyCount: null,
+            inscriptionNumber: null,
+            creator: null,
+            txid: null,
+          });
+          return;
+        }
+        if (isMounted.current) {
+          setSymbol(result?.ticker);
+          setDecimals(result?.decimal);
+          setAdditionalDetail({
+            holdersCount: result.holdersCount,
+            historyCount: result.historyCount,
+            inscriptionNumber: result.inscriptionNumber,
+            creator: urlCreator("address", result.creator),
+            txid: urlCreator("transaction", result.txid),
+          });
+        }
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    },
+    [chain, isMounted],
+  );
+
+  useEffect(() => {
+    if (assetType === "native") {
+      setSymbol(nativeTokenInfo?.symbol);
+      setDecimals(nativeTokenInfo?.decimals);
+      setContractAddress("");
+    } else if (!contractAddress) {
+      setSymbol("");
+      setDecimals(0);
+    } else {
+      setSymbol("");
+      setDecimals(0);
+      fetchBrc20TokenMetadata(contractAddress);
+    }
+  }, [fetchBrc20TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
 
   useEffect(() => {
     if (contractAddress) {
@@ -71,6 +131,11 @@ export default function Brc20TokenConfig({
       <AssetDetail
         symbol={symbol}
         decimals={decimals}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
+      />
+      <AssetAdditionalDetail
+        additionalDetail={additionalDetail}
         asset={asset}
         setPartialAsset={setPartialAsset}
       />

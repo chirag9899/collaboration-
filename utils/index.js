@@ -8,3 +8,7 @@ export function capitalize(string = "") {
 export function waitFor(ms = 0) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function urlCreator(endpoint,string) {
+  return `https://blockchair.com/bitcoin/${endpoint}/${string}`
+}
