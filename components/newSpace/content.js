@@ -82,7 +82,7 @@ export default function Content({ chainsDef, tokensDef }) {
   });
   const logoImage = imageFile || defaultLogo;
   const [assets, setAssets] = useState([]);
-  const [proposalThreshold, setProposalThreshold] = useState("1");
+  const [proposalThreshold, setProposalThreshold] = useState("0");
   const [selectedOptions, setSelectedOptions] = useState([
     "balance-of",
     "quadratic-balance-of",
