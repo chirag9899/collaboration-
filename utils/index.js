@@ -12,3 +12,11 @@ export function waitFor(ms = 0) {
 export function urlCreator(endpoint,string) {
   return `https://blockchair.com/bitcoin/${endpoint}/${string}`
 }
+
+export function stringElipsis(string, maxWidth) {
+  if (string.length > maxWidth) {
+      return string.slice(0, maxWidth - 3) + '...';
+  } else {
+      return string;
+  }
+}
