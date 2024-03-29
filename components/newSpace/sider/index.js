@@ -77,7 +77,7 @@ export default function Sider({
     }
 
     if (!selectedStrategies.length) {
-      dispatch(newErrorToast("At least one strategy is required"));
+      dispatch(newErrorToast("Strategy is required"));
       return false;
     }
 
@@ -110,16 +110,16 @@ export default function Sider({
 
     setIsLoading(true);
     try {
-      const { result, error } = await nextApi.post("spaces", spaceData);
-      if (error) {
-        dispatch(newErrorToast(error.message));
-      }
+    const { result, error } = await nextApi.post("spaces", spaceData);
+    if (error) {
+    dispatch(newErrorToast(error.message));
+    }
       if (result) {
-        dispatch(newSuccessToast("Space created successfully"));
-        router.push(`/space/${result.spaceId}`);
-      }
+    dispatch(newSuccessToast("Space created successfully"));
+    router.push(`/space/${result.spaceId}`);
+    }
     } finally {
-      setIsLoading(false);
+    setIsLoading(false);
     }
   }, [
     router,

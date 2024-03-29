@@ -12,7 +12,7 @@ const Text = styled.span`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  color: var(--neutral-1);;
+  color: var(--neutral-1);
 `;
 
 const Items = styled.div`
@@ -21,7 +21,7 @@ const Items = styled.div`
 `;
 
 export default function Strategies({ options, selectedOptions }) {
-  let strategiesList = "-";
+let strategiesList = "-";
 
   if (selectedOptions.length > 0) {
     strategiesList = (
@@ -38,7 +38,7 @@ export default function Strategies({ options, selectedOptions }) {
   return (
     <Wrapper>
       <Name>Strategies({selectedOptions.length || 0})</Name>
-      <Value>{strategiesList}</Value>
+        <Value>{strategiesList}</Value>
     </Wrapper>
   );
 }

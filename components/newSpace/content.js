@@ -11,17 +11,18 @@ import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
 // import { identicon } from "minidenticons";
 
-let identicon=()=>{}
+let identicon = () => {};
 // Import minidenticons only in the browser environment
-if (typeof window !== 'undefined') {
-  import('minidenticons').then(minidenticons => {
+if (typeof window !== "undefined") {
+  import("minidenticons")
+    .then((minidenticons) => {
       // Your code that uses minidenticons
-      identicon = minidenticons.identicon 
-  }).catch(error => {
+      identicon = minidenticons.identicon;
+    })
+    .catch((error) => {
       console.error("Error importing minidenticons:", error);
-  });
+    });
 }
-
 
 const Wrapper = styled.div`
   display: flex;
@@ -83,10 +84,7 @@ export default function Content({ chainsDef, tokensDef }) {
   const logoImage = imageFile || defaultLogo;
   const [assets, setAssets] = useState([]);
   const [proposalThreshold, setProposalThreshold] = useState("0");
-  const [selectedOptions, setSelectedOptions] = useState([
-    "balance-of",
-    "quadratic-balance-of",
-  ]);
+  const [selectedOptions, setSelectedOptions] = useState(["balance-of"]);
   const options = [
     { value: "balance-of", text: "balance-of" },
     { value: "quadratic-balance-of", text: "quadratic-balance-of" },
