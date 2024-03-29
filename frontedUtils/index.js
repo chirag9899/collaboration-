@@ -214,7 +214,27 @@ export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 // set explorer in fe
 export function getExplorer(network) {
-  return network === "statemine" ? "statescan" : "subscan";
+  return network === "statemine"
+    ? "statescan"
+    : "moonbeam"
+    ? "moonbeam"
+    : "ethereum"
+    ? "ethereum"
+    : "taiko"
+    ? "taiko"
+    : "linea"
+    ? "linea"
+    : "blast"
+    ? "blast"
+    : "berachain"
+    ? "berachain"
+    : "merlin"
+    ? "merlin"
+    : "brc20"
+    ? "brc20"
+    : "moonriver"
+    ? "moonriver"
+    : "subscan";
 }
 
 export function isZero(value) {
