@@ -86,7 +86,6 @@ export default function Brc20TokenConfig({
     } else {
       setSymbol("");
       setDecimals(0);
-      fetchBrc20TokenMetadata(contractAddress);
     }
   }, [fetchBrc20TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
 
@@ -112,6 +111,12 @@ export default function Brc20TokenConfig({
     }
   }, [contractAddress, asset?.type, asset?.ticker, setPartialAsset]);
 
+  const onBlurHandler = (e) => {
+    const { value } = e.target;
+    setContractAddress(value);
+    fetchBrc20TokenMetadata(value);
+  };
+
   return (
     <Wrapper>
       <FieldWrapper>
@@ -124,7 +129,7 @@ export default function Brc20TokenConfig({
           <Title>Asset ticker</Title>
           <LoadingInput
             placeholder="Enter an ticker address"
-            onBlur={(e) => setContractAddress(e.target.value)}
+            onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
           />
         </FieldWrapper>
