@@ -37,7 +37,7 @@ let strategiesList = "-";
 
   return (
     <Wrapper>
-      <Name>Strategies({selectedOptions.length || 0})</Name>
+      <Name>Strategy</Name>
         <Value>{strategiesList}</Value>
     </Wrapper>
   );
