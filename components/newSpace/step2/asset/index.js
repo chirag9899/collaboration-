@@ -7,7 +7,7 @@ import CommonAssetConfig from "./commonAssetConfig";
 import OrmlTokenConfig from "./ormlTokenConfig";
 import Erc20TokenConfig from "./erc20TokenConfig";
 import Brc20TokenConfig from "./brc20TokenConfig";
-import ordCollectionTokenConfig from "./ordCollectionTokenConfig";
+import OrdCollectionTokenConfig from "./ordCollectionTokenConfig";
 import styled from "styled-components";
 import useStateChanged from "hooks/useStateChanged";
 import { AssetTypes } from "./constants";
@@ -148,7 +148,7 @@ export default function Asset({
     );
   } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.COLLECTION_ORD)) {
   assetConfig = (
-    <ordCollectionTokenConfig
+    <OrdCollectionTokenConfig
       count={count}
       chain={asset.chain}
       name={asset.name}

@@ -8,7 +8,7 @@ import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
 
-export default function ordCollectionTokenConfig({
+export default function OrdCollectionTokenConfig({
   count,
   chain,
   nativeTokenInfo,
