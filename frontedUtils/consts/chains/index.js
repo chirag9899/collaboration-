@@ -106,8 +106,8 @@ export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainNam
 
 const walletToChains = {
   'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
-  'unisat': ['brc20'],
-  'walletConnect': ['ethereum', 'brc20'],
+  'unisat': ['brc20', 'ordcollection'],
+  'walletConnect': ['ethereum', 'brc20', 'ordcollection'],
 }
 
 export function supportedChains(selectedWallet) {

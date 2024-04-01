@@ -78,7 +78,7 @@ export default function Connect({ networks }) {
         if (window.unisat) {
           try {
             let res = await window.unisat.requestAccounts();
-            let res2 = await window.unisat.getNetwork();
+            //let res2 = await window.unisat.getNetwork();
             setAddress(res[0]);
             dispatch(
               setAccount({
