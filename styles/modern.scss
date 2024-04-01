@@ -339,6 +339,17 @@ ul {
     color: var(--persistent-white) !important;
   }
 }
+[class*="markdown__EditorWrapper"] {
+  textarea {
+    background-color: var(--background);
+    color: var(--persistent-white);
+    border-bottom: none;
+  }
+}
+[class*="markdown__Tab"] {
+  border: none !important;
+}
+
 [class*="StyledButton"] {
   display: inline-flex;
   align-items: center;

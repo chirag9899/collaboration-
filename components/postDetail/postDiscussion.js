@@ -27,8 +27,9 @@ import {
   MarkdownPreviewer,
   renderMentionIdentityUserPlugin,
 } from "@osn/previewer";
-import { MentionIdentityUser, RichEditor } from "@osn/common-ui";
+import { MentionIdentityUser } from "@osn/common-ui";
 import { useSuggestions } from "./suggestions";
+import RichEditor from "../RichEditor";
 
 const Item = styled.div`
   padding-top: 20px;
