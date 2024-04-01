@@ -46,6 +46,7 @@ const Wrapper = styled.div`
   padding: 24px;
   cursor: pointer;
   width: 200px;
+  min-height: 243px;
 
   :hover {
     border-color: var(--background);
@@ -102,11 +103,11 @@ export default function SpaceListItem({ name, space }) {
           <SpaceLogo space={space} />
         </Icon>
         <Name title={space.name}>
-          {stringElipsis(space.name,12)} 
-          <Image src="./imgs/icons/verified.svg" width={20} height={20}/>
+          {stringElipsis(space.name, 12)}
+          <Image src="./imgs/icons/verified.svg" width={20} height={20} />
         </Name>
       </IconWrapper>
-      {!isSpaceJoined(name) ? (
+      {/* {!isSpaceJoined(name) ? (
         <JoinButton
           onClick={(e) => {
             e.preventDefault();
@@ -122,9 +123,9 @@ export default function SpaceListItem({ name, space }) {
             e.stopPropagation();
             leaveSpace(name);
           }}
-          title="leave"
+          title="joined"
         />
-      )}
+      )} */}
     </Wrapper>
   );
 }

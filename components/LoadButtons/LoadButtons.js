@@ -13,6 +13,7 @@ const LoadBtnWrapper = styled.div`
 const LoadButton = styled(Button)`
   margin-left: 20px;
   color: ${black} !important;
+  border-radius: 0px !important;
   &:hover {
     color: ${black} !important;
   }
@@ -40,17 +41,18 @@ const LoadButtons = ({ limit = 5, data, showCount, setShowCount }) => {
           primary
           className="button button-modern"
           onClick={handleLoadLess}
-          title={"Load Less"}
-        />
+        >
+          Load Less
+        </LoadButton>
       )}
       {showCount < data.length && (
         <LoadButton
           primary
           className="button button-modern"
           onClick={handleLoadMore}
-          title={"Load More"}
-        />
-     
+        >
+          Load More
+        </LoadButton>
       )}
     </LoadBtnWrapper>
   );
