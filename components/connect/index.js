@@ -25,7 +25,7 @@ import {
 import { loginAccountSelector } from "store/reducers/accountSlice";
 import { getCookie } from "frontedUtils/cookie";
 import { newErrorToast } from "store/reducers/toastSlice";
-import { useWeb3Modal, useDisconnect,useWeb3ModalAccount,useWeb3ModalEvents, useWeb3ModalState } from "@web3modal/ethers5/react";
+import { useWeb3Modal, useDisconnect,useWeb3ModalAccount,useWeb3ModalEvents } from "@web3modal/ethers5/react";
 
 const Wrapper = styled.div``;
 

@@ -24,6 +24,7 @@ const walletConnectChains = evmChains.map(chain => ({
   rpcUrl: chain.rpc
 }));
 
+
 // 3. Create a metadata object
 const metadata = {
   name: 'voteApp',
@@ -50,6 +51,7 @@ createWeb3Modal({
   ethersConfig,
   chains: walletConnectChains,
   projectId,
+  defaultChain: walletConnectChains[0],
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
   themeVariables: {

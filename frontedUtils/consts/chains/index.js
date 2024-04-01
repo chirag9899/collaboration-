@@ -91,7 +91,7 @@ export function getChainConfigs(chain) {
 // });
 
 export const chains = [
-  { id: '0x1', chainName: 'ethereum', name: 'ethereum', chainType: 'evm', blockExplorerUrl: 'https://lineascan.build', rpc: 'https://linea.blockpi.network/v1/rpc/public', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
+  { id: '0x1', chainName: 'ethereum', name: 'Ethereum LlamaNodes', chainType: 'evm', blockExplorerUrl: 'https://etherscan.io', rpc: 'https://eth.llamarpc.com', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x4fc', chainName: 'moonbeam', name: 'Moonbeam', chainType: 'evm', blockExplorerUrl: 'https://moonbeam.moonscan.io', rpc: 'https://rpc.api.moonbeam.network', nativeCurrency: { name: 'GLMR', symbol: 'GLMR', decimals: 18 } },
   { id: '0x505', chainName: 'moonriver', name: 'Moonriver', chainType: 'evm', blockExplorerUrl: 'https://moonriver.moonscan.io', rpc: 'https://moonriver.api.onfinality.io/public', nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 } },
   { id: '0x28c60', chainName: 'taiko', name: 'Taiko Katla L2', chainType: 'evm', blockExplorerUrl: 'https://explorer.katla.taiko.xyz', rpc: 'https://rpc.katla.taiko.xyz', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
