@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-import { RichEditor, FlexBetween } from "@osn/common-ui";
+import { FlexBetween } from "@osn/common-ui";
 import ToggleText from "@/components/uploadBanner/toggleText";
 import Uploader from "@/components/uploadBanner/uploader";
 import { bg_white } from "../styles/colors";
 import Input from "../Input";
+import RichEditor from "../RichEditor";
 
 const Wrapper = styled.div`
   background: ${bg_white};

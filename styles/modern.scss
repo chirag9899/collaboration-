@@ -333,6 +333,12 @@ ul {
     }
   }
 }
+
+[class*="osn-previewer"] {
+  .markdown-body {
+    color: var(--persistent-white) !important;
+  }
+}
 [class*="StyledButton"] {
   display: inline-flex;
   align-items: center;
