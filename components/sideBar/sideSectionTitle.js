@@ -27,7 +27,7 @@ function SideSectionTitle({ title, tooltip, img }) {
   return (
     <TitleWrapper>
       {info}
-      <Image src={img} alt={title} width={24} height={24} />
+      {img && <Image src={img} alt={title} width={24} height={24} />}
     </TitleWrapper>
   );
 }

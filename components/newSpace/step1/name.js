@@ -7,7 +7,6 @@ import Input from "@/components/Input";
 const Wrapper = styled.div``;
 
 const InputWrapper = styled.div`
-
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -22,6 +21,7 @@ export default function Name({ name, setName, errorMsg }) {
           placeholder="Please enter the name of space..."
           value={name}
           onChange={(e) => setName(e.target.value)}
+          maxLength={20}
         />
         <Hint>
           <p>The space name cannot exceed 20 characters</p>

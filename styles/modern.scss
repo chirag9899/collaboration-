@@ -109,9 +109,7 @@ button {
       box-shadow: none;
       border: 0;
       border-radius: 10px !important;
-      transition:
-        box-shadow 0.1s ease,
-        width 0.1s ease;
+      transition: box-shadow 0.1s ease, width 0.1s ease;
       &[aria-expanded="true"] {
         border-radius: 10px 10px 0 0 !important;
       }
@@ -160,7 +158,12 @@ button {
     content: "";
     height: 100%;
     width: 300%;
-    background: linear-gradient(-60deg, var(--peach) 0%, var(--yellow) 50%, var(--sunset));
+    background: linear-gradient(
+      -60deg,
+      var(--peach) 0%,
+      var(--yellow) 50%,
+      var(--sunset)
+    );
     top: 0;
     right: 0;
     position: absolute;
@@ -326,10 +329,27 @@ ul {
 [class*="logo__LogoWrapper"] {
   svg {
     path {
-      fill: var(--neutral-1) !important;
+      fill: var(--neutral-10) !important;
     }
   }
 }
+
+[class*="osn-previewer"] {
+  .markdown-body {
+    color: var(--persistent-white) !important;
+  }
+}
+[class*="markdown__EditorWrapper"] {
+  textarea {
+    background-color: var(--background);
+    color: var(--persistent-white);
+    border-bottom: none;
+  }
+}
+[class*="markdown__Tab"] {
+  border: none !important;
+}
+
 [class*="StyledButton"] {
   display: inline-flex;
   align-items: center;
