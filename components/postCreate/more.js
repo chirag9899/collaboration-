@@ -24,7 +24,7 @@ import DropdownSelector from "../DropdownSelector";
 
 const Wrapper = styled.div`
   min-width: 302px;
-  background:${bg_white};
+  background: ${bg_white};
   border: 1px solid #f0f3f8;
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.04),
     0px 0.751293px 3.88168px rgba(26, 33, 44, 0.03);
@@ -82,7 +82,7 @@ const ChoiceWrapper = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
-  color: var(--neutral-1);;
+  color: var(--neutral-1);
 `;
 
 export default function More({ onPublish, space }) {
@@ -123,7 +123,7 @@ export default function More({ onPublish, space }) {
   return (
     <Wrapper>
       <InnerWrapper>
-        <SideSectionTitle title="System" img="/imgs/icons/action.svg" />
+        <SideSectionTitle title="System" />
         <DropdownSelector
           options={choiceTypes}
           value={choiceTypeIndex}
@@ -131,9 +131,10 @@ export default function More({ onPublish, space }) {
         />
       </InnerWrapper>
       <InnerWrapper>
-        <SideSectionTitle title="Period" img="/imgs/icons/date.svg" />
+        <SideSectionTitle title="Period" />
         <DateWrapper>
           <DatePicker
+            minDate={new Date()}
             date={authoringStartDate}
             setDate={(value) => {
               if (value?.getTime) {
@@ -159,7 +160,6 @@ export default function More({ onPublish, space }) {
         <SideSectionTitle
           title="Snapshot"
           tooltip="Support multiple chain voting"
-          img="/imgs/icons/block.svg"
         />
         <DateWrapper>
           <SnapshotHeightPicker space={space} />
@@ -174,7 +174,7 @@ export default function More({ onPublish, space }) {
         </DateWrapper>
       </InnerWrapper>
       <InnerWrapper>
-        <SideSectionTitle title="Information" img="/imgs/icons/info.svg" />
+        <SideSectionTitle title="Information" />
         <Divider />
         <Information space={space} />
       </InnerWrapper>
