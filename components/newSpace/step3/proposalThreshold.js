@@ -11,8 +11,7 @@ const Wrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
-border-bottom-width: 0px;
-
+  border-bottom-width: 0px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -30,7 +29,7 @@ export default function ProposalThreshold({
         <Flex style={{ height: 24 }}>
           <Tooltip
             iconSize={16}
-            content="Only account with balance >= threshold can propose"
+            content="The proposal threshold refers to the minimum number of tokens a member must hold to be eligible to create a proposal."
           />
         </Flex>
       </Flex>
