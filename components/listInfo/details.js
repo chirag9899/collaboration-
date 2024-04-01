@@ -106,7 +106,7 @@ export default function Details({ space }) {
         </DetailsItem>
 
         <DetailsItem>
-          <DetailsLabel>Strategies({strategyCount})</DetailsLabel>
+          <DetailsLabel>Strategy</DetailsLabel>
           <div>
             {space.weightStrategy?.map((strategy, index) => (
               <DetailsValue key={index}>{strategy}</DetailsValue>

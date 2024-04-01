@@ -25,7 +25,8 @@ import {
 import { loginAccountSelector } from "store/reducers/accountSlice";
 import { getCookie } from "frontedUtils/cookie";
 import { newErrorToast } from "store/reducers/toastSlice";
-import { useWeb3Modal, useDisconnect,useWeb3ModalAccount,useWeb3ModalEvents, useWeb3ModalState } from "@web3modal/ethers5/react";
+import { useWeb3Modal, useDisconnect, useWeb3ModalAccount, useWeb3ModalEvents } from "@web3modal/ethers5/react";
+import { Web3Modal, switchNetworkWc, web3Modal } from "./walletConnect/web3Modal";
 
 const Wrapper = styled.div``;
 
@@ -64,14 +65,15 @@ export default function Connect({ networks }) {
                 network: "ethereum",
               }));
             dispatch(setConnectedWallet(selectedWallet.id))
-            dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
           } catch (error) {
             console.error('Failed to connect to Metamask:', error);
+            dispatch(newErrorToast(error.message));
           }
         } else {
-          console.error('Metamask is not installed');
+          dispatch(newErrorToast("Metamask is not installed"));
         }
+        dispatch(closeConnect());
         break;
       case 'unisat':
         // Connect to Unisat
@@ -86,21 +88,27 @@ export default function Connect({ networks }) {
                 network: "brc20",
               }));
             dispatch(setConnectedWallet(selectedWallet.id))
-            dispatch(closeConnect());
             dispatch(setShowHeaderMenu(false));
-          } catch (e) {
-            console.log(e);
+          } catch (error) {
+            dispatch(newErrorToast(error.message));
+            console.log(error);
           }
+        } else {
+          dispatch(newErrorToast("Unisat is not installed"));
         }
+        dispatch(closeConnect());
+
         break;
       case 'walletConnect':
         await open()
         dispatch(closeConnect());
         break;
-
       default:
+        dispatch(newErrorToast("No walelt found"));
+        dispatch(closeConnect());
 
-        break
+        break;
+
       // ...
     }
 
@@ -108,7 +116,6 @@ export default function Connect({ networks }) {
 
   useEffect(() => {
     if (accounts && accounts.length > 0) {
-      console.log(address)
       setAddress(accounts[0].address);
     }
     if (address == null) {
@@ -117,40 +124,98 @@ export default function Connect({ networks }) {
   }, [accounts]);
 
 
-  const handleChainSelect = async (selectedChain) => {
-    let chainID = chainMap.get(chain.network).id;
-    let chainType = chainMap.get(chain.network).chainType;
+  // const handleChainSelect = async (selectedChain) => {
+  //   let chainID = chainMap.get(chain.network).id;
+  //   let chainType = chainMap.get(chain.network).chainType;
+  //   try {
+  //     if (wallet === "metamask" ) {
+  //       await switchChain(chainID)
+  //     } else if (wallet === "unisat" ) {
+  //       if (chainType === "evm") {
+  //         throw new Error("Chain not supported on this wallet"); // Create a new error object
+  //       }
+  //       await switchNetwork(chain.network)
+  //     } else if (wallet === "walletConnect") {
+  //       await switchNetworkWc(parseInt(chainID, 16));
+  //     }
+
+  //     dispatch(
+  //       setAccount({
+  //         address: address,
+  //         network: selectedChain.network
+  //       }));
+
+  //   } catch (error) {
+  //     console.log(error)
+  //     dispatch(newErrorToast(error.message));
+  //   }
+  //   dispatch(closeConnect());
+  // }
+
+  const handleChainSelect = async (chain) => {
     try {
-      if (wallet === "metamask" ) {
-        await switchChain(chainID)
-      } else if (wallet === "unisat" ) {
-        if (chainType === "evm") {
-          throw new Error("Chain not supported on this wallet"); // Create a new error object
+      const chainID = chainMap.get(chain.network).id;
+      let chainType = chainMap.get(chain.network).chainType;
+
+      if (wallet == "metamask") {
+        try {
+          if (chainType === "btc") {
+            throw new Error("Chain not supported on this wallet"); // Create a new error object
+          }
+          await switchChain(chainID);
+        } catch (error) {
+          dispatch(newErrorToast(error.message));
         }
-        await switchNetwork(chain.network)
-      } else if (wallet === "walletConnect") {
-        open({ view: 'Networks' })
+      } else if (wallet == "unisat") {
+        try {
+          if (chainType === "evm") {
+            throw new Error("Chain not supported on this wallet"); // Create a new error object
+          }
+          await switchNetwork("livenet");
+        } catch (error) {
+          dispatch(newErrorToast(error.message));
+        }
+      } else if (wallet == "walletConnect") {
+        try {
+          if (chainType === "btc") {
+            throw new Error("Chain not supported on this wallet"); // Create a new error object
+          }
+          await switchNetworkWc(parseInt(chainID, 16));
+        } catch (error) {
+          dispatch(newErrorToast(error.message));
+        }
+
       }
-
-      dispatch(
-        setAccount({
-          address: address,
-          network: selectedChain.network
-        }));
-
+      else {
+        dispatch(newErrorToast("No wallet connected"));
+      }
     } catch (error) {
       console.log(error)
-      dispatch(newErrorToast(error.message));
+      throw error;
     }
+    // Dispatch closeNetworkSelector when a chain is selected
+    dispatch(
+      setAccount({
+        address: address,
+        network: chain.network,
+      }),
+    );
     dispatch(closeConnect());
-  }
+  };
 
   useEffect(() => {
+
+
     if (wallet == null) {
       // Show all wallet options to the user
       setElement(<WalletSelector onSelect={handleWalletSelect} />);
       return;
     }
+
+    // else if (wallet === "walletConnect") {
+    //   open({ view: 'Networks' });
+    //   return; // Return early to prevent setting the element state
+    // }
 
     else if (wallet) {
       // Show chain selection options to the user
@@ -167,12 +232,9 @@ export default function Connect({ networks }) {
     // Rest of your code...
   }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
 
-  if ( wallet == "walletConnect" ) {
-    return;
-  }
-  
+
   return (
-   <Wrapper>
+    <Wrapper>
       <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>

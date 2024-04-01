@@ -7,6 +7,7 @@ import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "@osn/common-ui";
 import encodeAddressByChain from "frontedUtils/chain/addr";
+import { white_text_color } from "./styles/colors";
 
 const IdentityWrapper = styled.span`
   display: inline-flex;
@@ -38,6 +39,7 @@ const Name = styled.span`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
+  color: ${white_text_color};
 `;
 
 export default function IdentityOrAddr({

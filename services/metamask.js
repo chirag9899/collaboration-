@@ -1,4 +1,3 @@
-import { evmChainId } from "../frontedUtils/consts/chains";
 import {
   isEvmSelector,
   loginAccountSelector,
