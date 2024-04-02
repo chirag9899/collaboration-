@@ -91,7 +91,7 @@ export function getChainConfigs(chain) {
 // });
 
 export const chains = [
-  { id: '0x1', chainName: 'ethereum', name: 'ethereum', chainType: 'evm', blockExplorerUrl: 'https://lineascan.build', rpc: 'https://linea.blockpi.network/v1/rpc/public', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
+  { id: '0x1', chainName: 'ethereum', name: 'Ethereum LlamaNodes', chainType: 'evm', blockExplorerUrl: 'https://etherscan.io', rpc: 'https://eth.llamarpc.com', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x4fc', chainName: 'moonbeam', name: 'Moonbeam', chainType: 'evm', blockExplorerUrl: 'https://moonbeam.moonscan.io', rpc: 'https://rpc.api.moonbeam.network', nativeCurrency: { name: 'GLMR', symbol: 'GLMR', decimals: 18 } },
   { id: '0x505', chainName: 'moonriver', name: 'Moonriver', chainType: 'evm', blockExplorerUrl: 'https://moonriver.moonscan.io', rpc: 'https://moonriver.api.onfinality.io/public', nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 } },
   { id: '0x28c60', chainName: 'taiko', name: 'Taiko Katla L2', chainType: 'evm', blockExplorerUrl: 'https://explorer.katla.taiko.xyz', rpc: 'https://rpc.katla.taiko.xyz', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
@@ -99,7 +99,7 @@ export const chains = [
   { id: '0x13e31', chainName: 'blast', name: 'blast', chainType: 'evm', blockExplorerUrl: 'https://blastscan.io', rpc: 'https://rpc.blast.io', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x138d5', chainName: 'berachain', name: 'Berachain Artio', chainType: 'evm', blockExplorerUrl: 'https://artio.beratrail.io', rpc: 'https://artio.rpc.berachain.com', nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 } },
   { id: '0x1068', chainName: 'merlin', name: 'Merlin Mainnet', chainType: 'evm', blockExplorerUrl: 'https://scan.merlinchain.io', rpc: 'https://rpc.merlinchain.io', nativeCurrency: { name: 'BTC', symbol: 'BTC', decimals: 18 } },
-  { id: '2f7b', chainName: 'brc20', chainType: 'btc' },
+  { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
   { id: '2f7c', chainName: 'ordcollection', chainType: 'btc' }
 ];
 
@@ -108,7 +108,7 @@ export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainNam
 const walletToChains = {
   'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
   'unisat': ['brc20', 'ordcollection'],
-  'walletConnect': ['ethereum', 'brc20', 'ordcollection'],
+  'walletConnect': ['ethereum', 'brc20', 'ordcollection', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
 }
 
 export function supportedChains(selectedWallet) {
