@@ -1,18 +1,10 @@
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers5/react'
-import { chains } from 'frontedUtils/consts/chains';
+import { chainMap, chains, getChainName } from 'frontedUtils/consts/chains';
 
 
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
 
-// 2. Set chains
-const mainnet = {
-  chainId: 1,
-  name: 'Ethereum',
-  currency: 'ETH',
-  explorerUrl: 'https://etherscan.io',
-  rpcUrl: 'https://cloudflare-eth.com'
-}
 const evmChains = chains.filter(chain => chain.chainType === 'evm');
 
 
@@ -24,11 +16,12 @@ const walletConnectChains = evmChains.map(chain => ({
   rpcUrl: chain.rpc
 }));
 
+
 // 3. Create a metadata object
 const metadata = {
   name: 'voteApp',
   description: 'voteApp description',
-  url: 'http://127.0.0.1:8001/', // origin must match your domain & subdomain
+  url: 'http://127.0.0.1:8001', // origin must match your domain & subdomain
   icons: ['https://avatars.mywebsite.com/']
 }
 
@@ -42,14 +35,14 @@ const ethersConfig = defaultConfig({
   enableInjected: true, // true by default
   enableCoinbase: true, // true by default
   rpcUrl: '...', // used for the Coinbase SDK
-  defaultChainId: 1, // used for the Coinbase SDK
 })
 
 // 5. Create a Web3Modal instance
-createWeb3Modal({
+export const web3Modal = createWeb3Modal({
   ethersConfig,
   chains: walletConnectChains,
   projectId,
+  defaultChain: walletConnectChains[0],
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
   themeVariables: {
@@ -57,8 +50,51 @@ createWeb3Modal({
     '--wcm-accent-color': '#F5841F',
     '--wcm-z-index' : '2147483647',
   },
+  
  
 })
+
+
+export const switchNetwork = async (desiredChainId) => {
+  const isConnected = await web3Modal.getIsConnected();
+  console.log(desiredChainId)
+  if (isConnected) {
+    try {
+      await web3Modal.switchNetwork(desiredChainId)
+      console.log('Network switched successfully')
+    } catch (error) {
+      const chainName = getChainName(desiredChainId);
+      // Handle errors, e.g., if the chain is not added to the wallet
+      if (error.code === 4902) {
+        // Chain not added, add it first
+        const chainData = {
+          chainId: `0x${desiredChainId}`,
+          chainName: chainMap.get(chainName).name, // Replace with the desired chain name
+          "blockExplorerUrls": [
+            chainMap.get(chainName).blockExplorerUrl
+          ],
+          "rpcUrls": [
+            chainMap.get(chainName).rpc
+          ],
+          "nativeCurrency": chainMap.get(chainName).nativeCurrency,
+        }
+
+        try {
+          await web3Modal.addChain(chainData)
+          console.log('Chain added successfully')
+          await web3Modal.switchNetwork(desiredChainId)
+          console.log('Network switched successfully')
+        } catch (addError) {
+          console.error('Failed to add chain', addError)
+        }
+      } else {
+        console.error('Failed to switch network', error)
+      }
+    }
+  } else {
+    console.error('No wallet connected')
+  }
+}
 
 export function Web3Modal({ children }) {
   return children

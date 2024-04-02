@@ -36,23 +36,47 @@ const WalletSelectorWrapper = styled.div`
   border-radius: 10px;
 `;
 
-const WalletButton = styled.button`
+
+const WalletButton = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px ;
+  padding: 10px;
   border: 1px solid #979797;
   border-radius: 5px;
   cursor: pointer;
-  background-color: #271F27;
   width: 100% !important;
   transition: background-color 0.3s, transform 0.3s;
   gap: 30px;
-  justify-content: start; // Distribute space evenly between the items
+  justify-content: start;
   padding-left: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: transparent;
+    transform: skewX(-25deg);
+    transition: 1s all;
+  }
 
   &:hover {
     background-color: #271F27;
-    transform: scale(1.02); // Slightly enlarge the button when hovered over
+    transform: scale(1.02);
+
+    &:before {
+      left: 100%;
+      background: linear-gradient(
+        to right,
+        transparent 50%,
+        rgba(255, 255, 255, 0.5) 60%,
+        transparent 70%
+      );
+    }
   }
 
   img {
