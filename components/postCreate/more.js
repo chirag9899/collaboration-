@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import DatePicker from "components/datePicker";
 import { useDispatch, useSelector } from "react-redux";
@@ -92,6 +92,8 @@ export default function More({ onPublish, space }) {
   const authoringEndDate = useSelector(authoringEndDateSelector);
   const choiceTypeIndex = useSelector(choiceTypeIndexSelector);
 
+  const [isDisabled, setIsDisabled] = useState(false);
+
   useEffect(() => {
     if (space?.networks) {
       dispatch(
@@ -120,6 +122,43 @@ export default function More({ onPublish, space }) {
     }),
   );
 
+  const getTimeHandler = (value, type) => {
+    const time = value.getTime();
+    if (type === "start" && time) {
+      const endTime = authoringEndDate?.getTime();
+      dispatch(setStartTimestamp(time));
+      if (time >= endTime || !endTime) {
+        dispatch(setEndTimestamp(time));
+      }
+    }
+
+    if (type === "end" && time) {
+      const startTime = authoringStartDate?.getTime();
+
+      setIsDisabled(false);
+      dispatch(setEndTimestamp(time));
+    }
+  };
+
+  const onTimeChange = ({ value, hour, minute }, type) => {
+    const startTime = authoringStartDate;
+    const startHour = startTime.getHours();
+    const startMinute = startTime.getMinutes();
+
+    if (type === "hour") {
+      setIsDisabled(
+        startHour > +value || (startHour === +value && startMinute > minute),
+      );
+    } else {
+      setIsDisabled(
+        startHour > hour || (startHour === hour && startMinute > +value),
+      );
+      if (startHour >= hour && startMinute > +value) {
+        setIsDisabled(true);
+      }
+    }
+  };
+
   return (
     <Wrapper>
       <InnerWrapper>
@@ -137,22 +176,19 @@ export default function More({ onPublish, space }) {
             minDate={new Date()}
             date={authoringStartDate}
             setDate={(value) => {
-              if (value?.getTime) {
-                dispatch(setStartTimestamp(value.getTime()));
-              }
+              getTimeHandler(value, "start");
             }}
             placeholder="Start date"
             defaultTime="now"
           />
           <DatePicker
+            disableSelect={isDisabled}
             minDate={getMinEndDate()}
+            defaultTime="now"
             date={authoringEndDate}
-            setDate={(value) => {
-              if (value?.getTime) {
-                dispatch(setEndTimestamp(value?.getTime()));
-              }
-            }}
+            setDate={(value) => getTimeHandler(value, "end")}
             placeholder="End date"
+            onTimeChange={onTimeChange}
           />
         </DateWrapper>
       </InnerWrapper>
