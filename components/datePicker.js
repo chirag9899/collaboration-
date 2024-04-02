@@ -58,7 +58,7 @@ const DateWrapper = styled.div`
   z-index: 1;
   right: 0;
   padding: 24px;
-  background:${bg_white};
+  background: ${bg_white};
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
 
@@ -96,7 +96,7 @@ const DateWrapper = styled.div`
     height: 40px;
     font-family: Montserrat, sans-serif;
     ${p_14_normal};
-    color: var(--neutral-1);;
+    color: var(--neutral-1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -138,7 +138,7 @@ const DateHeader = styled(Flex)`
     font-family: Montserrat, sans-serif;
     ${p_16_semibold};
     text-align: center;
-    color: var(--neutral-1);;
+    color: var(--neutral-1);
     flex: 1 1 auto;
   }
   > svg {
@@ -168,7 +168,7 @@ const TimeWrapper = styled.div`
   position: absolute;
   right: 0;
   padding: 24px;
-  background:${bg_white};
+  background: ${bg_white};
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
 `;
@@ -178,7 +178,7 @@ const TimeHeaderWrapper = styled(FlexBetween)`
   white-space: nowrap;
   > :first-child {
     font-weight: 600;
-    color: var(--neutral-1);;
+    color: var(--neutral-1);
   }
   > :last-child {
     color: #9da9bb;
@@ -211,6 +211,8 @@ export default function Component({
   button,
   onSelect = () => {},
   defaultTime = "00:00",
+  disableSelect,
+  onTimeChange = () => {},
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [show, setShow] = useState("date");
@@ -259,6 +261,7 @@ export default function Component({
     if (!checkInt(value)) return;
     if (Number(value) > 23 || Number(value) < 0) return;
     setHour(value);
+    onTimeChange({value,hour,minute}, "hour");
   };
   const onMinuteChange = (e) => {
     let value = e.target.value;
@@ -268,6 +271,7 @@ export default function Component({
     if (!checkInt(value)) return;
     if (Number(value) > 59 || Number(value) < 0) return;
     setMinute(value);
+    onTimeChange({value,hour,minute}, "minute");
   };
   const format = (value) => {
     if (value === null || value === undefined) return "";
@@ -375,6 +379,7 @@ export default function Component({
                 <ButtonWrapper>
                   <Button onClick={() => setIsOpen(false)}>Cancel</Button>
                   <Button
+                    disabled={disableSelect}
                     primary
                     onClick={() => {
                       onSelectTime();
