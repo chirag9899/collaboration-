@@ -99,15 +99,16 @@ export const chains = [
   { id: '0x13e31', chainName: 'blast', name: 'blast', chainType: 'evm', blockExplorerUrl: 'https://blastscan.io', rpc: 'https://rpc.blast.io', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x138d5', chainName: 'berachain', name: 'Berachain Artio', chainType: 'evm', blockExplorerUrl: 'https://artio.beratrail.io', rpc: 'https://artio.rpc.berachain.com', nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 } },
   { id: '0x1068', chainName: 'merlin', name: 'Merlin Mainnet', chainType: 'evm', blockExplorerUrl: 'https://scan.merlinchain.io', rpc: 'https://rpc.merlinchain.io', nativeCurrency: { name: 'BTC', symbol: 'BTC', decimals: 18 } },
-  { id: 'livenet', chainName: 'brc20', chainType: 'btc' }
+  { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
+  { id: '2f7c', chainName: 'ordcollection', chainType: 'btc' }
 ];
 
 export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, name: chain.name, id: chain.id, chainType: chain.chainType, rpc: chain.rpc, blockExplorerUrl: chain.blockExplorerUrl, nativeCurrency: chain.nativeCurrency }]));
 
 const walletToChains = {
   'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
-  'unisat': ['brc20'],
-  'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
+  'unisat': ['brc20', 'ordcollection'],
+  'walletConnect': ['ethereum', 'brc20', 'ordcollection', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
 }
 
 export function supportedChains(selectedWallet) {

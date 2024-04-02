@@ -38,7 +38,7 @@ export default function Connect({ networks }) {
     useExtension();
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
-
+  
   // const handleWalletSelect = async (selectedWallet) => {
   //   // Implement the connection logic for each wallet
   //   switch (selectedWallet.id) {
