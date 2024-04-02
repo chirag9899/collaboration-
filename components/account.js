@@ -42,7 +42,9 @@
   import { accountSelector } from "store/reducers/accountSlice";
   import { clearCookie, getCookie } from "frontedUtils/cookie";
   import Image from "next/image";
-import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
+  import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
+  import { _handleChainSelect } from "./connect/helper";
+
 
   
   const ConnectModal = dynamic(() => import("./connect"), {
@@ -229,9 +231,11 @@ import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
   
     const onLogout = () => {
       dispatch(logout());
-      connectedWallet == "walletConnect" && disconnect()
       dispatch(setConnectedWallet(null))
       dispatch(setShowHeaderMenu(false));
+      if (connectedWallet) {
+        connectedWallet == "walletConnect" && disconnect();
+      }
     };
   
     useEffect(() => {
@@ -263,58 +267,17 @@ import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
       </div>
     );
   
-  
-  
+
   const handleChainSelect = async (chain) => {
-      try {
-        const chainID = chainMap.get(chain.network).id;
-        let chainType = chainMap.get(chain.network).chainType;
-
-        if (connectedWallet == "metamask") {
-          try {
-            if (chainType === "btc") {
-              throw new Error("Chain not supported on this wallet"); // Create a new error object
-            }
-            await switchChain(chainID);
-          } catch (error) {
-            dispatch(newErrorToast(error.message));
-          }
-        } else if (connectedWallet == "unisat") {
-          try {
-            if (chainType === "evm") {
-              throw new Error("Chain not supported on this wallet"); // Create a new error object
-            }
-            await switchNetwork("livenet");
-          } catch (error) {
-            dispatch(newErrorToast(error.message));
-          }
-        } else if (connectedWallet == "walletConnect") {
-          try {
-            if (chainType === "btc") {
-              throw new Error("Chain not supported on this wallet"); // Create a new error object
-            }
-            await switchNetworkWc(parseInt(chainID, 16));
-          } catch (error) {
-            dispatch(newErrorToast(error.message));
-          }
-
-        } 
-        else {
-          dispatch(newErrorToast("No wallet connected"));
-        }
-      } catch (error) {
-        console.log(error)
-        throw error;
-      }
-      // Dispatch closeNetworkSelector when a chain is selected
+    try {
+      await _handleChainSelect(connectedWallet, dispatch, account?.address, chainMap, chain);
       dispatch(setShowNetworkSelector(false));
-      dispatch(
-        setAccount({
-          address: account.address,
-          network: chain.network,
-        }),
-      );
-    };
+
+    } catch (error) {
+      console.log(error)
+      throw error;
+    }
+  };
   
     let selectedNetworks = connectedWallet && supportedChains(connectedWallet);
     let supportedAvailableNetworks = availableNetworks.filter((network) =>

@@ -55,7 +55,7 @@ export const web3Modal = createWeb3Modal({
 })
 
 
-export const switchNetworkWc = async (desiredChainId) => {
+export const switchNetwork = async (desiredChainId) => {
   const isConnected = await web3Modal.getIsConnected();
   console.log(desiredChainId)
   if (isConnected) {
