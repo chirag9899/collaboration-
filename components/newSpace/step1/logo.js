@@ -20,7 +20,7 @@ export default function Logo({ imageFile, setImageFile }) {
       <LogoWrapper>
         <LogoUploader imageFile={imageFile} setImageFile={setImageFile} />
         <Hint>
-          <p>Optional</p>
+          <p>Logo (Optional)</p>
           <p>Recommended size: 200x200px</p>
         </Hint>
       </LogoWrapper>

@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 import { useDispatch } from "react-redux";
 import copy from "copy-to-clipboard";
-
 import { newSuccessToast } from "store/reducers/toastSlice";
-import { p_14_normal } from "../styles/textStyles";
 import { text_light_major } from "./styles/colors";
+import { useState } from "react";
+import { p_14_normal } from "styles/textStyles";
 
 const Wrapper = styled.div`
   display: inline-flex;
@@ -38,7 +38,14 @@ const Wrapper = styled.div`
 
 const PopupWrapper = styled.div`
   cursor: auto;
-  display: none !important;
+  ${(props) =>
+    props.show
+      ? css`
+          display: block;
+        `
+      : css`
+          display: none;
+        `}
   position: absolute;
   padding-bottom: 10px;
   left: 50%;
@@ -66,12 +73,17 @@ const PopupWrapper = styled.div`
 
 const Popup = styled.div`
   position: relative;
-  background: rgba(25, 30, 39, 0.9);
-  white-space: nowrap;
+  background: rgb(25, 30, 39);
+  white-space: normal;
   padding: 8px 12px;
   ${p_14_normal};
-  color: ${text_light_major};
-  word-wrap: break-word;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  color: #ffffff;
+  overflow-wrap: break-word;
+  width: 300px;
 `;
 
 const Triangle = styled.div`
@@ -133,6 +145,7 @@ const TitleWrapper = styled.div`
 const TooltipIcon = styled.img`
   width: ${({ size }) => size || 24}px;
   height: ${({ size }) => size || 24}px;
+  cursor: pointer;
 `;
 
 export default function Tooltip({
@@ -149,11 +162,20 @@ export default function Tooltip({
   offset,
 }) {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
 
   const onCopy = () => {
     if (isCopy && content && copy(copyText || content)) {
       dispatch(newSuccessToast("Copied"));
     }
+  };
+
+  const onMouseEnterHandler = () => {
+    setShow(true);
+  };
+
+  const onMouseLeaveHandler = () => {
+    setShow(false);
   };
 
   return (
@@ -181,7 +203,12 @@ export default function Tooltip({
         <Wrapper bg={bg}>
           {label && label}
           {!label && (
-            <TooltipIcon size={iconSize} src="/imgs/icons/tooltip-icon.svg" />
+            <TooltipIcon
+              size={iconSize}
+              src="/imgs/icons/tooltip-icon.svg"
+              onMouseEnter={onMouseEnterHandler}
+              onMouseLeave={onMouseLeaveHandler}
+            />
           )}
           {content && (
             <PopupWrapper
@@ -189,6 +216,7 @@ export default function Tooltip({
               isCopy={isCopy}
               position={position}
               offset={offset}
+              show={show}
             >
               <Popup>
                 {position === "down" && <TopTriangle />}

@@ -7,14 +7,11 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 80px;
   height: 80px;
   left: 0px;
   top: 0px;
-
-  background: var(--background-0);
-
+  background: var(--background) !important;
   border: 0;
   border-radius: 50%;
   overflow: hidden;
@@ -30,13 +27,12 @@ const Layer = styled.div`
   right: 0;
   left: 0;
   bottom: 0;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   cursor: pointer;
   border-radius: 50%;
+  z-index: 1 !important;
 
   ${({ hide }) =>
     hide &&
