@@ -74,7 +74,7 @@ export default function NetworkListItem({ network }) {
         </Icon>
         <TitleWrapper>
           <Name>{network.name}</Name>
-          <SubTitle>Chain #1</SubTitle>
+          {/* <SubTitle>Chain #1</SubTitle> */}
         </TitleWrapper>
       </IconWrapper>
       {/* <Footer>In 66K space(s)</Footer> */}

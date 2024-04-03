@@ -14,6 +14,10 @@ import { ReactComponent as Chrwna } from "../../public/imgs/icons/chain/chrwna.s
 import { ReactComponent as Shiden } from "../../public/imgs/icons/chain/shiden.svg";
 import { ReactComponent as Altair } from "../../public/imgs/icons/chain/altair.svg";
 import { ReactComponent as Rococo } from "../../public/imgs/icons/chain/rococo.svg";
+import { ReactComponent as Taiko } from "../../public/imgs/icons/chain/taiko.svg";
+import { ReactComponent as Linea } from "../../public/imgs/icons/chain/linea.svg";
+import { ReactComponent as Berachain } from "../../public/imgs/icons/chain/berachain.svg";
+import { ReactComponent as Brc20 } from "../../public/imgs/icons/chain/bitcoin.svg";
 import Westend from "../../public/imgs/icons/chain/westend.png";
 import Bifrost from "../../public/imgs/icons/chain/bifrost.png";
 import Kintsugi from "../../public/imgs/icons/chain/kintsugi.png";
@@ -57,6 +61,10 @@ const svgs = {
   Shiden,
   Altair,
   Rococo,
+  Taiko,
+  Linea,
+  Berachain,
+  Brc20,
 };
 const pngs = {
   Westend,
