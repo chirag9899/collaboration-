@@ -6,6 +6,13 @@ export const FieldWrapper = styled.div`
   gap: 16px;
 `;
 
+
+export const TextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
 export const Title = styled.span`
   font-family: "Montserrat";
   font-style: normal;

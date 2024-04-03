@@ -7,6 +7,16 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
+import { newErrorToast } from "store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
+import AssetOrdAdditionalDetail from "./assetOrdAdditionalDetail";
+const initAdditioanlDetail = {
+  description: null,
+  name: null,
+  icon_url: null,
+  supply: null,
+  bis_url: null,
+};
 
 export default function OrdCollectionTokenConfig({
   count,
@@ -21,16 +31,22 @@ export default function OrdCollectionTokenConfig({
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [additionalDetail, setAdditionalDetail] =
+    useState(initAdditioanlDetail);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSymbol(contractAddress);
     setContractAddress(contractAddress);
-    setDecimals(18)
+    setDecimals(18);
   }, [false, assetType, contractAddress, nativeTokenInfo]);
 
   useEffect(() => {
     if (contractAddress) {
-      if (asset?.type === "ordcollection" && asset?.collection === contractAddress) {
+      if (
+        asset?.type === "ordcollection" &&
+        asset?.collection === contractAddress
+      ) {
         return;
       }
 
@@ -50,6 +66,48 @@ export default function OrdCollectionTokenConfig({
     }
   }, [contractAddress, asset?.type, asset?.collection, setPartialAsset]);
 
+  const fetchOrdCollMetadata = useCallback(
+    async (collection) => {
+      setIsLoadingMetadata(true);
+      try {
+        const { result, error } = await nextApi.fetch(
+          `chain/inscription-collection/collection/${collection}`,
+        );
+        if (result?.data === "no-data") {
+          dispatch(newErrorToast("Please enter a valid collection"));
+          setAdditionalDetail(initAdditioanlDetail);
+          setSymbol(null);
+          return;
+        }
+
+        if (error) {
+          dispatch(newErrorToast("Please enter a valid collection"));
+          setAdditionalDetail(initAdditioanlDetail);
+          return;
+        }
+        if (isMounted.current) {
+          setSymbol(result?.data?.name);
+          // setDecimals(result?.decimal);
+          setAdditionalDetail({
+            description: result.data.description,
+            name: result.data.name,
+            icon_url: result.data.icon_url,
+            supply: result.data.supply,
+            bis_url: result.data.bis_url,
+          });
+        }
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    },
+    [chain, isMounted],
+  );
+
+  const onBlurHandler = (e) => {
+    const { value } = e.target;
+    setContractAddress(value);
+    fetchOrdCollMetadata(value);
+  };
   return (
     <Wrapper>
       <FieldWrapper>
@@ -62,18 +120,26 @@ export default function OrdCollectionTokenConfig({
           <Title>Asset collection</Title>
           <LoadingInput
             placeholder="Enter an collection address"
-            onBlur={(e) => setContractAddress(e.target.value)}
+            onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
           />
         </FieldWrapper>
       )}
 
-      <AssetDetail
+      {/* <AssetDetail
         symbol={symbol}
         decimals={decimals}
         asset={asset}
         setPartialAsset={setPartialAsset}
+      /> */}
+      <AssetOrdAdditionalDetail
+        symbol={symbol}
+        decimals={decimals}
+        additionalDetail={additionalDetail}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
       />
+
       <AssetConfig
         count={count}
         symbol={asset?.symbol}
