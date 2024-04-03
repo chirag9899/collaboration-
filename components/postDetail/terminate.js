@@ -79,7 +79,7 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
   if (isAuthor) {
     terminateButton = (
       <TerminateButton isLoading={isLoading} large onClick={handleTerminate}>
-        Terminate
+        Delete Proposal
       </TerminateButton>
     );
   }
