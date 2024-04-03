@@ -5,6 +5,7 @@ import { ChainIcon } from "@osn/common-ui";
 import DropdownSelector from "@osn/common-ui/es/DropdownSelector";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useSelector, useDispatch } from "react-redux";
+import NetworkLogo from "./network/networkLogo";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -56,7 +57,8 @@ const ItemWrapper = styled.div`
 const ChainItem = ({ chainName, onClick }) => {
   return (
     <ItemWrapper onClick={onClick}>
-      <ChainIcon chainName={chainName} />
+      {/* <ChainIcon chainName={chainName} /> */}
+      <NetworkLogo network={chainName} />
       <div>
         <Text>{chainName}</Text>
       </div>
