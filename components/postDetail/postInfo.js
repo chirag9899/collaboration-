@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import moment from "moment";
-
 import ExternalLink from "@osn/common-ui/es/ExternalLink";
 import { capitalize, getExplorer } from "../../frontedUtils";
 import { ChainIcon } from "@osn/common-ui";
@@ -29,6 +28,7 @@ const InfoItem = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 24px;
+  margin-top: 10px;
 
   > :first-child {
     color: var(--neutral-4);
@@ -79,7 +79,7 @@ export default function PostInfo({ data, space }) {
   return (
     <Wrapper>
       <div>
-        <SideSectionTitle title="Information" img="/imgs/icons/info.svg" />
+        <SideSectionTitle title="Information" />
         <Divider />
         <div>
           <InfoItem>
@@ -116,15 +116,12 @@ export default function PostInfo({ data, space }) {
         </div>
       </div>
       <div>
-        <SideSectionTitle
-          title={`Assets(${assets.length})`}
-          img="/imgs/icons/asset.svg"
-        />
+        <SideSectionTitle title={`Assets(${assets.length})`} />
         <Divider />
         <AssetList assets={assets} />
       </div>
       <div>
-        <SideSectionTitle title="Timestamp" img="/imgs/icons/timeline.svg" />
+        <SideSectionTitle title="Timestamp" />
         <Divider />
         <TimestampWrapper>
           {data?.createdAt && (
