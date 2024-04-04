@@ -31,7 +31,7 @@ body {
       main {
         min-height: calc(100vh - 80px);
         position: relative;
-        z-index: 5;
+        z-index: 2;
         background-color: var(--background-1);
 
         &::after {
@@ -182,7 +182,7 @@ button {
 
 footer {
   position: relative;
-  z-index: 4;
+  z-index: 0;
   // background: var(--background-2) !important;
   .footer-logo {
     border-radius: 5px;

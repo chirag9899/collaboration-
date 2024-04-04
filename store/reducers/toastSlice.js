@@ -62,4 +62,10 @@ export const newErrorToast = (message) =>
     message,
   });
 
+  export const newWarningToast = (message) =>
+  addToast({
+    type: TOAST_TYPES.WARNING,
+    message,
+  });
+
 export default toastSlice.reducer;
