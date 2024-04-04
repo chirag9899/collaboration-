@@ -197,9 +197,10 @@ const TimeInputWrapper = styled(FlexBetween)`
 
 const TimeInput = styled.input`
   all: unset;
-  width: 128px;
+  width: 50%;
   height: 24px;
   text-align: center;
+  padding:10px 20px !important
 `;
 
 export default function Component({

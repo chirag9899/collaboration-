@@ -7,10 +7,10 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
-import AssetAdditionalDetail from "../assetAdditionalDetail";
 import { urlCreator } from "utils";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
+import AssetBrcAdditionalDetail from "./assetBrcAdditionalDetail";
 
 const initAdditioanlDetail = {
   holdersCount: null,
@@ -141,7 +141,7 @@ export default function Brc20TokenConfig({
         asset={asset}
         setPartialAsset={setPartialAsset}
       />
-      <AssetAdditionalDetail
+      <AssetBrcAdditionalDetail
         additionalDetail={additionalDetail}
         asset={asset}
         setPartialAsset={setPartialAsset}

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 // import {Input, noop } from "@osn/common-ui";
-import { FieldWrapper, Title } from "./styled";
+import { FieldWrapper, Title } from "../styled";
 import { useEffect, useState } from "react";
 import { noop } from "utils";
 import Input from "@/components/Input";
@@ -35,7 +35,7 @@ const FieldGroup = styled.div`
   }
 `;
 
-export default function AssetAdditionalDetail({
+export default function AssetBrcAdditionalDetail({
   additionalDetail,
   asset,
   setPartialAsset = noop,
