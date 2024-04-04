@@ -31,7 +31,7 @@ body {
       main {
         min-height: calc(100vh - 80px);
         position: relative;
-        z-index: 2;
+        z-index: 5;
         background-color: var(--background-1);
 
         &::after {
