@@ -66,7 +66,7 @@ export default function PostResult({ data, voteStatus, space }) {
 
   return (
     <Panel>
-      <SideSectionTitle title="Results" img="/imgs/icons/strategy.svg" />
+      <SideSectionTitle title="Results"/>
       <Divider />
       <div>
         <VoteItem>

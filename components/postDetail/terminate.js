@@ -15,6 +15,8 @@ import {
 } from "store/reducers/toastSlice";
 import { useState } from "react";
 import { delayPromise } from "../../services/delayLoading";
+import Confirmation from "../confirmationModal";
+import useModal from "hooks/useModal";
 
 const TerminateButton = styled(Button)`
   margin-left: 20px;
@@ -26,9 +28,12 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  const { open, openModal, closeModal } = useModal();
+
   const isAuthor = loginAddress === proposal.address;
 
   const handleTerminate = async () => {
+    closeModal();
     if (!viewfunc) {
       return;
     }
@@ -78,9 +83,19 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
 
   if (isAuthor) {
     terminateButton = (
-      <TerminateButton isLoading={isLoading} large onClick={handleTerminate}>
-        Delete Proposal
-      </TerminateButton>
+      <>
+        <TerminateButton isLoading={isLoading} large onClick={openModal}>
+          Proposal Termination
+        </TerminateButton>
+        {open && (
+          <Confirmation
+            open={open}
+            closeModal={closeModal}
+            message="The proposal deletion is permanent.Are you sure you want to delete?"
+            onConfirmation={handleTerminate}
+          />
+        )}
+      </>
     );
   }
 

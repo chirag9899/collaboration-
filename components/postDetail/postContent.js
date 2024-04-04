@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-
 import PostVote from "./postVote";
 import Author from "components/author";
 import { p_14_normal, p_semibold } from "styles/textStyles";
@@ -12,17 +11,21 @@ import Accordion from "@/components/accordionPanel/accordion";
 import SubTitle from "@osn/common-ui/es/styled/SubTitle";
 import Appendants from "./appendants";
 import { useSelector } from "react-redux";
-import { loginAddressSelector } from "store/reducers/accountSlice";
+import {
+  loginAddressSelector,
+  loginNetworkSelector,
+} from "store/reducers/accountSlice";
 import { proposalStatus } from "frontedUtils/consts/proposal";
 import { MarkdownPreviewer } from "@osn/previewer";
 import PostBanner from "@/components/postDetail/postBanner";
 import { black, white_text_color } from "../styles/colors";
+import { useTerminate } from "./terminate";
 
 const Title = styled.div`
   ${p_semibold};
   font-size: 20px;
   line-height: 28px;
-  margin-bottom: 16px;
+  max-width: 70%;
 `;
 
 const InfoWrapper = styled.div`
@@ -42,7 +45,7 @@ const LeftWrapper = styled.div`
     content: "·";
     margin: 0 8px;
   }
- `;
+`;
 
 const Divider = styled.div`
   height: 1px;
@@ -58,18 +61,25 @@ const Divider = styled.div`
 const Content = styled.div`
   ${p_14_normal};
   color: var(--neutral-1);
-  .osn-previewer{
-    .markdown-body{
-      >p{
+  .osn-previewer {
+    .markdown-body {
+      > p {
         color: ${white_text_color};
       }
     }
   }
+`;
 
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: center;
 `;
 
 export default function PostContent({ data, space }) {
   const loginAddress = useSelector(loginAddressSelector);
+  const { network: loginNetwork } = useSelector(loginNetworkSelector) || {};
   const isOwner = loginAddress === (data.proposor || data.address);
   const networkConfig = findNetworkConfig(
     data.networksConfig,
@@ -81,12 +91,21 @@ export default function PostContent({ data, space }) {
     proposalStatus.terminated,
   ].includes(data?.status);
 
+  const { terminateButton } = useTerminate({
+    proposal: data,
+    loginAddress,
+    loginNetwork,
+  });
+
   const showAppendants =
     (isOwner && !proposalClosed) || data.appendants?.length > 0;
 
   return (
     <Panel>
-      <Title>{data?.title}</Title>
+      <TitleWrapper>
+        <Title>{data?.title}</Title>
+        {terminateButton}
+      </TitleWrapper>
       <InfoWrapper>
         <LeftWrapper>
           <Author

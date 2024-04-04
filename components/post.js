@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Author from "./author";
 import InternalLink from "components/internalLink";
 import HardLink from "components/hardLink";
-import { p_16_semibold } from "styles/textStyles";
+import { p_18_semibold } from "styles/textStyles";
 import { shadow_100, shadow_200 } from "styles/globalCss";
 import StatusTag from "./statusTag";
 import PostTime from "./postTime";
@@ -18,8 +18,9 @@ import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "./styles/colors";
 
 const Wrapper = styled.div`
-  background:${bg_white};
+  background: ${bg_white};
   border: 1px solid #f0f3f8;
+  border-radius: 10px;
   ${shadow_100}
   ${p_24};
 
@@ -37,7 +38,8 @@ const Title = styled.h3`
   font-family: Montserrat, serif;
   font-style: normal;
   display: inline-block;
-  ${p_16_semibold};
+  ${p_18_semibold};
+  font-weight: bold !important;
   flex-grow: 1;
 `;
 
@@ -55,9 +57,11 @@ const LeftWrapper = styled(Flex)`
   line-height: 24px;
   color: var(--neutral-3);
   flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
 
   > :not(:first-child)::before {
-    content: "·";
+    /* content: "·"; */
     margin: 0 8px;
   }
 `;
@@ -72,7 +76,7 @@ const SpaceName = styled.a`
   text-transform: capitalize;
   margin-left: 6px;
   ${p_14_medium};
-  color: var(--neutral-1); !important;
+  color: var(--neutral-1) !important;
 
   :hover {
     text-decoration-line: underline;
@@ -108,44 +112,44 @@ export default function Post({ data, showSpace, space, spaces }) {
 
   return (
     <Wrapper>
-      <TitleWrapper>
-        <HardLink href={`/space/${data.space}/proposal/${data.cid}`}>
+      <HardLink href={`/space/${data.space}/proposal/${data.cid}`}>
+        <TitleWrapper>
           <Title>{data.title}</Title>
-        </HardLink>
-        <PostResult data={data} space={spaceInfo} />
-      </TitleWrapper>
-      <Divider />
-      <InfoWrapper>
-        <LeftWrapper>
-          {showRichInfo && (
-            <Author
-              address={data.proposer ?? data.address}
-              space={proposerNetworkConfig}
-              showNetwork={spaceSupportMultiChain}
-            />
-          )}
-          {!showRichInfo && (
-            <img width="20px" height="20px" src={spaceIcon} alt="" />
-          )}
-          <PostTime post={data} />
-          {showSpace && showRichInfo && (
-            <FromSpace>
-              From
-              <img
-                width="20px"
-                height="20px"
-                className="ml-4px"
-                src={spaceIcon}
-                alt=""
+          <PostResult data={data} space={spaceInfo} />
+          <StatusTag>{data.status}</StatusTag>
+        </TitleWrapper>
+        {/* <Divider /> */}
+        <InfoWrapper>
+          <LeftWrapper>
+            {showRichInfo && (
+              <Author
+                address={data.proposer ?? data.address}
+                space={proposerNetworkConfig}
+                showNetwork={spaceSupportMultiChain}
               />
-              <InternalLink href={`/space/${data.space}`}>
-                <SpaceName>{getSpaceDisplayName(data.space)}</SpaceName>
-              </InternalLink>
-            </FromSpace>
-          )}
-        </LeftWrapper>
-        <StatusTag>{data.status}</StatusTag>
-      </InfoWrapper>
+            )}
+            {!showRichInfo && (
+              <img width="20px" height="20px" src={spaceIcon} alt="" />
+            )}
+            <PostTime post={data} />
+            {showSpace && showRichInfo && (
+              <FromSpace>
+                From
+                <img
+                  width="20px"
+                  height="20px"
+                  className="ml-4px"
+                  src={spaceIcon}
+                  alt=""
+                />
+                <InternalLink href={`/space/${data.space}`}>
+                  <SpaceName>{getSpaceDisplayName(data.space)}</SpaceName>
+                </InternalLink>
+              </FromSpace>
+            )}
+          </LeftWrapper>
+        </InfoWrapper>
+      </HardLink>
     </Wrapper>
   );
 }

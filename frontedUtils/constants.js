@@ -30,4 +30,5 @@ export const TOAST_TYPES = {
   ERROR: "Error",
   INFO: "Info",
   PENDING: "Pending",
+  WARNING:"Warning"
 };

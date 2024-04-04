@@ -12,7 +12,7 @@ import { bg_white } from "../styles/colors";
 const Wrapper = styled.div`
   padding: 20px;
   width: 400px;
-  background:${bg_white};
+  background: ${bg_white};
   filter: drop-shadow(0px 4px 31px rgba(26, 33, 44, 0.06))
     drop-shadow(0px 0.751293px 8px rgba(26, 33, 44, 0.04));
   color: rgba(17, 17, 17, 0.65);
@@ -48,7 +48,7 @@ const Title = styled.div`
 const Content = styled.div`
   font-size: 14px;
   line-height: 24px;
-  color: var(--neutral-4);
+  color: var(--neutral-0);
   word-wrap: break-word;
   word-break: break-all;
 `;
@@ -79,6 +79,8 @@ const getToastColor = (type) => {
     case TOAST_TYPES.INFO:
     case TOAST_TYPES.PENDING:
       return "#6848FF";
+    case TOAST_TYPES.WARNING:
+      return "#FFFF00";
     default:
       return "#9DA9BB";
   }
