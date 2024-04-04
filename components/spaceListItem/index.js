@@ -104,7 +104,11 @@ export default function SpaceListItem({ name, space }) {
         </Icon>
         <Name title={space.name}>
           {stringElipsis(space.name, 12)}
-          <Image src="./imgs/icons/verified.svg" width={20} height={20} />
+          {(space.name === "runestone" ||
+            space.name === "runestone collection" ||
+            space.name === "pfpepe") && (
+            <Image src="./imgs/icons/verified.svg" width={20} height={20} />
+          )}
         </Name>
       </IconWrapper>
       {/* {!isSpaceJoined(name) ? (
