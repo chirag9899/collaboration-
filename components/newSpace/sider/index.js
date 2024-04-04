@@ -12,6 +12,11 @@ import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import isEmpty from "lodash.isempty";
+import { validate } from 'bitcoin-address-validation';
+import {
+  loginAddressSelector,
+} from "store/reducers/accountSlice";
+import { signApiData } from "../../../services/chainApi";
 
 const Sections = styled.div`
   display: flex;
@@ -65,6 +70,7 @@ export default function Sider({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  const address = useSelector(loginAddressSelector);
   const verifyData = useCallback(() => {
     if (isNaN(proposalThreshold)) {
       dispatch(newErrorToast("Proposal threshold must be a number"));
@@ -73,6 +79,11 @@ export default function Sider({
 
     if (proposalThreshold < 0) {
       dispatch(newErrorToast("Proposal threshold must not be less then 0"));
+      return false;
+    }
+
+    if (!address) {
+      dispatch(newErrorToast("Please connect wallet"));
       return false;
     }
 
@@ -89,6 +100,10 @@ export default function Sider({
       return;
     }
 
+    let pubkey = address
+    if (validate(account.address)) {
+      pubkey = await window.unisat.getPublicKey();
+    }
     const spaceData = {
       name,
       symbol,
@@ -106,11 +121,17 @@ export default function Sider({
       proposalThreshold: new BigNumber(proposalThreshold)
         .times(Math.pow(10, decimals))
         .toFixed(),
+      pubkey: pubkey
     };
+    
+    const signedData = await signApiData(
+      { data: spaceData },
+      address,
+    );
 
     setIsLoading(true);
     try {
-    const { result, error } = await nextApi.post("spaces", spaceData);
+      const { result, error } = await nextApi.post("spaces", signedData);
     if (error) {
     dispatch(newErrorToast(error.message));
     }
