@@ -85,7 +85,7 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
     terminateButton = (
       <>
         <TerminateButton isLoading={isLoading} large onClick={openModal}>
-          Delete Proposal
+          Proposal Termination
         </TerminateButton>
         {open && (
           <Confirmation
