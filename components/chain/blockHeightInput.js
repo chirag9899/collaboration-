@@ -16,17 +16,23 @@ const Wrapper = styled.div`
   img {
     position: absolute;
     left: 16px;
-    top: 12px;
+    top: 8px;
   }
 
   svg:nth-child(2) {
-    left: 48px;
+    left: 58px;
   }
 `;
 const StyledInput = styled(Input)`
   padding-left: 48px;
-  width: 216px;
+  width: 200px;
   box-sizing: content-box;
+  margin-left: 50px;
+  margin-bottom: 0px;
+`;
+
+const IconWrapper = styled.div`
+  margin-right: 10px;
 `;
 
 function BlockHeightInput({ network, height, loading }) {
@@ -34,7 +40,9 @@ function BlockHeightInput({ network, height, loading }) {
   const dispatch = useDispatch();
   return (
     <Wrapper>
-      <ChainIcon chainName={network} />
+      <IconWrapper>
+        <ChainIcon chainName={network} />
+      </IconWrapper>
       {loading && <Loading />}
       <StyledInput
         placeholder={loading ? "" : "Input Block Height"}

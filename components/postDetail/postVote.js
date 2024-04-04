@@ -124,12 +124,6 @@ export default function PostVote({ proposal }) {
   const loginAddress = useSelector(loginAddressSelector);
   const { network: loginNetwork } = useSelector(loginNetworkSelector) || {};
 
-  const { terminateButton } = useTerminate({
-    proposal,
-    loginAddress,
-    loginNetwork,
-  });
-
   const voteBalance = useProxy ? proxyBalance : balance;
   const voteDelegation = useProxy ? proxyDelegation : delegation;
 
@@ -328,8 +322,6 @@ export default function PostVote({ proposal }) {
           >
             {useProxy ? "Proxy Vote" : "Vote"}
           </Button>
-
-          {terminateButton}
         </Flex>
       </InnerWrapper>
     );
