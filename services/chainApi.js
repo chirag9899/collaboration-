@@ -45,7 +45,7 @@ export const signMessage = async (text, address) => {
       throw new Error("Sign address is missing");
     }
 
-    await web3Enable("opensquare.io");
+    await web3Enable("dvote.ai");
     const injector = await web3FromAddress(address);
 
     const data = stringToHex(text);

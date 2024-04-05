@@ -55,7 +55,7 @@ function Menu() {
         <MenuItem>
           <ItemWrapper
             target="_blank"
-            href="https://github.com/opensquare-network/collaboration/discussions/813"
+            href="https://dvote.ai"
           >
             <span>Add a Space</span>
             <Plus />
@@ -64,7 +64,7 @@ function Menu() {
         <MenuItem>
           <ItemWrapper
             target="_blank"
-            href="https://github.com/opensquare-network/collaboration/discussions"
+            href="https://dvote.ai"
           >
             <span>Discussions</span>
             <Discussions />

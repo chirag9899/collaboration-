@@ -31,7 +31,7 @@ const footerItems = [
       // {
       //   name: "Telegram",
       //   icon: "telegram.svg",
-      //   link: "https://t.me/opensquare",
+      //   link: "https://dvote.ai",
       // },
       {
         name: "Twitter",
@@ -48,7 +48,7 @@ const footerItems = [
   // {
   //   label: "Contact",
   //   items: [
-  //     { name: "Email", icon: "mail.svg", link: "mailto:hi@opensquare.network" },
+  //     { name: "Email", icon: "mail.svg", link: "mailto:hi@dvote.network" },
   //   ],
   // },
 ];

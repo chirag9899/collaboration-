@@ -17,7 +17,7 @@ export default function Seo({ space, title, desc, banner }) {
       title={finalTitle}
       description={desc}
       openGraph={{
-        url: "https://www.opensquare.io/",
+        url: "https://dvote.ai",
         title: finalTitle,
         description: desc,
         images,
