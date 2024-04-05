@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { p_14_medium, p_12_normal } from "../styles/textStyles";
 import { ChainIcon, FlexBetween } from "@osn/common-ui";
 import Tooltip from "./tooltip";
+import NetworkLogo from "./network/networkLogo";
 
 const Wrapper = styled.div`
   display: flex;
@@ -49,7 +50,8 @@ export default function AssetList({ assets }) {
             <DetailsValue>
               <AssetName>
                 <AssetIconContainer>
-                  <ChainIcon chainName={network} size={20} />
+                  {/* <ChainIcon chainName={network} size={20} /> */}
+                  <NetworkLogo network={network} size={20} />
                 </AssetIconContainer>
                 <FlexColumn>
                   <span>{assetName || symbol}</span>

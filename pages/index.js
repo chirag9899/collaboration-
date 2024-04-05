@@ -6,8 +6,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
-const Home = dynamic(() => import('components/home'),{
-  ssr: true
+const Home = dynamic(() => import("components/home"), {
+  ssr: true,
 });
 
 export default function Index({
@@ -20,10 +20,18 @@ export default function Index({
     .map((item) => {
       return {
         name: item[0],
-        space: item[1],
+        space: {
+          ...item[1],
+          verified:
+            item[1].name === "runestone" ||
+            item[1].name === "runestone collection" ||
+            item[1].name === "pfpepe",
+        },
       };
     })
-    .sort((a, b) => a.space.proposalsCount - b.space.proposalsCount);
+    .sort(function (x, y) {
+      return x.space.verified === y.space.verified ? 0 : x ? -1 : 1;
+    });
 
   const networks = allNetworks.map((item) => {
     return {
@@ -34,7 +42,7 @@ export default function Index({
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setAvailableNetworks(allNetworks || []));
-      }, [dispatch, allNetworks]);
+  }, [dispatch, allNetworks]);
 
   const desc =
     "One of the governance products powered by dVote. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
@@ -65,7 +73,7 @@ export async function getServerSideProps(context) {
   ]);
 
   const showAllSpace = context.req.cookies.showallspace;
-  
+
   return {
     props: {
       spaces: spaces || {},

@@ -214,27 +214,61 @@ export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 // set explorer in fe
 export function getExplorer(network) {
-  return network === "statemine"
-    ? "statescan"
-    : "moonbeam"
-    ? "moonbeam"
-    : "ethereum"
-    ? "ethereum"
-    : "taiko"
-    ? "taiko"
-    : "linea"
-    ? "linea"
-    : "blast"
-    ? "blast"
-    : "berachain"
-    ? "berachain"
-    : "merlin"
-    ? "merlin"
-    : "brc20"
-    ? "brc20"
-    : "moonriver"
-    ? "moonriver"
-    : "subscan";
+  switch (network) {
+    case "statemine":
+      return "statescan";
+    case "moonbeam":
+      return "moonbeam";
+    case "ethereum":
+      return "ethereum";
+    case "taiko":
+      return "taiko";
+    case "linea":
+      return "lineascan";
+    case "blast":
+      return "blast";
+    case "berachain":
+      return "berachain";
+    case "merlin":
+      return "merlin";
+    case "brc20":
+      return "brc20";
+    case "moonriver":
+      return "moonriver";
+    default:
+      return "subscan";
+  }
+}
+
+export function getExplorerUrl(network) {
+  switch (network) {
+    case "moonriver":
+      return `https://moonriver.moonscan.io`;
+    case "moonbeam":
+      return `https://moonscan.io`;
+    case "taiko":
+      return `https://explorer.katla.taiko.xyz`;
+    case "linea":
+      return `https://lineascan.build`;
+    case "blast":
+      return `https://blastexplorer.io`;
+    case "berachain":
+      return `https://artio.beratrail.io`;
+    case "merlin":
+      return `https://scan.merlinchain.io`;
+    case "creditcoin":
+      return `https://explorer.creditcoin.org`;
+    case "statemine":
+      return "https://statemine.statescan.io";
+    case "brc20":
+      return "https://blockchair.com/bitcoin";
+    case "ordcollection":
+      return "https://blockchair.com/bitcoin";
+    case "ethereum":
+      return "https://etherscan.io";
+    default:
+      return `https://${network}.subscan.io`;
+  }
 }
 
 export function isZero(value) {

@@ -76,7 +76,7 @@ export default function FourOFour() {
           <InternalLink href="/">Back to Square</InternalLink>
         </div>
       </Content>
-      <Footer github="https://github.com/opensquare-network/collaboration/" />
+      <Footer github="https://dvote.ai" />
       <Toast />
     </Wrapper>
   );

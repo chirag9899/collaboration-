@@ -249,7 +249,7 @@ export default function Header({ networks }) {
                   ecosystem
                 </span>
               </MenuItem>
-              <MenuItem href="https://bounties.opensquare.io/">
+              <MenuItem href="https://dvote.ai/">
                 <img src="/imgs/icons/short-term-employment.svg" alt="" />
                 <p>Bounties</p>
                 <CaretRightIcon />
@@ -280,7 +280,7 @@ export default function Header({ networks }) {
                 </Link>
                 {/* <ExternalLink
                   target="_blank"
-                  href="https://github.com/opensquare-network/collaboration/discussions"
+                  href="https://dvote.ai/"
                 ><i class="icon-message-circle"></i> Discussions
                 </ExternalLink> */}
               </ExternalLinkWrapper>

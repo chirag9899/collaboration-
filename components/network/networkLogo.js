@@ -1,5 +1,5 @@
 import ChainIcon from "../chain/ChainIcon";
 
-export default function NetworkLogo({ network }) {
-  return <ChainIcon chainName={network} />;
+export default function NetworkLogo({ network,size=24 }) {
+  return <ChainIcon chainName={network} size={size}/>;
 }

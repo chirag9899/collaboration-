@@ -53,6 +53,7 @@ import { clearCookie, getCookie } from "frontedUtils/cookie";
 import Image from "next/image";
 import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
 import { _handleChainSelect } from "./connect/helper";
+import NetworkLogo from "./network/networkLogo";
 
 const ConnectModal = dynamic(() => import("./connect"), {
   ssr: false,
@@ -329,7 +330,8 @@ function Account({ networks }) {
             <div>
               <Avatar address={address} size={20} />
               {spaceSupportMultiChain && (
-                <ChainIcon chainName={account?.network} size={16} />
+                // <ChainIcon chainName={account?.network} size={16} />
+                <NetworkLogo network={account?.network} size={16}/>
               )}
               <IdentityOrAddr
                 network={account?.network}
@@ -386,7 +388,9 @@ function Account({ networks }) {
           <div>
             <Avatar address={address} size={20} />
             {spaceSupportMultiChain && (
-              <ChainIcon chainName={account?.network} size={16} />
+              // <ChainIcon chainName={account?.network} size={16} />
+              <NetworkLogo network={account?.network} size={16} />
+
             )}
             <IdentityOrAddr
               network={account?.network}

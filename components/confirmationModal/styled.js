@@ -31,7 +31,8 @@ export const Text = styled.p`
   ${p_16_semibold};
   color: var(--neutral-1);
   margin: 0;
-  padding: 40px 0px;
+  padding: 20px 0px;
+  text-align: center;
 `;
 
 export const BtnWrapper = styled(Button)`
@@ -52,5 +53,8 @@ export const ActionsWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 15px;
+  flex-direction: row-reverse;
 `;
