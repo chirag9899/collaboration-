@@ -262,10 +262,12 @@ export function getExplorerUrl(network) {
       return "https://statemine.statescan.io";
     case "brc20":
       return "https://blockchair.com/bitcoin";
+    case "ordcollection":
+      return "https://blockchair.com/bitcoin";
     case "ethereum":
       return "https://etherscan.io";
     default:
-      return `https://www.subscan.io`;
+      return `https://${network}.subscan.io`;
   }
 }
 
