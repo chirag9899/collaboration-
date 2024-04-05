@@ -67,10 +67,9 @@ export default function Sider({
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
+  const address = useSelector(loginAddressSelector);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
-  const address = useSelector(loginAddressSelector);
   const verifyData = useCallback(() => {
     if (isNaN(proposalThreshold)) {
       dispatch(newErrorToast("Proposal threshold must be a number"));
@@ -82,27 +81,29 @@ export default function Sider({
       return false;
     }
 
-    if (!address) {
-      dispatch(newErrorToast("Please connect wallet"));
-      return false;
-    }
-
     if (!selectedStrategies.length) {
       dispatch(newErrorToast("Strategy is required"));
       return false;
     }
-
     return true;
   }, [dispatch, proposalThreshold, selectedStrategies]);
 
   const submit = useCallback(async () => {
+    if (!address) {
+      dispatch(newErrorToast("Please connect wallet"));
+      return;
+    }
     if (!verifyData()) {
       return;
     }
 
     let pubkey = address
-    if (validate(account.address)) {
-      pubkey = await window.unisat.getPublicKey();
+    if (typeof window !== "undefined") {
+      return;
+    } else {
+      if (validate(address)) {
+        pubkey = await window.unisat.getPublicKey();
+      }
     }
     const spaceData = {
       name,
@@ -125,7 +126,7 @@ export default function Sider({
     };
     
     const signedData = await signApiData(
-      { data: spaceData },
+      spaceData,
       address,
     );
 
