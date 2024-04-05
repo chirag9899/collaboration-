@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Name, Value } from "./styled";
 import { ChainIcon } from "@osn/common-ui";
 import Tooltip from "@/components/tooltip";
+import NetworkLogo from "@/components/network/networkLogo";
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +43,8 @@ export default function Assets({ assets = [] }) {
     assetsList = assets.map((asset, index) => (
       <AssetItem key={index}>
         <Description>
-          <ChainIcon chainName={asset?.chain} />
+          <NetworkLogo network={asset?.chain}/>
+          {/* <ChainIcon chainName={asset?.chain} /> */}
           <span>{asset?.symbol}</span>
         </Description>
         <Tooltip
