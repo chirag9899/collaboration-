@@ -348,6 +348,9 @@ ul {
 }
 [class*="markdown__Tab"] {
   border: none !important;
+  .active{
+    color: var(--yellow) !important;
+  }
 }
 
 [class*="StyledButton"] {
