@@ -43,6 +43,7 @@ const Title = styled.div`
   font-size: 16px;
   line-height: 24px;
   margin-bottom: 4px;
+  color: ${(props) => props.color};
 `;
 
 const Content = styled.div`
@@ -113,7 +114,7 @@ const ToastItem = ({ type, message, id, sticky }) => {
   return (
     <Wrapper color={color} className={tranClass}>
       <LeftWrapper>
-        <Title>{type}</Title>
+        <Title color={color}>{type}</Title>
         <Content>{message}</Content>
       </LeftWrapper>
       <RightWrapper>
