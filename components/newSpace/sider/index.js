@@ -98,7 +98,7 @@ export default function Sider({
     }
 
     let pubkey = address
-    if (typeof window !== "undefined") {
+    if (typeof window === "undefined") {
       return;
     } else {
       if (validate(address)) {
