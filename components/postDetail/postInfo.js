@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import moment from "moment";
 import ExternalLink from "@osn/common-ui/es/ExternalLink";
-import { capitalize, getExplorer } from "../../frontedUtils";
+import { capitalize, getExplorer, getExplorerUrl } from "../../frontedUtils";
 import { ChainIcon } from "@osn/common-ui";
 import Tooltip from "@/components/tooltip";
 import Panel from "@/components/postDetail/panel";
 import SideSectionTitle from "@/components/sideBar/sideSectionTitle";
 import AssetList from "../assetList";
 import { getSpaceAssets } from "frontedUtils/getSpaceAssets";
+import NetworkLogo from "../network/networkLogo";
 
 const Wrapper = styled(Panel)`
   > :not(:first-child) {
@@ -88,7 +89,7 @@ export default function PostInfo({ data, space }) {
               {Object.keys(data.snapshotHeights).map((networkName) => {
                 const height = data.snapshotHeights[networkName];
                 const explorer = getExplorer(networkName);
-                const link = `https://${networkName}.${explorer}.io/block/${height}`;
+                const link = `${getExplorerUrl(networkName)}/block/${height}`;
                 return (
                   <Tooltip
                     key={networkName}
@@ -98,7 +99,8 @@ export default function PostInfo({ data, space }) {
                     size="fit"
                   >
                     <ExternalLink href={link}>
-                      <ChainIcon chainName={networkName} />
+                      <NetworkLogo network={networkName} />
+                      {/* <ChainIcon chainName={networkName} /> */}
                     </ExternalLink>
                   </Tooltip>
                 );
