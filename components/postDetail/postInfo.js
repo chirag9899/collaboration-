@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import moment from "moment";
 import ExternalLink from "@osn/common-ui/es/ExternalLink";
-import { capitalize, getExplorer, getExplorerUrl } from "../../frontedUtils";
+import { capitalize, getExplorerUrl } from "../../frontedUtils";
 import { ChainIcon } from "@osn/common-ui";
 import Tooltip from "@/components/tooltip";
 import Panel from "@/components/postDetail/panel";
@@ -88,8 +88,12 @@ export default function PostInfo({ data, space }) {
             <SnapshotsWrapper>
               {Object.keys(data.snapshotHeights).map((networkName) => {
                 const height = data.snapshotHeights[networkName];
-                const explorer = getExplorer(networkName);
-                const link = `${getExplorerUrl(networkName)}/block/${height}`;
+                let link
+                if (networkName === 'statemine') {
+                  link = `${getExplorerUrl(networkName)}/#/blocks/${height}`;
+                } else {
+                  link = `${getExplorerUrl(networkName)}/block/${height}`;
+                }
                 return (
                   <Tooltip
                     key={networkName}

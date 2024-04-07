@@ -59,37 +59,6 @@ export function getChainConfigs(chain) {
   return configs;
 }
 
-// export const evm = {
-//   moonbeam: "moonbeam",
-//   moonriver: "moonriver",
-//   ethereum: "ethereum",
-//   taiko: "taiko",
-//   linea: "linea",
-//   blast: "blast",
-//   berachain: "berachain",
-//   merlin: "merlin"
-// };
-// export const evmChains = [evm.moonbeam, evm.moonriver, evm.ethereum, evm.taiko, evm.linea, evm.blast, evm.berachain, evm.merlin];
-// export const evmChainId = Object.freeze({
-//   [evm.moonbeam]: 1284,
-//   [evm.moonriver]: 1285,
-//   [evm.ethereum]: 1,
-//   [evm.taiko]: 167008,
-//   [evm.linea]: 59144,
-//   [evm.blast]: 81457,
-//   [evm.berachain]: 80085,
-//   [evm.merlin]: 4200
-// });
-
-// // Add BTC chain
-// export const btc = {
-//   brc20: "brc20"
-// }
-// export const btcChains = [btc.brc20];
-// export const btcChainId = Object.freeze({
-//   [btc.brc20]: 12123
-// });
-
 export const chains = [
   { id: '0x1', chainName: 'ethereum', name: 'Ethereum LlamaNodes', chainType: 'evm', blockExplorerUrl: 'https://etherscan.io', rpc: 'https://eth.llamarpc.com', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x4fc', chainName: 'moonbeam', name: 'Moonbeam', chainType: 'evm', blockExplorerUrl: 'https://moonbeam.moonscan.io', rpc: 'https://rpc.api.moonbeam.network', nativeCurrency: { name: 'GLMR', symbol: 'GLMR', decimals: 18 } },
