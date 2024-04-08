@@ -5,7 +5,7 @@ import { IdentityUser } from "@osn/common-ui";
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  color: #2e343d;
+  /* color: #2e343d; */
 
   > :not(:first-child) {
     margin-left: 4px;

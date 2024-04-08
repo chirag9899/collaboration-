@@ -81,6 +81,13 @@ export default function Content({ chainsDef, tokensDef }) {
     saturation: 50,
     lightness: 50,
   });
+  const [socialfields, setSocialFields] = useState({
+    website: null,
+    github: null,
+    docs: null,
+    twitter: null,
+    forum: null,
+  });
   const logoImage = imageFile || defaultLogo;
   const [assets, setAssets] = useState([]);
   const [proposalThreshold, setProposalThreshold] = useState("0");
@@ -119,6 +126,8 @@ export default function Content({ chainsDef, tokensDef }) {
         setImageFile={setImageFile}
         name={name}
         setName={setName}
+        setSocialFields={setSocialFields}
+        socialfields={socialfields}
       />
     );
   } else if (currentStep === 1) {
@@ -150,6 +159,7 @@ export default function Content({ chainsDef, tokensDef }) {
       <MainWrapper>{stepContent}</MainWrapper>
       <SiderWrapper>
         <Sider
+          socialfields={socialfields}
           symbol={symbol}
           decimals={decimals}
           imageFile={logoImage}

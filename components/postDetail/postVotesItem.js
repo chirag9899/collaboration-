@@ -8,6 +8,7 @@ import Voter from "@/components/role/voter";
 import Tooltip from "@/components/tooltip";
 import VoteBalanceDetail from "./VoteBalanceDetail";
 import { isZero } from "frontedUtils";
+import { white_text_color } from "../styles/colors";
 
 const Item = styled.div`
   padding: 20px 0;
@@ -37,7 +38,7 @@ const ContentWrapper = styled.div`
 
 const Content = styled.div`
   line-height: 24px;
-  color: rgba(80, 97, 118, 1);
+  color: ${white_text_color};
 `;
 
 const BalanceWrapper = styled.div`
@@ -97,17 +98,13 @@ const DelegationTag = styled.div`
   justify-content: center;
   align-items: center;
   padding: 2px 8px;
-
   border: 1px solid #d2d9e2;
   border-radius: 9px;
-
   font-style: normal;
   font-weight: 500;
   font-size: 10px;
   line-height: 14px;
-
   color: var(--neutral-3);
-
   margin-top: 3px;
   margin-bottom: 3px;
   margin-left: 8px;

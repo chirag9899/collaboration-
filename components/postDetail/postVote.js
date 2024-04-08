@@ -68,11 +68,11 @@ const Title = styled.div`
     display: flex;
     align-items: center;
     font-style: normal;
-    font-weight: 400;
     font-size: 12px;
     line-height: 16px;
     text-align: right;
-    color: var(--neutral-3);
+    font-weight: bold;
+    color: var(--neutral-0);
     text-transform: capitalize;
   }
 `;
@@ -80,6 +80,10 @@ const Title = styled.div`
 const ButtonsWrapper = styled.div`
   > :not(:first-child) {
     margin-top: 8px;
+  }
+  > button {
+    margin-right: 15px;
+    width: 200px !important;
   }
 `;
 
@@ -104,6 +108,10 @@ const ToggleWrapper = styled.div`
 const RedText = styled.span`
   margin-left: 8px;
   ${text_secondary_red_500};
+`;
+
+const VoteBtnWrapper = styled(Button)`
+  width: 200px !important;
 `;
 
 export default function PostVote({ proposal }) {
@@ -312,7 +320,7 @@ export default function PostVote({ proposal }) {
         )}
 
         <Flex>
-          <Button
+          <VoteBtnWrapper
             primary
             large
             block
@@ -321,7 +329,7 @@ export default function PostVote({ proposal }) {
             disabled={!canVote}
           >
             {useProxy ? "Proxy Vote" : "Vote"}
-          </Button>
+          </VoteBtnWrapper>
         </Flex>
       </InnerWrapper>
     );

@@ -1,20 +1,16 @@
 import styled from "styled-components";
-import { Button as OsnButton, Flex } from "@osn/common-ui";
 import { css } from "styled-components";
 import { p_14_medium } from "@osn/common-ui/es/styles/textStyles";
 import {
   primary_purple_500,
   text_dark_accessory,
 } from "@osn/common-ui/es/styles/colors";
+import Button from "./Button";
+import Flex from "./styled/Flex";
 
-const Button = styled(OsnButton)`
+const ButtonWrapper = styled(Button)`
   padding: 12px 24px;
-  ${(p) =>
-    p.active &&
-    css`
-      border-color: ${primary_purple_500} !important;
-      color: ${primary_purple_500};
-    `}
+  color: ${(p) => p.active && 'var(--peach)'} !important;
 `;
 
 const Content = styled(Flex)`
@@ -35,11 +31,11 @@ const Content = styled(Flex)`
 
 function Option({ children, index, active, ...props }) {
   return (
-    <Button block active={active} {...props}>
+    <ButtonWrapper block active={active} {...props}>
       <Content active={active} index={index}>
         {children}
       </Content>
-    </Button>
+    </ButtonWrapper>
   );
 }
 

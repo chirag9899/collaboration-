@@ -12,6 +12,7 @@ import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import isEmpty from "lodash.isempty";
+import { SocialLinks } from "./socialLinks";
 import { validate } from 'bitcoin-address-validation';
 import {
   loginAddressSelector,
@@ -64,6 +65,7 @@ export default function Sider({
   proposalThreshold,
   allStrategies,
   selectedStrategies,
+  socialfields,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
@@ -97,6 +99,16 @@ export default function Sider({
       return;
     }
 
+    const socialLinks = {
+      ...socialfields,
+    };
+
+    for (const key in socialLinks) {
+      if (socialfields[key] === null || socialfields[key] === "") {
+        delete socialLinks[key];
+      }
+    }
+
     let pubkey = address
     if (typeof window === "undefined") {
       return;
@@ -105,11 +117,13 @@ export default function Sider({
         pubkey = await window.unisat.getPublicKey();
       }
     }
+    
     const spaceData = {
       name,
       symbol,
       decimals,
       logo: imageFile,
+      ...socialLinks,
       assets: assets?.map((item) => ({
         ...item,
         assetId: isEmpty(item.assetId) ? undefined : parseInt(item.assetId),
@@ -172,6 +186,7 @@ export default function Sider({
           options={allStrategies}
           selectedOptions={selectedStrategies}
         />
+        <SocialLinks socialfields={socialfields}/>
         {currentStep === 2 && (
           <Button primary block onClick={submit} isLoading={isLoading}>
             Submit
