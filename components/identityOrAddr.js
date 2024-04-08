@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
-import { addressEllipsis, getExplorer } from "../frontedUtils";
+import { addressEllipsis, getExplorerUrl } from "../frontedUtils";
 import { useIsMounted } from "frontedUtils/hooks";
-import { btcChains, chainMap, evm, evmChains, getChainConfigs } from "../frontedUtils/consts/chains";
+import { chainMap, getChainConfigs } from "../frontedUtils/consts/chains";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "@osn/common-ui";
@@ -52,47 +52,19 @@ export default function IdentityOrAddr({
 }) {
   const [identity, setIdentity] = useState();
   const isMounted = useIsMounted();
-  const explorer = getExplorer(network);
-
   const isLink = !noLink;
 
   let chain = chainMap.get(network);
-  let link = `https://${network}.${explorer}.io/account/${address}`;
-  if (chain) {
-    switch (chain.chainName) {
-      case 'moonriver':
-        link = `https://moonriver.moonscan.io/address/${address}`;
-        break;
-      case 'moonbeam':
-        link = `https://moonscan.io/address/${address}`;
-        break;
-      case 'taiko':
-        link = `https://explorer.katla.taiko.xyz/address/${address}`;
-        break;
-      case 'linea':
-        link = `https://lineascan.build/address/${address}`;
-        break;
-      case 'blast':
-        link = `https://blastexplorer.io/address/${address}`;
-        break;
-      case 'berachain':
-        link = `https://artio.beratrail.io/address/${address}`;
-        break;
-      case 'merlin':
-        link = `https://scan.merlinchain.io/address/${address}`;
-        break;
-      case 'creditcoin':
-        link = `https://explorer.creditcoin.org/Account/RecentExtrinsics/${address}`;
-        break;
-      default:
-        link = `https://${network}.${explorer}.io/account/${address}`;
-    }
-  } else {
-    console.error(`Unknown network: ${network}`);
-  }
-
   const isEvm = chain.chainType == 'evm';
   const isBtc = chain.chainType == 'btc';
+  let link
+  if (chain.chainName === 'statemine') {
+    link = `${getExplorerUrl(network)}/#/accounts/${address}`;
+  } else if (isEvm || isBtc) {
+    link = `${getExplorerUrl(network)}/address/${address}`;
+  } else {
+    link = `${getExplorerUrl(network)}/account/${address}`;
+  }
 
   useEffect(() => {
     if (!address || !network || isEvm || isBtc ) {

@@ -13,6 +13,11 @@ import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import isEmpty from "lodash.isempty";
 import { SocialLinks } from "./socialLinks";
+import { validate } from 'bitcoin-address-validation';
+import {
+  loginAddressSelector,
+} from "store/reducers/accountSlice";
+import { signApiData } from "../../../services/chainApi";
 
 const Sections = styled.div`
   display: flex;
@@ -64,9 +69,9 @@ export default function Sider({
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
+  const address = useSelector(loginAddressSelector);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-
   const verifyData = useCallback(() => {
     if (isNaN(proposalThreshold)) {
       dispatch(newErrorToast("Proposal threshold must be a number"));
@@ -82,11 +87,14 @@ export default function Sider({
       dispatch(newErrorToast("Strategy is required"));
       return false;
     }
-
     return true;
   }, [dispatch, proposalThreshold, selectedStrategies]);
 
   const submit = useCallback(async () => {
+    if (!address) {
+      dispatch(newErrorToast("Please connect wallet"));
+      return;
+    }
     if (!verifyData()) {
       return;
     }
@@ -101,6 +109,15 @@ export default function Sider({
       }
     }
 
+    let pubkey = address
+    if (typeof window === "undefined") {
+      return;
+    } else {
+      if (validate(address)) {
+        pubkey = await window.unisat.getPublicKey();
+      }
+    }
+    
     const spaceData = {
       name,
       symbol,
@@ -119,11 +136,17 @@ export default function Sider({
       proposalThreshold: new BigNumber(proposalThreshold)
         .times(Math.pow(10, decimals))
         .toFixed(),
+      pubkey: pubkey
     };
+    
+    const signedData = await signApiData(
+      spaceData,
+      address,
+    );
 
     setIsLoading(true);
     try {
-    const { result, error } = await nextApi.post("spaces", spaceData);
+      const { result, error } = await nextApi.post("spaces", signedData);
     if (error) {
     dispatch(newErrorToast(error.message));
     }

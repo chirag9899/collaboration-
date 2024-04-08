@@ -212,34 +212,6 @@ export function abbreviateBigNumber(x, fixed = 2) {
 
 export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-// set explorer in fe
-export function getExplorer(network) {
-  switch (network) {
-    case "statemine":
-      return "statescan";
-    case "moonbeam":
-      return "moonbeam";
-    case "ethereum":
-      return "ethereum";
-    case "taiko":
-      return "taiko";
-    case "linea":
-      return "lineascan";
-    case "blast":
-      return "blast";
-    case "berachain":
-      return "berachain";
-    case "merlin":
-      return "merlin";
-    case "brc20":
-      return "brc20";
-    case "moonriver":
-      return "moonriver";
-    default:
-      return "subscan";
-  }
-}
-
 export function getExplorerUrl(network) {
   switch (network) {
     case "moonriver":
@@ -256,8 +228,6 @@ export function getExplorerUrl(network) {
       return `https://artio.beratrail.io`;
     case "merlin":
       return `https://scan.merlinchain.io`;
-    case "creditcoin":
-      return `https://explorer.creditcoin.org`;
     case "statemine":
       return "https://statemine.statescan.io";
     case "brc20":
