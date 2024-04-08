@@ -11,6 +11,7 @@ import { MyPanel, Sections } from "../styled";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MyDivider from "../myDivider";
+import SocialFields from "./SocialFormFields";
 
 const NextButton = styled(Button)`
   padding: 12px 0;
@@ -22,6 +23,8 @@ export default function Step1({
   setImageFile,
   name,
   setName,
+  setSocialFields,
+  socialfields,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
@@ -59,6 +62,10 @@ export default function Step1({
       <Sections>
         <Logo imageFile={imageFile} setImageFile={setImageFile} />
         <Name name={name} setName={setName} errorMsg={errorMsg} />
+        <SocialFields
+          setSocialFields={setSocialFields}
+          socialfields={socialfields}
+        />
       </Sections>
       <NextButton block onClick={() => handleNext()}>
         Next
