@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
+import _ from "lodash";
 const Home = dynamic(() => import("components/home"), {
   ssr: true,
 });
@@ -16,22 +17,18 @@ export default function Index({
   showAllSpace,
   allNetworks,
 }) {
-  const allSpaces = Object.entries(spaces)
-    .map((item) => {
-      return {
-        name: item[0],
-        space: {
-          ...item[1],
-          verified:
-            item[1].name === "runestone" ||
-            item[1].name === "runestone collection" ||
-            item[1].name === "pfpepe",
-        },
-      };
-    })
-    .sort(function (x, y) {
-      return x.space.verified === y.space.verified ? 0 : x ? -1 : 1;
-    });
+
+  const allSpaces = _.sortBy(
+    Object.entries(spaces).map(([name, space]) => ({
+      name,
+      space: {
+        ...space,
+        verified: ["runestone", "runestone collection", "pfpepe"].includes(space.name),
+      },
+    })),
+    (item) => !item.space.verified
+  );
+  
 
   const networks = allNetworks.map((item) => {
     return {
