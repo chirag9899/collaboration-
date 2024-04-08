@@ -3,6 +3,8 @@ import CheckedIndex from "./checkedIndex";
 import CurrentIndex from "./currentIndex";
 import { Index, NavigationLine } from "./styled";
 import { Flex } from "@osn/common-ui";
+import { useDispatch } from "react-redux";
+import { setCurrentStep } from "store/reducers/newSpaceSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -11,8 +13,10 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 10px;
-  [class*="Index"]
-  {border-radius: 5px;}
+  [class*="Index"] {
+    border-radius: 5px;
+  }
+  cursor: pointer;
 `;
 
 const Title = styled.span`
@@ -25,14 +29,21 @@ const Title = styled.span`
 `;
 
 export default function Step({ step, index = 0, currentStep = 0, isLast }) {
+  const dispatch = useDispatch();
   const { title = "" } = step || {};
   const isCurrent = index === currentStep;
   const isPrevious = index < currentStep;
   const isFirst = index === 0;
 
+  const onBackClick = (val) => {
+    if (isPrevious) {
+      dispatch(setCurrentStep(val));
+    }
+  };
+
   let indexBox = <Index>{index + 1}</Index>;
   if (isPrevious) {
-    indexBox = <CheckedIndex />;
+    indexBox = <CheckedIndex onClickHandler={() => onBackClick(index)} />;
   } else if (isCurrent) {
     indexBox = <CurrentIndex>{index + 1}</CurrentIndex>;
   }
@@ -44,7 +55,9 @@ export default function Step({ step, index = 0, currentStep = 0, isLast }) {
         {indexBox}
         <NavigationLine isHidden={isLast} />
       </Flex>
-      <Title isCurrent={isCurrent}>{title}</Title>
+      <Title isCurrent={isCurrent} onClick={() => onBackClick(index)}>
+        {title}
+      </Title>
     </Wrapper>
   );
 }

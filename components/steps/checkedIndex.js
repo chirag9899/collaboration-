@@ -7,9 +7,9 @@ const Wrapper = styled(Index)`
   border-color: ${primary_color};
 `;
 
-export default function CheckedIndex() {
+export default function CheckedIndex({onClickHandler}) {
   return (
-    <Wrapper>
+    <Wrapper onClick={onClickHandler}>
       <CheckedSVG />
     </Wrapper>
   );
