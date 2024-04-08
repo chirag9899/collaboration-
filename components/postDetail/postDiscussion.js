@@ -49,6 +49,9 @@ const DividerWrapper = styled.div`
       margin: 0 8px;
     }
   }
+  >div{
+    margin-left: 10px !important;
+  }
 `;
 
 const ContentWrapper = styled.div`
