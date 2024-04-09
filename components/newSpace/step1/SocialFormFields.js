@@ -40,7 +40,7 @@ export default function SocialFields({
         />
         {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
       </InputWrapper>
-      <SectionTitle>Twiter(Optional)</SectionTitle>
+      <SectionTitle>Twitter(Optional)</SectionTitle>
       <InputWrapper>
         <Input
           placeholder="Please enter the name of twitter account."
