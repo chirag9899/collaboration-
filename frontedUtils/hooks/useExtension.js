@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import dynamic from 'next/dynamic';
-const isWeb3Injected = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
-const web3Accounts = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
-const web3Enable = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
+import {
+  isWeb3Injected,
+  web3Accounts,
+  web3Enable,
+} from "@polkadot/extension-dapp";
 import { useIsMountedBool } from "./index";
 import { appName } from "../consts/app";
 import { ethers } from "ethers";

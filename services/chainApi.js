@@ -1,7 +1,8 @@
-import dynamic from 'next/dynamic';
-const isWeb3Injected = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
-const web3FromAddress = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
-const web3Enable = dynamic(() => import('@polkadot/extension-dapp'), { ssr: false });
+import {
+  web3Enable,
+  isWeb3Injected,
+  web3FromAddress,
+} from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
 import { validate } from 'bitcoin-address-validation';
