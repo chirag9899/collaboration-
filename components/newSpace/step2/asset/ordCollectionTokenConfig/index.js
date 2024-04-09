@@ -36,7 +36,7 @@ export default function OrdCollectionTokenConfig({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setSymbol(contractAddress);
+    setSymbol(contractAddress.toLowerCase());
     setContractAddress(contractAddress);
     setDecimals(18);
   }, [false, assetType, contractAddress, nativeTokenInfo]);
