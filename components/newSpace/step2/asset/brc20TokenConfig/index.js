@@ -11,6 +11,7 @@ import { urlCreator } from "utils";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import AssetBrcAdditionalDetail from "./assetBrcAdditionalDetail";
+import ContractButton from "@/components/styled/ContractButton";
 
 const initAdditioanlDetail = {
   holdersCount: null,
@@ -26,6 +27,7 @@ export default function Brc20TokenConfig({
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
+  prevContract,
 }) {
   const [assetType, setAssetType] = useState("ticker");
   const [contractAddress, setContractAddress] = useState("ticker");
@@ -35,6 +37,7 @@ export default function Brc20TokenConfig({
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [additionalDetail, setAdditionalDetail] =
     useState(initAdditioanlDetail);
+  const [assetTicker, setAssetTicker] = useState("");
 
   const dispatch = useDispatch();
 
@@ -117,6 +120,17 @@ export default function Brc20TokenConfig({
     fetchBrc20TokenMetadata(value);
   };
 
+  const onChangeHandler = (e) => {
+    const { value } = e.target;
+    setAssetTicker(value);
+  };
+
+  const onClickPrevContract = () => {
+    setAssetTicker(prevContract);
+    setContractAddress(prevContract);
+    fetchBrc20TokenMetadata(prevContract);
+  };
+
   return (
     <Wrapper>
       <FieldWrapper>
@@ -126,8 +140,17 @@ export default function Brc20TokenConfig({
 
       {assetType === "ticker" && (
         <FieldWrapper>
-          <Title>Asset ticker</Title>
+          <Title>
+            Asset ticker{" "}
+            {assetTicker === "" && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
           <LoadingInput
+            onChange={onChangeHandler}
+            value={assetTicker}
             placeholder="Enter an ticker address"
             onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}

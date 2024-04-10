@@ -26,6 +26,7 @@ export default function Step2({
   tokensDef,
   assets,
   setAssets,
+  prevContract,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
@@ -116,6 +117,7 @@ export default function Step2({
         {assets?.map((asset, index) => (
           <Fragment key={asset.id}>
             <Asset
+              prevContract={prevContract}
               chainsDef={chainsDef}
               tokensDef={tokensDef}
               count={assets.length}

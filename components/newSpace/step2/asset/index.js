@@ -41,6 +41,7 @@ export default function Asset({
   asset,
   setAsset = noop,
   removeAsset = noop,
+  prevContract,
 }) {
   const assetsCountChanged = useStateChanged(count);
 
@@ -127,6 +128,7 @@ export default function Asset({
   } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.EVM_ERC20)) {
     assetConfig = (
       <Erc20TokenConfig
+        prevContract={prevContract}
         count={count}
         chain={asset.chain}
         name={asset.name}
@@ -138,6 +140,7 @@ export default function Asset({
   } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.ORD_BRC20)) {
     assetConfig = (
       <Brc20TokenConfig
+        prevContract={prevContract}
         count={count}
         chain={asset.chain}
         name={asset.name}
@@ -146,18 +149,21 @@ export default function Asset({
         setPartialAsset={setPartialAsset}
       />
     );
-  } else if (chainInfo?.supportAssetTypes?.includes(AssetTypes.COLLECTION_ORD)) {
-  assetConfig = (
-    <OrdCollectionTokenConfig
-      count={count}
-      chain={asset.chain}
-      name={asset.name}
-      nativeTokenInfo={chainInfo}
-      asset={asset}
-      setPartialAsset={setPartialAsset}
-    />
-  );
-}
+  } else if (
+    chainInfo?.supportAssetTypes?.includes(AssetTypes.COLLECTION_ORD)
+  ) {
+    assetConfig = (
+      <OrdCollectionTokenConfig
+        prevContract={prevContract}
+        count={count}
+        chain={asset.chain}
+        name={asset.name}
+        nativeTokenInfo={chainInfo}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
+      />
+    );
+  }
 
   return (
     <Wrapper>
@@ -171,7 +177,9 @@ export default function Asset({
         <Title>Chain</Title>
         <ChainSelector chains={chainsDef} onSelect={onSelectChain} />
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
-        <Title>ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}</Title>
+        <Title>
+          ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}
+        </Title>
       </MyFieldWrapper>
       {assetConfig}
     </Wrapper>

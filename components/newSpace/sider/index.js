@@ -66,12 +66,14 @@ export default function Sider({
   allStrategies,
   selectedStrategies,
   socialfields,
+  spaceDetails,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const address = useSelector(loginAddressSelector);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const verifyData = useCallback(() => {
     if (isNaN(proposalThreshold)) {
       dispatch(newErrorToast("Proposal threshold must be a number"));
@@ -87,6 +89,7 @@ export default function Sider({
       dispatch(newErrorToast("Strategy is required"));
       return false;
     }
+
     return true;
   }, [dispatch, proposalThreshold, selectedStrategies]);
 
@@ -117,7 +120,7 @@ export default function Sider({
         pubkey = await window.unisat.getPublicKey();
       }
     }
-    
+
     const spaceData = {
       name,
       symbol,
@@ -136,9 +139,9 @@ export default function Sider({
       proposalThreshold: new BigNumber(proposalThreshold)
         .times(Math.pow(10, decimals))
         .toFixed(),
-      pubkey: pubkey
+      pubkey: pubkey,
     };
-    
+
     const signedData = await signApiData(
       spaceData,
       address,
@@ -146,16 +149,19 @@ export default function Sider({
 
     setIsLoading(true);
     try {
-      const { result, error } = await nextApi.post("spaces", signedData);
-    if (error) {
-    dispatch(newErrorToast(error.message));
-    }
+      const { result, error } = await nextApi.post(
+        !spaceDetails ? "spaces" : `spaces/${router?.query?.space}/edit`,
+        signedData,
+      );
+      if (error) {
+        dispatch(newErrorToast(error.message));
+      }
       if (result) {
-    dispatch(newSuccessToast("Space created successfully"));
-    router.push(`/space/${result.spaceId}`);
-    }
+        dispatch(newSuccessToast("Space created successfully"));
+        router.push(`/space/${result.spaceId}`);
+      }
     } finally {
-    setIsLoading(false);
+      setIsLoading(false);
     }
   }, [
     router,
@@ -186,10 +192,10 @@ export default function Sider({
           options={allStrategies}
           selectedOptions={selectedStrategies}
         />
-        <SocialLinks socialfields={socialfields}/>
+        <SocialLinks socialfields={socialfields} />
         {currentStep === 2 && (
           <Button primary block onClick={submit} isLoading={isLoading}>
-            Submit
+            {spaceDetails ? "Update" : "Submit"}
           </Button>
         )}
       </Items>

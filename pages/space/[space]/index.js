@@ -9,8 +9,11 @@ import { EmptyQuery } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
-import { useDispatch } from "react-redux";
-import { setAvailableNetworks } from "store/reducers/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginAddressSelector,
+  setAvailableNetworks,
+} from "store/reducers/accountSlice";
 import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
@@ -42,6 +45,7 @@ export default function List({
   activeTab,
   defaultPage,
 }) {
+  const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
 
@@ -93,6 +97,8 @@ export default function List({
           />
           <ListInfo spaceId={spaceId} space={space} />
           <ListTab
+            loginAddress={address}
+            spaceAddress={space?.address}
             spaceId={spaceId}
             activeTab={activeTab}
             onActiveTab={setTab}

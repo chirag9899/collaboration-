@@ -7,6 +7,7 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
+import ContractButton from "@/components/styled/ContractButton";
 
 export default function Erc20TokenConfig({
   count,
@@ -14,6 +15,7 @@ export default function Erc20TokenConfig({
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
+  prevContract,
 }) {
   const [assetType, setAssetType] = useState("contract");
   const [contractAddress, setContractAddress] = useState("");
@@ -21,6 +23,7 @@ export default function Erc20TokenConfig({
   const [decimals, setDecimals] = useState(0);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [assetTicker, setAssetTicker] = useState("");
 
   const fetchErc20TokenMetadata = useCallback(
     async (contractAddress) => {
@@ -80,6 +83,19 @@ export default function Erc20TokenConfig({
     }
   }, [contractAddress, asset?.type, asset?.contract, setPartialAsset]);
 
+  const onBlurHandler = (e) => {
+    setContractAddress(e.target.value);
+  };
+
+  const onChangeHandler = (e) => {
+    const { value } = e.target;
+    setAssetTicker(value);
+  };
+  const onClickPrevContract = () => {
+    setAssetTicker(prevContract);
+    setContractAddress(prevContract);
+  };
+
   return (
     <Wrapper>
       <FieldWrapper>
@@ -89,10 +105,19 @@ export default function Erc20TokenConfig({
 
       {assetType === "contract" && (
         <FieldWrapper>
-          <Title>Asset Contract</Title>
+          <Title>
+            Asset Contract{" "}
+            {assetTicker === "" && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
           <LoadingInput
+            value={assetTicker}
+            onChange={onChangeHandler}
             placeholder="Enter an contract address"
-            onBlur={(e) => setContractAddress(e.target.value)}
+            onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
           />
         </FieldWrapper>
