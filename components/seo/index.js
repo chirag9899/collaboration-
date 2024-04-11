@@ -5,9 +5,9 @@ export default function Seo({ space, title, desc, banner }) {
   const imageCid = space?.seoImage || defaultSeoImage;
   const images = [
     {
-      url: banner ?? `https://ipfs.fleek.co/ipfs/${imageCid}`,
-      width: 1200,
-      height: 628,
+      url: banner ?? `https://dvote.ai/imgs/dvote_preview.png`,
+      width: 1201,
+      height: 629,
     },
   ];
 
