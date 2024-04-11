@@ -29,7 +29,6 @@ const Wrapper = styled.div`
   gap: 4px;
 `;
 
-
 const Link = styled.a`
   font-style: normal;
   font-weight: 500;
@@ -64,32 +63,32 @@ export const SocialLinks = ({ socialfields }) => {
     switch (key) {
       case "website":
         return (
-          <Link href={value}>
+          <Link title={key} href={value}>
             <Website />
           </Link>
         );
       case "twitter":
         return (
-          <Link href={value}>
+          <Link title={key} href={value}>
             <TwitterSvg />
           </Link>
         );
       case "github":
         return (
-          <Link href={value}>
+          <Link title={key} href={value}>
             <GithubSvg />
           </Link>
         );
       case "docs":
         return (
-          <Link href={value}>
+          <Link title={key} href={value}>
             <Docs />
           </Link>
         );
 
       case "forum":
         return (
-          <Link href={value}>
+          <Link title={key} href={value}>
             <Forum />
           </Link>
         );

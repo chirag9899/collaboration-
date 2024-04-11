@@ -17,25 +17,27 @@ export default function Index({
   showAllSpace,
   allNetworks,
 }) {
-
   const allSpaces = _.sortBy(
     Object.entries(spaces).map(([name, space]) => ({
       name,
       space: {
         ...space,
-        verified: ["runestone", "runestone collection", "pfpepe"].includes(space.name),
+        verified: ["runestone", "runestone collection", "pfpepe"].includes(
+          space.name,
+        ),
       },
     })),
-    (item) => !item.space.verified
+    (item) => !item.space.verified,
   );
-  
 
-  const networks = allNetworks.map((item) => {
-    return {
-      name: item.network,
-      ...item,
-    };
-  });
+  const networks = allNetworks
+    .map((item) => {
+      return {
+        name: item.network,
+        ...item,
+      };
+    })
+    .filter((item) => item.network !== "linea" && item.network !== "blast");
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setAvailableNetworks(allNetworks || []));
