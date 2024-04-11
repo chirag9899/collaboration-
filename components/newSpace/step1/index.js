@@ -45,56 +45,28 @@ export default function Step1({
 
   const socialLinksValidate = () => {
     const socialLinks = { docs, forum, github, twitter, website };
+    let errors = {};
+    for (const key in socialLinks) {
+      const value = socialLinks[key];
 
-    for (const [key, value] of Object.entries(socialLinks)) {
-      switch (key) {
-        case "docs":
-          if (isValidUrl(value)) {
-            setSocialErrors({
-              ...socialErrors,
-              docsErr: "Please enter a valid docs link",
-            });
-          }
-          break;
-        case "forum":
-          if (isValidUrl(value)) {
-            setSocialErrors({
-              ...socialErrors,
-              forumErr: "Please enter a valid forum link",
-            });
-          }
-          break;
-        case "github":
-          if (isValidUrl(value)) {
-            setSocialErrors({
-              ...socialErrors,
-              githubErr: "Please enter a valid GitHub link",
-            });
-          }
-          break;
-        case "twitter":
-          if (isValidUrl(value)) {
-            setSocialErrors({
-              ...socialErrors,
-              twitterErr: "Please enter a valid Twitter link",
-            });
-          }
-          break;
-        case "website":
-          if (isValidUrl(value)) {
-            setSocialErrors({
-              ...socialErrors,
-              websiteErr: "Please enter a valid website link",
-            });
-          }
-          break;
-        default:
-          setSocialErrors(initErrors);
-          break;
+      if (value && !isValidUrl(value)) {
+        errors = {
+          ...errors,
+          [`${key}Err`]: `Please enter a valid ${key} link`,
+        };
+      } else {
+        errors = {
+          ...errors,
+          [`${key}Err`]: null,
+        };
       }
     }
+    if (Object.values(errors).every((error) => error === null)) {
+      dispatch(setCurrentStep(1));
+    } else {
+      setSocialErrors(errors);
+    }
   };
-
   const handleNext = () => {
     if (!name) {
       setErrorMsg("Space name cannot be empty");
@@ -113,7 +85,6 @@ export default function Step1({
       return;
     }
     socialLinksValidate();
-    dispatch(setCurrentStep(1));
   };
 
   return (

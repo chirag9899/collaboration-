@@ -115,7 +115,6 @@ export default function OrdCollectionTokenConfig({
   const onChangeHandler = (e) => {
     const { value } = e.target;
     setAssetTicker(value);
-    fetchOrdCollMetadata(value);
   };
 
   const onClickPrevContract = () => {
