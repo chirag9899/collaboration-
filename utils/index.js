@@ -48,3 +48,24 @@ export const isValidUrl = (url) =>
   /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(
     url,
   );
+
+export async function imageUrlToBase64(url) {
+  try {
+    // Fetch the image
+    const response = await fetch(url);
+    const blob = await response.blob();
+
+    // Convert blob to base64
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise((resolve, reject) => {
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject;
+    });
+  } catch (error) {
+    console.error("Error converting image to base64:", error);
+    return null;
+  }
+}

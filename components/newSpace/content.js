@@ -9,6 +9,7 @@ import {
 } from "store/reducers/newSpaceSlice";
 import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
+import { imageUrlToBase64 } from "utils";
 // import { identicon } from "minidenticons";
 
 let identicon = () => {};
@@ -118,9 +119,16 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
         twitter: spaceDetails?.twitter ?? null,
         forum: spaceDetails?.forum ?? null,
       });
-      setImageFile(
+
+      imageUrlToBase64(
         process.env.NEXT_PUBLIC_IPFS_ENDPOINT + spaceDetails?.spaceIcon,
-      );
+      )
+        .then((base64Data) => {
+          setImageFile(base64Data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
       setSelectedOptions(spaceDetails?.weightStrategy);
       setAssets(spaceDetails?.assets);
       setPrevContract(spaceDetails?.assets[0]?.symbol);

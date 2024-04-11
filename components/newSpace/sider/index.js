@@ -13,10 +13,8 @@ import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import isEmpty from "lodash.isempty";
 import { SocialLinks } from "./socialLinks";
-import { validate } from 'bitcoin-address-validation';
-import {
-  loginAddressSelector,
-} from "store/reducers/accountSlice";
+import { validate } from "bitcoin-address-validation";
+import { loginAddressSelector } from "store/reducers/accountSlice";
 import { signApiData } from "../../../services/chainApi";
 
 const Sections = styled.div`
@@ -112,7 +110,7 @@ export default function Sider({
       }
     }
 
-    let pubkey = address
+    let pubkey = address;
     if (typeof window === "undefined") {
       return;
     } else {
@@ -140,12 +138,10 @@ export default function Sider({
         .times(Math.pow(10, decimals))
         .toFixed(),
       pubkey: pubkey,
+      address,
     };
 
-    const signedData = await signApiData(
-      spaceData,
-      address,
-    );
+    const signedData = await signApiData(spaceData, address);
 
     setIsLoading(true);
     try {
@@ -157,7 +153,11 @@ export default function Sider({
         dispatch(newErrorToast(error.message));
       }
       if (result) {
-        dispatch(newSuccessToast("Space created successfully"));
+        dispatch(
+          newSuccessToast(
+            `Space ${spaceDetails ? "updated" : "created"} successfully`,
+          ),
+        );
         router.push(`/space/${result.spaceId}`);
       }
     } finally {
