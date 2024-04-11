@@ -84,9 +84,9 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
   });
   const [socialfields, setSocialFields] = useState({
     website: null,
+    twitter: null,
     github: null,
     docs: null,
-    twitter: null,
     forum: null,
   });
   const logoImage = imageFile || defaultLogo;
