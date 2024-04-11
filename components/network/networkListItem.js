@@ -57,11 +57,11 @@ const TitleWrapper = styled.div`
 `;
 const SubTitle = styled.span`
   font-size: 12px !important;
-  color: #8b949e;
+  color:var(--netural-11);
   font-weight: bold;
 `;
 const Footer = styled.div`
-  color: #8b949e;
+  color:var(--netural-11);
   font-weight: bold;
 `;
 
