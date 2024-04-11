@@ -5,7 +5,9 @@ import Seo from "@/components/seo";
 import { ssrNextApi } from "services/nextApi";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
-const EditSpace = dynamic(() => import("@/components/newSpace"));
+const EditSpace = dynamic(() => import("@/components/newSpace"), {
+  ssr: false,
+});
 
 export default function Index({
   allNetworks,
