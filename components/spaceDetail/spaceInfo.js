@@ -10,12 +10,12 @@ import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
 import SidebarTab from "../sidebarTab";
 
 const Wrapper = styled(Panel)`
-  padding:20px 0px;
+  padding: 20px 0px;
   > :not(:first-child) {
     margin-top: 20px;
   }
   @media screen and (max-width: 800px) {
-    padding:20px 0px 0px 0px;
+    padding: 20px 0px 0px 0px;
   }
 `;
 
@@ -48,7 +48,14 @@ const MembersCount = styled.div`
 `;
 
 // eslint-disable-next-line
-export default function SpaceInfo({ space, showContent, setShowContent }) {
+export default function SpaceInfo({
+  space,
+  setShowContent,
+  onActiveTab,
+  spaceId,
+  defaultPage,
+  activeTab,
+}) {
   const socialfields = {
     website: space?.website,
     twitter: space?.twitter,
@@ -75,8 +82,11 @@ export default function SpaceInfo({ space, showContent, setShowContent }) {
 
       <SidebarTab
         tabItems={SPACE_SIDEBAR_TAB_ITEMS}
-        defaultTab="proposals"
         setShowContent={setShowContent}
+        onActiveTab={onActiveTab}
+        spaceId={spaceId}
+        defaultPage={defaultPage}
+        activeTab={activeTab}
       />
       <SocialIconsWrapper>
         <SocialLinks socialfields={socialfields} />

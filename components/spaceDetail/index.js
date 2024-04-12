@@ -17,10 +17,24 @@ const SiderWrapper = styled.div`
   }
 `;
 
-export default function SpaceDetail({space,setShowContent}) {
+export default function SpaceDetail({
+  space,
+  setShowContent,
+  onActiveTab,
+  spaceId,
+  defaultPage,
+  activeTab,
+}) {
   return (
     <SiderWrapper>
-      <SpaceInfo space={space} setShowContent={setShowContent}/>
+      <SpaceInfo
+        space={space}
+        setShowContent={setShowContent}
+        onActiveTab={onActiveTab}
+        spaceId={spaceId}
+        defaultPage={defaultPage}
+        activeTab={activeTab}
+      />
     </SiderWrapper>
   );
 }

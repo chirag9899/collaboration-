@@ -18,6 +18,7 @@ import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
+import NoData from "@/components/NoData";
 const ListInfo = dynamic("components/listInfo");
 
 const Wrapper = styled.div`
@@ -71,7 +72,7 @@ export default function List({
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
-  const [showContent, setShowContent] = useState("proposals");
+  const [showContent, setShowContent] = useState("proposals-all");
 
   useEffect(() => {
     dispatch(initAccount());
@@ -91,13 +92,13 @@ export default function List({
   }
 
   let proposalList = EmptyQuery;
-  if (!tab || tab === "all") {
+  if (!tab || tab === "proposals-all") {
     proposalList = proposals;
-  } else if (tab === "pending") {
+  } else if (tab === "proposals-pending") {
     proposalList = pendingProposals;
-  } else if (tab === "active") {
+  } else if (tab === "proposals-active") {
     proposalList = activeProposals;
-  } else if (tab === "closed") {
+  } else if (tab === "proposals-closed") {
     proposalList = closedProposals;
   }
 
@@ -111,8 +112,11 @@ export default function List({
             space={space}
             setShowContent={setShowContent}
             showContent={showContent}
+            onActiveTab={setTab}
+            spaceId={spaceId}s
+            defaultPage={defaultPage}
           />
-          {showContent === "proposals" && (
+          {showContent.includes("proposals") && (
             <MainWrapper>
               <HeaderWrapper>
                 <Breadcrumb
@@ -142,8 +146,44 @@ export default function List({
               </PostWrapper>
             </MainWrapper>
           )}
-          {showContent === "treasury" && <MainWrapper>treasury</MainWrapper>}
-          {showContent === "about" && <MainWrapper>about</MainWrapper>}
+          {showContent === "treasury" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </HeaderWrapper>
+              <NoData message="No data found" />
+            </MainWrapper>
+          )}
+          {showContent === "about" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </HeaderWrapper>
+              <NoData message="No data found" />
+            </MainWrapper>
+          )}
         </Wrapper>
       </Layout>
     </>
@@ -167,19 +207,19 @@ export async function getServerSideProps(context) {
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     ssrNextApi.fetch(`${spaceId}/proposals`, {
-      page: activeTab === "all" ? nPage : 1,
+      page: activeTab === "proposals-all" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/pending`, {
-      page: activeTab === "pending" ? nPage : 1,
+      page: activeTab === "proposals-pending" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/active`, {
-      page: activeTab === "active" ? nPage : 1,
+      page: activeTab === "proposals-active" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/closed`, {
-      page: activeTab === "closed" ? nPage : 1,
+      page: activeTab === "proposals-closed" ? nPage : 1,
       pageSize,
     }),
   ]);

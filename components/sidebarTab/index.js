@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 import FlexBetween from "../styled/FlexBetween";
 import { primary_color } from "../styles/colors";
 import { p_16_semibold } from "styles/textStyles";
+import { useRouter } from "next/router";
+import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
 
 const Wrapper = styled(FlexBetween)`
   width: 100%;
@@ -65,12 +67,46 @@ const Text = styled.div`
   }
 `;
 
-export default function SidebarTab({ tabItems, defaultTab, setShowContent }) {
-  const [activeTab, setActiveTab] = useState(defaultTab);
+export default function SidebarTab({
+  tabItems,
+  setShowContent,
+  onActiveTab,
+  spaceId,
+  defaultPage,
+  activeTab
+}) {
+  const router = useRouter();
+  const activeTabIndex = SPACE_SIDEBAR_TAB_ITEMS.findIndex(
+    (item) => item.value === activeTab,
+  );
+  const [tabIndex, setTabIndex] = useState(activeTabIndex);
 
-  const handleClick = (tabValue) => {
-    setActiveTab(tabValue);
-    setShowContent(tabValue);
+  useEffect(() => {
+    const currTabIndex = SPACE_SIDEBAR_TAB_ITEMS.findIndex(
+      (item) => item.value === router.query.tab,
+    );
+    setTabIndex(currTabIndex >= 0 ? currTabIndex : 0);
+    onActiveTab(router.query.tab);
+  }, [router, onActiveTab]);
+
+  const handleClick = (item) => {
+    setShowContent(item.value);
+    router.push(
+      {
+        query: {
+          space: spaceId,
+          tab: item.value,
+          ...(item.value === defaultPage?.tab
+            ? defaultPage.page > 1
+              ? { page: defaultPage.page }
+              : {}
+            : {}),
+        },
+      },
+      undefined,
+      { shallow: true },
+    );
+    onActiveTab(item.value);
   };
 
   return (
@@ -78,8 +114,8 @@ export default function SidebarTab({ tabItems, defaultTab, setShowContent }) {
       {tabItems.map((item, index) => (
         <Item
           key={index}
-          active={activeTab === item.value}
-          onClick={() => handleClick(item.value)}
+          active={tabIndex === index}
+          onClick={() => handleClick(item)}
         >
           <Text>{item.name}</Text>
         </Item>
