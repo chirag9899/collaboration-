@@ -128,13 +128,13 @@ export default function Sider({
         ...item,
         assetId: isEmpty(item.assetId) ? undefined : parseInt(item.assetId),
         votingWeight: parseInt(item.votingWeight),
-        votingThreshold: !spaceDetails ? new BigNumber(item.votingThreshold)
+        votingThreshold: new BigNumber(item.votingThreshold)
           .times(Math.pow(10, item.decimals))
-          .toFixed() : item.votingThreshold,
+          .toFixed(),
       })),
       weightStrategy: selectedStrategies,
-      proposalThreshold: !spaceDetails ? new BigNumber(proposalThreshold)
-        .times(Math.pow(10, decimals)) : proposalThreshold
+      proposalThreshold: new BigNumber(proposalThreshold)
+        .times(Math.pow(10, decimals))
         .toFixed(),
       pubkey: pubkey,
       address,

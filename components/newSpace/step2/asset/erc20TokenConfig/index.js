@@ -1,4 +1,5 @@
 import AssetTypeSelector from "./assetTypeSelector";
+import BigNumber from "bignumber.js";
 import { useCallback, useEffect, useState } from "react";
 import { FieldWrapper, Title, Wrapper } from "../styled";
 import { noop } from "@osn/common-ui";
@@ -17,6 +18,11 @@ export default function Erc20TokenConfig({
   setPartialAsset = noop,
   prevContract,
 }) {
+  if (asset?.votingThreshold !== "1") {
+    const votingThreshold = new BigNumber(asset.votingThreshold)
+      .div(Math.pow(10, asset.decimals)).toFixed()
+    asset.votingThreshold = votingThreshold.toString()
+  }
   const [assetType, setAssetType] = useState("contract");
   const [contractAddress, setContractAddress] = useState("");
   const [symbol, setSymbol] = useState("");

@@ -1,4 +1,5 @@
 import AssetTypeSelector from "./assetTypeSelector";
+import BigNumber from "bignumber.js";
 import { useEffect, useMemo, useState } from "react";
 import { FieldWrapper, Title, Wrapper } from "../styled";
 // import { Input, noop } from "@osn/common-ui";
@@ -17,6 +18,11 @@ export default function StatemineAssetConfig({
   asset,
   setPartialAsset = noop,
 }) {
+  if (asset?.votingThreshold !== "1") {
+    const votingThreshold = new BigNumber(asset.votingThreshold)
+      .div(Math.pow(10, asset.decimals)).toFixed()
+    asset.votingThreshold = votingThreshold.toString()
+  }
   const [assetType, setAssetType] = useState("native");
   const [assetId, setAssetId] = useState("");
   const [symbol, setSymbol] = useState("");
