@@ -118,7 +118,6 @@ export default function Sider({
         pubkey = await window.unisat.getPublicKey();
       }
     }
-
     const spaceData = {
       name,
       symbol,
@@ -129,14 +128,13 @@ export default function Sider({
         ...item,
         assetId: isEmpty(item.assetId) ? undefined : parseInt(item.assetId),
         votingWeight: parseInt(item.votingWeight),
-        votingThreshold:item.votingThreshold
-        // votingThreshold: new BigNumber(item.votingThreshold)
-        //   .times(Math.pow(10, item.decimals))
-        //   .toFixed(),
+        votingThreshold: !spaceDetails ? new BigNumber(item.votingThreshold)
+          .times(Math.pow(10, item.decimals))
+          .toFixed() : item.votingThreshold,
       })),
       weightStrategy: selectedStrategies,
-      proposalThreshold: new BigNumber(proposalThreshold)
-        .times(Math.pow(10, decimals))
+      proposalThreshold: !spaceDetails ? new BigNumber(proposalThreshold)
+        .times(Math.pow(10, decimals)) : proposalThreshold
         .toFixed(),
       pubkey: pubkey,
       address,
