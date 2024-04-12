@@ -10,6 +10,7 @@ import LoadingInput from "@/components/loadingInput";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import AssetOrdAdditionalDetail from "./assetOrdAdditionalDetail";
+import ContractButton from "@/components/styled/ContractButton";
 const initAdditioanlDetail = {
   description: null,
   name: null,
@@ -24,6 +25,7 @@ export default function OrdCollectionTokenConfig({
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
+  prevContract,
 }) {
   const [assetType, setAssetType] = useState("collection");
   const [contractAddress, setContractAddress] = useState("collection");
@@ -31,6 +33,7 @@ export default function OrdCollectionTokenConfig({
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [assetTicker, setAssetTicker] = useState("");
   const [additionalDetail, setAdditionalDetail] =
     useState(initAdditioanlDetail);
   const dispatch = useDispatch();
@@ -108,6 +111,17 @@ export default function OrdCollectionTokenConfig({
     setContractAddress(value);
     fetchOrdCollMetadata(value);
   };
+
+  const onChangeHandler = (e) => {
+    const { value } = e.target;
+    setAssetTicker(value);
+  };
+
+  const onClickPrevContract = () => {
+    setAssetTicker(prevContract);
+    setContractAddress(prevContract);
+    fetchOrdCollMetadata(prevContract);
+  };
   return (
     <Wrapper>
       <FieldWrapper>
@@ -117,8 +131,17 @@ export default function OrdCollectionTokenConfig({
 
       {assetType === "collection" && (
         <FieldWrapper>
-          <Title>Asset collection</Title>
+          <Title>
+            Asset collection
+            {assetTicker === "" && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
           <LoadingInput
+            value={assetTicker}
+            onChange={onChangeHandler}
             placeholder="Enter an collection address"
             onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}

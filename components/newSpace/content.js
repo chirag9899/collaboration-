@@ -9,6 +9,7 @@ import {
 } from "store/reducers/newSpaceSlice";
 import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
+import { imageUrlToBase64 } from "utils";
 // import { identicon } from "minidenticons";
 
 let identicon = () => {};
@@ -71,7 +72,7 @@ const useDefaultLogo = ({ username, saturation, lightness }) => {
   return `data:image/svg+xml;utf8,${encodeURIComponent(svgText)}`;
 };
 
-export default function Content({ chainsDef, tokensDef }) {
+export default function Content({ chainsDef, tokensDef, spaceDetails }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const [imageFile, setImageFile] = useState();
@@ -83,9 +84,9 @@ export default function Content({ chainsDef, tokensDef }) {
   });
   const [socialfields, setSocialFields] = useState({
     website: null,
+    twitter: null,
     github: null,
     docs: null,
-    twitter: null,
     forum: null,
   });
   const logoImage = imageFile || defaultLogo;
@@ -96,16 +97,7 @@ export default function Content({ chainsDef, tokensDef }) {
     { value: "balance-of", text: "balance-of" },
     { value: "quadratic-balance-of", text: "quadratic-balance-of" },
   ];
-
-  useEffect(() => {
-    dispatch(setCurrentStep(0));
-  }, [dispatch]);
-
-  const steps = [
-    { title: "Space profile" },
-    { title: "Vote Tokens" },
-    { title: "Strategies" },
-  ];
+  const [prevContract, setPrevContract] = useState(null);
 
   let symbol = "Token Symbol";
   let decimals = 12;
@@ -116,6 +108,42 @@ export default function Content({ chainsDef, tokensDef }) {
     symbol = "VOTE";
     decimals = Math.max(...assets.map((x) => x.decimals));
   }
+
+  useEffect(() => {
+    if (spaceDetails) {
+      setName(spaceDetails.name);
+      setSocialFields({
+        website: spaceDetails?.website ?? null,
+        github: spaceDetails?.github ?? null,
+        docs: spaceDetails?.docs ?? null,
+        twitter: spaceDetails?.twitter ?? null,
+        forum: spaceDetails?.forum ?? null,
+      });
+
+      imageUrlToBase64(
+        process.env.NEXT_PUBLIC_IPFS_ENDPOINT + spaceDetails?.spaceIcon,
+      )
+        .then((base64Data) => {
+          setImageFile(base64Data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+      setSelectedOptions(spaceDetails?.weightStrategy);
+      setAssets(spaceDetails?.assets);
+      setPrevContract(spaceDetails?.assets[0]?.symbol);
+    }
+  }, [spaceDetails]);
+
+  useEffect(() => {
+    dispatch(setCurrentStep(0));
+  }, [dispatch]);
+
+  const steps = [
+    { title: "Space profile" },
+    { title: "Vote Tokens" },
+    { title: "Strategies" },
+  ];
 
   let stepContent = null;
   if (currentStep === 0) {
@@ -133,6 +161,7 @@ export default function Content({ chainsDef, tokensDef }) {
   } else if (currentStep === 1) {
     stepContent = (
       <Step2
+        prevContract={prevContract}
         steps={steps}
         chainsDef={chainsDef}
         tokensDef={tokensDef}
@@ -159,6 +188,7 @@ export default function Content({ chainsDef, tokensDef }) {
       <MainWrapper>{stepContent}</MainWrapper>
       <SiderWrapper>
         <Sider
+          spaceDetails={spaceDetails}
           socialfields={socialfields}
           symbol={symbol}
           decimals={decimals}

@@ -30,8 +30,8 @@ const Wrapper = styled(FlexBetween)`
 `;
 
 const Item = styled.div`
-margin-right: 15px;
-@media screen and (max-width: 800px) {
+  margin-right: 15px;
+  @media screen and (max-width: 800px) {
     position: relative;
   }
   overflow: visible;
@@ -57,7 +57,7 @@ const NewPostLink = styled(Flex)`
   cursor: pointer;
   ${p_16_semibold};
   color: ${primary_color};
-  margin-left: 40px;
+  margin-left: 10px;
   > img {
     width: 24px;
     height: 24px;
@@ -70,6 +70,8 @@ export default function ListTab({
   activeTab,
   onActiveTab = () => {},
   defaultPage,
+  spaceAddress,
+  loginAddress,
 }) {
   const router = useRouter();
   const activeTabIndex = LIST_TAB_ITEMS.findIndex(
@@ -120,12 +122,20 @@ export default function ListTab({
           </Item>
         ))}
       </Flex>
-      <Link href={`/space/${spaceId}/create`}>
-        <NewPostLink>
-          <i class="icon-plus"></i>&nbsp;
-          New Proposal
-        </NewPostLink>
-      </Link>
+      <Flex>
+        {spaceAddress === loginAddress && (
+          <Link href={`/space/${spaceId}/edit`}>
+            <NewPostLink>
+              <i class="icon-edit"></i>&nbsp; Edit
+            </NewPostLink>
+          </Link>
+        )}
+        <Link href={`/space/${spaceId}/create`}>
+          <NewPostLink>
+            <i class="icon-plus"></i>&nbsp; New Proposal
+          </NewPostLink>
+        </Link>
+      </Flex>
     </Wrapper>
   );
 }
