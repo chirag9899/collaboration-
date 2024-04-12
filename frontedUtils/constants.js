@@ -32,3 +32,19 @@ export const TOAST_TYPES = {
   PENDING: "Pending",
   WARNING:"Warning"
 };
+
+
+export const SPACE_SIDEBAR_TAB_ITEMS = [
+  {
+    value: "proposals",
+    name: "Proposals",
+  },
+  {
+    value: "treasury",
+    name: "Treasury",
+  },
+  {
+    value: "about",
+    name: "About",
+  },
+];

@@ -3,6 +3,7 @@ import { no_scroll_bar } from "../../styles/globalCss";
 import NetworkListItem from "./networkListItem";
 import LoadButtons from "../LoadButtons/LoadButtons";
 import { useState } from "react";
+import NoData from "../NoData";
 
 const ItemsWrapper = styled.div`
   display: flex;

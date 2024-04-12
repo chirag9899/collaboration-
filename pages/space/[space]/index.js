@@ -17,7 +17,30 @@ import {
 import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
+import SpaceDetail from "@/components/spaceDetail";
 const ListInfo = dynamic("components/listInfo");
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-top: 22px;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+`;
+
+const MainWrapper = styled.div`
+  flex: 1 1 auto;
+  /* 100% - sider width - sider margin-left */
+  max-width: calc(100% - 300px - 20px);
+  > :not(:first-child) {
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    max-width: 100%;
+  }
+`;
 
 const HeaderWrapper = styled.div`
   > :not(:first-child) {
@@ -48,6 +71,7 @@ export default function List({
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
+  const [showContent, setShowContent] = useState("proposals");
 
   useEffect(() => {
     dispatch(initAccount());
@@ -82,32 +106,45 @@ export default function List({
     <>
       <Seo space={space} title={`${space.name} off-chain voting`} desc={desc} />
       <Layout bgHeight="264px" networks={space.networks}>
-        <HeaderWrapper>
-          <Breadcrumb
-            routes={[
-              { name: "Home", link: "/" },
-              {
-                name: (
-                  <span style={{ textTransform: "capitalize" }}>
-                    {space.name}
-                  </span>
-                ),
-              },
-            ]}
+        <Wrapper>
+          <SpaceDetail
+            space={space}
+            setShowContent={setShowContent}
+            showContent={showContent}
           />
-          <ListInfo spaceId={spaceId} space={space} />
-          <ListTab
-            loginAddress={address}
-            spaceAddress={space?.address}
-            spaceId={spaceId}
-            activeTab={activeTab}
-            onActiveTab={setTab}
-            defaultPage={defaultPage}
-          />
-        </HeaderWrapper>
-        <PostWrapper>
-          <PostList posts={proposalList} space={space} />
-        </PostWrapper>
+          {showContent === "proposals" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+                <ListInfo spaceId={spaceId} space={space} />
+                <ListTab
+                  loginAddress={address}
+                  spaceAddress={space?.address}
+                  spaceId={spaceId}
+                  activeTab={activeTab}
+                  onActiveTab={setTab}
+                  defaultPage={defaultPage}
+                />
+              </HeaderWrapper>
+              <PostWrapper>
+                <PostList posts={proposalList} space={space} />
+              </PostWrapper>
+            </MainWrapper>
+          )}
+          {showContent === "treasury" && <MainWrapper>treasury</MainWrapper>}
+          {showContent === "about" && <MainWrapper>about</MainWrapper>}
+        </Wrapper>
       </Layout>
     </>
   );
