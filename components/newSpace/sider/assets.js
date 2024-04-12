@@ -52,9 +52,9 @@ export default function Assets({ assets = [] }) {
           content={`${asset?.symbol}`}
         >
           <div>
-            <Threshold>
+            {/* <Threshold>
               {asset?.symbol}
-            </Threshold>
+            </Threshold> */}
           </div>
         </Tooltip>
       </AssetItem>
