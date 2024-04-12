@@ -129,9 +129,10 @@ export default function Sider({
         ...item,
         assetId: isEmpty(item.assetId) ? undefined : parseInt(item.assetId),
         votingWeight: parseInt(item.votingWeight),
-        votingThreshold: new BigNumber(item.votingThreshold)
-          .times(Math.pow(10, item.decimals))
-          .toFixed(),
+        // votingThreshold: new BigNumber(item.votingThreshold)
+        //   .times(Math.pow(10, item.decimals))
+        //   .toFixed(),
+        votingThreshold: item.votingThreshold
       })),
       weightStrategy: selectedStrategies,
       proposalThreshold: new BigNumber(proposalThreshold)

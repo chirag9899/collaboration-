@@ -111,7 +111,7 @@ export default function StatemineAssetConfig({
         symbol={asset?.symbol}
         votingThreshold={asset?.votingThreshold}
         setVotingThreshold={(votingThreshold) => {
-          if (asset?.votingThreshold === votingThreshold) return;
+          // if (asset?.votingThreshold === votingThreshold) return;
           setPartialAsset({ votingThreshold });
         }}
         votingWeight={asset?.votingWeight}
