@@ -189,7 +189,7 @@ const DarkButton = styled(Button)`
   }
 `;
 
-function Account({ networks }) {
+function Account({ networks, menu }) {
   const event = useWeb3ModalEvents();
   const dispatch = useDispatch();
   const windowSize = useWindowSize();
@@ -277,15 +277,18 @@ function Account({ networks }) {
 
   const ConnectWalletButton = (
     <div className="connect">
-      {!account && (
-        <DarkButton
-          primary
-          onClick={() => dispatch(popUpConnect())}
-          className="button button-modern"
-        >
-          {connectedWallet ? "Switch Chain" : "Connect Wallet"}
-        </DarkButton>
-      )}
+      {!account &&
+        (menu ? (
+          <div  onClick={() => dispatch(popUpConnect())}>{connectedWallet ? "Switch Chain" : "Connect Wallet"}</div>
+        ) : (
+          <DarkButton
+            primary
+            onClick={() => dispatch(popUpConnect())}
+            className="button button-modern"
+          >
+            {connectedWallet ? "Switch Chain" : "Connect Wallet"}
+          </DarkButton>
+        ))}
     </div>
   );
 
@@ -331,7 +334,7 @@ function Account({ networks }) {
               <Avatar address={address} size={20} />
               {spaceSupportMultiChain && (
                 // <ChainIcon chainName={account?.network} size={16} />
-                <NetworkLogo network={account?.network} size={16}/>
+                <NetworkLogo network={account?.network} size={16} />
               )}
               <IdentityOrAddr
                 network={account?.network}
@@ -377,7 +380,7 @@ function Account({ networks }) {
   // if already connected, show address on right top corner
   if (address && pageMounted) {
     return (
-      <Wrapper>
+      <Wrapper className="account_modal">
         <AccountWrapperPC
           show={showMenu}
           onClick={() => {
@@ -390,7 +393,6 @@ function Account({ networks }) {
             {spaceSupportMultiChain && (
               // <ChainIcon chainName={account?.network} size={16} />
               <NetworkLogo network={account?.network} size={16} />
-
             )}
             <IdentityOrAddr
               network={account?.network}
@@ -412,7 +414,7 @@ function Account({ networks }) {
 
   // show dropdown menu (Mobile only)
   if (showMenu) {
-    return <Wrapper>{Menu}</Wrapper>;
+    return <Wrapper className="account">{Menu}</Wrapper>;
   }
 
   return null;
