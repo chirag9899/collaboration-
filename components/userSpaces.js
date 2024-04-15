@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import InternalLink from "./internalLink";
 import { no_scroll_bar } from "../styles/globalCss";
-import { loginAddressSelector } from "store/reducers/accountSlice";
-import SpaceListItem from "./spaceListItem";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchJoinedSpace } from "store/reducers/accountSlice";
 import LoadButtons from "./LoadButtons/LoadButtons";
-import { useWindowSize } from "frontedUtils/hooks";
 import NoData from "./NoData";
-import { h3_36_bold, p_16_semibold } from "./styles/textStyles";
+import SpaceListItem from "./spaceListItem";
+import { h3_36_bold } from "styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
+import { p_16_semibold } from "./styles/textStyles";
 
 const Wrapper = styled.div``;
 
@@ -73,29 +70,8 @@ const TotalCountWrapper = styled.div`
   text-transform: capitalize;
 `;
 
-export default function Space({ spaces, limit, title, totalCount }) {
+export default function UserSpaces({ userSpaces, limit, title, totalCount }) {
   const [showCount, setShowCount] = useState(limit);
-
-  const dispatch = useDispatch();
-  const address = useSelector(loginAddressSelector);
-
-  const windowSize = useWindowSize();
-
-  // useEffect(() => {
-  //   if (windowSize.width > 800) {
-  //     setShowCount(5);
-  //   } else {
-  //     setShowCount(2);
-  //   }
-  // }, [windowSize.width, setShowCount]);
-
-  useEffect(() => {
-    if (!address) {
-      return;
-    }
-    dispatch(fetchJoinedSpace(address));
-  }, [dispatch, address]);
-
   return (
     <Wrapper>
       <SubTitleWrapper>
@@ -106,12 +82,11 @@ export default function Space({ spaces, limit, title, totalCount }) {
           <TotalCount>{`(${formatNumber(totalCount)}) ${title}`}</TotalCount>
         </TotalCountWrapper>
       </SubTitleWrapper>
-
-      {spaces.length === 0 ? (
+      {totalCount === 0 ? (
         <NoData message="No Data Found" />
       ) : (
         <ItemsWrapper>
-          {spaces.slice(0, showCount).map(({ name, space }, index) => (
+          {userSpaces.slice(0, showCount).map(({ name, space }, index) => (
             <InternalLink href={`/space/${name}`} key={index}>
               <SpaceListItem name={name} space={space} />
             </InternalLink>
@@ -119,7 +94,7 @@ export default function Space({ spaces, limit, title, totalCount }) {
         </ItemsWrapper>
       )}
       <LoadButtons
-        data={spaces}
+        data={userSpaces}
         showCount={showCount}
         setShowCount={setShowCount}
         limit={limit}

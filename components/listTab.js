@@ -8,6 +8,7 @@ import Tooltip from "@/components/tooltip";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import Link from "next/link";
 import { primary_color } from "./styles/colors";
+import Button from "./Button";
 
 const Wrapper = styled(FlexBetween)`
   align-items: flex-start;
@@ -53,11 +54,12 @@ const Item = styled.div`
   }
 `;
 
-const NewPostLink = styled(Flex)`
+const NewPostLink = styled(Button)`
   cursor: pointer;
   ${p_16_semibold};
   color: ${primary_color};
   margin-left: 10px;
+  margin-right: 5px;
   > img {
     width: 24px;
     height: 24px;
@@ -126,7 +128,7 @@ export default function ListTab({
         {spaceAddress === loginAddress && (
           <Link href={`/space/${spaceId}/edit`}>
             <NewPostLink>
-              <i class="icon-edit"></i>&nbsp; Edit
+              <i class="icon-edit"></i>&nbsp; Edit Space
             </NewPostLink>
           </Link>
         )}

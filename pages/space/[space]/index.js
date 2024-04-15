@@ -113,7 +113,7 @@ export default function List({
             setShowContent={setShowContent}
             showContent={showContent}
             onActiveTab={setTab}
-            spaceId={spaceId}s
+            spaceId={spaceId}
             defaultPage={defaultPage}
           />
           {showContent.includes("proposals") && (
