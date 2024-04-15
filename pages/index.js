@@ -59,7 +59,7 @@ export default function Index({
     async function fetchData() {
       try {
         const response = await nextApi.fetch(
-          `spaces/space/0x23459a89eac054bdac1c13eb5ccb39f42574c26a`,
+          `spaces/space/${address}`,
         );
         const result = await sortUserSpaces(response?.result);
         setUsersSpaces(result);
