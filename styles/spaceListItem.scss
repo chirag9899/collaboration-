@@ -2,7 +2,8 @@
 
 $icon-size: 100px;
 [class*="space__ItemsWrapper"],
-[class*="userSpaces__ItemsWrapper"] {
+[class*="userSpaces__ItemsWrapper"],
+[class*="networkSpaces__ItemsWrapper"] {
   [class*="internalLink__Wrapper"] {
     opacity: 0;
     transform: scale(0.9);

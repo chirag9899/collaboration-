@@ -50,7 +50,7 @@ export default function Index({
 
   const sortUserSpaces = async (object) => {
     return _.map(_.values(object), (value, index) => ({
-      name: value.name,
+      name: value.name.toLowerCase(),
       space: { ...value },
     }));
   };

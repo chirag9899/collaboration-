@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { shadow_100, shadow_200, makeSquare } from "../../styles/globalCss";
 import { p_18_semibold } from "../../styles/textStyles";
 import NetworkLogo from "./networkLogo";
+import Link from "next/link";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -34,6 +35,10 @@ const Wrapper = styled.div`
   ${shadow_100};
   padding: 24px;
   width: 100%;
+  a {
+    flex-direction: column;
+    align-items: start;
+  }
   :hover {
     border-color: var(--background);
     ${shadow_200}
@@ -41,12 +46,11 @@ const Wrapper = styled.div`
   @media screen and (min-width: 992px) {
     width: 22%;
   }
-  @media screen and (max-width:992px) {
+  @media screen and (max-width: 992px) {
     width: 45%;
   }
-  
- 
-  @media screen and (max-width:767px) {
+
+  @media screen and (max-width: 767px) {
     width: 100%;
   }
 `;
@@ -57,27 +61,29 @@ const TitleWrapper = styled.div`
 `;
 const SubTitle = styled.span`
   font-size: 12px !important;
-  color:var(--netural-11);
+  color: var(--netural-11);
   font-weight: bold;
 `;
 const Footer = styled.div`
-  color:var(--netural-11);
+  color: var(--netural-11);
   font-weight: bold;
 `;
 
 export default function NetworkListItem({ network }) {
   return (
     <Wrapper>
-      <IconWrapper>
-        <Icon>
-          <NetworkLogo network={network.network} />
-        </Icon>
-        <TitleWrapper>
-          <Name>{network.name}</Name>
-          {/* <SubTitle>Chain #1</SubTitle> */}
-        </TitleWrapper>
-      </IconWrapper>
-      {/* <Footer>In 66K space(s)</Footer> */}
+      <Link href={`/space/networkSpaces?name=${network.network}`}>
+        <IconWrapper>
+          <Icon>
+            <NetworkLogo network={network.network} />
+          </Icon>
+          <TitleWrapper>
+            <Name>{network.name}</Name>
+            {/* <SubTitle>Chain #1</SubTitle> */}
+          </TitleWrapper>
+        </IconWrapper>
+        {/* <Footer>In 66K space(s)</Footer> */}
+      </Link>
     </Wrapper>
   );
 }
