@@ -17,7 +17,7 @@ const ItemsWrapper = styled.div`
   overflow: visible;
   min-height: 100px;
   ${no_scroll_bar};
-
+  flex-wrap: wrap;
   @media screen and (max-width: 1200px) {
     margin: 0 -32px;
     padding: 0 32px;
@@ -27,8 +27,6 @@ const ItemsWrapper = styled.div`
     padding: 0 20px;
     justify-content: center;
   }
-
-  flex-wrap: wrap;
 `;
 const TitleWrapper = styled.div`
   display: flex;
@@ -46,6 +44,7 @@ const SubTitleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
+  margin-bottom: 15px;
   > :last-child {
     flex-shrink: 0;
     flex-grow: 1;

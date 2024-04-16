@@ -48,6 +48,7 @@ const SubTitleWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
+  margin-bottom: 15px;
   > :last-child {
     flex-shrink: 0;
     flex-grow: 1;
