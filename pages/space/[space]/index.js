@@ -139,6 +139,7 @@ export default function List({
                   activeTab={activeTab}
                   onActiveTab={setTab}
                   defaultPage={defaultPage}
+                  network={space?.networks[0]?.network}
                 />
               </HeaderWrapper>
               <PostWrapper>

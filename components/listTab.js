@@ -72,7 +72,7 @@ const ButtonWrapper = styled(Button)`
 
 export default function ListTab({
   spaceId,
-  space,
+  network,
   activeTab,
   onActiveTab = () => {},
   defaultPage,
@@ -132,6 +132,7 @@ export default function ListTab({
     }
   }
 
+  const showDelegateBtn = network === "taiko" || network === "berachain";
   return (
     <Wrapper>
       <Flex>
@@ -181,7 +182,9 @@ export default function ListTab({
             <i class="icon-plus"></i> New Proposal
           </ButtonWrapper>
         </Link>
-        <ButtonWrapper onClick={delegate}>Delegate</ButtonWrapper>
+        {showDelegateBtn && (
+          <ButtonWrapper onClick={delegate}>Delegate</ButtonWrapper>
+        )}
       </Flex>
     </Wrapper>
   );
