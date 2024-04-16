@@ -133,7 +133,7 @@ export default function OrdCollectionTokenConfig({
         <FieldWrapper>
           <Title>
             Asset collection
-            {assetTicker === "" && (
+            {assetTicker === "" && prevContract && (
               <ContractButton onClick={onClickPrevContract}>
                 {prevContract}
               </ContractButton>

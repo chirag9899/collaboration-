@@ -142,7 +142,7 @@ export default function Brc20TokenConfig({
         <FieldWrapper>
           <Title>
             Asset ticker{" "}
-            {assetTicker === "" && (
+            {assetTicker === "" && prevContract && (
               <ContractButton onClick={onClickPrevContract}>
                 {prevContract}
               </ContractButton>

@@ -107,7 +107,7 @@ export default function Erc20TokenConfig({
         <FieldWrapper>
           <Title>
             Asset Contract{" "}
-            {assetTicker === "" && (
+            {assetTicker === "" && prevContract && (
               <ContractButton onClick={onClickPrevContract}>
                 {prevContract}
               </ContractButton>
