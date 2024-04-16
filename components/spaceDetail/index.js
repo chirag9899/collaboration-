@@ -14,6 +14,7 @@ const SiderWrapper = styled.div`
     margin-left: 0;
     margin-top: 20px;
     max-width: none;
+    margin-bottom: 30px;
   }
 `;
 
