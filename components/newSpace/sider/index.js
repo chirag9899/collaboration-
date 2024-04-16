@@ -118,6 +118,7 @@ export default function Sider({
         pubkey = await window.unisat.getPublicKey();
       }
     }
+    
     const spaceData = {
       name,
       symbol,

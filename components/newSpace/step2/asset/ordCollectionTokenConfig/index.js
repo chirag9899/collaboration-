@@ -139,7 +139,7 @@ export default function OrdCollectionTokenConfig({
         <FieldWrapper>
           <Title>
             Asset collection
-            {assetTicker === "" && (
+            {assetTicker === "" && prevContract && (
               <ContractButton onClick={onClickPrevContract}>
                 {prevContract}
               </ContractButton>
@@ -174,7 +174,7 @@ export default function OrdCollectionTokenConfig({
         symbol={asset?.symbol}
         votingThreshold={asset?.votingThreshold}
         setVotingThreshold={(votingThreshold) => {
-          if (asset?.votingThreshold === votingThreshold) return;
+          // if (asset?.votingThreshold === votingThreshold) return;
           setPartialAsset({ votingThreshold });
         }}
         votingWeight={asset?.votingWeight}

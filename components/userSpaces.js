@@ -1,12 +1,14 @@
+import React, { useState } from "react";
 import styled from "styled-components";
-import { no_scroll_bar } from "../../styles/globalCss";
-import NetworkListItem from "./networkListItem";
-import LoadButtons from "../LoadButtons/LoadButtons";
-import { useState } from "react";
-import NoData from "../NoData";
-import { h3_36_bold, p_16_semibold } from "../styles/textStyles";
-import { text_light_major } from "../styles/colors";
+import InternalLink from "./internalLink";
+import { no_scroll_bar } from "../styles/globalCss";
+import LoadButtons from "./LoadButtons/LoadButtons";
+import NoData from "./NoData";
+import SpaceListItem from "./spaceListItem";
+import { h3_36_bold } from "styles/textStyles";
+import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
+import { p_16_semibold } from "./styles/textStyles";
 
 const Wrapper = styled.div``;
 
@@ -15,9 +17,10 @@ const ItemsWrapper = styled.div`
   gap: 34px;
   justify-content: start;
   overflow: visible;
-  min-height: 100px;
+  min-height: 227px;
   ${no_scroll_bar};
   flex-wrap: wrap;
+
   @media screen and (max-width: 1200px) {
     margin: 0 -32px;
     padding: 0 32px;
@@ -28,6 +31,7 @@ const ItemsWrapper = styled.div`
     justify-content: center;
   }
 `;
+
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -67,7 +71,7 @@ const TotalCountWrapper = styled.div`
   text-transform: capitalize;
 `;
 
-export default function Networks({ networks, limit, title, totalCount }) {
+export default function UserSpaces({ userSpaces, limit, title, totalCount }) {
   const [showCount, setShowCount] = useState(limit);
   return (
     <Wrapper>
@@ -79,17 +83,19 @@ export default function Networks({ networks, limit, title, totalCount }) {
           <TotalCount>{`(${formatNumber(totalCount)}) ${title}`}</TotalCount>
         </TotalCountWrapper>
       </SubTitleWrapper>
-      {networks.length === 0 ? (
+      {totalCount === 0 ? (
         <NoData message="No Data Found" />
       ) : (
         <ItemsWrapper>
-          {networks.slice(0, showCount).map((network, index) => {
-            return <NetworkListItem key={index} network={network} />;
-          })}
+          {userSpaces.slice(0, showCount).map(({ name, space }, index) => (
+            <InternalLink href={`/space/${name}`} key={index}>
+              <SpaceListItem name={name} space={space} />
+            </InternalLink>
+          ))}
         </ItemsWrapper>
       )}
       <LoadButtons
-        data={networks}
+        data={userSpaces}
         showCount={showCount}
         setShowCount={setShowCount}
         limit={limit}

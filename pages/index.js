@@ -1,10 +1,13 @@
 import Layout from "components/layout";
 // import Home from "components/home";
-import { ssrNextApi } from "services/nextApi";
+import nextApi, { ssrNextApi } from "services/nextApi";
 import Seo from "@/components/seo";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setAvailableNetworks } from "store/reducers/accountSlice";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginAddressSelector,
+  setAvailableNetworks,
+} from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import _ from "lodash";
 const Home = dynamic(() => import("components/home"), {
@@ -38,10 +41,36 @@ export default function Index({
       };
     })
     .filter((item) => item.network !== "linea" && item.network !== "blast");
+  const [userSpaces, setUsersSpaces] = useState([]);
+  const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setAvailableNetworks(allNetworks || []));
   }, [dispatch, allNetworks]);
+
+  const sortUserSpaces = async (object) => {
+    return _.map(_.values(object), (value, index) => ({
+      name: value.name.toLowerCase(),
+      space: { ...value },
+    }));
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await nextApi.fetch(
+          `spaces/space/${address}`,
+        );
+        const result = await sortUserSpaces(response?.result);
+        setUsersSpaces(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    if (address) {
+      fetchData();
+    }
+  }, [address, dispatch]);
 
   const desc =
     "One of the governance products powered by dVote. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
@@ -54,6 +83,7 @@ export default function Index({
           networks={networks}
           hottestProposals={hottestProposals}
           showAllSpace={showAllSpace}
+          userSpaces={userSpaces}
         />
       </Layout>
     </>

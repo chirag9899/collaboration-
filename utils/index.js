@@ -13,8 +13,8 @@ export function urlCreator(endpoint, string) {
   return `https://blockchair.com/bitcoin/${endpoint}/${string}`;
 }
 
-export function stringElipsis(string, maxWidth) {
-  const trimedString = string.split("-")[0];
+export function stringElipsis(string = "", maxWidth) {
+  const trimedString = string?.split("-")[0];
   if (trimedString.length > maxWidth) {
     return trimedString.slice(0, maxWidth - 3) + "...";
   } else {

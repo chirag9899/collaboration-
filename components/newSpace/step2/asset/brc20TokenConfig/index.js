@@ -148,7 +148,7 @@ export default function Brc20TokenConfig({
         <FieldWrapper>
           <Title>
             Asset ticker{" "}
-            {assetTicker === "" && (
+            {assetTicker === "" && prevContract && (
               <ContractButton onClick={onClickPrevContract}>
                 {prevContract}
               </ContractButton>
@@ -180,7 +180,7 @@ export default function Brc20TokenConfig({
         symbol={asset?.symbol}
         votingThreshold={asset?.votingThreshold}
         setVotingThreshold={(votingThreshold) => {
-          if (asset?.votingThreshold === votingThreshold) return;
+          // if (asset?.votingThreshold === votingThreshold) return;
           setPartialAsset({ votingThreshold });
         }}
         votingWeight={asset?.votingWeight}

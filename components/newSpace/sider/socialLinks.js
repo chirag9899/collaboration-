@@ -44,7 +44,7 @@ const Items = styled.div`
   display: flex;
 `;
 
-export const SocialLinks = ({ socialfields }) => {
+export const SocialLinks = ({ socialfields, title }) => {
   let socialLinksList = "-";
 
   const socialLinks = {
@@ -107,7 +107,7 @@ export const SocialLinks = ({ socialfields }) => {
 
   return (
     <Wrapper>
-      <Name>Social Links</Name>
+      {title && <Name>{title}</Name>}
       <Value>{socialLinksList}</Value>
     </Wrapper>
   );

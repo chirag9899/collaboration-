@@ -98,6 +98,7 @@ export default function Step1({
           setSocialFields={setSocialFields}
           socialfields={socialfields}
           socialErrors={socialErrors}
+          title="Social Links"
         />
       </Sections>
       <NextButton block onClick={() => handleNext()}>
