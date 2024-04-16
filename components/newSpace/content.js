@@ -10,6 +10,7 @@ import {
 import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
 import { imageUrlToBase64 } from "utils";
+import { chainMap } from "../../frontedUtils/consts/chains";
 // import { identicon } from "minidenticons";
 
 let identicon = () => {};
@@ -130,8 +131,17 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
           console.error("Error:", error);
         });
       setSelectedOptions(spaceDetails?.weightStrategy);
+      let chain = chainMap.get(spaceDetails?.networks[0].network);
+      const isEvm = chain.chainType == 'evm';
+      const isBtc = chain.chainType == 'btc';
+      if (isBtc){
+        setPrevContract(spaceDetails?.assets[0]?.symbol);
+      } else if (isEvm) {
+        setPrevContract(spaceDetails?.assets[0]?.contract);
+      } else {
+        setPrevContract(spaceDetails?.assets[0]?.symbol);
+      }
       setAssets(spaceDetails?.assets);
-      setPrevContract(spaceDetails?.assets[0]?.symbol);
     }
   }, [spaceDetails]);
 

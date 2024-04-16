@@ -49,12 +49,12 @@ export default function Assets({ assets = [] }) {
           <span>{asset?.symbol}</span>
         </Description>
         <Tooltip
-          content={`Threshold: ${asset?.votingThreshold} ${asset?.symbol}`}
+          content={`${asset?.symbol}`}
         >
           <div>
-            <Threshold>
-              {formatNumber(+asset?.votingThreshold)} {asset?.symbol}
-            </Threshold>
+            {/* <Threshold>
+              {asset?.symbol}
+            </Threshold> */}
           </div>
         </Tooltip>
       </AssetItem>
