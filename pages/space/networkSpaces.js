@@ -111,7 +111,7 @@ export default function NetworkSpaces({ allSpaces, allNetworks, limit = 5 }) {
   }, [dispatch, address]);
 
   const filteredSpaces = _.map(_.values(allSpaces), (value, index) => ({
-    name: value.name.toLowerCase(),
+    name: value.id,
     space: { ...value },
   }));
 
