@@ -96,7 +96,7 @@ const IconWrapper = styled.div`
   }
 `;
 
-export default function NetworkSpaces({ allSpaces, limit = 5 }) {
+export default function NetworkSpaces({ allSpaces, allNetworks, limit = 5 }) {
   const [showCount, setShowCount] = useState(limit);
 
   const dispatch = useDispatch();
@@ -115,18 +115,19 @@ export default function NetworkSpaces({ allSpaces, limit = 5 }) {
     space: { ...value },
   }));
 
-  console.log(filteredSpaces,"filteredSpaces")
+
+  const handleGoBack = () => {
+    router.back();
+  };
 
   const totalCount = filteredSpaces.length;
   return (
     <Wrapper>
-      <Layout bgHeight="183px">
+      <Layout bgHeight="183px" networks={allNetworks}>
         <SubTitleWrapper>
           <TitleWrapper>
-            <IconWrapper>
-              <Link href="/" passHref legacyBehavior>
-                <ArrowLeft />
-              </Link>
+            <IconWrapper onClick={handleGoBack}>
+              <ArrowLeft />
             </IconWrapper>
             <Title>Spaces ({router.query.name})</Title>
           </TitleWrapper>
@@ -161,13 +162,15 @@ export default function NetworkSpaces({ allSpaces, limit = 5 }) {
 
 export async function getServerSideProps(context) {
   const { name } = context.query;
-  const [{ result: allSpaces }] = await Promise.all([
+  const [{ result: allSpaces }, { result: allNetworks }] = await Promise.all([
     ssrNextApi.fetch(`spaces-by-network/${name}`),
+    ssrNextApi.fetch("networks"),
   ]);
 
   return {
     props: {
       allSpaces: allSpaces || [],
+      allNetworks: allNetworks,
     },
   };
 }
