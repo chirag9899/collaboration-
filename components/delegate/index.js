@@ -23,7 +23,7 @@ const Delegate = ({ space }) => {
         <IconWrapper onClick={handleGoBack}>
           <ArrowLeft />
         </IconWrapper>
-        <Title>Delegete</Title>
+        <Title>Delegate</Title>
       </TitleWrapper>
       <Content spaceId={space.id} />
     </Wrapper>
