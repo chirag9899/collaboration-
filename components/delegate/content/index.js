@@ -87,7 +87,7 @@ const Content = ({ spaceId }) => {
             <SectionTitle>To</SectionTitle>
             <Input
               type="text"
-              placeholder="Address of ENS name"
+              placeholder="Address"
               value={delegationAddress}
               name="delegationAddress"
               onChange={onChangeHandler}
@@ -101,11 +101,7 @@ const Content = ({ spaceId }) => {
           />
           <InputWrapper>
             <SectionTitle>Space</SectionTitle>
-            <Input
-              placeholder="Address of ENS name"
-              value={spaceId}
-              disabled={true}
-            />
+            <Input placeholder="Space name" value={spaceId} disabled={true} />
           </InputWrapper>
         </PanelWrapper>
       </LeftSectionWrapper>
