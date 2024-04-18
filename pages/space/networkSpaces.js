@@ -18,6 +18,7 @@ import { no_scroll_bar } from "styles/globalCss";
 import { h3_36_bold, p_16_semibold } from "styles/textStyles";
 import { formatNumber } from "utils";
 import { ReactComponent as ArrowLeft } from "../../public/imgs/icons/arrow-left.svg";
+import dynamic from "next/dynamic";
 const SpaceListItem = dynamic(() => import("@/components/spaceListItem"), {
   ssr: false,
   loading:"Loading...."

@@ -9,6 +9,7 @@ import { h3_36_bold } from "styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
 import { p_16_semibold } from "./styles/textStyles";
+import dynamic from "next/dynamic";
 const SpaceListItem = dynamic(() => import("./spaceListItem"), {
   ssr: false,
   loading:"Loading...."
