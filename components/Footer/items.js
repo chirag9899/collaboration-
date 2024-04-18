@@ -3,7 +3,7 @@ const footerItems = [
     label: "Apps",
     items: [
       { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
-      { name: "Dvote.ai", link: "https://dvote.ai/" },
+      { name: "BeraVote", link: "https://beravote.com/" },
     ],
   },
   {
@@ -31,7 +31,7 @@ const footerItems = [
       // {
       //   name: "Telegram",
       //   icon: "telegram.svg",
-      //   link: "https://dvote.ai",
+      //   link: "https://beravote.com/",
       // },
       {
         name: "Twitter",
