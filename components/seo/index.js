@@ -11,7 +11,7 @@ export default function Seo({ space, title, desc, banner }) {
     },
   ];
 
-  const finalTitle = title ?? "dVote | Decentralized Governance Infrastructure ";
+  const finalTitle = title ?? "beraVote | Decentralized Governance Infrastructure ";
   return (
     <NextSeo
       title={finalTitle}

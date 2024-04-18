@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import ExternalLink from "../ExternalLink";
-import { ReactComponent as FooterLogoSvg } from "../../public/imgs/logoIcon.svg";
+import { ReactComponent as FooterLogoSvg } from "../../public/imgs/beravote-logoIcon.svg";
 import { ReactComponent as GithubSvg } from "../../public/imgs/icons/github.svg";
 import { ReactComponent as DiscordSvg } from "../../public/imgs/icons/discord.svg";
 import { ReactComponent as TwitterSvg } from "../../public/imgs/icons/twitter.svg";

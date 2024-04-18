@@ -22,8 +22,8 @@ import NotificationBell from "./notification/bell";
 import { ReactComponent as CaretRight } from "/public/imgs/icons/caret-right-s.svg";
 import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
-import LogoImg from "../public/imgs/dvote.logo.svg";
-import LogoIcon from "../public/imgs/logoIcon.svg";
+import LogoImg from "../public/imgs/beravote-logo.svg";
+import LogoIcon from "../public/imgs/beravote-logoIcon.svg";
 import { dark_violet, primary_text_color, text_light_major } from "./styles/colors";
 import Image from "next/image";
 

@@ -143,7 +143,7 @@ export default function Home({ networks, spaces, hottestProposals }) {
           placeholder="Search..."
           search={search}
           onSearchChange={onSearchChange}
-          dropdown={true}
+          dropdown={false}
           dropDownOptions={options}
           onSelectOption={handleSelect}
         />
