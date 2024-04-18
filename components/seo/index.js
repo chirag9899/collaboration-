@@ -5,13 +5,14 @@ export default function Seo({ space, title, desc, banner }) {
   const imageCid = space?.seoImage || defaultSeoImage;
   const images = [
     {
-      url: banner ?? `https://dvote.ai/imgs/dvote_preview.png`,
-      width: 1201,
-      height: 629,
+      url: banner ?? `https://beravote.com/imgs/beravote_preview.png`,
+      width: 1200,
+      height: 628,
     },
   ];
 
-  const finalTitle = title ?? "BeraVote | Decentralized Governance Infrastructure ";
+  const finalTitle =
+    title ?? "BeraVote | Decentralized Governance Infrastructure ";
   return (
     <NextSeo
       title={finalTitle}
