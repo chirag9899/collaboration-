@@ -3,7 +3,7 @@ import styled from "styled-components";
 import InternalLink from "./internalLink";
 import { no_scroll_bar } from "../styles/globalCss";
 import { loginAddressSelector } from "store/reducers/accountSlice";
-import SpaceListItem from "./spaceListItem";
+// import SpaceListItem from "./spaceListItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchJoinedSpace } from "store/reducers/accountSlice";
 import LoadButtons from "./LoadButtons/LoadButtons";
@@ -12,6 +12,11 @@ import NoData from "./NoData";
 import { h3_36_bold, p_16_semibold } from "./styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
+import dynamic from "next/dynamic";
+const SpaceListItem = dynamic(() => import("./spaceListItem"), {
+  ssr: false,
+  loading:"Loading...."
+});
 
 const Wrapper = styled.div``;
 

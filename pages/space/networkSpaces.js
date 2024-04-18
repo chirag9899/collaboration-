@@ -1,7 +1,7 @@
 import LoadButtons from "@/components/LoadButtons/LoadButtons";
 import InternalLink from "@/components/internalLink";
 import Layout from "@/components/layout";
-import SpaceListItem from "@/components/spaceListItem";
+// import SpaceListItem from "@/components/spaceListItem";
 import { text_light_major, white_text_color } from "@/components/styles/colors";
 import _ from "lodash";
 import Link from "next/link";
@@ -18,6 +18,10 @@ import { no_scroll_bar } from "styles/globalCss";
 import { h3_36_bold, p_16_semibold } from "styles/textStyles";
 import { formatNumber } from "utils";
 import { ReactComponent as ArrowLeft } from "../../public/imgs/icons/arrow-left.svg";
+const SpaceListItem = dynamic(() => import("@/components/spaceListItem"), {
+  ssr: false,
+  loading:"Loading...."
+});
 
 const Wrapper = styled.div`
   display: flex;
