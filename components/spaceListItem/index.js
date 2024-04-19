@@ -14,6 +14,8 @@ import JoinButton from "./joinButton";
 import { border_primary } from "../styles/colors";
 import Image from "next/image";
 import { stringElipsis } from "utils";
+import { signedApiData } from "services/chainApi";
+import validate from "bitcoin-address-validation";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -69,9 +71,22 @@ export default function SpaceListItem({ name, space }) {
       if (!address) {
         return;
       }
-      const { result } = await nextApi.post(`account/${address}/spaces`, {
+      let pubkey = address;
+      if (!window && typeof window === "undefined") {
+        return;
+      } else {
+        if (validate(address)) {
+          pubkey = await window?.unisat?.getPublicKey();
+        }
+      }
+
+      const data = {
         space: spaceName,
-      });
+        pubkey,
+      };
+
+      const signedData = await signedApiData(data, address);
+      const { result } = await nextApi.post(`account/spaces`, signedData);
       if (result) {
         dispatch(fetchJoinedSpace(address));
       }
@@ -84,8 +99,24 @@ export default function SpaceListItem({ name, space }) {
       if (!address) {
         return;
       }
-      const { result } = await nextApi.delete(
-        `account/${address}/spaces/${spaceName}`,
+      let pubkey = address;
+      if (!window && typeof window === "undefined") {
+        return;
+      } else {
+        if (validate(address)) {
+          pubkey = await window?.unisat?.getPublicKey();
+        }
+      }
+
+      const data = {
+        space: spaceName,
+        pubkey,
+      };
+
+      const signedData = await signedApiData(data, address);
+      const { result } = await nextApi.post(
+        `account/spaces/leave`,
+        signedData,
       );
       if (result) {
         dispatch(fetchJoinedSpace(address));
@@ -109,7 +140,7 @@ export default function SpaceListItem({ name, space }) {
           )}
         </Name>
       </IconWrapper>
-      {/* {!isSpaceJoined(name) ? (
+      {!isSpaceJoined(name) ? (
         <JoinButton
           onClick={(e) => {
             e.preventDefault();
@@ -127,7 +158,7 @@ export default function SpaceListItem({ name, space }) {
           }}
           title="joined"
         />
-      )} */}
+      )}
     </Wrapper>
   );
 }

@@ -5,14 +5,14 @@ import {
 } from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
-import { validate } from 'bitcoin-address-validation';
+import { validate } from "bitcoin-address-validation";
 
 async function singByUnisat(text) {
   if (!window.unisat) {
     throw new Error("No UniSat detected");
   }
   const hex = stringToHex(text);
-  console.log(hex)
+  console.log(hex);
   return await window.unisat.signMessage(hex);
 }
 
@@ -71,5 +71,23 @@ export const signApiData = async (data, address) => {
     data: dataToSign,
     address,
     signature,
+  };
+};
+
+export const signedApiData = async (data, address) => {
+  const { space, pubkey } = data;
+  const dataToSign = {
+    pubkey,
+    address,
+    timestamp: parseInt(Date.now() / 1000),
+  };
+  const msg = JSON.stringify(dataToSign);
+  const signature = await signMessage(msg, address);
+
+  return {
+    data: dataToSign,
+    address,
+    signature,
+    space,
   };
 };

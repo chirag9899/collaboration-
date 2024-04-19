@@ -4,11 +4,16 @@ import InternalLink from "./internalLink";
 import { no_scroll_bar } from "../styles/globalCss";
 import LoadButtons from "./LoadButtons/LoadButtons";
 import NoData from "./NoData";
-import SpaceListItem from "./spaceListItem";
+// import SpaceListItem from "./spaceListItem";
 import { h3_36_bold } from "styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
 import { p_16_semibold } from "./styles/textStyles";
+import dynamic from "next/dynamic";
+const SpaceListItem = dynamic(() => import("./spaceListItem"), {
+  ssr: false,
+  loading:"Loading...."
+});
 
 const Wrapper = styled.div``;
 
