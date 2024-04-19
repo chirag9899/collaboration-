@@ -19,7 +19,13 @@ import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
 import NoData from "@/components/NoData";
-const ListInfo = dynamic("components/listInfo");
+// import Treasury from "@/components/treasury";
+const Treasury = dynamic(() => import("@/components/treasury"), {
+  ssr: false,
+});
+const ListInfo = dynamic(() => import("components/listInfo"), {
+  ssr: false,
+});
 
 const Wrapper = styled.div`
   display: flex;
@@ -163,7 +169,7 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <NoData message="No data found" />
+              <Treasury spaceId={spaceId} address={address} />
             </MainWrapper>
           )}
           {showContent === "about" && (
