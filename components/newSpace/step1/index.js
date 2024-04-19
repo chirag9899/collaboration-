@@ -13,6 +13,7 @@ import styled from "styled-components";
 import MyDivider from "../myDivider";
 import SocialFields from "./SocialFormFields";
 import { isValidUrl } from "utils";
+import Description from "./description";
 
 const NextButton = styled(Button)`
   padding: 12px 0;
@@ -32,16 +33,23 @@ export default function Step1({
   setName,
   setSocialFields,
   socialfields,
+  description,
+  setDescription,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const [errorMsg, setErrorMsg] = useState("");
+  const [errorDescMsg, setDesErrorMsg] = useState("");
   const [socialErrors, setSocialErrors] = useState(initErrors);
   const { website, github, docs, twitter, forum } = socialfields;
 
   useEffect(() => {
     setErrorMsg("");
   }, [name]);
+
+  useEffect(() => {
+    setDesErrorMsg("");
+  }, [description]);
 
   const socialLinksValidate = () => {
     const socialLinks = { docs, forum, github, twitter, website };
@@ -73,6 +81,11 @@ export default function Step1({
       return;
     }
 
+    if (!description) {
+      setDesErrorMsg("Space description cannot be empty");
+      return;
+    }
+
     if (name.length > 20) {
       setErrorMsg("Space name cannot exceed 20 characters");
       return;
@@ -94,6 +107,11 @@ export default function Step1({
       <Sections>
         <Logo imageFile={imageFile} setImageFile={setImageFile} />
         <Name name={name} setName={setName} errorMsg={errorMsg} />
+        <Description
+          description={description}
+          setDescription={setDescription}
+          errorDescMsg={errorDescMsg}
+        />
         <SocialFields
           setSocialFields={setSocialFields}
           socialfields={socialfields}

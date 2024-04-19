@@ -78,6 +78,7 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
   const currentStep = useSelector(currentStepSelector);
   const [imageFile, setImageFile] = useState();
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const defaultLogo = useDefaultLogo({
     username: name,
     saturation: 50,
@@ -166,6 +167,8 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
         setName={setName}
         setSocialFields={setSocialFields}
         socialfields={socialfields}
+        description={description}
+        setDescription={setDescription}
       />
     );
   } else if (currentStep === 1) {
@@ -204,6 +207,7 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
           decimals={decimals}
           imageFile={logoImage}
           name={name}
+          description={description}
           assets={assets}
           proposalThreshold={proposalThreshold}
           allStrategies={options}

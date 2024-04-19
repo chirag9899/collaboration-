@@ -65,6 +65,7 @@ export default function Sider({
   selectedStrategies,
   socialfields,
   spaceDetails,
+  description,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
@@ -118,9 +119,10 @@ export default function Sider({
         pubkey = await window.unisat.getPublicKey();
       }
     }
-    
+
     const spaceData = {
       name,
+      description,
       symbol,
       decimals,
       logo: imageFile,

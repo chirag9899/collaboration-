@@ -19,6 +19,7 @@ import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
 import NoData from "@/components/NoData";
+import SpaceAbout from "@/components/spaceAbout";
 // import Treasury from "@/components/treasury";
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -79,6 +80,8 @@ export default function List({
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
+
+  console.log(space,"space")
 
   useEffect(() => {
     dispatch(initAccount());
@@ -188,7 +191,7 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <NoData message="No data found" />
+              <SpaceAbout space={space}/>
             </MainWrapper>
           )}
         </Wrapper>
