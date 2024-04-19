@@ -85,6 +85,10 @@ const ChoiceWrapper = styled.div`
   color: var(--neutral-1);
 `;
 
+const StrategyWrapper = styled.div`
+  ${p_14_medium};
+`;
+
 export default function More({ onPublish, space }) {
   const dispatch = useDispatch();
   const snapshotHeights = useSelector(snapshotHeightsSelector);
@@ -162,6 +166,8 @@ export default function More({ onPublish, space }) {
   return (
     <Wrapper>
       <InnerWrapper>
+        <SideSectionTitle title="Strategy" />
+        <StrategyWrapper>{space?.weightStrategy[0]}</StrategyWrapper>
         <SideSectionTitle title="System" />
         <DropdownSelector
           options={choiceTypes}

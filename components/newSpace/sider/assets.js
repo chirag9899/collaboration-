@@ -3,6 +3,7 @@ import { Name, Value } from "./styled";
 import { ChainIcon } from "@osn/common-ui";
 import Tooltip from "@/components/tooltip";
 import NetworkLogo from "@/components/network/networkLogo";
+import { formatNumber } from "utils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -48,12 +49,12 @@ export default function Assets({ assets = [] }) {
           <span>{asset?.symbol}</span>
         </Description>
         <Tooltip
-          content={`Threshold: ${asset?.votingThreshold} ${asset?.symbol}`}
+          content={`${asset?.symbol}`}
         >
           <div>
-            <Threshold>
-              {asset?.votingThreshold} {asset?.symbol}
-            </Threshold>
+            {/* <Threshold>
+              {asset?.symbol}
+            </Threshold> */}
           </div>
         </Tooltip>
       </AssetItem>

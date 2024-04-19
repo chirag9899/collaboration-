@@ -73,7 +73,7 @@ export default function FourOFour() {
             Sorry. the content you’re looking for doesn’t exist. Either it was
             removed, or you mistyped the link.
           </p>
-          <InternalLink href="/">Back to Square</InternalLink>
+          <InternalLink href="/">Back to Home</InternalLink>
         </div>
       </Content>
       <Footer github="https://dvote.ai" />

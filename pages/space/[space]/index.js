@@ -9,12 +9,46 @@ import { EmptyQuery } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
-import { useDispatch } from "react-redux";
-import { setAvailableNetworks } from "store/reducers/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginAddressSelector,
+  setAvailableNetworks,
+} from "store/reducers/accountSlice";
 import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
-const ListInfo = dynamic("components/listInfo");
+import SpaceDetail from "@/components/spaceDetail";
+import NoData from "@/components/NoData";
+import SpaceAbout from "@/components/spaceAbout";
+// import Treasury from "@/components/treasury";
+const Treasury = dynamic(() => import("@/components/treasury"), {
+  ssr: false,
+});
+const ListInfo = dynamic(() => import("components/listInfo"), {
+  ssr: false,
+});
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: flex-start;
+  margin-top: 22px;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
+`;
+
+const MainWrapper = styled.div`
+  flex: 1 1 auto;
+  /* 100% - sider width - sider margin-left */
+  max-width: calc(100% - 300px - 20px);
+  > :not(:first-child) {
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 800px) {
+    width: 100%;
+    max-width: 100%;
+  }
+`;
 
 const HeaderWrapper = styled.div`
   > :not(:first-child) {
@@ -42,8 +76,12 @@ export default function List({
   activeTab,
   defaultPage,
 }) {
+  const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
+  const [showContent, setShowContent] = useState("proposals-all");
+
+  console.log(space,"space")
 
   useEffect(() => {
     dispatch(initAccount());
@@ -63,13 +101,13 @@ export default function List({
   }
 
   let proposalList = EmptyQuery;
-  if (!tab || tab === "all") {
+  if (!tab || tab === "proposals-all") {
     proposalList = proposals;
-  } else if (tab === "pending") {
+  } else if (tab === "proposals-pending") {
     proposalList = pendingProposals;
-  } else if (tab === "active") {
+  } else if (tab === "proposals-active") {
     proposalList = activeProposals;
-  } else if (tab === "closed") {
+  } else if (tab === "proposals-closed") {
     proposalList = closedProposals;
   }
 
@@ -78,30 +116,85 @@ export default function List({
     <>
       <Seo space={space} title={`${space.name} off-chain voting`} desc={desc} />
       <Layout bgHeight="264px" networks={space.networks}>
-        <HeaderWrapper>
-          <Breadcrumb
-            routes={[
-              { name: "Home", link: "/" },
-              {
-                name: (
-                  <span style={{ textTransform: "capitalize" }}>
-                    {space.name}
-                  </span>
-                ),
-              },
-            ]}
-          />
-          <ListInfo spaceId={spaceId} space={space} />
-          <ListTab
-            spaceId={spaceId}
-            activeTab={activeTab}
+        <Wrapper>
+          <SpaceDetail
+            space={space}
+            setShowContent={setShowContent}
+            showContent={showContent}
             onActiveTab={setTab}
+            spaceId={spaceId}
             defaultPage={defaultPage}
           />
-        </HeaderWrapper>
-        <PostWrapper>
-          <PostList posts={proposalList} space={space} />
-        </PostWrapper>
+          {showContent.includes("proposals") && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+                <ListInfo spaceId={spaceId} space={space} />
+                <ListTab
+                  loginAddress={address}
+                  spaceAddress={space?.address}
+                  spaceId={spaceId}
+                  activeTab={activeTab}
+                  onActiveTab={setTab}
+                  defaultPage={defaultPage}
+                  network={space?.networks[0]?.network}
+                />
+              </HeaderWrapper>
+              <PostWrapper>
+                <PostList posts={proposalList} space={space} />
+              </PostWrapper>
+            </MainWrapper>
+          )}
+          {showContent === "treasury" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </HeaderWrapper>
+              <Treasury spaceId={spaceId} address={address} />
+            </MainWrapper>
+          )}
+          {showContent === "about" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </HeaderWrapper>
+              <SpaceAbout space={space}/>
+            </MainWrapper>
+          )}
+        </Wrapper>
       </Layout>
     </>
   );
@@ -124,19 +217,19 @@ export async function getServerSideProps(context) {
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     ssrNextApi.fetch(`${spaceId}/proposals`, {
-      page: activeTab === "all" ? nPage : 1,
+      page: activeTab === "proposals-all" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/pending`, {
-      page: activeTab === "pending" ? nPage : 1,
+      page: activeTab === "proposals-pending" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/active`, {
-      page: activeTab === "active" ? nPage : 1,
+      page: activeTab === "proposals-active" ? nPage : 1,
       pageSize,
     }),
     ssrNextApi.fetch(`${spaceId}/proposals/closed`, {
-      page: activeTab === "closed" ? nPage : 1,
+      page: activeTab === "proposals-closed" ? nPage : 1,
       pageSize,
     }),
   ]);

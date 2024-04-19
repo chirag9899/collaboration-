@@ -55,7 +55,7 @@ const DropdownListItem = styled.li`
 `;
 
 const BadgeWrapper = styled.span`
-  background-color: #8B949E;
+  background-color: var(--netural-11);
   color: var(--neutral-1);
   border-radius: 30px;
   padding: 0px 5px;

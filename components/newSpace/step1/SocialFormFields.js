@@ -16,9 +16,9 @@ const InputWrapper = styled.div`
 export default function SocialFields({
   socialfields,
   setSocialFields,
-  errorMsg,
+  socialErrors,
 }) {
-  const { website, github, docs, twitter, forum } = socialfields;
+  const { website,twitter, github, docs, forum } = socialfields;
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     setSocialFields((props) => {
@@ -28,6 +28,8 @@ export default function SocialFields({
       };
     });
   };
+
+  const { docsErr, forumErr, githubErr, twitterErr, websiteErr } = socialErrors;
   return (
     <Wrapper>
       <SectionTitle>Website(Optional)</SectionTitle>
@@ -38,7 +40,7 @@ export default function SocialFields({
           value={website}
           onChange={onChangeHandler}
         />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        {websiteErr && <ErrorMessage>{websiteErr}</ErrorMessage>}
       </InputWrapper>
       <SectionTitle>Twitter(Optional)</SectionTitle>
       <InputWrapper>
@@ -48,7 +50,7 @@ export default function SocialFields({
           name="twitter"
           onChange={onChangeHandler}
         />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        {twitterErr && <ErrorMessage>{twitterErr}</ErrorMessage>}
       </InputWrapper>
       <SectionTitle>Github(Optional)</SectionTitle>
       <InputWrapper>
@@ -58,7 +60,7 @@ export default function SocialFields({
           name="github"
           onChange={onChangeHandler}
         />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        {githubErr && <ErrorMessage>{githubErr}</ErrorMessage>}
       </InputWrapper>
       <SectionTitle>Docs(Optional)</SectionTitle>
       <InputWrapper>
@@ -68,7 +70,7 @@ export default function SocialFields({
           name="docs"
           onChange={onChangeHandler}
         />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        {docsErr && <ErrorMessage>{docsErr}</ErrorMessage>}
       </InputWrapper>
       <SectionTitle>Forum(Optional)</SectionTitle>
       <InputWrapper>
@@ -78,7 +80,7 @@ export default function SocialFields({
           name="forum"
           onChange={onChangeHandler}
         />
-        {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
+        {forumErr && <ErrorMessage>{forumErr}</ErrorMessage>}
       </InputWrapper>
     </Wrapper>
   );

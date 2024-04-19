@@ -55,15 +55,17 @@ const Item = styled.div`
   justify-content: center;
   font-size: 14px;
   font-weight: 500;
-  color:  ${black}
+  color: ${black};
   &:hover {
     background: ${primary_color};
   }
   ${(p) =>
     p.$active &&
     css`
-      background: ${primary_color};
-      color: ${black};
+      /* background: ${primary_color}; */
+      /* color: ${black}; */
+      font-weight: bold;
+      color: var(--netural-11);
       cursor: auto;
       pointer-events: none;
     `}

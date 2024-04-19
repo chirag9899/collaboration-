@@ -34,28 +34,32 @@ const LoadButtons = ({ limit = 5, data, showCount, setShowCount }) => {
     setShowCount((prevCount) => Math.max(prevCount - limit, limit));
   };
 
-  return (
-    <LoadBtnWrapper>
-      {showCount > limit && (
-        <LoadButton
-          primary
-          className="button button-modern"
-          onClick={handleLoadLess}
-        >
-          Load Less
-        </LoadButton>
-      )}
-      {showCount < data.length && (
-        <LoadButton
-          primary
-          className="button button-modern"
-          onClick={handleLoadMore}
-        >
-          Load More
-        </LoadButton>
-      )}
-    </LoadBtnWrapper>
-  );
+  if (data.length > 0) {
+    return (
+      <LoadBtnWrapper>
+        {showCount > limit && (
+          <LoadButton
+            primary
+            className="button button-modern"
+            onClick={handleLoadLess}
+          >
+            Load Less
+          </LoadButton>
+        )}
+        {showCount < data.length && (
+          <LoadButton
+            primary
+            className="button button-modern"
+            onClick={handleLoadMore}
+          >
+            Load More
+          </LoadButton>
+        )}
+      </LoadBtnWrapper>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default LoadButtons;

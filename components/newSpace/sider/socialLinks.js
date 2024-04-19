@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 // import { Name, Value } from "./styled";
+import { ReactComponent as GithubSvg } from "../../../public/imgs/icons/github.svg";
+import { ReactComponent as TwitterSvg } from "../../../public/imgs/icons/twitter.svg";
+import { ReactComponent as Website } from "../../../public/imgs/icons/website.svg";
+import { ReactComponent as Forum } from "../../../public/imgs/icons/forum.svg";
+import { ReactComponent as Docs } from "../../../public/imgs/icons/docs.svg";
 
 export const Name = styled.span`
   font-style: normal;
@@ -24,26 +29,22 @@ const Wrapper = styled.div`
   gap: 4px;
 `;
 
-const Text = styled.span`
+const Link = styled.a`
   font-style: normal;
   font-weight: 500;
+  text-transform: capitalize;
   font-size: 14px;
   line-height: 24px;
   color: var(--neutral-1);
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: inline-block;
-  max-width: 100%;
-  -webkit-line-clamp: 1;
-  white-space: nowrap;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 5px;
 `;
-
 const Items = styled.div`
   display: flex;
-  flex-direction: column;
 `;
 
-export const SocialLinks = ({ socialfields }) => {
+export const SocialLinks = ({ socialfields, title }) => {
   let socialLinksList = "-";
 
   const socialLinks = {
@@ -58,19 +59,55 @@ export const SocialLinks = ({ socialfields }) => {
 
   const socialLinksArray = Object.entries(socialLinks);
 
+  const getLink = (key, value) => {
+    switch (key) {
+      case "website":
+        return (
+          <Link title={key} href={value}>
+            <Website />
+          </Link>
+        );
+      case "twitter":
+        return (
+          <Link title={key} href={value}>
+            <TwitterSvg />
+          </Link>
+        );
+      case "github":
+        return (
+          <Link title={key} href={value}>
+            <GithubSvg />
+          </Link>
+        );
+      case "docs":
+        return (
+          <Link title={key} href={value}>
+            <Docs />
+          </Link>
+        );
+
+      case "forum":
+        return (
+          <Link title={key} href={value}>
+            <Forum />
+          </Link>
+        );
+      default:
+        return;
+    }
+  };
+
   if (socialLinksArray.length > 0) {
     socialLinksList = (
       <Items>
-        {socialLinksArray.map(([key, value]) => (
-          <Text key={key}>{`${key}: ${value}`}</Text>
-        ))}
+        {socialLinksArray.map(([key, value]) => getLink(key, value))}
       </Items>
     );
   }
 
   return (
     <Wrapper>
-      <Name>Social Links</Name>
+      {title && <Name>{title}</Name>}
       <Value>{socialLinksList}</Value>
     </Wrapper>
   );

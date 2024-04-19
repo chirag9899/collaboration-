@@ -1,4 +1,5 @@
 import AssetTypeSelector from "./assetTypeSelector";
+import BigNumber from "bignumber.js";
 import { useCallback, useEffect, useState } from "react";
 import { FieldWrapper, Title, Wrapper } from "../styled";
 import { noop } from "@osn/common-ui";
@@ -10,6 +11,7 @@ import LoadingInput from "@/components/loadingInput";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import AssetOrdAdditionalDetail from "./assetOrdAdditionalDetail";
+import ContractButton from "@/components/styled/ContractButton";
 const initAdditioanlDetail = {
   description: null,
   name: null,
@@ -24,13 +26,20 @@ export default function OrdCollectionTokenConfig({
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
+  prevContract,
 }) {
+  if (asset?.votingThreshold !== "1") {
+    const votingThreshold = new BigNumber(asset.votingThreshold)
+      .div(Math.pow(10, asset.decimals)).toFixed()
+    asset.votingThreshold = votingThreshold.toString()
+  }
   const [assetType, setAssetType] = useState("collection");
   const [contractAddress, setContractAddress] = useState("collection");
   const [symbol, setSymbol] = useState("collection");
   const [decimals, setDecimals] = useState(18);
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
+  const [assetTicker, setAssetTicker] = useState("");
   const [additionalDetail, setAdditionalDetail] =
     useState(initAdditioanlDetail);
   const dispatch = useDispatch();
@@ -108,6 +117,17 @@ export default function OrdCollectionTokenConfig({
     setContractAddress(value);
     fetchOrdCollMetadata(value);
   };
+
+  const onChangeHandler = (e) => {
+    const { value } = e.target;
+    setAssetTicker(value);
+  };
+
+  const onClickPrevContract = () => {
+    setAssetTicker(prevContract);
+    setContractAddress(prevContract);
+    fetchOrdCollMetadata(prevContract);
+  };
   return (
     <Wrapper>
       <FieldWrapper>
@@ -117,8 +137,17 @@ export default function OrdCollectionTokenConfig({
 
       {assetType === "collection" && (
         <FieldWrapper>
-          <Title>Asset collection</Title>
+          <Title>
+            Asset collection
+            {assetTicker === "" && prevContract && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
           <LoadingInput
+            value={assetTicker}
+            onChange={onChangeHandler}
             placeholder="Enter an collection address"
             onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
@@ -145,7 +174,7 @@ export default function OrdCollectionTokenConfig({
         symbol={asset?.symbol}
         votingThreshold={asset?.votingThreshold}
         setVotingThreshold={(votingThreshold) => {
-          if (asset?.votingThreshold === votingThreshold) return;
+          // if (asset?.votingThreshold === votingThreshold) return;
           setPartialAsset({ votingThreshold });
         }}
         votingWeight={asset?.votingWeight}

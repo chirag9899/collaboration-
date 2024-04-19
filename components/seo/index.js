@@ -2,10 +2,10 @@ import { defaultSeoImage } from "frontedUtils/consts/spaces/sns";
 import { NextSeo } from "next-seo";
 
 export default function Seo({ space, title, desc, banner }) {
-  const imageCid = space?.seoImage || defaultSeoImage;
+  // const imageCid = space?.seoImage || defaultSeoImage;
   const images = [
     {
-      url: banner ?? `https://dvote.ai/imgs/dvote_preview.png`,
+      url: banner ?? `${process.env.NEXT_PUBLIC_API_END_POINT}imgs/card.png`,
       width: 1201,
       height: 629,
     },
@@ -17,7 +17,7 @@ export default function Seo({ space, title, desc, banner }) {
       title={finalTitle}
       description={desc}
       openGraph={{
-        url: "https://dvote.ai",
+        url: process.env.NEXT_PUBLIC_API_END_POINT,
         title: finalTitle,
         description: desc,
         images,

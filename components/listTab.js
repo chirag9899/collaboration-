@@ -8,6 +8,7 @@ import Tooltip from "@/components/tooltip";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import Link from "next/link";
 import { primary_color } from "./styles/colors";
+import Button from "./Button";
 
 const Wrapper = styled(FlexBetween)`
   align-items: flex-start;
@@ -30,8 +31,8 @@ const Wrapper = styled(FlexBetween)`
 `;
 
 const Item = styled.div`
-margin-right: 15px;
-@media screen and (max-width: 800px) {
+  margin-right: 15px;
+  @media screen and (max-width: 800px) {
     position: relative;
   }
   overflow: visible;
@@ -53,30 +54,34 @@ margin-right: 15px;
   }
 `;
 
-const NewPostLink = styled(Flex)`
+const ButtonWrapper = styled(Button)`
   cursor: pointer;
   ${p_16_semibold};
   color: ${primary_color};
-  margin-left: 40px;
+  margin-right: 10px;
+  font-size: 12px;
+  padding: 4px 12px !important;
   > img {
     width: 24px;
     height: 24px;
-    margin-right: 8px;
+    margin-right: 8px !important;
   }
 `;
 
 export default function ListTab({
   spaceId,
+  network,
   activeTab,
   onActiveTab = () => {},
   defaultPage,
+  spaceAddress,
+  loginAddress,
 }) {
   const router = useRouter();
   const activeTabIndex = LIST_TAB_ITEMS.findIndex(
     (item) => item.value === activeTab,
   );
   const [tabIndex, setTabIndex] = useState(activeTabIndex);
-
   useEffect(() => {
     const currTabIndex = LIST_TAB_ITEMS.findIndex(
       (item) => item.value === router.query.tab,
@@ -85,6 +90,8 @@ export default function ListTab({
     onActiveTab(router.query.tab);
   }, [router, onActiveTab]);
 
+  // const showDelegateBtn = network === "taiko" || network === "berachain";
+  const showDelegateBtn = network === "notexist";
   return (
     <Wrapper>
       <Flex>
@@ -120,12 +127,26 @@ export default function ListTab({
           </Item>
         ))}
       </Flex>
-      <Link href={`/space/${spaceId}/create`}>
-        <NewPostLink>
-          <i class="icon-plus"></i>&nbsp;
-          New Proposal
-        </NewPostLink>
-      </Link>
+
+      <Flex>
+        {spaceAddress === loginAddress && (
+          <Link href={`/space/${spaceId}/edit`}>
+            <ButtonWrapper>
+              <i class="icon-edit"></i> Edit Space
+            </ButtonWrapper>
+          </Link>
+        )}
+        <Link href={`/space/${spaceId}/create`}>
+          <ButtonWrapper>
+            <i class="icon-plus"></i> New Proposal
+          </ButtonWrapper>
+        </Link>
+        {showDelegateBtn && (
+          <Link href={`/space/${spaceId}/delegate`}>
+            <ButtonWrapper>Delegate</ButtonWrapper>
+          </Link>
+        )}
+      </Flex>
     </Wrapper>
   );
 }
