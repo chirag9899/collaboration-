@@ -59,7 +59,7 @@ const Content = ({ spaceId,address }) => {
     <Wrapper>
       <PanelWrapper>
         <InputWrapper>
-          <SectionTitle>To</SectionTitle>
+          <SectionTitle>Add Treasury</SectionTitle>
           <Input
             type="text"
             placeholder="Treasury Contract Address"

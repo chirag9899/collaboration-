@@ -8,6 +8,8 @@ import { stringElipsis } from "utils";
 import { SocialLinks } from "../newSpace/sider/socialLinks";
 import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
 import SidebarTab from "../sidebarTab";
+import nextApi from "services/nextApi";
+import React, { useState, useEffect } from "react";
 
 const Wrapper = styled(Panel)`
   padding: 20px 0px;
@@ -44,7 +46,7 @@ const SocialIconsWrapper = styled.div`
 `;
 const MembersCount = styled.div`
   color: var(--netural-11);
-  font-weight: Bold !important;
+  font-weight: bold !important;
 `;
 
 // eslint-disable-next-line
@@ -56,6 +58,7 @@ export default function SpaceInfo({
   defaultPage,
   activeTab,
 }) {
+  const [count, setCount] = useState(null);
   const socialfields = {
     website: space?.website,
     twitter: space?.twitter,
@@ -63,6 +66,22 @@ export default function SpaceInfo({
     docs: space?.docs,
     forum: space?.forum,
   };
+  useEffect(() => {
+    const fetchCount = async () => {
+      try {
+        const response = await nextApi.fetch(`account/spaces/${space.id}/count`);
+        if (response.result.count === 1) {
+          setCount(response.result.count + ' member');
+        } else {
+          setCount(response.result.count + ' members');
+        }
+      } catch (error) {
+        console.error('Error fetching count:', error);
+        setCount("0 members");
+      }
+  };
+    fetchCount();
+  }, [space.id]);
 
   return (
     <Wrapper>
@@ -77,7 +96,7 @@ export default function SpaceInfo({
             <Image src="./imgs/icons/verified.svg" width={20} height={20} />
           )}
         </Name>
-        <MembersCount>143K members</MembersCount>
+        <MembersCount>{count !== null ? `${count}` : 'Loading...'}</MembersCount>
       </IconWrapper>
 
       <SidebarTab
