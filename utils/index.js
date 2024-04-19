@@ -21,3 +21,8 @@ export function stringElipsis(string, maxWidth) {
     return trimedString;
   }
 }
+
+export const isValidUrl = (url) =>
+  /^(?:(?:(?:https?|ftp):)?\/\/)?(?:\S+(?::\S*)?@)?(?:(?!-)[a-zA-Z0-9-]{1,63}(?<!-)\.)+[a-zA-Z]{2,}(?::\d{1,5})?(?:\/\S*)?$/.test(
+    url,
+  );

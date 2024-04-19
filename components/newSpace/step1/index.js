@@ -12,11 +12,18 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import MyDivider from "../myDivider";
 import SocialFields from "./SocialFormFields";
+import { isValidUrl } from "utils";
 
 const NextButton = styled(Button)`
   padding: 12px 0;
 `;
-
+const initErrors = {
+  docsErr: null,
+  forumErr: null,
+  githubErr: null,
+  twitterErr: null,
+  websiteErr: null,
+};
 export default function Step1({
   steps,
   imageFile,
@@ -29,11 +36,37 @@ export default function Step1({
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const [errorMsg, setErrorMsg] = useState("");
+  const [socialErrors, setSocialErrors] = useState(initErrors);
+  const { website, github, docs, twitter, forum } = socialfields;
 
   useEffect(() => {
     setErrorMsg("");
   }, [name]);
 
+  const socialLinksValidate = () => {
+    const socialLinks = { docs, forum, github, twitter, website };
+    let errors = {};
+    for (const key in socialLinks) {
+      const value = socialLinks[key];
+
+      if (value && !isValidUrl(value)) {
+        errors = {
+          ...errors,
+          [`${key}Err`]: `Please enter a valid ${key} link`,
+        };
+      } else {
+        errors = {
+          ...errors,
+          [`${key}Err`]: null,
+        };
+      }
+    }
+    if (Object.values(errors).every((error) => error === null)) {
+      dispatch(setCurrentStep(1));
+    } else {
+      setSocialErrors(errors);
+    }
+  };
   const handleNext = () => {
     if (!name) {
       setErrorMsg("Space name cannot be empty");
@@ -51,8 +84,7 @@ export default function Step1({
       );
       return;
     }
-
-    dispatch(setCurrentStep(1));
+    socialLinksValidate();
   };
 
   return (
@@ -65,6 +97,8 @@ export default function Step1({
         <SocialFields
           setSocialFields={setSocialFields}
           socialfields={socialfields}
+          socialErrors={socialErrors}
+          title="Social Links"
         />
       </Sections>
       <NextButton block onClick={() => handleNext()}>

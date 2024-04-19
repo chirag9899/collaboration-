@@ -6,7 +6,7 @@ import { ssrNextApi } from "services/nextApi";
 import { setAvailableNetworks } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 // import NewSpace from "@/components/newSpace";
-const NewSpace = dynamic(() => import('@/components/newSpace'));
+const NewSpace = dynamic(() => import("@/components/newSpace"), { ssr: false });
 
 export default function Index({ allNetworks, chainsDef, tokensDef }) {
   const dispatch = useDispatch();

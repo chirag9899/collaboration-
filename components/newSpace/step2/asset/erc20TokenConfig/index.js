@@ -7,6 +7,8 @@ import AssetConfig from "../assetConfig";
 import { useIsMounted } from "@osn/common";
 import nextApi from "services/nextApi";
 import LoadingInput from "@/components/loadingInput";
+import { useDispatch } from "react-redux";
+import { newErrorToast } from "store/reducers/toastSlice";
 
 export default function Erc20TokenConfig({
   count,
@@ -22,6 +24,8 @@ export default function Erc20TokenConfig({
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
 
+  const dispatch = useDispatch()
+
   const fetchErc20TokenMetadata = useCallback(
     async (contractAddress) => {
       setIsLoadingMetadata(true);
@@ -30,6 +34,7 @@ export default function Erc20TokenConfig({
           `evm/chain/${chain}/erc20/contract/${contractAddress}`,
         );
         if (error) {
+          dispatch(newErrorToast("Please enter a valid contract"))
           return;
         }
         if (isMounted.current) {

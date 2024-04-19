@@ -40,6 +40,7 @@ export default function DropdownList({
 
   const onSelectOption = (value) => {
     setSelectedOptions([value]);
+    setShowDropdown(false)
   };
 
   return (

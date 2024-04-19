@@ -60,6 +60,12 @@ export default function Asset({
     [asset, setAsset],
   );
 
+  useEffect(() => {
+    if (filtredCains.length === 1) {
+      onSelectChain(filtredCains[0]);
+    }
+  }, [filtredCains]);
+
   const onSelectChain = useCallback(
     (chain) => {
       if (!chain) {
@@ -177,8 +183,12 @@ export default function Asset({
         )}
       </Header>
       <MyFieldWrapper>
-        <Title>Chain</Title>
-        <ChainSelector chains={filtredCains} onSelect={onSelectChain} />
+        {filtredCains.length > 1 && (
+          <>
+            <Title>Chain</Title>
+            <ChainSelector chains={filtredCains} onSelect={onSelectChain} />
+          </>
+        )}
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
         <Title>
           ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}
