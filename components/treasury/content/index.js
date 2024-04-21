@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ConfirmButton, InputWrapper, PanelWrapper, Wrapper } from "./styled";
 import Input from "@/components/Input";
 import { SectionTitle } from "@/components/styled/sectionTitle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoData from "@/components/NoData";
 import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";

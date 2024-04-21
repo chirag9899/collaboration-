@@ -3,7 +3,7 @@ import { Button } from "@osn/common-ui";
 import nextApi from "services/nextApi";
 import { useViewfunc } from "frontedUtils/hooks";
 import { extensionCancelled } from "frontedUtils/consts/extension";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import {
   newToastId,
