@@ -16,6 +16,9 @@ import Image from "next/image";
 import { stringElipsis } from "utils";
 import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";
+import { request, AddressPurpose } from "@sats-connect/core";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
+const connectedWallet = useSelector(connectedWalletSelector);
 
 const IconWrapper = styled.div`
   display: flex;
@@ -76,7 +79,19 @@ export default function SpaceListItem({ name, space }) {
         return;
       } else {
         if (validate(address)) {
-          pubkey = await window?.unisat?.getPublicKey();
+          if (connectedWallet === "unisat") {
+            pubkey = await window.unisat.getPublicKey();
+          }
+          if (connectedWallet === "xverse") {
+              const res = await request('getAccounts', {
+                purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+                message: 'We are requesting your bitcoin address',
+              });
+              const ordinalsAddressItem = res.result.find(
+                (address) => address.purpose === AddressPurpose.Ordinals
+              );
+              pubkey = ordinalsAddressItem.publicKey;
+            }
         }
       }
 
@@ -85,7 +100,7 @@ export default function SpaceListItem({ name, space }) {
         pubkey,
       };
 
-      const signedData = await signedApiData(data, address);
+      const signedData = await signedApiData(data, address, connectedWallet);
       const { result } = await nextApi.post(`account/spaces`, signedData);
       if (result) {
         dispatch(fetchJoinedSpace(address));
@@ -104,7 +119,19 @@ export default function SpaceListItem({ name, space }) {
         return;
       } else {
         if (validate(address)) {
-          pubkey = await window?.unisat?.getPublicKey();
+          if (connectedWallet === "unisat") {
+            pubkey = await window.unisat.getPublicKey();
+          }
+          if (connectedWallet === "xverse") {
+            const res = await request('getAccounts', {
+              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+              message: 'We are requesting your bitcoin address',
+            });
+            const ordinalsAddressItem = res.result.find(
+              (address) => address.purpose === AddressPurpose.Ordinals
+            );
+            pubkey = ordinalsAddressItem.publicKey;
+          }
         }
       }
 
@@ -113,7 +140,7 @@ export default function SpaceListItem({ name, space }) {
         pubkey,
       };
 
-      const signedData = await signedApiData(data, address);
+      const signedData = await signedApiData(data, address, connectedWallet);
       const { result } = await nextApi.post(
         `account/spaces/leave`,
         signedData,

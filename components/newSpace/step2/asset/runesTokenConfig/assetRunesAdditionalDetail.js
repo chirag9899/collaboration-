@@ -88,16 +88,6 @@ export default function AssetRunesAdditionalDetail({
     }, 2000);
   };
 
-  // if (
-  //   !holdersCount ||
-  //   !genesisBlock ||
-  //   !runeNumber ||
-  //   !circulatingSupply ||
-  //   !deployTxid
-  // ) {
-  //   return null;
-  // }
-
   return (
     <>
       <Wrapper>
@@ -109,31 +99,26 @@ export default function AssetRunesAdditionalDetail({
         )}
         {genesisBlock > 0 && (
           <FieldWrapper>
-            <Title>Max</Title>
+            <Title>Genesis Block</Title>
             <Input value={genesisBlock} disabled />
           </FieldWrapper>
         )}
       </Wrapper>
       {runeNumber > 0 && (
         <FieldWrapper>
-          <Title>Inscription</Title>
+          <Title>Rune Number</Title>
           <Input value={runeNumber} disabled />
         </FieldWrapper>
       )}
       {circulatingSupply && (
         <FieldWrapper>
-          <Title>BTC Address</Title>
-          <FieldGroup>
+          <Title>Circulating Supply</Title>
             <Input value={circulatingSupply} disabled />
-            <CopyButton onClick={handleCopyCreator}>
-              {copiedCreator ? "Copied!" : "Copy"}
-            </CopyButton>
-          </FieldGroup>
         </FieldWrapper>
       )}
       {deployTxid && (
         <FieldWrapper>
-          <Title>Transaction Id</Title>
+          <Title>Deploy Transaction Id</Title>
           <FieldGroup>
             <Input value={deployTxid} disabled />
             <CopyButton onClick={handleCopyTxid}>

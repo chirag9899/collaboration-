@@ -15,7 +15,9 @@ import isEmpty from "lodash.isempty";
 import { SocialLinks } from "./socialLinks";
 import { validate } from "bitcoin-address-validation";
 import { loginAddressSelector } from "store/reducers/accountSlice";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { signApiData } from "../../../services/chainApi";
+import { request, AddressPurpose } from "@sats-connect/core";
 
 const Sections = styled.div`
   display: flex;
@@ -70,6 +72,7 @@ export default function Sider({
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const address = useSelector(loginAddressSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -116,7 +119,19 @@ export default function Sider({
       return;
     } else {
       if (validate(address)) {
+        if (connectedWallet === "unisat") {
         pubkey = await window.unisat.getPublicKey();
+        }
+        if (connectedWallet === "xverse") {
+          const res = await request('getAccounts', {
+            purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+            message: 'We are requesting your bitcoin address',
+          });
+          const ordinalsAddressItem = res.result.find(
+            (address) => address.purpose === AddressPurpose.Ordinals
+          );
+          pubkey = ordinalsAddressItem.publicKey;
+        }
       }
     }
 
@@ -143,7 +158,7 @@ export default function Sider({
       address,
     };
 
-    const signedData = await signApiData(spaceData, address);
+    const signedData = await signApiData(spaceData, address, connectedWallet);
 
     setIsLoading(true);
     try {

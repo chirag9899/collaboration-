@@ -6,7 +6,7 @@ function UnisatNoAccount() {
   return (
     <Fragment>
       <StyledDescription>
-        No accounts found from Unisat. Please create or import some accounts
+        No accounts found from Unisat or Xverse. Please create or import some accounts
         first.
       </StyledDescription>
 
