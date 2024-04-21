@@ -42,38 +42,38 @@ export default function AssetBrcAdditionalDetail({
 }) {
   const [copiedTxid, setCopiedTxid] = useState(false);
   const [copiedCreator, setCopiedCreator] = useState(false);
-  const { holdersCount, historyCount, inscriptionNumber, creator, txid } =
+  const { holdersCount, genesisBlock, runeNumber, circulatingSupply, deployTxid } =
     additionalDetail;
   useEffect(() => {
     if (
       holdersCount === asset?.holdersCount &&
-      historyCount === asset?.historyCount &&
-      inscriptionNumber === asset?.inscriptionNumber &&
-      creator === asset?.creator &&
-      txid === asset?.txid
+      genesisBlock === asset?.genesisBlock &&
+      runeNumber === asset?.runeNumber &&
+      circulatingSupply === asset?.circulatingSupply &&
+      deployTxid === asset?.deployTxid
     ) {
       return;
     }
 
     setPartialAsset({
       holdersCount,
-      historyCount,
-      inscriptionNumber,
-      creator,
-      txid,
+      genesisBlock,
+      runeNumber,
+      circulatingSupply,
+      deployTxid,
     });
   }, [
     asset,
     holdersCount,
-    historyCount,
-    inscriptionNumber,
-    creator,
-    txid,
+    genesisBlock,
+    runeNumber,
+    circulatingSupply,
+    deployTxid,
     setPartialAsset,
   ]);
 
   const handleCopyTxid = () => {
-    navigator.clipboard.writeText(txid);
+    navigator.clipboard.writeText(deployTxid);
     setCopiedTxid(true);
     setTimeout(() => {
       setCopiedTxid(false);
@@ -81,7 +81,7 @@ export default function AssetBrcAdditionalDetail({
   };
 
   const handleCopyCreator = () => {
-    navigator.clipboard.writeText(creator);
+    navigator.clipboard.writeText(circulatingSupply);
     setCopiedCreator(true);
     setTimeout(() => {
       setCopiedCreator(false);
@@ -90,10 +90,10 @@ export default function AssetBrcAdditionalDetail({
 
   // if (
   //   !holdersCount ||
-  //   !historyCount ||
-  //   !inscriptionNumber ||
-  //   !creator ||
-  //   !txid
+  //   !genesisBlock ||
+  //   !runeNumber ||
+  //   !circulatingSupply ||
+  //   !deployTxid
   // ) {
   //   return null;
   // }
@@ -107,35 +107,35 @@ export default function AssetBrcAdditionalDetail({
             <Input value={holdersCount} disabled />
           </FieldWrapper>
         )}
-        {historyCount > 0 && (
+        {genesisBlock > 0 && (
           <FieldWrapper>
             <Title>Max</Title>
-            <Input value={historyCount} disabled />
+            <Input value={genesisBlock} disabled />
           </FieldWrapper>
         )}
       </Wrapper>
-      {inscriptionNumber > 0 && (
+      {runeNumber > 0 && (
         <FieldWrapper>
           <Title>Inscription</Title>
-          <Input value={inscriptionNumber} disabled />
+          <Input value={runeNumber} disabled />
         </FieldWrapper>
       )}
-      {creator && (
+      {circulatingSupply && (
         <FieldWrapper>
           <Title>BTC Address</Title>
           <FieldGroup>
-            <Input value={creator} disabled />
+            <Input value={circulatingSupply} disabled />
             <CopyButton onClick={handleCopyCreator}>
               {copiedCreator ? "Copied!" : "Copy"}
             </CopyButton>
           </FieldGroup>
         </FieldWrapper>
       )}
-      {txid && (
+      {deployTxid && (
         <FieldWrapper>
           <Title>Transaction Id</Title>
           <FieldGroup>
-            <Input value={txid} disabled />
+            <Input value={deployTxid} disabled />
             <CopyButton onClick={handleCopyTxid}>
               {copiedTxid ? "Copied!" : "Copy"}
             </CopyButton>

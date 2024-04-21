@@ -8,6 +8,7 @@ import OrmlTokenConfig from "./ormlTokenConfig";
 import Erc20TokenConfig from "./erc20TokenConfig";
 import Brc20TokenConfig from "./brc20TokenConfig";
 import OrdCollectionTokenConfig from "./ordCollectionTokenConfig";
+import RunesTokenConfig from "./runesTokenConfig";
 import styled from "styled-components";
 import useStateChanged from "hooks/useStateChanged";
 import { AssetTypes } from "./constants";
@@ -157,6 +158,20 @@ export default function Asset({
   ) {
     assetConfig = (
       <OrdCollectionTokenConfig
+        prevContract={prevContract}
+        count={count}
+        chain={asset.chain}
+        name={asset.name}
+        nativeTokenInfo={chainInfo}
+        asset={asset}
+        setPartialAsset={setPartialAsset}
+      />
+    );
+  } else if (
+    chainInfo?.supportAssetTypes?.includes(AssetTypes.COLLECTION_RUNES)
+  ) {
+    assetConfig = (
+      <RunesTokenConfig
         prevContract={prevContract}
         count={count}
         chain={asset.chain}
