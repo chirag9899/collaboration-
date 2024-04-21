@@ -35,7 +35,7 @@ const FieldGroup = styled.div`
   }
 `;
 
-export default function AssetBrcAdditionalDetail({
+export default function AssetRunesAdditionalDetail({
   additionalDetail,
   asset,
   setPartialAsset = noop,
