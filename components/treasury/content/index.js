@@ -8,7 +8,6 @@ import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";
 import nextApi from "services/nextApi";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
-const connectedWallet = useSelector(connectedWalletSelector);
 import { request, AddressPurpose } from "@sats-connect/core";
 
 const Content = ({ spaceId,address }) => {
@@ -19,6 +18,7 @@ const Content = ({ spaceId,address }) => {
   const { treasuryAddress } = formData;
 
   const dispatch = useDispatch();
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   async function onConfirmHandler() {
     try {

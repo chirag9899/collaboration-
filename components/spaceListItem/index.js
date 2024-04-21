@@ -18,7 +18,6 @@ import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";
 import { request, AddressPurpose } from "@sats-connect/core";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
-const connectedWallet = useSelector(connectedWalletSelector);
 
 const IconWrapper = styled.div`
   display: flex;
@@ -63,6 +62,7 @@ export default function SpaceListItem({ name, space }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
   const joinedSpaces = useSelector(joinedSpacesSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   const isSpaceJoined = useCallback(
     (spaceName) => !!joinedSpaces.find((item) => item.space === spaceName),

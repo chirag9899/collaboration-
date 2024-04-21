@@ -3,8 +3,6 @@ import { signApiData } from "../services/chainApi";
 import { validate } from 'bitcoin-address-validation';
 import { useDispatch, useSelector } from "react-redux";
 import { request, AddressPurpose } from "@sats-connect/core";
-import { connectedWalletSelector } from "store/reducers/showConnectSlice";
-const connectedWallet = useSelector(connectedWalletSelector);
 
 export function validateProposal(formData) {
   const fields = [
@@ -57,7 +55,7 @@ export async function createProposal(proposal) {
   return await nextApi.post(`${proposal.space}/proposals`, signedData);
 }
 
-export async function signProposal(proposal) {
+export async function signProposal(proposal, connectedWallet) {
   const { address, ...data } = proposal;
   if (validate(address)) {
     let pubkey
@@ -131,6 +129,7 @@ export async function signComment(
   contentType,
   address,
   commenterNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
     let pubkey
@@ -205,6 +204,7 @@ export async function signVote(
   address,
   realVoter,
   voterNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
     let pubkey
@@ -259,6 +259,7 @@ export async function signTerminate({
   proposalCid,
   terminatorNetwork,
   address,
+  connectedWallet,
 }) {
   if (validate(address)) {
     let pubkey
@@ -306,6 +307,7 @@ export async function signAppendant(
   contentType,
   address,
   appenderNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
     let pubkey

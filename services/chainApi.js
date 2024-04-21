@@ -6,7 +6,6 @@ import {
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
 import { validate } from "bitcoin-address-validation";
-import { useDispatch, useSelector } from "react-redux";
 import { request } from "@sats-connect/core";
 
 
@@ -29,7 +28,6 @@ async function singByXverse(text, address) {
     message: hex,
   };
   const signMessageResult = await request("signMessage", options)
-  console.log(signMessageResult)
   return signMessageResult.result.signature
 }
 

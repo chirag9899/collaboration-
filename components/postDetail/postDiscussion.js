@@ -30,6 +30,7 @@ import {
 import { MentionIdentityUser } from "@osn/common-ui";
 import { useSuggestions } from "./suggestions";
 import RichEditor from "../RichEditor";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const Item = styled.div`
   padding-top: 20px;
@@ -110,6 +111,7 @@ export default function PostDiscussion({
   votesPage = 1,
 }) {
   const [content, setContent] = useState("");
+  const connectedWallet = useSelector(connectedWalletSelector);
   const viewfunc = useViewfunc();
   const account = useSelector(loginAccountSelector);
   const dispatch = useDispatch();
@@ -139,6 +141,7 @@ export default function PostDiscussion({
         "markdown",
         encodeAddressByChain(account?.address, account?.network),
         account?.network,
+        connectedWallet,
       );
     } catch (e) {
       const errorMessage = e.message;
