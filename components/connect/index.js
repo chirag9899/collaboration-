@@ -4,7 +4,7 @@ import { availableNetworksSelector, initAccount } from "store/reducers/accountSl
 import styled from "styled-components";
 import ChainSelector from "@/components/chainSelector";
 import Closeable from "@/components/connect/closeable";
-import useExtension from "../../frontedUtils/hooks/useExtension";
+//import useExtension from "../../frontedUtils/hooks/useExtension";
 import { btcChains, chainMap, evmChains } from "../../frontedUtils/consts/chains";
 import WalletSelector from "@/components/connect/supportedWallets"
 import { setAccount } from "../../store/reducers/accountSlice";
@@ -31,11 +31,12 @@ export default function Connect({ networks }) {
     dispatch(initAccount());
   }, [dispatch]);
   const [chain, setChain] = useState(networks[0]);
+  const [accounts, setAccounts] = useState([]);
   const [address, setAddress] = useState();
   const [element, setElement] = useState(null);
   const availableNetworks = useSelector(availableNetworksSelector);
-  const { accounts, hasExtension, extensionAccessible, detecting } =
-    useExtension();
+  // const { accounts, hasExtension, extensionAccessible, detecting } =
+  //   useExtension();
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
   
@@ -85,12 +86,12 @@ export default function Connect({ networks }) {
 
 
     // Rest of your code...
-  }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
+  }, [wallet, chain, accounts, address, chain?.network, metaMaskNetworkChangeCount]);
 
 
   return (
     <Wrapper>
-      <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
+      <Closeable open={!false} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
     </Wrapper>
