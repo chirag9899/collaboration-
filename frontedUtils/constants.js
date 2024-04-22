@@ -1,19 +1,19 @@
 export const LIST_TAB_ITEMS = [
   {
-    value: "all",
+    value: "proposals-all",
     name: "All Proposals",
   },
   {
-    value: "active",
+    value: "proposals-active",
     name: "Active",
   },
   {
-    value: "pending",
+    value: "proposals-pending",
     name: "Pending",
     tooltip: "Waiting for the start date",
   },
   {
-    value: "closed",
+    value: "proposals-closed",
     name: "Closed",
   },
 ];
@@ -32,3 +32,19 @@ export const TOAST_TYPES = {
   PENDING: "Pending",
   WARNING:"Warning"
 };
+
+
+export const SPACE_SIDEBAR_TAB_ITEMS = [
+  {
+    value: "proposals-all",
+    name: "Proposals",
+  },
+  {
+    value: "treasury",
+    name: "Treasury",
+  },
+  {
+    value: "about",
+    name: "About",
+  },
+];

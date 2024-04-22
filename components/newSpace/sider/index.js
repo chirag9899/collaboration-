@@ -13,11 +13,11 @@ import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import isEmpty from "lodash.isempty";
 import { SocialLinks } from "./socialLinks";
-import { validate } from 'bitcoin-address-validation';
-import {
-  loginAddressSelector,
-} from "store/reducers/accountSlice";
+import { validate } from "bitcoin-address-validation";
+import { loginAddressSelector } from "store/reducers/accountSlice";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { signApiData } from "../../../services/chainApi";
+import { request, AddressPurpose } from "@sats-connect/core";
 
 const Sections = styled.div`
   display: flex;
@@ -66,12 +66,16 @@ export default function Sider({
   allStrategies,
   selectedStrategies,
   socialfields,
+  spaceDetails,
+  description,
 }) {
   const dispatch = useDispatch();
   const currentStep = useSelector(currentStepSelector);
   const address = useSelector(loginAddressSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const verifyData = useCallback(() => {
     if (isNaN(proposalThreshold)) {
       dispatch(newErrorToast("Proposal threshold must be a number"));
@@ -87,6 +91,7 @@ export default function Sider({
       dispatch(newErrorToast("Strategy is required"));
       return false;
     }
+
     return true;
   }, [dispatch, proposalThreshold, selectedStrategies]);
 
@@ -109,17 +114,30 @@ export default function Sider({
       }
     }
 
-    let pubkey = address
+    let pubkey = address;
     if (typeof window === "undefined") {
       return;
     } else {
       if (validate(address)) {
+        if (connectedWallet === "unisat") {
         pubkey = await window.unisat.getPublicKey();
+        }
+        if (connectedWallet === "xverse") {
+          const res = await request('getAccounts', {
+            purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+            message: 'We are requesting your bitcoin address',
+          });
+          const ordinalsAddressItem = res.result.find(
+            (address) => address.purpose === AddressPurpose.Ordinals
+          );
+          pubkey = ordinalsAddressItem.publicKey;
+        }
       }
     }
-    
+
     const spaceData = {
       name,
+      description,
       symbol,
       decimals,
       logo: imageFile,
@@ -136,26 +154,31 @@ export default function Sider({
       proposalThreshold: new BigNumber(proposalThreshold)
         .times(Math.pow(10, decimals))
         .toFixed(),
-      pubkey: pubkey
-    };
-    
-    const signedData = await signApiData(
-      spaceData,
+      pubkey: pubkey,
       address,
-    );
+    };
+
+    const signedData = await signApiData(spaceData, address, connectedWallet);
 
     setIsLoading(true);
     try {
-      const { result, error } = await nextApi.post("spaces", signedData);
-    if (error) {
-    dispatch(newErrorToast(error.message));
-    }
+      const { result, error } = await nextApi.post(
+        !spaceDetails ? "spaces" : `spaces/${router?.query?.space}/edit`,
+        signedData,
+      );
+      if (error) {
+        dispatch(newErrorToast(error.message));
+      }
       if (result) {
-    dispatch(newSuccessToast("Space created successfully"));
-    router.push(`/space/${result.spaceId}`);
-    }
+        dispatch(
+          newSuccessToast(
+            `Space ${spaceDetails ? "updated" : "created"} successfully`,
+          ),
+        );
+        router.push(`/space/${result.spaceId}`);
+      }
     } finally {
-    setIsLoading(false);
+      setIsLoading(false);
     }
   }, [
     router,
@@ -186,10 +209,10 @@ export default function Sider({
           options={allStrategies}
           selectedOptions={selectedStrategies}
         />
-        <SocialLinks socialfields={socialfields}/>
+        <SocialLinks socialfields={socialfields} />
         {currentStep === 2 && (
           <Button primary block onClick={submit} isLoading={isLoading}>
-            Submit
+            {spaceDetails ? "Update" : "Submit"}
           </Button>
         )}
       </Items>

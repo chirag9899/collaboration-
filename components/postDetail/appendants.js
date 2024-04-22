@@ -26,6 +26,7 @@ import { useViewfunc } from "frontedUtils/hooks";
 import nextApi from "services/nextApi";
 import { MarkdownPreviewer } from "@osn/previewer";
 import RichEditor from "../RichEditor";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const Wrapper = styled.div`
   > :first-child {
@@ -82,6 +83,7 @@ export default function Appendants({ proposal, appendants, editable }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const account = useSelector(loginAccountSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState("");
@@ -115,6 +117,7 @@ export default function Appendants({ proposal, appendants, editable }) {
         contentType,
         account.address,
         account.network,
+        connectedWallet
       );
     } catch (error) {
       const errorMessage = error.message;

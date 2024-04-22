@@ -1,21 +1,20 @@
 import styled from "styled-components";
-import PostList from "./postList";
 import SearchBar from "./searchBar";
-import DropDown from "./DropdownMenu";
-import { ReactComponent as Grid } from "../public/imgs/icons/grid.svg";
 import useDropDown from "hooks/useDropDown";
-import { netural_grey_100, text_light_major } from "./styles/colors";
-import { h3_36_bold, p_16_semibold } from "styles/textStyles";
-import { formatNumber } from "services/util";
 // import Space from "./space";
 // import Networks from "./network";
 import { useEffect, useState } from "react";
-import dynamic from 'next/dynamic';
-const Networks = dynamic(() => import('./network'),{
-  ssr: true
+import dynamic from "next/dynamic";
+// import UserSpaces from "./userSpaces";
+const Networks = dynamic(() => import("./network"), {
+  ssr: true,
 });
-const Space = dynamic(() => import('./space'),{
-  ssr: true
+const Space = dynamic(() => import("./space"), {
+  ssr: true,
+});
+
+const UserSpaces = dynamic(() => import("./userSpaces"), {
+  ssr: false,
 });
 
 const Wrapper = styled.div`
@@ -24,15 +23,10 @@ const Wrapper = styled.div`
   gap: 40px;
 `;
 
-const SubTitleWrapper = styled.div`
+const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
-  > :last-child {
-    flex-shrink: 0;
-    flex-grow: 1;
-    justify-content: right;
-  }
   @media screen and (max-width: 800px) {
     display: flex;
     flex-direction: column;
@@ -49,30 +43,6 @@ const FilterDropDownWrapper = styled.div`
   }
   border-radius: 100px;
   min-width: 150px;
-`;
-
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  text-transform: capitalize;
-`;
-
-const TotalCount = styled.span`
-  ${p_16_semibold};
-  color: var(--neutral-3);
-`;
-
-const TotalCountWrapper = styled.div`
-  display: flex;
-  gap: 40px;
-  text-transform: capitalize;
-`;
-
-const Title = styled.div`
-  ${h3_36_bold};
-  color: ${text_light_major};
 `;
 
 const searchOptions = [
@@ -93,10 +63,16 @@ const categoriesOptions = [
   { label: "grant", value: "grant", badge: "123" },
 ];
 
-export default function Home({ networks, spaces, hottestProposals }) {
+export default function Home({
+  networks,
+  spaces,
+  hottestProposals,
+  userSpaces,
+}) {
   const [allSpaces, setAllSpaces] = useState(spaces);
   const [allNetworks, setAllNetworks] = useState(networks);
   const [search, setSearch] = useState("");
+  const [ownSpaces, setOwnSpaces] = useState(userSpaces);
 
   const {
     options,
@@ -114,9 +90,13 @@ export default function Home({ networks, spaces, hottestProposals }) {
     const searchVal = value.toLowerCase();
     if (isSpaces && searchVal === "") {
       setAllSpaces(spaces);
+      setOwnSpaces(userSpaces);
     } else {
       const result = spaces.filter(({ name }) => name.match(searchVal));
       setAllSpaces(result);
+      setOwnSpaces(
+        userSpaces.filter(({ name }) => name.toLowerCase().match(searchVal)),
+      );
     }
 
     if (isNetworks && searchVal === "") {
@@ -127,18 +107,13 @@ export default function Home({ networks, spaces, hottestProposals }) {
     }
   };
 
-  const totalCount = isSpaces
-    ? spaces.length
-    : isNetworks
-    ? networks.length
-    : [];
+  useEffect(() => {
+    setOwnSpaces(userSpaces);
+  }, [userSpaces]);
 
   return (
     <Wrapper>
-      <TitleWrapper>
-        <Title>{selectedOption}</Title>
-      </TitleWrapper>
-      <SubTitleWrapper>
+      <SearchBarWrapper>
         <SearchBar
           placeholder="Search..."
           search={search}
@@ -158,14 +133,31 @@ export default function Home({ networks, spaces, hottestProposals }) {
             />
           </FilterDropDownWrapper>
         )} */}
-        <TotalCountWrapper>
-          <TotalCount>
-            {`(${formatNumber(totalCount)}) ${selectedOption}`}
-          </TotalCount>
-        </TotalCountWrapper>
-      </SubTitleWrapper>
-      {isSpaces && <Space spaces={allSpaces} limit={5} />}
-      {isNetworks && <Networks networks={allNetworks} limit={5} />}
+      </SearchBarWrapper>
+      {isSpaces && ownSpaces.length > 0 && (
+        <UserSpaces
+          userSpaces={ownSpaces}
+          limit={5}
+          title="Your Spaces"
+          totalCount={userSpaces.length}
+        />
+      )}
+      {isSpaces && (
+        <Space
+          spaces={allSpaces}
+          limit={5}
+          title="All Spaces"
+          totalCount={spaces.length}
+        />
+      )}
+      {isNetworks && (
+        <Networks
+          networks={allNetworks}
+          limit={5}
+          title="Networks"
+          totalCount={networks.length}
+        />
+      )}
       {/* <PostList
         title="Hottest Proposals"
         posts={hottestProposals}

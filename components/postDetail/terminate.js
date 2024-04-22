@@ -3,9 +3,8 @@ import { Button } from "@osn/common-ui";
 import nextApi from "services/nextApi";
 import { useViewfunc } from "frontedUtils/hooks";
 import { extensionCancelled } from "frontedUtils/consts/extension";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-// TODO: use { createToast } from common-ui instead
 import {
   newToastId,
   newErrorToast,
@@ -17,6 +16,7 @@ import { useState } from "react";
 import { delayPromise } from "../../services/delayLoading";
 import Confirmation from "../confirmationModal";
 import useModal from "hooks/useModal";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const TerminateButton = styled(Button)`
   margin-left: 20px;
@@ -27,6 +27,7 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
   const viewfunc = useViewfunc();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   const { open, openModal, closeModal } = useModal();
 
@@ -45,6 +46,7 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
         address: loginAddress,
         proposalCid: proposal.cid,
         terminatorNetwork: loginNetwork,
+        connectedWallet: connectedWallet,
       });
     } catch (error) {
       const errorMessage = error.message;

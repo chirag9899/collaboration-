@@ -122,7 +122,7 @@ export default function AssetBrcAdditionalDetail({
       )}
       {creator && (
         <FieldWrapper>
-          <Title>Btc Address</Title>
+          <Title>BTC Address</Title>
           <FieldGroup>
             <Input value={creator} disabled />
             <CopyButton onClick={handleCopyCreator}>

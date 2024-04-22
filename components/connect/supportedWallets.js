@@ -4,6 +4,7 @@ import React from 'react';
 import Metamask from "../connect/connectButton/metamask.svg";
 import Polkadot from "../connect/connectButton/polkadot.svg";
 import Unisat from "../connect/connectButton/unisat.svg";
+import Xverse from "../connect/connectButton/xverse.svg";
 import walletConnect from "../connect/connectButton/wallet-connect.svg";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
@@ -18,6 +19,7 @@ import Image from 'next/image';
 const supportedWallets = [
   { name: 'Metamask', id: 'metamask', icon: Metamask },
   // { name: 'Unisat', id: 'unisat', icon: Unisat },
+  // { name: 'Xverse', id: 'xverse', icon: Xverse },
   { name: 'WalletConnect', id: 'walletConnect', icon: walletConnect },
   // { name: 'Polkadot', id: 'polkadot', icon: Polkadot },
 ];

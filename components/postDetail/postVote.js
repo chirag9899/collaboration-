@@ -42,6 +42,7 @@ import DelegationInfo from "./delegationInfo";
 import Input from "../Input";
 import Flex from "../styled/Flex";
 import Button from "../Button";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const Wrapper = styled.div`
   > :not(:first-child) {
@@ -83,7 +84,8 @@ const ButtonsWrapper = styled.div`
   }
   > button {
     margin-right: 15px;
-    width: 200px !important;
+    min-width: 200px !important;
+    margin-bottom: 10px;
   }
 `;
 
@@ -128,6 +130,7 @@ export default function PostVote({ proposal }) {
   const proxyAddress = useSelector(proxySelector);
   const proxyBalance = useSelector(proxyBalanceSelector);
   const proxyDelegation = useSelector(proxyDelegationSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   const loginAddress = useSelector(loginAddressSelector);
   const { network: loginNetwork } = useSelector(loginNetworkSelector) || {};
@@ -207,6 +210,7 @@ export default function PostVote({ proposal }) {
         loginAddress,
         useProxy ? proxyAddress : undefined,
         loginNetwork,
+        connectedWallet,
       );
     } catch (error) {
       const errorMessage = error.message;

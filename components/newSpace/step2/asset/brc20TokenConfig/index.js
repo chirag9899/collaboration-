@@ -1,4 +1,5 @@
 import AssetTypeSelector from "./assetTypeSelector";
+import BigNumber from "bignumber.js";
 import { useCallback, useEffect, useState } from "react";
 import { FieldWrapper, Title, Wrapper } from "../styled";
 import { noop } from "@osn/common-ui";
@@ -11,6 +12,7 @@ import { urlCreator } from "utils";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import AssetBrcAdditionalDetail from "./assetBrcAdditionalDetail";
+import ContractButton from "@/components/styled/ContractButton";
 
 const initAdditioanlDetail = {
   holdersCount: null,
@@ -26,7 +28,13 @@ export default function Brc20TokenConfig({
   nativeTokenInfo,
   asset,
   setPartialAsset = noop,
+  prevContract,
 }) {
+  if (asset?.votingThreshold !== "1") {
+    const votingThreshold = new BigNumber(asset.votingThreshold)
+      .div(Math.pow(10, asset.decimals)).toFixed()
+    asset.votingThreshold = votingThreshold.toString()
+  }
   const [assetType, setAssetType] = useState("ticker");
   const [contractAddress, setContractAddress] = useState("ticker");
   const [symbol, setSymbol] = useState("ticker");
@@ -35,6 +43,7 @@ export default function Brc20TokenConfig({
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [additionalDetail, setAdditionalDetail] =
     useState(initAdditioanlDetail);
+  const [assetTicker, setAssetTicker] = useState("");
 
   const dispatch = useDispatch();
 
@@ -117,6 +126,17 @@ export default function Brc20TokenConfig({
     fetchBrc20TokenMetadata(value);
   };
 
+  const onChangeHandler = (e) => {
+    const { value } = e.target;
+    setAssetTicker(value);
+  };
+
+  const onClickPrevContract = () => {
+    setAssetTicker(prevContract);
+    setContractAddress(prevContract);
+    fetchBrc20TokenMetadata(prevContract);
+  };
+
   return (
     <Wrapper>
       <FieldWrapper>
@@ -126,8 +146,17 @@ export default function Brc20TokenConfig({
 
       {assetType === "ticker" && (
         <FieldWrapper>
-          <Title>Asset ticker</Title>
+          <Title>
+            Asset ticker{" "}
+            {assetTicker === "" && prevContract && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
           <LoadingInput
+            onChange={onChangeHandler}
+            value={assetTicker}
             placeholder="Enter an ticker address"
             onBlur={onBlurHandler}
             isLoading={isLoadingMetadata}
@@ -151,7 +180,7 @@ export default function Brc20TokenConfig({
         symbol={asset?.symbol}
         votingThreshold={asset?.votingThreshold}
         setVotingThreshold={(votingThreshold) => {
-          if (asset?.votingThreshold === votingThreshold) return;
+          // if (asset?.votingThreshold === votingThreshold) return;
           setPartialAsset({ votingThreshold });
         }}
         votingWeight={asset?.votingWeight}

@@ -4,7 +4,7 @@ import { availableNetworksSelector, initAccount } from "store/reducers/accountSl
 import styled from "styled-components";
 import ChainSelector from "@/components/chainSelector";
 import Closeable from "@/components/connect/closeable";
-import useExtension from "../../frontedUtils/hooks/useExtension";
+//import useExtension from "../../frontedUtils/hooks/useExtension";
 import { btcChains, chainMap, evmChains } from "../../frontedUtils/consts/chains";
 import WalletSelector from "@/components/connect/supportedWallets"
 import { setAccount } from "../../store/reducers/accountSlice";
@@ -31,80 +31,15 @@ export default function Connect({ networks }) {
     dispatch(initAccount());
   }, [dispatch]);
   const [chain, setChain] = useState(networks[0]);
+  const [accounts, setAccounts] = useState([]);
   const [address, setAddress] = useState();
   const [element, setElement] = useState(null);
   const availableNetworks = useSelector(availableNetworksSelector);
-  const { accounts, hasExtension, extensionAccessible, detecting } =
-    useExtension();
+  // const { accounts, hasExtension, extensionAccessible, detecting } =
+  //   useExtension();
   const [metaMaskNetworkChangeCount, setMetaMaskNetworkChangeCount] =
     useState(1);
   
-  // const handleWalletSelect = async (selectedWallet) => {
-  //   // Implement the connection logic for each wallet
-  //   switch (selectedWallet.id) {
-  //     case 'metamask':
-  //       // Connect to Metamask
-  //       if (window.ethereum) {
-  //         try {
-  //           const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  //           const network = await window.ethereum.request({ method: 'eth_chainId' });
-  //           setAddress(accounts[0]);
-  //           setChain(network[0]);
-  //           dispatch(
-  //             setAccount({
-  //               address: accounts[0],
-  //               network: "ethereum",
-  //             }));
-  //           dispatch(setConnectedWallet(selectedWallet.id))
-  //           dispatch(setShowHeaderMenu(false));
-  //         } catch (error) {
-  //           console.error('Failed to connect to Metamask:', error);
-  //           dispatch(newErrorToast(error.message));
-  //         }
-  //       } else {
-  //         dispatch(newErrorToast("Metamask is not installed"));
-  //       }
-  //       dispatch(closeConnect());
-  //       break;
-  //     case 'unisat':
-  //       // Connect to Unisat
-  //       if (window.unisat) {
-  //         try {
-  //           let res = await window.unisat.requestAccounts();
-  //           let res2 = await window.unisat.getNetwork();
-  //           setAddress(res[0]);
-  //           dispatch(
-  //             setAccount({
-  //               address: res[0],
-  //               network: "brc20",
-  //             }));
-  //           dispatch(setConnectedWallet(selectedWallet.id))
-  //           dispatch(setShowHeaderMenu(false));
-  //         } catch (error) {
-  //           dispatch(newErrorToast(error.message));
-  //           console.log(error);
-  //         }
-  //       } else {
-  //         dispatch(newErrorToast("Unisat is not installed"));
-  //       }
-  //       dispatch(closeConnect());
-
-  //       break;
-  //     case 'walletConnect':
-  //       await open()
-  //       dispatch(closeConnect());
-  //       break;
-  //     default:
-  //       dispatch(newErrorToast("No walelt found"));
-  //       dispatch(closeConnect());
-
-  //       break;
-
-  //     // ...
-  //   }
-
-  // };
-
   const handleWalletSelect = async (selectedWallet) => {
     await _handleWalletSelect(selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu);
   };
@@ -151,12 +86,12 @@ export default function Connect({ networks }) {
 
 
     // Rest of your code...
-  }, [wallet, chain, extensionAccessible, accounts, hasExtension, detecting, address, chain?.network, metaMaskNetworkChangeCount]);
+  }, [wallet, chain, accounts, address, chain?.network, metaMaskNetworkChangeCount]);
 
 
   return (
     <Wrapper>
-      <Closeable open={!detecting} text={wallet ? "Switch Chain" : "Connect Wallet"}>
+      <Closeable open={!false} text={wallet ? "Switch Chain" : "Connect Wallet"}>
         {element}
       </Closeable>
     </Wrapper>

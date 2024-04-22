@@ -14,6 +14,10 @@ import JoinButton from "./joinButton";
 import { border_primary } from "../styles/colors";
 import Image from "next/image";
 import { stringElipsis } from "utils";
+import { signedApiData } from "services/chainApi";
+import validate from "bitcoin-address-validation";
+import { request, AddressPurpose } from "@sats-connect/core";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const IconWrapper = styled.div`
   display: flex;
@@ -58,6 +62,7 @@ export default function SpaceListItem({ name, space }) {
   const dispatch = useDispatch();
   const address = useSelector(loginAddressSelector);
   const joinedSpaces = useSelector(joinedSpacesSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   const isSpaceJoined = useCallback(
     (spaceName) => !!joinedSpaces.find((item) => item.space === spaceName),
@@ -69,9 +74,34 @@ export default function SpaceListItem({ name, space }) {
       if (!address) {
         return;
       }
-      const { result } = await nextApi.post(`account/${address}/spaces`, {
+      let pubkey = address;
+      if (!window && typeof window === "undefined") {
+        return;
+      } else {
+        if (validate(address)) {
+          if (connectedWallet === "unisat") {
+            pubkey = await window.unisat.getPublicKey();
+          }
+          if (connectedWallet === "xverse") {
+              const res = await request('getAccounts', {
+                purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+                message: 'We are requesting your bitcoin address',
+              });
+              const ordinalsAddressItem = res.result.find(
+                (address) => address.purpose === AddressPurpose.Ordinals
+              );
+              pubkey = ordinalsAddressItem.publicKey;
+            }
+        }
+      }
+
+      const data = {
         space: spaceName,
-      });
+        pubkey,
+      };
+
+      const signedData = await signedApiData(data, address, connectedWallet);
+      const { result } = await nextApi.post(`account/spaces`, signedData);
       if (result) {
         dispatch(fetchJoinedSpace(address));
       }
@@ -84,8 +114,36 @@ export default function SpaceListItem({ name, space }) {
       if (!address) {
         return;
       }
-      const { result } = await nextApi.delete(
-        `account/${address}/spaces/${spaceName}`,
+      let pubkey = address;
+      if (!window && typeof window === "undefined") {
+        return;
+      } else {
+        if (validate(address)) {
+          if (connectedWallet === "unisat") {
+            pubkey = await window.unisat.getPublicKey();
+          }
+          if (connectedWallet === "xverse") {
+            const res = await request('getAccounts', {
+              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+              message: 'We are requesting your bitcoin address',
+            });
+            const ordinalsAddressItem = res.result.find(
+              (address) => address.purpose === AddressPurpose.Ordinals
+            );
+            pubkey = ordinalsAddressItem.publicKey;
+          }
+        }
+      }
+
+      const data = {
+        space: spaceName,
+        pubkey,
+      };
+
+      const signedData = await signedApiData(data, address, connectedWallet);
+      const { result } = await nextApi.post(
+        `account/spaces/leave`,
+        signedData,
       );
       if (result) {
         dispatch(fetchJoinedSpace(address));
@@ -109,7 +167,7 @@ export default function SpaceListItem({ name, space }) {
           )}
         </Name>
       </IconWrapper>
-      {/* {!isSpaceJoined(name) ? (
+      {!isSpaceJoined(name) ? (
         <JoinButton
           onClick={(e) => {
             e.preventDefault();
@@ -127,7 +185,7 @@ export default function SpaceListItem({ name, space }) {
           }}
           title="joined"
         />
-      )} */}
+      )}
     </Wrapper>
   );
 }

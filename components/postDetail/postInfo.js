@@ -122,7 +122,7 @@ export default function PostInfo({ data, space }) {
         </div>
       </div>
       <div>
-        <SideSectionTitle title={`Assets(${assets.length})`} />
+        <SideSectionTitle title={`Assets`} />
         <Divider />
         <AssetList assets={assets} />
       </div>

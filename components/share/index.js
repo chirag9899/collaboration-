@@ -13,22 +13,22 @@ const Wrapper = styled.div`
 
 const ShareItem = styled.span`
   cursor: pointer;
-  &:hover {
-    .twitter {
-      rect {
-        fill: #e6f4fe;
-      }
-      path {
-        fill: #33a2f2;
-      }
+  .twitter {
+    rect {
+      fill: none;
     }
-    .copy {
-      rect {
-        fill: #edf7ed;
-      }
-      path {
-        fill: #4caf50;
-      }
+    path {
+      fill: var(--white);
+      opacity: 0.65;
+    }
+  }
+  .copy {
+    rect {
+      fill: none;
+    }
+    path {
+      fill: var(--white);
+      opacity: 0.65;
     }
   }
 `;
@@ -55,10 +55,10 @@ export default function Share({ uid }) {
 
   return (
     <Wrapper>
-      <ShareItem onClick={tweet}>
+      <ShareItem onClick={tweet} title="Share on twitter">
         <Twitter className="twitter" />
       </ShareItem>
-      <ShareItem onClick={copyLink}>
+      <ShareItem onClick={copyLink} title="Copy Proposal link">
         <Tooltip content={isCopied ? "Copied" : "Copy Short Link"} size="fit">
           <CopySvg className="copy" />
         </Tooltip>

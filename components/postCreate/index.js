@@ -42,6 +42,7 @@ import {
 import encodeAddressByChain from "../../frontedUtils/chain/addr";
 import nextApi from "../../services/nextApi";
 import { extensionCancelled } from "../../frontedUtils/consts/extension";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -85,6 +86,7 @@ export default function PostCreate({ space }) {
 
   const snapshotHeights = useSelector(snapshotHeightsSelector);
   const choiceTypeIndex = useSelector(choiceTypeIndexSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
   const router = useRouter();
 
   const [title, setTitle] = useState(
@@ -228,7 +230,7 @@ export default function PostCreate({ space }) {
     dispatch(setCreateProposalLoading(true));
     let signedData;
     try {
-      signedData = await viewFunc.signProposal(proposal);
+      signedData = await viewFunc.signProposal(proposal, connectedWallet);
     } catch (e) {
       const errorMessage = e.message;
       if (extensionCancelled !== errorMessage) {
