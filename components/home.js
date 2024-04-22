@@ -118,7 +118,7 @@ export default function Home({
           placeholder="Search..."
           search={search}
           onSearchChange={onSearchChange}
-          dropdown={true}
+          dropdown={false}
           dropDownOptions={options}
           onSelectOption={handleSelect}
         />

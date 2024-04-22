@@ -5,19 +5,20 @@ export default function Seo({ space, title, desc, banner }) {
   // const imageCid = space?.seoImage || defaultSeoImage;
   const images = [
     {
-      url: banner ?? `${process.env.NEXT_PUBLIC_API_END_POINT}imgs/card.png`,
-      width: 1201,
-      height: 629,
+      url: banner ?? `https://beravote.com/imgs/beravote_preview.png`,
+      width: 1200,
+      height: 628,
     },
   ];
 
-  const finalTitle = title ?? "dVote | Decentralized Governance Infrastructure ";
+  const finalTitle =
+    title ?? "BeraVote | Decentralized Governance Infrastructure ";
   return (
     <NextSeo
       title={finalTitle}
       description={desc}
       openGraph={{
-        url: process.env.NEXT_PUBLIC_API_END_POINT,
+        url: "https://beravote.com/",
         title: finalTitle,
         description: desc,
         images,

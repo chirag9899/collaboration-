@@ -35,6 +35,8 @@ export default function Erc20TokenConfig({
 
   const dispatch = useDispatch()
 
+  const dispatch = useDispatch()
+
   const fetchErc20TokenMetadata = useCallback(
     async (contractAddress) => {
       setIsLoadingMetadata(true);

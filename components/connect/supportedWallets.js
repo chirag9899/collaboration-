@@ -18,8 +18,8 @@ import Image from 'next/image';
 
 const supportedWallets = [
   { name: 'Metamask', id: 'metamask', icon: Metamask },
-  { name: 'Unisat', id: 'unisat', icon: Unisat },
-  { name: 'Xverse', id: 'xverse', icon: Xverse },
+  // { name: 'Unisat', id: 'unisat', icon: Unisat },
+  // { name: 'Xverse', id: 'xverse', icon: Xverse },
   { name: 'WalletConnect', id: 'walletConnect', icon: walletConnect },
   // { name: 'Polkadot', id: 'polkadot', icon: Polkadot },
 ];

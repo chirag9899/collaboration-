@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import ExternalLink from "../ExternalLink";
-import { ReactComponent as FooterLogoSvg } from "../../public/imgs/logoIcon.svg";
+import { ReactComponent as FooterLogoSvg } from "../../public/imgs/beravote-logoIcon.svg";
 import { ReactComponent as GithubSvg } from "../../public/imgs/icons/github.svg";
 import { ReactComponent as DiscordSvg } from "../../public/imgs/icons/discord.svg";
 import { ReactComponent as TwitterSvg } from "../../public/imgs/icons/twitter.svg";
@@ -19,7 +19,7 @@ const SvgMap = new Map([
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
-  background:var(--background);
+  background: var(--background);
 `;
 
 const ContentWrapper = styled.div`
@@ -96,6 +96,11 @@ const RightWrapper = styled.div`
   flex-direction: column;
   align-items: flex-end;
 
+  svg {
+    width: 68px !important;
+    height: 48px !important;
+  }
+
   > div {
     text-align: right;
     font-size: 16px;
@@ -157,7 +162,7 @@ export default function Footer({ github }) {
           </RightWrapper>
         </ContentWrapper>
         <BottomWrapper>
-          {`© ${new Date().getFullYear()} dVote. All Rights Reserved.`}
+          {`© ${new Date().getFullYear()} BeraVote. All Rights Reserved.`}
         </BottomWrapper>
       </Container>
     </Wrapper>

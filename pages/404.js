@@ -76,7 +76,7 @@ export default function FourOFour() {
           <InternalLink href="/">Back to Home</InternalLink>
         </div>
       </Content>
-      <Footer github="https://dvote.ai" />
+      <Footer github="https://beravote.com/" />
       <Toast />
     </Wrapper>
   );

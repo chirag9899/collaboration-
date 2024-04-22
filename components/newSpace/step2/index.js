@@ -159,7 +159,7 @@ export default function Step2({
       {assets.length < 1 && <MyDivider />}
       <ButtonsWrapper>
         <BackButton />
-        <Button disabled={assets.length&& !assets[0]?.symbol} block onClick={nextStep}>
+        <Button disabled={assets.length && !assets[0]?.symbol} block onClick={nextStep}>
           Next
         </Button>
       </ButtonsWrapper>
