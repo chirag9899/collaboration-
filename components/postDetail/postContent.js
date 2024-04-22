@@ -104,7 +104,8 @@ export default function PostContent({ data, space }) {
     <Panel>
       <TitleWrapper>
         <Title>{data?.title}</Title>
-        {terminateButton}
+        {data?.status !== "closed" ||
+          (data?.status !== "terminated" && terminateButton)}
       </TitleWrapper>
       <InfoWrapper>
         <LeftWrapper>
