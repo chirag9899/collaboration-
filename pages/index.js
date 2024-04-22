@@ -25,9 +25,16 @@ export default function Index({
       name,
       space: {
         ...space,
-        verified: ["runestone", "runestone collection", "pfpepe"].includes(
-          space.name,
-        ),
+        verified: [
+          "runestone",
+          "runestone collection",
+          "pfpepe",
+          "Ethereal Nexus",
+          "Celestial Capital ",
+          "Celestial Capital",
+          "TaikoHorse",
+          "stgUSDCberachain",
+        ].includes(space.name),
       },
     })),
     (item) => !item.space.verified,
@@ -58,9 +65,7 @@ export default function Index({
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await nextApi.fetch(
-          `spaces/space/${address}`,
-        );
+        const response = await nextApi.fetch(`spaces/space/${address}`);
         const result = await sortUserSpaces(response?.result);
         setUsersSpaces(result);
       } catch (error) {

@@ -27,7 +27,6 @@ export const InputWrapper = styled(FlexCenter)`
 
 export const StyledInput = styled.input`
   ${p_14_normal};
-
   color: ${white_text_color};
   box-sizing: border-box;
   padding: 12px 0;
@@ -35,7 +34,6 @@ export const StyledInput = styled.input`
   border: none;
   background: none;
   outline: none;
-
   ::placeholder {
     color: ${text_dark_accessory};
   }

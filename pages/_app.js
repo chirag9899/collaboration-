@@ -36,7 +36,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
       <Head>
-        <title>dVote Network Off-chain Voting</title>
+        <title>dVote Decentralized Governance Infrastructure</title>
         <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
       <Component {...pageProps} />

@@ -11,6 +11,7 @@ import Modal from "@osn/common-ui/es/Modal";
 import { useState } from "react";
 import Details from "./details";
 import { Flex, FlexBetween } from "@osn/common-ui";
+import { makeSquare } from "styles/globalCss";
 
 const Wrapper = styled(FlexBetween)`
   @media screen and (max-width: 900px) {
@@ -83,6 +84,16 @@ const ChainIcons = styled.div`
   }
 `;
 
+const Icon = styled.div`
+  ${makeSquare(32)};
+  margin-right: 16px;
+`;
+const IconWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 export default function ListInfo({ space }) {
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -99,7 +110,12 @@ export default function ListInfo({ space }) {
   return (
     <Wrapper>
       <Flex>
-        <SpaceLogo space={space} />
+        <IconWrapper>
+          <Icon>
+            <SpaceLogo space={space} />
+            <SpaceLogo space={space} />
+          </Icon>
+        </IconWrapper>
         <div>
           <LogoName>{space.name}</LogoName>
           <LogoSymbol>{space.symbol}</LogoSymbol>
