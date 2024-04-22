@@ -1702,6 +1702,7 @@ __metadata:
     react-test-renderer: ^17.0.2
     sanitize-html: ^2.6.1
     sass: ^1.72.0
+    sats-connect: 2.3.x
     semantic-ui-css: ^2.4.1
     semantic-ui-react: ^2.0.3
     socket.io-client: ^4.6.1
@@ -2906,7 +2907,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:^1.3.1":
+"@noble/hashes@npm:^1.1.2, @noble/hashes@npm:^1.3.1":
   version: 1.4.0
   resolution: "@noble/hashes@npm:1.4.0"
   checksum: 8ba816ae26c90764b8c42493eea383716396096c5f7ba6bea559993194f49d80a73c081f315f4c367e51bd2d5891700bcdfa816b421d24ab45b41cb03e4f3342
@@ -2917,6 +2918,13 @@ __metadata:
   version: 1.7.0
   resolution: "@noble/secp256k1@npm:1.7.0"
   checksum: 540a2b8e527ee1e5522af1c430e54945ad373883cac983b115136cd0950efa1f2c473ee6a36d8e69b6809b3ee586276de62f5fa705c77a9425721e81bada8116
+  languageName: node
+  linkType: hard
+
+"@noble/secp256k1@npm:^1.6.3":
+  version: 1.7.1
+  resolution: "@noble/secp256k1@npm:1.7.1"
+  checksum: d2301f1f7690368d8409a3152450458f27e54df47e3f917292de3de82c298770890c2de7c967d237eff9c95b70af485389a9695f73eb05a43e2bd562d18b18cb
   languageName: node
   linkType: hard
 
@@ -3750,6 +3758,52 @@ __metadata:
   version: 1.5.1
   resolution: "@rushstack/eslint-patch@npm:1.5.1"
   checksum: e4c25322312dbaa29e835a7ab4fbac53c8731dd0da65e46646e38945e296429e7fb91c2ef3da5af5d5938d44b0cde1d5290438ebb3dcb015e02b80b5e2530d24
+  languageName: node
+  linkType: hard
+
+"@sats-connect/core@npm:0.0.7":
+  version: 0.0.7
+  resolution: "@sats-connect/core@npm:0.0.7"
+  dependencies:
+    axios: 1.6.8
+    bitcoin-address-validation: 2.2.3
+    buffer: 6.0.3
+    jsontokens: 4.0.1
+    lodash.omit: 4.5.0
+  checksum: 5d38de5895ff1059e5680ea56b2d9b8faa9ba0fb35428eb9bcc91b6acac44e526cb93f7d5ee70dad3fc63d888474783e9cc02eba5d3aa0c4894317ea542f063b
+  languageName: node
+  linkType: hard
+
+"@sats-connect/core@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@sats-connect/core@npm:0.0.8"
+  dependencies:
+    axios: 1.6.8
+    bitcoin-address-validation: 2.2.3
+    buffer: 6.0.3
+    jsontokens: 4.0.1
+    lodash.omit: 4.5.0
+  checksum: cb896ddf6cefb7a6782c7c3eef04a9d3f7781628b1a120fd0a9cd757871e2e59b5de8be635c4a3778a54995136aac0b172cd97a98e685fd4614b3788ced5ec94
+  languageName: node
+  linkType: hard
+
+"@sats-connect/make-default-provider-config@npm:0.0.2":
+  version: 0.0.2
+  resolution: "@sats-connect/make-default-provider-config@npm:0.0.2"
+  dependencies:
+    "@sats-connect/core": 0.0.7
+    "@sats-connect/ui": 0.0.5
+    bowser: 2.11.0
+  peerDependencies:
+    typescript: 5.4.4
+  checksum: 1f1ad645b8f9bdf7abd01c498af0e5edbcb7a2228f58b698bf8ae3618eb7a68711f88ade43d54ee0cce898a8ffb755102ca3033c02c65a881b3f44cfcc1f9b6d
+  languageName: node
+  linkType: hard
+
+"@sats-connect/ui@npm:0.0.5":
+  version: 0.0.5
+  resolution: "@sats-connect/ui@npm:0.0.5"
+  checksum: 9da7bced5533db461c191c6afcc70d59095ed36afc47103b0815255feca91fae3c78c8a82859706959866bd3105519d3ee353511ff5235e9e5b88edd49adc1cb
   languageName: node
   linkType: hard
 
@@ -5636,6 +5690,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios@npm:1.6.8":
+  version: 1.6.8
+  resolution: "axios@npm:1.6.8"
+  dependencies:
+    follow-redirects: ^1.15.6
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: bf007fa4b207d102459300698620b3b0873503c6d47bf5a8f6e43c0c64c90035a4f698b55027ca1958f61ab43723df2781c38a99711848d232cad7accbcdfcdd
+  languageName: node
+  linkType: hard
+
 "axobject-query@npm:^3.1.1":
   version: 3.2.1
   resolution: "axobject-query@npm:3.2.1"
@@ -5796,7 +5861,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base64-js@npm:^1.3.1":
+"base64-js@npm:^1.3.1, base64-js@npm:^1.5.1":
   version: 1.5.1
   resolution: "base64-js@npm:1.5.1"
   checksum: 669632eb3745404c2f822a18fc3a0122d2f9a7a13f7fb8b5823ee19d1d2ff9ee5b52c53367176ea4ad093c332fd5ab4bd0ebae5a8e27917a4105a4cfc86b1005
@@ -5838,7 +5903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bitcoin-address-validation@npm:^2.2.3":
+"bitcoin-address-validation@npm:2.2.3, bitcoin-address-validation@npm:^2.2.3":
   version: 2.2.3
   resolution: "bitcoin-address-validation@npm:2.2.3"
   dependencies:
@@ -5867,6 +5932,13 @@ __metadata:
   version: 1.0.0
   resolution: "boolbase@npm:1.0.0"
   checksum: 3e25c80ef626c3a3487c73dbfc70ac322ec830666c9ad915d11b701142fab25ec1e63eff2c450c74347acfd2de854ccde865cd79ef4db1683f7c7b046ea43bb0
+  languageName: node
+  linkType: hard
+
+"bowser@npm:2.11.0":
+  version: 2.11.0
+  resolution: "bowser@npm:2.11.0"
+  checksum: 29c3f01f22e703fa6644fc3b684307442df4240b6e10f6cfe1b61c6ca5721073189ca97cdeedb376081148c8518e33b1d818a57f781d70b0b70e1f31fb48814f
   languageName: node
   linkType: hard
 
@@ -8001,6 +8073,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: a62c378dfc8c00f60b9c80cab158ba54e99ba0239a5dd7c81245e5a5b39d10f0c35e249c3379eae719ff0285fff88c365dd446fab19dee771f1d76252df1bbf5
+  languageName: node
+  linkType: hard
+
 "for-each@npm:^0.3.3":
   version: 0.3.3
   resolution: "for-each@npm:0.3.3"
@@ -8028,6 +8110,17 @@ __metadata:
     combined-stream: ^1.0.8
     mime-types: ^2.1.12
   checksum: b019e8d35c8afc14a2bd8a7a92fa4f525a4726b6d5a9740e8d2623c30e308fbb58dc8469f90415a856698933c8479b01646a9dff33c87cc4e76d72aedbbf860d
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
   languageName: node
   linkType: hard
 
@@ -9995,6 +10088,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jsontokens@npm:4.0.1":
+  version: 4.0.1
+  resolution: "jsontokens@npm:4.0.1"
+  dependencies:
+    "@noble/hashes": ^1.1.2
+    "@noble/secp256k1": ^1.6.3
+    base64-js: ^1.5.1
+  checksum: 5396294d1b24acb9f7a3b3501ed25bc8ea2e8730a2e371c3b8886c1691829e7114dbeb856c14b88ea8379796f2572661f3175562e2ee3d40c42dbd70dc769427
+  languageName: node
+  linkType: hard
+
 "jsx-ast-utils@npm:^2.4.1 || ^3.0.0":
   version: 3.3.3
   resolution: "jsx-ast-utils@npm:3.3.3"
@@ -10266,6 +10370,13 @@ __metadata:
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: ad580b4bdbb7ca1f7abf7e1bce63a9a0b98e370cf40194b03380a46b4ed799c9573029599caebc1b14e3f24b111aef72b96674a56cfa105e0f5ac70546cdc005
+  languageName: node
+  linkType: hard
+
+"lodash.omit@npm:4.5.0":
+  version: 4.5.0
+  resolution: "lodash.omit@npm:4.5.0"
+  checksum: 434645e49fe84ab315719bd5a9a3a585a0f624aa4160bc09157dd041a414bcc287c15840365c1379476a3f3eda41fbe838976c3f7bdecbbf4c5478e86c471a30
   languageName: node
   linkType: hard
 
@@ -11920,6 +12031,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-from-env@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "proxy-from-env@npm:1.1.0"
+  checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
+  languageName: node
+  linkType: hard
+
 "psl@npm:^1.1.33":
   version: 1.9.0
   resolution: "psl@npm:1.9.0"
@@ -12624,6 +12742,17 @@ __metadata:
   bin:
     sass: sass.js
   checksum: f420079c7d51660b7256ee52463c1499ede36f7fd5c8ef50c687451777ad641509001454dea45244073cedd7c00e7a3bc1c362e55206ac6686171b994edb41e4
+  languageName: node
+  linkType: hard
+
+"sats-connect@npm:2.3.x":
+  version: 2.3.0
+  resolution: "sats-connect@npm:2.3.0"
+  dependencies:
+    "@sats-connect/core": 0.0.8
+    "@sats-connect/make-default-provider-config": 0.0.2
+    "@sats-connect/ui": 0.0.5
+  checksum: 2fdb4c24459e6a21d8bb651b27b0f4e3b966a26d7145d5dc3d54547b9ceed0e6ee5357c85a1a91f0ca85ebb58f750047272206190bfc9aa12666016c2ae8d6fb
   languageName: node
   linkType: hard
 

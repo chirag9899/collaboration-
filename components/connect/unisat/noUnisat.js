@@ -6,11 +6,12 @@ function NoUnisat() {
   return (
     <Fragment>
       <StyledDescription>
-        Unisat not detected. Click following button to install it.
+        Bitcoin wallet is not detected. Click one of the following buttons to install it.
       </StyledDescription>
 
       <ActionBar>
-        <GoToExtension link="https://Unisat.io/" text="Unisat Wallet" />
+        <GoToExtension link="https://unisat.io/" text="Unisat Wallet" />
+        <GoToExtension link="https://www.xverse.app/" text="Xverse Wallet" />
       </ActionBar>
     </Fragment>
   );

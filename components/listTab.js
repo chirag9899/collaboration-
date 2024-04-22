@@ -90,7 +90,8 @@ export default function ListTab({
     onActiveTab(router.query.tab);
   }, [router, onActiveTab]);
 
-  const showDelegateBtn = network === "taiko" || network === "berachain";
+  // const showDelegateBtn = network === "taiko" || network === "berachain";
+  const showDelegateBtn = network === "notexist";
   return (
     <Wrapper>
       <Flex>

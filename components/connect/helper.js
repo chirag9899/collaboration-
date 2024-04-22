@@ -7,6 +7,8 @@ import { switchChain as metamaskSwitchChain } from "@/components/connect/metamas
 import { switchNetwork as unisatSwitchNetwork } from "@/components/connect/unisat/index";
 import { switchNetwork as walletConnectSwitchNetworkWc} from "./walletConnect/web3Modal";
 import { setConnectedWallet } from "store/reducers/showConnectSlice";
+import { request, AddressPurpose } from "@sats-connect/core";
+
 
 import { chainMap, supportedChains } from "frontedUtils/consts/chains";
 
@@ -30,6 +32,14 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           throw new Error("Chain not supported on this wallet"); // Create a new error object
         }
         await unisatSwitchNetwork("livenet");
+      } catch (error) {
+        dispatch(newErrorToast(error.message));
+      }
+    } else if (connectedWallet === "xverse") {
+      try {
+        if (chainType === "evm") {
+          throw new Error("Chain not supported on this wallet"); // Create a new error object
+        }
       } catch (error) {
         dispatch(newErrorToast(error.message));
       }
@@ -73,6 +83,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               setAccount({
                 address: accounts[0],
                 network: "ethereum",
+                pubkey: accounts[0]
               }));
             dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(setShowHeaderMenu(false));
@@ -95,6 +106,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               setAccount({
                 address: res[0],
                 network: "brc20",
+                pubkey: await window.unisat.getPublicKey()
               }));
             dispatch(setConnectedWallet(selectedWallet.id))
             dispatch(setShowHeaderMenu(false));
@@ -104,6 +116,35 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           }
         } else {
           dispatch(newErrorToast("Unisat is not installed"));
+        }
+        dispatch(closeConnect());
+        break;
+      case 'xverse':
+        // Connect to Xverse
+        if (window.XverseProviders) {
+          try {
+            const res = await request('getAccounts', {
+              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+              message: 'We are requesting your bitcoin address',
+            });
+            const ordinalsAddressItem = res.result.find(
+              (address) => address.purpose === AddressPurpose.Ordinals
+            );
+            setAddress(ordinalsAddressItem.address);
+            dispatch(
+              setAccount({
+                address: ordinalsAddressItem.address,
+                network: "brc20",
+                pubkey: ordinalsAddressItem.publicKey
+              }));
+            dispatch(setConnectedWallet(selectedWallet.id))
+            dispatch(setShowHeaderMenu(false));
+          } catch (error) {
+            dispatch(newErrorToast(error.message));
+            console.log(error);
+          }
+        } else {
+          dispatch(newErrorToast("Xverse is not installed"));
         }
         dispatch(closeConnect());
         break;

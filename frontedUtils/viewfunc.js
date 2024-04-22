@@ -1,6 +1,8 @@
 import nextApi from "../services/nextApi";
 import { signApiData } from "../services/chainApi";
 import { validate } from 'bitcoin-address-validation';
+import { useDispatch, useSelector } from "react-redux";
+import { request, AddressPurpose } from "@sats-connect/core";
 
 export function validateProposal(formData) {
   const fields = [
@@ -53,10 +55,23 @@ export async function createProposal(proposal) {
   return await nextApi.post(`${proposal.space}/proposals`, signedData);
 }
 
-export async function signProposal(proposal) {
+export async function signProposal(proposal, connectedWallet) {
   const { address, ...data } = proposal;
   if (validate(address)) {
-  const pubkey = await window.unisat.getPublicKey();
+    let pubkey
+    if (connectedWallet === "unisat") {
+      pubkey = await window.unisat.getPublicKey();
+    }
+    if (connectedWallet === "xverse") {
+      const res = await request('getAccounts', {
+          purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+          message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+          (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      pubkey = ordinalsAddressItem.publicKey;
+    }
   return await signApiData(
     {
       ...data,
@@ -68,6 +83,7 @@ export async function signProposal(proposal) {
       pubkey: pubkey
     },
     address,
+    connectedWallet,
   );
   } else {
     return await signApiData(
@@ -113,9 +129,23 @@ export async function signComment(
   contentType,
   address,
   commenterNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
-    const pubkey = await window.unisat.getPublicKey();
+    let pubkey
+    if (connectedWallet === "unisat") {
+      pubkey = await window.unisat.getPublicKey();
+    }
+    if (connectedWallet === "xverse") {
+      const res = await request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      pubkey = ordinalsAddressItem.publicKey;
+    }
     return await signApiData(
       {
         proposalCid,
@@ -126,6 +156,7 @@ export async function signComment(
         pubkey: pubkey
       },
       address,
+      connectedWallet,
     );
   } else {
     return await signApiData(
@@ -173,9 +204,23 @@ export async function signVote(
   address,
   realVoter,
   voterNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
-    const pubkey = await window.unisat.getPublicKey();
+    let pubkey
+    if (connectedWallet === "unisat") {
+      pubkey = await window.unisat.getPublicKey();
+    }
+    if (connectedWallet === "xverse") {
+      const res = await request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      pubkey = ordinalsAddressItem.publicKey;
+    }
     return await signApiData(
       {
         proposalCid,
@@ -190,6 +235,7 @@ export async function signVote(
         pubkey: pubkey
       },
       address,
+      connectedWallet,
     );
   } else {
     return await signApiData(
@@ -213,9 +259,23 @@ export async function signTerminate({
   proposalCid,
   terminatorNetwork,
   address,
+  connectedWallet,
 }) {
   if (validate(address)) {
-    const pubkey = await window.unisat.getPublicKey();
+    let pubkey
+    if (connectedWallet === "unisat") {
+      pubkey = await window.unisat.getPublicKey();
+    }
+    if (connectedWallet === "xverse") {
+      const res = await request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      pubkey = ordinalsAddressItem.publicKey;
+    }
     return await signApiData(
       {
         action: "terminate",
@@ -225,6 +285,7 @@ export async function signTerminate({
         pubkey: pubkey
       },
       address,
+      connectedWallet,
     );
   } else {
     return await signApiData(
@@ -246,9 +307,23 @@ export async function signAppendant(
   contentType,
   address,
   appenderNetwork,
+  connectedWallet,
 ) {
   if (validate(address)) {
-    const pubkey = await window.unisat.getPublicKey();
+    let pubkey
+    if (connectedWallet === "unisat") {
+      pubkey = await window.unisat.getPublicKey();
+    }
+    if (connectedWallet === "xverse") {
+      const res = await request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      pubkey = ordinalsAddressItem.publicKey;
+    }
     return await signApiData(
       {
         proposalCid,
@@ -259,6 +334,7 @@ export async function signAppendant(
         pubkey: pubkey
       },
       address,
+      connectedWallet,
     );
   } else {
     return await signApiData(

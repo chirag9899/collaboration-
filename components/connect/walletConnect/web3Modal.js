@@ -19,9 +19,9 @@ const walletConnectChains = evmChains.map(chain => ({
 
 // 3. Create a metadata object
 const metadata = {
-  name: 'voteApp',
-  description: 'voteApp description',
-  url: 'http://127.0.0.1:8001', // origin must match your domain & subdomain
+  name: 'dVote',
+  description: 'Decentralized Governance Infrastructure',
+  url: 'http://127.0.0.1:8001',
   icons: ['https://avatars.mywebsite.com/']
 }
 
