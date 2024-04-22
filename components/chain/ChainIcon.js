@@ -19,6 +19,8 @@ import { ReactComponent as Linea } from "../../public/imgs/icons/chain/linea.svg
 import { ReactComponent as Berachain } from "../../public/imgs/icons/chain/berachain.svg";
 import { ReactComponent as Brc20 } from "../../public/imgs/icons/chain/bitcoin.svg";
 import { ReactComponent as Merlin } from "../../public/imgs/icons/chain/merlin.svg";
+import { ReactComponent as Runes } from "../../public/imgs/icons/chain/runes.svg";
+import { ReactComponent as Ordcollection } from "../../public/imgs/icons/chain/ordcollection.svg";
 import Westend from "../../public/imgs/icons/chain/westend.png";
 import Bifrost from "../../public/imgs/icons/chain/bifrost.png";
 import Kintsugi from "../../public/imgs/icons/chain/kintsugi.png";
@@ -66,7 +68,9 @@ const svgs = {
   Linea,
   Berachain,
   Brc20,
-  Merlin
+  Merlin,
+  Runes,
+  Ordcollection
 };
 const pngs = {
   Westend,
@@ -105,7 +109,12 @@ function ResolveChainIcon({ chainName = "", size = 24 }) {
     Icon = <SvgIcon viewBox="0 0 24 24" width={size} height={size} />;
   } else if (pngs[chainName]) {
     Icon = (
-      <Image src={resolvePngs(pngs[chainName])} width={size} height={size} alt={chainName} />
+      <Image
+        src={resolvePngs(pngs[chainName])}
+        width={size}
+        height={size}
+        alt={chainName}
+      />
     );
   }
 
