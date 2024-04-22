@@ -1,6 +1,7 @@
 @import "./colours.scss";
 
 $icon-size: 100px;
+$logo-size:64px;
 [class*="space__ItemsWrapper"],
 [class*="userSpaces__ItemsWrapper"],
 [class*="networkSpaces__ItemsWrapper"] {
@@ -122,6 +123,40 @@ $icon-size: 100px;
       }
     }
   }
+}
+
+[class*="listInfo__Wrapper"] {
+  [class*="listInfo__IconWrapper"]{
+  [class*="__Icon"] {
+    &:not([class*="Wrapper"]) {
+      width: $logo-size;
+      height: $logo-size;
+      position: relative;
+      overflow: hidden;
+      border-radius: 100px;
+      img {
+        background: unset;
+        &:first-child {
+          width: $logo-size;
+          height: $logo-size;
+          padding: $logo-size * 0.2;
+          position: relative;
+          z-index: 2;
+          border-radius: 20px !important;
+        }
+        &:last-child {
+          width: $logo-size;
+          height: $logo-size;
+          padding: $logo-size * 0.1;
+          position: absolute;
+          top: 0;
+          left: 0;
+          filter: blur($logo-size * 0.4);
+          z-index: 1;
+        }
+      }
+    }
+  }}
 }
 
 @keyframes popIn {

@@ -111,10 +111,10 @@ export default function List({
     proposalList = closedProposals;
   }
 
-  const desc = `Space for ${space.name} off-chain voting. You can create, view, and vote proposals. Join ${space.name} off-chain governance!`;
+  const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
     <>
-      <Seo space={space} title={`${space.name} off-chain voting`} desc={desc} />
+      <Seo space={space} title={`${space.name} Decentralized Governance Infrastructure`} desc={desc} />
       <Layout bgHeight="264px" networks={space.networks}>
         <Wrapper>
           <SpaceDetail

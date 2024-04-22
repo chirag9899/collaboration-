@@ -22,7 +22,7 @@ export default function Description({
       <SectionTitle>Description</SectionTitle>
       <InputWrapper>
         <Input
-          placeholder="Please enter the name of space..."
+          placeholder="Please enter the description of space..."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
