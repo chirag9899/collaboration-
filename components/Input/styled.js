@@ -34,7 +34,6 @@ export const StyledInput = styled.input`
   border: none;
   background: none;
   outline: none;
-  margin-top: 10px;
   ::placeholder {
     color: ${text_dark_accessory};
   }

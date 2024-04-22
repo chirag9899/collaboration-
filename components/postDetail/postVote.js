@@ -84,7 +84,8 @@ const ButtonsWrapper = styled.div`
   }
   > button {
     margin-right: 15px;
-    width: 200px !important;
+    min-width: 200px !important;
+    margin-bottom: 10px;
   }
 `;
 
