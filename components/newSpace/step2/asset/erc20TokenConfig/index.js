@@ -32,11 +32,7 @@ export default function Erc20TokenConfig({
   const isMounted = useIsMounted();
   const [isLoadingMetadata, setIsLoadingMetadata] = useState(false);
   const [assetTicker, setAssetTicker] = useState("");
-
   const dispatch = useDispatch()
-
-  const dispatch = useDispatch()
-
   const fetchErc20TokenMetadata = useCallback(
     async (contractAddress) => {
       setIsLoadingMetadata(true);
