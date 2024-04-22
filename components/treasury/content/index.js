@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { ConfirmButton, InputWrapper, PanelWrapper, Wrapper } from "./styled";
 import Input from "@/components/Input";
 import { SectionTitle } from "@/components/styled/sectionTitle";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NoData from "@/components/NoData";
 import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";
 import nextApi from "services/nextApi";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
+import { request, AddressPurpose } from "@sats-connect/core";
 
 const Content = ({ spaceId,address }) => {
   const [formData, setFormData] = useState({
@@ -16,6 +18,7 @@ const Content = ({ spaceId,address }) => {
   const { treasuryAddress } = formData;
 
   const dispatch = useDispatch();
+  const connectedWallet = useSelector(connectedWalletSelector);
 
   async function onConfirmHandler() {
     try {
@@ -24,7 +27,19 @@ const Content = ({ spaceId,address }) => {
         return;
       } else {
         if (validate(address)) {
-          pubkey = await window?.unisat?.getPublicKey();
+          if (connectedWallet === "unisat") {
+            pubkey = await window.unisat.getPublicKey();
+          }
+          if (connectedWallet === "xverse") {
+            const res = await request('getAccounts', {
+              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+              message: 'We are requesting your bitcoin address',
+            });
+            const ordinalsAddressItem = res.result.find(
+              (address) => address.purpose === AddressPurpose.Ordinals
+            );
+            pubkey = ordinalsAddressItem.publicKey;
+          }
         }
       }
 
@@ -32,7 +47,7 @@ const Content = ({ spaceId,address }) => {
         pubkey,
         address,
       };
-      const signedData = await signedApiData(data, address);
+      const signedData = await signedApiData(data, address, connectedWallet);
       const response = await nextApi.post(
         `spaces/${spaceId}/treasury/address/${treasuryAddress}`,
         signedData,
