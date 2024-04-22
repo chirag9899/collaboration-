@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ErrorMessage } from "@/components/styled/errorMessage";
-import Input from "@/components/Input";
 import { SectionTitle } from "../styled";
+import Textarea from "@/components/TextArea";
 
 const Wrapper = styled.div``;
 
@@ -11,7 +11,6 @@ const InputWrapper = styled.div`
   gap: 8px;
 `;
 
-
 export default function Description({
   description,
   setDescription,
@@ -20,14 +19,12 @@ export default function Description({
   return (
     <Wrapper>
       <SectionTitle>Description</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the description of space..."
+        <Textarea
+          placeholder="Please enter the project description."
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
         {errorDescMsg && <ErrorMessage>{errorDescMsg}</ErrorMessage>}
-      </InputWrapper>
     </Wrapper>
   );
 }

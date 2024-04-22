@@ -4,16 +4,17 @@ import {
   PanelWrapper,
   TextPlaceholder,
   TextWrapper,
+  Title,
   Wrapper,
 } from "./styled";
-import { SectionTitle } from "@/components/styled/sectionTitle";
+
 
 const Content = ({ space }) => {
   return (
     <Wrapper>
       <PanelWrapper>
         <Container>
-          <SectionTitle>Owner</SectionTitle>
+          <Title>Owner</Title>
           {space?.address ? (
             <TextWrapper>{space?.address}</TextWrapper>
           ) : (
@@ -21,7 +22,7 @@ const Content = ({ space }) => {
           )}
         </Container>
         <Container>
-          <SectionTitle>Description</SectionTitle>
+          <Title>Description</Title>
           {space?.description ? (
             <TextWrapper>{space?.description}</TextWrapper>
           ) : (

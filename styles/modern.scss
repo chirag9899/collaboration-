@@ -318,6 +318,15 @@ ul {
   }
 }
 
+[class*="styled__StyledTextArea"] {
+  font-weight: bold !important;
+  &::placeholder {
+    font-weight: bold !important;
+    color: var(--netural-11);
+    opacity: 0.4;
+  }
+}
+
 [class*="InputWrapper"] {
   background: transparent !important;
   padding: 0 !important;

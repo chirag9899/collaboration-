@@ -1,5 +1,7 @@
 import Panel from "@/components/styled/panel";
+import { SectionTitle } from "@/components/styled/sectionTitle";
 import { Text } from "@/components/styled/text";
+import { primary_color } from "@/components/styles/colors";
 import styled from "styled-components";
 
 export const Wrapper = styled.div``;
@@ -30,4 +32,8 @@ export const TextPlaceholder = styled(Text)`
   padding-left: 20px;
   color: var(--netural-11);
   font-weight: bold;
+`;
+
+export const Title = styled(SectionTitle)`
+  color: ${primary_color};
 `;
