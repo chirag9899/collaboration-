@@ -20,6 +20,7 @@ import { MarkdownPreviewer } from "@osn/previewer";
 import PostBanner from "@/components/postDetail/postBanner";
 import { black, white_text_color } from "../styles/colors";
 import { useTerminate } from "./terminate";
+import { useEffect, useState } from "react";
 
 const Title = styled.div`
   ${p_semibold};
@@ -78,6 +79,7 @@ const TitleWrapper = styled.div`
 `;
 
 export default function PostContent({ data, space }) {
+  const [showBtn, setShowBtn] = useState(false);
   const loginAddress = useSelector(loginAddressSelector);
   const { network: loginNetwork } = useSelector(loginNetworkSelector) || {};
   const isOwner = loginAddress === (data.proposor || data.address);
@@ -97,15 +99,21 @@ export default function PostContent({ data, space }) {
     loginNetwork,
   });
 
+  useEffect(() => {
+    if (!(data?.status === "closed" || data?.status === "terminated")) {
+      setShowBtn(true);
+    } else {
+      setShowBtn(false);
+    }
+  }, [data]);
+
   const showAppendants =
     (isOwner && !proposalClosed) || data.appendants?.length > 0;
-
   return (
     <Panel>
       <TitleWrapper>
         <Title>{data?.title}</Title>
-        {data?.status !== "closed" ||
-          (data?.status !== "terminated" && terminateButton)}
+        {showBtn && terminateButton}
       </TitleWrapper>
       <InfoWrapper>
         <LeftWrapper>

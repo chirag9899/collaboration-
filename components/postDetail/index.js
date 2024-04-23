@@ -1,10 +1,11 @@
 import styled from "styled-components";
-
-import PostContent from "./postContent";
+// import PostContent from "./postContent";
 import PostInfo from "./postInfo";
 import PostResults from "./postResults";
 import PostVotes from "@/components/postDetail/postVotes";
 import PostDiscussion from "@/components/postDetail/postDiscussion";
+import dynamic from "next/dynamic";
+const PostContent = dynamic(() => import("./postContent"), { ssr: false });
 
 const Wrapper = styled.div`
   display: flex;

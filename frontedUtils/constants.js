@@ -16,6 +16,10 @@ export const LIST_TAB_ITEMS = [
     value: "proposals-closed",
     name: "Closed",
   },
+  {
+    value: "proposals-terminated",
+    name: "Terminated",
+  },
 ];
 
 export const EmptyQuery = {

@@ -5,7 +5,7 @@ import Breadcrumb from "components/breadcrumb";
 // import ListInfo from "components/listInfo";
 import ListTab from "components/listTab";
 import PostList from "components/postList";
-import { EmptyQuery } from "frontedUtils/constants";
+import { EmptyQuery, LIST_TAB_ITEMS } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
@@ -81,8 +81,6 @@ export default function List({
   const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
 
-  console.log(space,"space")
-
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
@@ -96,25 +94,48 @@ export default function List({
     );
   }, [dispatch, space]);
 
+  const filterProposals = (data, filterby) => {
+    return {
+      ...data,
+      items: data?.items.filter((item) => item.status !== filterby),
+    };
+  };
+  const terminatedProposals = (data, filterby) => {
+    return {
+      ...data,
+      items: data?.items.filter((item) => item.status === filterby),
+    };
+  };
+
   if (!space) {
     return null;
   }
-
   let proposalList = EmptyQuery;
   if (!tab || tab === "proposals-all") {
-    proposalList = proposals;
+    proposalList = filterProposals(proposals, "terminated");
   } else if (tab === "proposals-pending") {
     proposalList = pendingProposals;
   } else if (tab === "proposals-active") {
     proposalList = activeProposals;
   } else if (tab === "proposals-closed") {
-    proposalList = closedProposals;
+    proposalList = filterProposals(closedProposals, "terminated");
+  } else if (tab === "proposals-terminated") {
+    proposalList = terminatedProposals(closedProposals, "terminated");
+  }
+
+  const listTabs = [...LIST_TAB_ITEMS];
+  if (address !== space?.address) {
+    listTabs.pop();
   }
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
     <>
-      <Seo space={space} title={`${space.name} Decentralized Governance Infrastructure`} desc={desc} />
+      <Seo
+        space={space}
+        title={`${space.name} Decentralized Governance Infrastructure`}
+        desc={desc}
+      />
       <Layout bgHeight="264px" networks={space.networks}>
         <Wrapper>
           <SpaceDetail
@@ -149,6 +170,7 @@ export default function List({
                   onActiveTab={setTab}
                   defaultPage={defaultPage}
                   network={space?.networks[0]?.network}
+                  listTabs={listTabs}
                 />
               </HeaderWrapper>
               <PostWrapper>
@@ -191,7 +213,7 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <SpaceAbout space={space}/>
+              <SpaceAbout space={space} />
             </MainWrapper>
           )}
         </Wrapper>
