@@ -42,13 +42,16 @@ export const SPACE_SIDEBAR_TAB_ITEMS = [
   {
     value: "proposals-all",
     name: "Proposals",
+    type:"public"
   },
   {
     value: "treasury",
     name: "Treasury",
+    type:"private"
   },
   {
     value: "about",
     name: "About",
+    type:"public"
   },
 ];

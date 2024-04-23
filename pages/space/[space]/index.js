@@ -80,6 +80,7 @@ export default function List({
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
+  const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
 
   useEffect(() => {
     dispatch(initAccount());
@@ -178,7 +179,7 @@ export default function List({
               </PostWrapper>
             </MainWrapper>
           )}
-          {showContent === "treasury" && (
+          {showContent === "treasury" && address === space?.address && (
             <MainWrapper>
               <HeaderWrapper>
                 <Breadcrumb
@@ -194,7 +195,12 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <Treasury spaceId={spaceId} address={address} />
+              <Treasury
+                treasury={treasuryAddress}
+                spaceId={spaceId}
+                address={address}
+                setTreasuryAddress={setTreasuryAddress}
+              />
             </MainWrapper>
           )}
           {showContent === "about" && (

@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import Panel from "@/components/styled/panel";
+import { Text } from "@/components/styled/text";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
@@ -26,4 +27,12 @@ export const InputWrapper = styled.div`
 export const ConfirmButton = styled(Button)`
   margin-top: 20px;
   width: 20% !important;
+`;
+
+export const TextWrapper = styled(Text)`
+  border: 1px solid #fff;
+  border-radius: 10px;
+  text-align: start;
+  padding-left: 20px;
+  margin-bottom: 20px;
 `;

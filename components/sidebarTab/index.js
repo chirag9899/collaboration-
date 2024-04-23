@@ -4,7 +4,7 @@ import FlexBetween from "../styled/FlexBetween";
 import { primary_color } from "../styles/colors";
 import { p_16_semibold } from "styles/textStyles";
 import { useRouter } from "next/router";
-import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
+// import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
 
 const Wrapper = styled(FlexBetween)`
   width: 100%;
@@ -73,16 +73,15 @@ export default function SidebarTab({
   onActiveTab,
   spaceId,
   defaultPage,
-  activeTab
+  activeTab,
+  isAuth,
 }) {
   const router = useRouter();
-  const activeTabIndex = SPACE_SIDEBAR_TAB_ITEMS.findIndex(
-    (item) => item.value === activeTab,
-  );
+  const activeTabIndex = tabItems.findIndex((item) => item.value === activeTab);
   const [tabIndex, setTabIndex] = useState(activeTabIndex);
 
   useEffect(() => {
-    const currTabIndex = SPACE_SIDEBAR_TAB_ITEMS.findIndex(
+    const currTabIndex = tabItems.findIndex(
       (item) => item.value === router.query.tab,
     );
     setTabIndex(currTabIndex >= 0 ? currTabIndex : 0);
@@ -111,15 +110,25 @@ export default function SidebarTab({
 
   return (
     <Wrapper>
-      {tabItems.map((item, index) => (
-        <Item
-          key={index}
-          active={tabIndex === index}
-          onClick={() => handleClick(item)}
-        >
-          <Text>{item.name}</Text>
-        </Item>
-      ))}
+      {tabItems.map((item, index) =>
+        item.type === "private" && isAuth ? (
+          <Item
+            key={index}
+            active={tabIndex === index}
+            onClick={() => handleClick(item)}
+          >
+            <Text>{item.name}</Text>
+          </Item>
+        ) : item.type === "public"? (
+          <Item
+            key={index}
+            active={tabIndex === index}
+            onClick={() => handleClick(item)}
+          >
+            <Text>{item.name}</Text>
+          </Item>
+        ) : null,
+      )}
     </Wrapper>
   );
 }

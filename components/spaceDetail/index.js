@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import SpaceInfo from "./spaceInfo";
+import { useSelector } from "react-redux";
+import { loginAddressSelector } from "store/reducers/accountSlice";
 
 const SiderWrapper = styled.div`
   flex: 0 0 300px;
@@ -26,6 +28,7 @@ export default function SpaceDetail({
   defaultPage,
   activeTab,
 }) {
+  const address = useSelector(loginAddressSelector);
   return (
     <SiderWrapper>
       <SpaceInfo
@@ -35,6 +38,7 @@ export default function SpaceDetail({
         spaceId={spaceId}
         defaultPage={defaultPage}
         activeTab={activeTab}
+        address={address}
       />
     </SiderWrapper>
   );
