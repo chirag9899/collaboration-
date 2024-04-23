@@ -5,13 +5,14 @@ import {
   p_20_semibold,
 } from "../../styles/textStyles";
 import SpaceLogo from "@/components/spaceLogo";
-import { ChainIcon } from "@osn/common-ui";
+// import { ChainIcon } from "@osn/common-ui";
 import ValueDisplay from "../valueDisplay";
 import Modal from "@osn/common-ui/es/Modal";
 import { useState } from "react";
 import Details from "./details";
 import { Flex, FlexBetween } from "@osn/common-ui";
 import { makeSquare } from "styles/globalCss";
+import NetworkLogo from "../network/networkLogo";
 
 const Wrapper = styled(FlexBetween)`
   @media screen and (max-width: 900px) {
@@ -131,7 +132,7 @@ export default function ListInfo({ space }) {
             <ChainIconsWrapper>
               <ChainIcons>
                 {space.networks?.slice(0, 3).map((network, index) => (
-                  <ChainIcon key={index} chainName={network.network} />
+                  <NetworkLogo key={index} network={network.network} />
                 ))}
               </ChainIcons>
               {space.networks?.length > 3 && "..."}

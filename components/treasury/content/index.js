@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { ConfirmButton, InputWrapper, PanelWrapper, Wrapper } from "./styled";
+import {
+  ConfirmButton,
+  InputWrapper,
+  PanelWrapper,
+  TextWrapper,
+  Wrapper,
+} from "./styled";
 import Input from "@/components/Input";
 import { SectionTitle } from "@/components/styled/sectionTitle";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import NoData from "@/components/NoData";
 import { signedApiData } from "services/chainApi";
 import validate from "bitcoin-address-validation";
@@ -10,14 +16,13 @@ import nextApi from "services/nextApi";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { request, AddressPurpose } from "@sats-connect/core";
 
-const Content = ({ spaceId,address }) => {
+const Content = ({ treasury, spaceId, address, setTreasuryAddress }) => {
   const [formData, setFormData] = useState({
     treasuryAddress: "",
   });
-  const [data, setData] = useState([]);
+
   const { treasuryAddress } = formData;
 
-  const dispatch = useDispatch();
   const connectedWallet = useSelector(connectedWalletSelector);
 
   async function onConfirmHandler() {
@@ -31,12 +36,16 @@ const Content = ({ spaceId,address }) => {
             pubkey = await window.unisat.getPublicKey();
           }
           if (connectedWallet === "xverse") {
-            const res = await request('getAccounts', {
-              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-              message: 'We are requesting your bitcoin address',
+            const res = await request("getAccounts", {
+              purposes: [
+                AddressPurpose.Payment,
+                AddressPurpose.Ordinals,
+                AddressPurpose.Stacks,
+              ],
+              message: "We are requesting your bitcoin address",
             });
             const ordinalsAddressItem = res.result.find(
-              (address) => address.purpose === AddressPurpose.Ordinals
+              (address) => address.purpose === AddressPurpose.Ordinals,
             );
             pubkey = ordinalsAddressItem.publicKey;
           }
@@ -53,6 +62,7 @@ const Content = ({ spaceId,address }) => {
         signedData,
       );
       console.log(response, "response here");
+      setTreasuryAddress(response?.result?.treasury);
       // const result = await sortUserSpaces(response?.result);
       // console.log(result,"result")
     } catch (error) {
@@ -73,6 +83,12 @@ const Content = ({ spaceId,address }) => {
   return (
     <Wrapper>
       <PanelWrapper>
+        {treasury && (
+          <>
+            <SectionTitle>Treasury Address</SectionTitle>
+            <TextWrapper>{treasury}</TextWrapper>
+          </>
+        )}
         <InputWrapper>
           <SectionTitle>Add Treasury</SectionTitle>
           <Input
@@ -90,7 +106,6 @@ const Content = ({ spaceId,address }) => {
           Confirm
         </ConfirmButton>
       </PanelWrapper>
-      <NoData message="No data found" />
     </Wrapper>
   );
 };

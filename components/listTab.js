@@ -76,6 +76,7 @@ export default function ListTab({
   defaultPage,
   spaceAddress,
   loginAddress,
+  listTabs
 }) {
   const router = useRouter();
   const activeTabIndex = LIST_TAB_ITEMS.findIndex(
@@ -92,10 +93,11 @@ export default function ListTab({
 
   // const showDelegateBtn = network === "taiko" || network === "berachain";
   const showDelegateBtn = network === "notexist";
+  
   return (
     <Wrapper>
       <Flex>
-        {LIST_TAB_ITEMS.map((item, index) => (
+        {listTabs.map((item, index) => (
           <Item
             key={index}
             active={tabIndex === index}

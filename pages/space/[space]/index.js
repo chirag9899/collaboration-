@@ -5,7 +5,7 @@ import Breadcrumb from "components/breadcrumb";
 // import ListInfo from "components/listInfo";
 import ListTab from "components/listTab";
 import PostList from "components/postList";
-import { EmptyQuery } from "frontedUtils/constants";
+import { EmptyQuery, LIST_TAB_ITEMS } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
@@ -20,6 +20,7 @@ import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
 import NoData from "@/components/NoData";
 import SpaceAbout from "@/components/spaceAbout";
+import { useRouter } from "next/router";
 // import Treasury from "@/components/treasury";
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -80,12 +81,28 @@ export default function List({
   const dispatch = useDispatch();
   const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
+  const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
 
-  console.log(space,"space")
-
+  const router = useRouter();
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
+
+  useEffect(() => {
+    if (space?.address !== address) {
+      setTab("proposals-all");
+      router.push(
+        {
+          query: {
+            space: spaceId,
+            tab: "proposals-all",
+          },
+        },
+        undefined,
+        { shallow: true },
+      );
+    }
+  }, [address, space]);
 
   useEffect(() => {
     dispatch(
@@ -96,25 +113,48 @@ export default function List({
     );
   }, [dispatch, space]);
 
+  const filterProposals = (data, filterby) => {
+    return {
+      ...data,
+      items: data?.items.filter((item) => item.status !== filterby),
+    };
+  };
+  const terminatedProposals = (data, filterby) => {
+    return {
+      ...data,
+      items: data?.items.filter((item) => item.status === filterby),
+    };
+  };
+
   if (!space) {
     return null;
   }
-
   let proposalList = EmptyQuery;
   if (!tab || tab === "proposals-all") {
-    proposalList = proposals;
+    proposalList = filterProposals(proposals, "terminated");
   } else if (tab === "proposals-pending") {
     proposalList = pendingProposals;
   } else if (tab === "proposals-active") {
     proposalList = activeProposals;
   } else if (tab === "proposals-closed") {
-    proposalList = closedProposals;
+    proposalList = filterProposals(closedProposals, "terminated");
+  } else if (tab === "proposals-terminated") {
+    proposalList = terminatedProposals(closedProposals, "terminated");
+  }
+
+  const listTabs = [...LIST_TAB_ITEMS];
+  if (address !== space?.address) {
+    listTabs.pop();
   }
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
     <>
-      <Seo space={space} title={`${space.name} Decentralized Governance Infrastructure`} desc={desc} />
+      <Seo
+        space={space}
+        title={`${space.name} Decentralized Governance Infrastructure`}
+        desc={desc}
+      />
       <Layout bgHeight="264px" networks={space.networks}>
         <Wrapper>
           <SpaceDetail
@@ -149,6 +189,7 @@ export default function List({
                   onActiveTab={setTab}
                   defaultPage={defaultPage}
                   network={space?.networks[0]?.network}
+                  listTabs={listTabs}
                 />
               </HeaderWrapper>
               <PostWrapper>
@@ -156,7 +197,7 @@ export default function List({
               </PostWrapper>
             </MainWrapper>
           )}
-          {showContent === "treasury" && (
+          {showContent === "treasury" && address === space?.address && (
             <MainWrapper>
               <HeaderWrapper>
                 <Breadcrumb
@@ -172,7 +213,12 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <Treasury spaceId={spaceId} address={address} />
+              <Treasury
+                treasury={treasuryAddress}
+                spaceId={spaceId}
+                address={address}
+                setTreasuryAddress={setTreasuryAddress}
+              />
             </MainWrapper>
           )}
           {showContent === "about" && (
@@ -191,7 +237,7 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <SpaceAbout space={space}/>
+              <SpaceAbout space={space} />
             </MainWrapper>
           )}
         </Wrapper>
