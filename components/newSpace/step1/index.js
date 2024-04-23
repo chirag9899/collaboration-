@@ -1,87 +1,127 @@
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@osn/common-ui";
+import {
+  currentStepSelector,
+  setCurrentStep,
+} from "store/reducers/newSpaceSlice";
+import Steps from "../../steps";
+import Logo from "./logo";
+import Name from "./name";
+import { MyPanel, Sections } from "../styled";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Hint, SectionTitle } from "../styled";
-// import { Input } from "@osn/common-ui";
-import { ErrorMessage } from "@/components/styled/errorMessage";
-import Input from "@/components/Input";
+import MyDivider from "../myDivider";
+import SocialFields from "./SocialFormFields";
+import { isValidUrl } from "utils";
+import Description from "./description";
 
-const Wrapper = styled.div``;
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+const NextButton = styled(Button)`
+  padding: 12px 0;
 `;
-
-export default function SocialFields({
-  socialfields,
+const initErrors = {
+  docsErr: null,
+  forumErr: null,
+  githubErr: null,
+  twitterErr: null,
+  websiteErr: null,
+};
+export default function Step1({
+  steps,
+  imageFile,
+  setImageFile,
+  name,
+  setName,
   setSocialFields,
-  socialErrors,
+  socialfields,
+  description,
+  setDescription,
 }) {
-  const { website,twitter, github, docs, forum } = socialfields;
-  const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    setSocialFields((props) => {
-      return {
-        ...props,
-        [name]: value,
-      };
-    });
+  const dispatch = useDispatch();
+  const currentStep = useSelector(currentStepSelector);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorDescMsg, setDesErrorMsg] = useState("");
+  const [socialErrors, setSocialErrors] = useState(initErrors);
+  const { website, github, docs, twitter, forum } = socialfields;
+
+  useEffect(() => {
+    setErrorMsg("");
+  }, [name]);
+
+  useEffect(() => {
+    setDesErrorMsg("");
+  }, [description]);
+
+  const socialLinksValidate = () => {
+    const socialLinks = { docs, forum, github, twitter, website };
+    let errors = {};
+    for (const key in socialLinks) {
+      const value = socialLinks[key];
+
+      if (value && !isValidUrl(value)) {
+        errors = {
+          ...errors,
+          [`${key}Err`]: `Please enter a valid ${key} link`,
+        };
+      } else {
+        errors = {
+          ...errors,
+          [`${key}Err`]: null,
+        };
+      }
+    }
+    if (Object.values(errors).every((error) => error === null)) {
+      dispatch(setCurrentStep(1));
+    } else {
+      setSocialErrors(errors);
+    }
+  };
+  const handleNext = () => {
+    if (!name) {
+      setErrorMsg("Space name cannot be empty");
+      return;
+    }
+
+    if (!description) {
+      setDesErrorMsg("Space description cannot be empty");
+      return;
+    }
+
+    if (name.length > 20) {
+      setErrorMsg("Space name cannot exceed 20 characters");
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9_\-\s]+$/.test(name)) {
+      setErrorMsg(
+        "Only letters, numbers, spaces, underscores and hyphens are allowed",
+      );
+      return;
+    }
+    socialLinksValidate();
   };
 
-  const { docsErr, forumErr, githubErr, twitterErr, websiteErr } = socialErrors;
   return (
-    <Wrapper>
-      <SectionTitle>Website(Optional)</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the name of website."
-          name="website"
-          value={website}
-          onChange={onChangeHandler}
+    <MyPanel>
+      <Steps steps={steps} currentStep={currentStep} />
+      <MyDivider />
+      <Sections>
+        <Logo imageFile={imageFile} setImageFile={setImageFile} />
+        <Name name={name} setName={setName} errorMsg={errorMsg} />
+        <Description
+          description={description}
+          setDescription={setDescription}
+          errorDescMsg={errorDescMsg}
         />
-        {websiteErr && <ErrorMessage>{websiteErr}</ErrorMessage>}
-      </InputWrapper>
-      <SectionTitle>Twitter(Optional)</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the name of twitter account."
-          value={twitter}
-          name="twitter"
-          onChange={onChangeHandler}
+        <SocialFields
+          setSocialFields={setSocialFields}
+          socialfields={socialfields}
+          socialErrors={socialErrors}
+          title="Social Links"
         />
-        {twitterErr && <ErrorMessage>{twitterErr}</ErrorMessage>}
-      </InputWrapper>
-      <SectionTitle>Github(Optional)</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the name of github account."
-          value={github}
-          name="github"
-          onChange={onChangeHandler}
-        />
-        {githubErr && <ErrorMessage>{githubErr}</ErrorMessage>}
-      </InputWrapper>
-      <SectionTitle>Docs(Optional)</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the name of documentation link."
-          value={docs}
-          name="docs"
-          onChange={onChangeHandler}
-        />
-        {docsErr && <ErrorMessage>{docsErr}</ErrorMessage>}
-      </InputWrapper>
-      <SectionTitle>Forum(Optional)</SectionTitle>
-      <InputWrapper>
-        <Input
-          placeholder="Please enter the name of Forum link."
-          value={forum}
-          name="forum"
-          onChange={onChangeHandler}
-        />
-        {forumErr && <ErrorMessage>{forumErr}</ErrorMessage>}
-      </InputWrapper>
-    </Wrapper>
+      </Sections>
+      <NextButton block onClick={() => handleNext()}>
+        Next
+      </NextButton>
+    </MyPanel>
   );
 }
