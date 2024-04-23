@@ -57,6 +57,7 @@ export default function SpaceInfo({
   spaceId,
   defaultPage,
   activeTab,
+  address,
 }) {
   const [count, setCount] = useState(null);
   const socialfields = {
@@ -69,19 +70,22 @@ export default function SpaceInfo({
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const response = await nextApi.fetch(`account/spaces/${space.id}/count`);
+        const response = await nextApi.fetch(
+          `account/spaces/${space.id}/count`,
+        );
         if (response.result.count === 1) {
-          setCount(response.result.count + ' member');
+          setCount(response.result.count + " member");
         } else {
-          setCount(response.result.count + ' members');
+          setCount(response.result.count + " members");
         }
       } catch (error) {
-        console.error('Error fetching count:', error);
+        console.error("Error fetching count:", error);
         setCount("0 members");
       }
-  };
+    };
     fetchCount();
   }, [space.id]);
+
 
   return (
     <Wrapper>
@@ -96,7 +100,9 @@ export default function SpaceInfo({
             <Image src="./imgs/icons/verified.svg" width={20} height={20} />
           )}
         </Name>
-        <MembersCount>{count !== null ? `${count}` : 'Loading...'}</MembersCount>
+        <MembersCount>
+          {count !== null ? `${count}` : "Loading..."}
+        </MembersCount>
       </IconWrapper>
 
       <SidebarTab
@@ -106,6 +112,7 @@ export default function SpaceInfo({
         spaceId={spaceId}
         defaultPage={defaultPage}
         activeTab={activeTab}
+        isAuth={address===space?.address}
       />
       <SocialIconsWrapper>
         <SocialLinks socialfields={socialfields} />

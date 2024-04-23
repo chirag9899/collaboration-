@@ -318,6 +318,12 @@ ul {
   }
 }
 
+[class*="markdown__Textarea"] {
+  &::selection {
+    color: var(--persistent-white);
+  }
+}
+
 [class*="styled__StyledTextArea"] {
   font-weight: bold !important;
   &::placeholder {
