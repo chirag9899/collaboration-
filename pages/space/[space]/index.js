@@ -20,6 +20,7 @@ import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
 import NoData from "@/components/NoData";
 import SpaceAbout from "@/components/spaceAbout";
+import { useRouter } from "next/router";
 // import Treasury from "@/components/treasury";
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -82,9 +83,26 @@ export default function List({
   const [showContent, setShowContent] = useState("proposals-all");
   const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
 
+  const router = useRouter();
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
+
+  useEffect(() => {
+    if (space?.address !== address) {
+      setTab("proposals-all");
+      router.push(
+        {
+          query: {
+            space: spaceId,
+            tab: "proposals-all",
+          },
+        },
+        undefined,
+        { shallow: true },
+      );
+    }
+  }, [address, space]);
 
   useEffect(() => {
     dispatch(
