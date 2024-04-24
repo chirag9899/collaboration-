@@ -91,18 +91,16 @@ export default function List({
   useEffect(() => {
     if (space?.address !== address) {
       setTab("proposals-all");
-      router.push(
-        {
-          query: {
-            space: spaceId,
-            tab: "proposals-all",
-          },
-        },
-        undefined,
-        { shallow: true },
-      );
     }
   }, [address, space]);
+
+  useEffect(() => {
+    if (router.query.tab) {
+      setShowContent(router.query.tab);
+    }else{
+      setShowContent("proposals-all");
+    }
+  }, [router]);
 
   useEffect(() => {
     dispatch(
@@ -165,7 +163,7 @@ export default function List({
             spaceId={spaceId}
             defaultPage={defaultPage}
           />
-          {showContent.includes("proposals") && (
+          {showContent.match(/proposals/) && (
             <MainWrapper>
               <HeaderWrapper>
                 <Breadcrumb
@@ -250,7 +248,7 @@ export async function getServerSideProps(context) {
   const { space: spaceId } = context.params;
   const { tab, page } = context.query;
   const nPage = parseInt(page) || 1;
-  const activeTab = tab || "all";
+  const activeTab = tab || "proposals-all";
 
   const pageSize = 20;
 
