@@ -23,7 +23,7 @@ function SearchBar(props) {
   } = props ?? {};
   return (
     <SearchBarWrapper>
-      <i class="icon-search"></i>
+      <i className="icon-search"></i>
       <SearchBarInput
         type="search"
         value={search}

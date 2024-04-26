@@ -24,7 +24,12 @@ const Confirmation = ({
       <HeadWrapper>
         <StyledTitle>{title}</StyledTitle>
         <CloseBar onClick={closeModal}>
-          <Image src="/imgs/icons/close.svg" width={24} height={24} />
+          <Image
+            src="/imgs/icons/close.svg"
+            alt="close"
+            width={24}
+            height={24}
+          />
         </CloseBar>
       </HeadWrapper>
       <ModalBodyWrapper>

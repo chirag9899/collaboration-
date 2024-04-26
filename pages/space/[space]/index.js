@@ -11,6 +11,7 @@ import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  loginAccountSelector,
   loginAddressSelector,
   setAvailableNetworks,
 } from "store/reducers/accountSlice";
@@ -18,9 +19,13 @@ import pick from "lodash.pick";
 import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
-import NoData from "@/components/NoData";
 import SpaceAbout from "@/components/spaceAbout";
 import { useRouter } from "next/router";
+import Button from "@/components/Button";
+import { p_16_semibold } from "styles/textStyles";
+import { primary_color } from "@/components/styles/colors";
+import { chainMap } from "frontedUtils/consts/chains";
+import useModal from "hooks/useModal";
 // import Treasury from "@/components/treasury";
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -28,6 +33,13 @@ const Treasury = dynamic(() => import("@/components/treasury"), {
 const ListInfo = dynamic(() => import("components/listInfo"), {
   ssr: false,
 });
+
+const TransferSpaceModal = dynamic(
+  () => import("@/components/transferSpace/TransSpaceModal"),
+  {
+    ssr: false,
+  },
+);
 
 const Wrapper = styled.div`
   display: flex;
@@ -67,6 +79,26 @@ const PostWrapper = styled.div`
   margin-top: 24px;
 `;
 
+const ButtonWrapper = styled(Button)`
+  cursor: pointer;
+  ${p_16_semibold};
+  color: ${primary_color};
+  margin-right: 10px;
+  font-size: 12px;
+  padding: 4px 12px !important;
+  > img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px !important;
+  }
+`;
+
+const BreadcrumbWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 export default function List({
   spaceId,
   space,
@@ -82,8 +114,13 @@ export default function List({
   const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
   const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
+  const account = useSelector(loginAccountSelector);
+
+  let chain = chainMap.get(account?.network);
+  const isEvm = chain?.chainType == "evm";
 
   const router = useRouter();
+  const { open, openModal, closeModal } = useModal();
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
@@ -97,7 +134,7 @@ export default function List({
   useEffect(() => {
     if (router.query.tab) {
       setShowContent(router.query.tab);
-    }else{
+    } else {
       setShowContent("proposals-all");
     }
   }, [router]);
@@ -166,18 +203,35 @@ export default function List({
           {showContent.match(/proposals/) && (
             <MainWrapper>
               <HeaderWrapper>
-                <Breadcrumb
-                  routes={[
-                    { name: "Home", link: "/" },
-                    {
-                      name: (
-                        <span style={{ textTransform: "capitalize" }}>
-                          {space.name}
-                        </span>
-                      ),
-                    },
-                  ]}
-                />
+                <BreadcrumbWrapper>
+                  <Breadcrumb
+                    routes={[
+                      { name: "Home", link: "/" },
+                      {
+                        name: (
+                          <span style={{ textTransform: "capitalize" }}>
+                            {space.name}
+                          </span>
+                        ),
+                      },
+                    ]}
+                  />
+                  {isEvm && address === space?.address && (
+                    <>
+                      <ButtonWrapper onClick={openModal}>
+                        Transfer Space
+                      </ButtonWrapper>
+                      {open && (
+                        <TransferSpaceModal
+                          title="Transfer Space"
+                          open={open}
+                          closeModal={closeModal}
+                          spaceId={spaceId}
+                        />
+                      )}
+                    </>
+                  )}
+                </BreadcrumbWrapper>
                 <ListInfo spaceId={spaceId} space={space} />
                 <ListTab
                   loginAddress={address}

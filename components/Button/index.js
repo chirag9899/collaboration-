@@ -11,6 +11,7 @@ function Button(
     color,
     isLoading,
     block,
+    type="button",
     onClick = () => {},
     ...rest
   },
@@ -28,7 +29,7 @@ function Button(
     <StyledButton
       ref={ref}
       {...rest}
-      type="button"
+      type={type}
       disabled={disabled}
       $primary={primary}
       $large={large}
