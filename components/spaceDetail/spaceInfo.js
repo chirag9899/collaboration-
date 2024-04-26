@@ -97,7 +97,7 @@ export default function SpaceInfo({
         <Name title={space.name}>
           {stringElipsis(space.name, 12)}
           {space.verified && (
-            <Image src="./imgs/icons/verified.svg" width={20} height={20} />
+            <Image src="./imgs/icons/verified.svg" alt="name" width={20} height={20} />
           )}
         </Name>
         <MembersCount>

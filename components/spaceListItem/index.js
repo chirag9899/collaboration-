@@ -163,7 +163,7 @@ export default function SpaceListItem({ name, space }) {
         <Name title={space.name}>
           {stringElipsis(space.name, 12)}
           {space.verified && (
-            <Image src="./imgs/icons/verified.svg" width={20} height={20} />
+            <Image src="./imgs/icons/verified.svg" alt="verified" width={20} height={20} />
           )}
         </Name>
       </IconWrapper>

@@ -134,13 +134,13 @@ export default function ListTab({
         {spaceAddress === loginAddress && (
           <Link href={`/space/${spaceId}/edit`}>
             <ButtonWrapper>
-              <i class="icon-edit"></i> Edit Space
+              <i className="icon-edit"></i> Edit Space
             </ButtonWrapper>
           </Link>
         )}
         <Link href={`/space/${spaceId}/create`}>
           <ButtonWrapper>
-            <i class="icon-plus"></i> New Proposal
+            <i className="icon-plus"></i> New Proposal
           </ButtonWrapper>
         </Link>
         {showDelegateBtn && (
