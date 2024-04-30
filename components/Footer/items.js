@@ -2,32 +2,32 @@ const footerItems = [
   {
     label: "Apps",
     items: [
-      { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
+      // { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
       { name: "Dvote.ai", link: "https://dvote.ai/" },
     ],
   },
-  {
-    label: "Resources",
-    items: [
-      {
-        name: "Documentation",
-        link: "https://quicksnap.gitbook.io/",
-      },
-      {
-        name: "Medium",
-        link: "https://medium.com/@quicksnap-finance",
-      },
-    ],
-  },
+  // {
+  //   label: "Resources",
+  //   items: [
+  //     {
+  //       name: "Documentation",
+  //       link: "https://quicksnap.gitbook.io/",
+  //     },
+  //     {
+  //       name: "Medium",
+  //       link: "https://medium.com/@quicksnap-finance",
+  //     },
+  //   ],
+  // },
   {
     label: "Social Links",
     items: [
-      {
-        key: "github",
-        name: "Github",
-        icon: "github.svg",
-        link: "https://github.com/quicksnap-io/",
-      },
+      // {
+      //   key: "github",
+      //   name: "Github",
+      //   icon: "github.svg",
+      //   link: "https://github.com/quicksnap-io/",
+      // },
       // {
       //   name: "Telegram",
       //   icon: "telegram.svg",
@@ -36,13 +36,13 @@ const footerItems = [
       {
         name: "Twitter",
         icon: "twitter.svg",
-        link: "https://twitter.com/QuickSnap_Lab",
+        link: "https://twitter.com/dvote_ai",
       },
-      {
-        name: "Discord",
-        icon: "discord.svg",
-        link: "https://discord.gg/HMYeVRJgDC",
-      },
+      // {
+      //   name: "Discord",
+      //   icon: "discord.svg",
+      //   link: "https://discord.gg/HMYeVRJgDC",
+      // },
     ],
   },
   // {
