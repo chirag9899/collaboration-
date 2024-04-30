@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { p_16_semibold, p_20_semibold } from "styles/textStyles";
 import Button from "../Button";
-import { black } from "../styles/colors";
+import { black, primary_color } from "../styles/colors";
 
 export const StyledTitle = styled.header`
   ${p_20_semibold};
@@ -36,16 +36,24 @@ export const Text = styled.p`
 `;
 
 export const BtnWrapper = styled(Button)`
-  color: ${black} !important;
-  border-radius: 0px !important;
+  cursor: pointer;
+  ${p_16_semibold};
+  color: ${primary_color};
+  margin-right: 10px;
+  font-size: 12px;
+  padding: 10px 20px !important;
+  box-shadow: none;
+  border: 1px solid ${primary_color} !important;
   &:hover {
-    color: ${black} !important;
+    border: 1px solid var(--peach) !important;
   }
-  @media screen and (max-width: 800px) {
-    padding: 8px 22px;
-    margin: auto;
-    width: 100%;
-    text-align: center;
+  &:disabled{
+    cursor: not-allowed !important;
+  }
+  > img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px !important;
   }
 `;
 
@@ -76,7 +84,7 @@ export const LabelWrapper = styled.div`
     margin-bottom: 0px;
   }
   .available_amount {
-    margin-left: 40px;
+    margin-left: 100px;
     text-transform: capitalize;
     font-weight: 600;
     opacity: 0.7;
@@ -87,6 +95,23 @@ export const InputGroup = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  > div {
+    justify-content: flex-start !important;
+    width: 80% !important;
+    margin-right: 10px !important;
+    input {
+      appearance: none;
+    }
+  }
+  .max_btn {
+    padding: 6px 25px !important;
+    color: ${primary_color} !important;
+    width: 20% !important;
+    margin-right: 0px;
+    &:hover {
+      color: var(--peach) !important;
+    }
+  }
   > button {
     border-radius: 100px !important;
   }

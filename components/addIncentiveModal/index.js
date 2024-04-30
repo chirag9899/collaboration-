@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Modal from "@osn/common-ui/es/Modal";
 import {
   CloseBar,
   StyledTitle,
@@ -18,6 +17,9 @@ import { SectionTitle } from "../styled/sectionTitle";
 import Input from "../Input";
 import CheckBox from "../styled/checkBox";
 import DropdownSelector from "../DropdownSelector";
+import useEthApis from "hooks/useEthApis";
+import Modal from "../Modal";
+import { ErrorMessage } from "../styled/errorMessage";
 
 const AddIncentive = ({
   open,
@@ -31,14 +33,54 @@ const AddIncentive = ({
     tokenAddress: "",
     incentiveAmount: 0,
     addIncentive: false,
+    availableBal: 0,
   });
 
-  const { tokenAddress, incentiveAmount, addincentive } = formdata;
+  const [errors, setErrors] = useState({
+    tokenErr: null,
+  });
+
+  const { tokenAddress, incentiveAmount, addincentive, availableBal } =
+    formdata;
+  const { tokenErr } = errors;
+
+  const { getBalance } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
     value: i,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
+
+  const getTokenBalance = async () => {
+    const { result, error } = await getBalance(tokenAddress);
+    if (error) {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          tokenErr: error,
+        };
+      });
+      setFormdata((prev) => {
+        return {
+          ...prev,
+          availableBal: 0,
+        };
+      });
+    } else {
+      setFormdata((prev) => {
+        return {
+          ...prev,
+          availableBal: result,
+        };
+      });
+      setErrors((prev) => {
+        return {
+          ...prev,
+          tokenErr: null,
+        };
+      });
+    }
+  };
 
   const onChangeHandler = (event) => {
     const { value, name, type, checked } = event.target;
@@ -50,11 +92,27 @@ const AddIncentive = ({
     });
   };
 
+  const maxIncentiveHandler = () => {
+    setFormdata((prev) => {
+      return {
+        ...prev,
+        incentiveAmount: availableBal,
+      };
+    });
+  };
+
   const onSubmitHandler = () => {
     onSubmit(formdata);
   };
   return (
-    <Modal open={open} footer={footer} closeBar={false}>
+    <Modal
+      size="large"
+      width={480}
+      height={500}
+      open={open}
+      footer={footer}
+      closeBar={false}
+    >
       <HeadWrapper>
         <StyledTitle>{title}</StyledTitle>
         <CloseBar onClick={closeModal}>
@@ -74,15 +132,17 @@ const AddIncentive = ({
             placeholder="Address"
             value={tokenAddress}
             name="tokenAddress"
+            onBlur={getTokenBalance}
             onChange={onChangeHandler}
           />
+          {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
         <InputWrapper>
           <LabelWrapper>
             <SectionTitle>incentive amount</SectionTitle>
             <div class="available_amount">
               <span>available :</span>
-              <span>0</span>
+              <span>{availableBal}</span>
             </div>
           </LabelWrapper>
           <InputGroup>
@@ -97,8 +157,10 @@ const AddIncentive = ({
             />
             <BtnWrapper
               primary
-              className="button button-modern"
-              // onClick={closeModal}
+              block
+              className="max_btn"
+              onClick={maxIncentiveHandler}
+              disabled={tokenAddress === ""}
             >
               Max
             </BtnWrapper>
@@ -121,18 +183,10 @@ const AddIncentive = ({
         </InputWrapper>
 
         <ActionsWrapper>
-          <BtnWrapper
-            primary
-            className="button button-modern"
-            onClick={onSubmitHandler}
-          >
+          <BtnWrapper primary onClick={onSubmitHandler}>
             Add Incentive
           </BtnWrapper>
-          <BtnWrapper
-            primary
-            className="button button-modern"
-            onClick={closeModal}
-          >
+          <BtnWrapper primary onClick={closeModal}>
             Approve token
           </BtnWrapper>
         </ActionsWrapper>
