@@ -1,16 +1,21 @@
 import styled from "styled-components";
-// import HardLink from "components/hardLink";
-import { p_16_semibold, p_18_semibold } from "styles/textStyles";
+
+import Author from "./author";
+import InternalLink from "components/internalLink";
+import HardLink from "components/hardLink";
+import { p_18_semibold } from "styles/textStyles";
 import { shadow_100, shadow_200 } from "styles/globalCss";
+import StatusTag from "./statusTag";
+import PostTime from "./postTime";
 import { p_24 } from "../styles/paddings";
+import { useEffect, useState } from "react";
+import { useWindowSize } from "../frontedUtils/hooks";
+import PostResult from "./postResult";
+import { findNetworkConfig } from "../services/util";
 import { Flex, FlexBetween } from "@osn/common-ui";
-import { bg_white, primary_color } from "./styles/colors";
-import Input from "./Input";
-import ProgressBar from "./progressBar";
-import Button from "./Button";
-import { useRouter } from "next/router";
-import useModal from "hooks/useModal";
-import AddIncentive from "./addIncentiveModal";
+import { p_14_medium } from "../styles/componentCss";
+import { getSpaceIconUrl } from "frontedUtils/space";
+import { bg_white } from "./styles/colors";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -36,130 +41,115 @@ const Title = styled.h3`
   ${p_18_semibold};
   font-weight: bold !important;
   flex-grow: 1;
-  margin-bottom: 0px !important;
+`;
+
+const Divider = styled.div`
+  height: 1px;
+  background: #f0f3f8;
+  margin: 16px 0;
 `;
 
 const InfoWrapper = styled(FlexBetween)`
   flex-wrap: wrap;
-  width: 100%;
-  align-items: start;
-  padding-top: 10px;
 `;
 
 const LeftWrapper = styled(Flex)`
   line-height: 24px;
   color: var(--neutral-3);
   flex-wrap: wrap;
-  justify-content: center;
-  width: 30%;
+  justify-content: space-between;
+  width: 100%;
 
   > :not(:first-child)::before {
+    /* content: "·"; */
     margin: 0 8px;
   }
 `;
 
-const RightWrapper = styled(Flex)`
-  line-height: 24px;
-  color: var(--neutral-3);
-  flex-wrap: wrap;
-  justify-content: space-between;
-  width: 70%;
+const FromSpace = styled(Flex)`
+  .ml-4px {
+    margin-left: 8px;
+  }
+`;
 
-  > :not(:first-child)::before {
-    margin: 0 8px;
+const SpaceName = styled.a`
+  text-transform: capitalize;
+  margin-left: 6px;
+  ${p_14_medium};
+  color: var(--neutral-1) !important;
+
+  :hover {
+    text-decoration-line: underline;
   }
 `;
 
 const TitleWrapper = styled(FlexBetween)`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
 `;
 
-const PostQuorom = styled.div`
-  font-weight: bold;
-`;
+export default function Post({ data, showSpace, space, spaces }) {
+  const getSpaceFromId = (spaceId) => spaces?.[spaceId];
+  const getSpaceDisplayName = (spaceId) => getSpaceFromId(spaceId)?.name;
+  const windowSize = useWindowSize();
+  const [showRichInfo, setShowRichInfo] = useState(true);
 
-const IncentivesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  span {
-    font-weight: bold;
-    align-items: center;
-  }
-  input {
-    padding: 6px 10px;
-    text-align: center;
-    width: 140px;
-  }
-`;
+  useEffect(() => {
+    if (windowSize.width <= 900) {
+      setShowRichInfo(false);
+    } else {
+      setShowRichInfo(true);
+    }
+  }, [windowSize.width, setShowRichInfo]);
 
-const ButtonsWrapper = styled.div`
-  min-width: 150px;
-`;
-const CustomBtn = styled(Button)`
-  cursor: pointer;
-  ${p_16_semibold};
-  color: ${primary_color};
-  margin-right: 10px;
-  font-size: 12px;
-  padding: 4px 12px !important;
-  box-shadow: none;
-  border: 1px solid ${primary_color} !important;
-  &:hover {
-    border: 1px solid var(--peach) !important;
-  }
-  > img {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px !important;
-  }
-`;
-export default function Post({ data, spaces, space }) {
-  const router = useRouter();
-  const { open, openModal, closeModal } = useModal();
-  const onCheckRewards = () => {
-    router.push(`/space/${space.id}/rewards?id=${space._id}`);
-  };
+  const proposerNetworkConfig = findNetworkConfig(
+    data.networksConfig,
+    data.proposerNetwork,
+  );
+  const spaceSupportMultiChain = proposerNetworkConfig?.networks?.length > 1;
 
-  const handleAddIncentive = (value) => {
-    console.log("handleAddIncentive click", value);
-  };
+  const spaceInfo = space ?? getSpaceFromId(data.space);
+  const spaceIcon = getSpaceIconUrl(spaceInfo);
+
   return (
     <Wrapper>
-      {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
-      <TitleWrapper>
-        <Title>{data.title}</Title>
-        <ButtonsWrapper>
-          <CustomBtn primary block onClick={openModal}>
-            Add incentive
-          </CustomBtn>
-          <CustomBtn primary block onClick={onCheckRewards}>
-            Check rewards
-          </CustomBtn>
-        </ButtonsWrapper>
-        <PostQuorom>Quorom:10%</PostQuorom>
-      </TitleWrapper>
-      <InfoWrapper>
-        <LeftWrapper>
-          <IncentivesWrapper>
-            <span>Incentives/Votes</span>
-            <Input type="text" value="$555" disabled={true} />
-          </IncentivesWrapper>
-        </LeftWrapper>
-        <RightWrapper>
-          <ProgressBar value={51} max={100} footer={true} />
-        </RightWrapper>
-      </InfoWrapper>
-      {/* </HardLink> */}
-      {open && (
-        <AddIncentive
-          open={open}
-          closeModal={closeModal}
-          message="The proposal deletion is permanent.Are you sure you want to delete?"
-          onSubmit={handleAddIncentive}
-        />
-      )}
+      <HardLink href={`/space/${data.space}/proposal/${data.cid}`}>
+        <TitleWrapper>
+          <Title>{data.title}</Title>
+          <PostResult data={data} space={spaceInfo} />
+          <StatusTag>{data.status}</StatusTag>
+        </TitleWrapper>
+        {/* <Divider /> */}
+        <InfoWrapper>
+          <LeftWrapper>
+            {showRichInfo && (
+              <Author
+                address={data.proposer ?? data.address}
+                space={proposerNetworkConfig}
+                showNetwork={spaceSupportMultiChain}
+              />
+            )}
+            {!showRichInfo && (
+              <img width="20px" height="20px" src={spaceIcon} alt="" />
+            )}
+            <PostTime post={data} />
+            {showSpace && showRichInfo && (
+              <FromSpace>
+                From
+                <img
+                  width="20px"
+                  height="20px"
+                  className="ml-4px"
+                  src={spaceIcon}
+                  alt=""
+                />
+                <InternalLink href={`/space/${data.space}`}>
+                  <SpaceName>{getSpaceDisplayName(data.space)}</SpaceName>
+                </InternalLink>
+              </FromSpace>
+            )}
+          </LeftWrapper>
+        </InfoWrapper>
+      </HardLink>
     </Wrapper>
   );
 }

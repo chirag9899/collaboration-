@@ -19,10 +19,12 @@ import LogoImg from "../public/imgs/beravote-logo.svg";
 import LogoIcon from "../public/imgs/beravote-logoIcon.svg";
 import { primary_text_color, text_light_major } from "./styles/colors";
 import Image from "next/image";
+import Button from "./Button";
 
 const HeaderItemWrapper = styled.div`
   display: flex;
   gap: 32px;
+  margin-left: 10px;
 
   @media screen and (max-width: 800px) {
     display: flex;
@@ -175,6 +177,16 @@ export default function Header({ networks }) {
               width={24}
             />
           </IconWrapper>
+          <Button
+            onClick={() => {
+              router.push({
+                pathname: "/space/beravote-test-space/singleSpace",
+                query: { state: "single" },
+              });
+            }}
+          >
+            Beravote space
+          </Button>
           <HeaderItemWrapper>
             {isHomePage && (
               <ExternalLinkWrapper>

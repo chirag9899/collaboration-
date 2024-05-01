@@ -187,11 +187,12 @@ const AddIncentive = ({
         </InputWrapper>
 
         <ActionsWrapper>
-          <BtnWrapper primary onClick={onSubmitHandler}>
+          <BtnWrapper className="action_btn" primary onClick={onSubmitHandler}>
             Add Incentive
           </BtnWrapper>
           <BtnWrapper
             primary
+            className="action_btn"
             onClick={() => {
               approveToken(
                 address,

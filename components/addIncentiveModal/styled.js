@@ -47,7 +47,7 @@ export const BtnWrapper = styled(Button)`
   &:hover {
     border: 1px solid var(--peach) !important;
   }
-  &:disabled{
+  &:disabled {
     cursor: not-allowed !important;
   }
   > img {
@@ -103,7 +103,8 @@ export const InputGroup = styled.div`
       appearance: none;
     }
   }
-  .max_btn {
+  .max_btn,
+  .action_btn {
     padding: 6px 25px !important;
     color: ${primary_color} !important;
     width: 20% !important;
@@ -112,6 +113,7 @@ export const InputGroup = styled.div`
       color: var(--peach) !important;
     }
   }
+
   > button {
     border-radius: 100px !important;
   }

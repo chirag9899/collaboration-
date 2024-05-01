@@ -90,11 +90,11 @@ button {
     opacity: 0;
     animation: menuIn 200ms ease forwards 1;
     color: var(--neutral-0) !important;
-   
+
     // * {
     //   color: var(--neutral-0) !important;
     // }
-     .ErrorMessage {
+    .ErrorMessage {
       color: var(--error) !important;
     }
   }
@@ -139,7 +139,10 @@ button {
   }
 }
 
-.ui.modal button:not([class*="CloseButton"]):not([class*="max_btn"]),
+.ui.modal
+  button:not([class*="CloseButton"]):not([class*="max_btn"]):not(
+    [class*="action_btn"]
+  ),
 .button-modern {
   background: transparent !important;
   border-radius: 100px;
