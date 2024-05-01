@@ -5,6 +5,7 @@ import PostResults from "./postResults";
 import PostVotes from "@/components/postDetail/postVotes";
 import PostDiscussion from "@/components/postDetail/postDiscussion";
 import dynamic from "next/dynamic";
+import PostIncentive from "./postIncentiveDetail";
 const PostContent = dynamic(() => import("./postContent"), { ssr: false });
 
 const Wrapper = styled.div`
@@ -71,6 +72,7 @@ export default function PostDetail({
       <SiderWrapper>
         <PostInfo data={data} space={space} />
         <PostResults data={data} voteStatus={voteStatus} space={space} />
+        <PostIncentive space={space}/>
       </SiderWrapper>
     </Wrapper>
   );

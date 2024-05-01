@@ -109,6 +109,20 @@ function Menu({ networks }) {
     return (
       <MenuWrapper onClick={(e) => e.stopPropagation()}>
         <MenuItem>
+          <ItemWrapper
+            passHref
+            legacyBehavior
+            href={{
+              pathname: "/space/beravote-test-space/singleSpace",
+              query: { state: "single" },
+            }}
+          >
+            <div>
+              <span>Beravote space</span>
+            </div>
+          </ItemWrapper>
+        </MenuItem>
+        <MenuItem>
           <ItemWrapper passHref legacyBehavior href="/space/new">
             <div>
               <span>Add a Space</span>

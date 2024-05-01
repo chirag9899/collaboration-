@@ -41,7 +41,7 @@ export const BtnWrapper = styled(Button)`
   color: ${primary_color};
   margin-right: 10px;
   font-size: 12px;
-  padding: 10px 20px !important;
+  padding: 10px 50px !important;
   box-shadow: none;
   border: 1px solid ${primary_color} !important;
   &:hover {
