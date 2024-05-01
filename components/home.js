@@ -137,7 +137,7 @@ export default function Home({
       {isSpaces && ownSpaces.length > 0 && (
         <UserSpaces
           userSpaces={ownSpaces}
-          limit={5}
+          limit={30}
           title="Your Spaces"
           totalCount={userSpaces.length}
         />
@@ -145,7 +145,7 @@ export default function Home({
       {isSpaces && (
         <Space
           spaces={allSpaces}
-          limit={5}
+          limit={30}
           title="All Spaces"
           totalCount={spaces.length}
         />
