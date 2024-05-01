@@ -20,6 +20,8 @@ import DropdownSelector from "../DropdownSelector";
 import useEthApis from "hooks/useEthApis";
 import Modal from "../Modal";
 import { ErrorMessage } from "../styled/errorMessage";
+import { useSelector } from "react-redux";
+import { loginAddressSelector } from "store/reducers/accountSlice";
 
 const AddIncentive = ({
   open,
@@ -40,11 +42,13 @@ const AddIncentive = ({
     tokenErr: null,
   });
 
+  const address = useSelector(loginAddressSelector);
+
   const { tokenAddress, incentiveAmount, addincentive, availableBal } =
     formdata;
   const { tokenErr } = errors;
 
-  const { getBalance } = useEthApis();
+  const { getBalance, approveToken } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
     value: i,
@@ -70,7 +74,7 @@ const AddIncentive = ({
       setFormdata((prev) => {
         return {
           ...prev,
-          availableBal: result,
+          availableBal: parseFloat(result).toFixed(2),
         };
       });
       setErrors((prev) => {
@@ -186,7 +190,16 @@ const AddIncentive = ({
           <BtnWrapper primary onClick={onSubmitHandler}>
             Add Incentive
           </BtnWrapper>
-          <BtnWrapper primary onClick={closeModal}>
+          <BtnWrapper
+            primary
+            onClick={() => {
+              approveToken(
+                address,
+                tokenAddress,
+                "0xa5544006EACd0D5665033eBd721cAdF761a2BFF8",
+              );
+            }}
+          >
             Approve token
           </BtnWrapper>
         </ActionsWrapper>
