@@ -89,8 +89,13 @@ button {
     border-radius: 10px !important;
     opacity: 0;
     animation: menuIn 200ms ease forwards 1;
-    * {
-      color: var(--neutral-0) !important;
+    color: var(--neutral-0) !important;
+
+    // * {
+    //   color: var(--neutral-0) !important;
+    // }
+    .ErrorMessage {
+      color: var(--error) !important;
     }
   }
   &.selection {
@@ -134,7 +139,10 @@ button {
   }
 }
 
-.ui.modal button:not([class*="CloseButton"]),
+.ui.modal
+  button:not([class*="CloseButton"]):not([class*="max_btn"]):not(
+    [class*="action_btn"]
+  ),
 .button-modern {
   background: transparent !important;
   border-radius: 100px;
