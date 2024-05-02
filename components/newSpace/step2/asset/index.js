@@ -47,9 +47,6 @@ export default function Asset({
   const assetsCountChanged = useStateChanged(count);
 
   const chainInfo = chainsDef.find((item) => item.network === asset?.chain);
-  const filtredCains = chainsDef.filter(
-    (item) => item.network !== "linea" && item.network !== "blast",
-  );
 
   const setPartialAsset = useCallback(
     (partialData) => {
@@ -193,7 +190,7 @@ export default function Asset({
       </Header>
       <MyFieldWrapper>
         <Title>Chain</Title>
-        <ChainSelector chains={filtredCains} onSelect={onSelectChain} />
+        <ChainSelector chains={chainsDef} onSelect={onSelectChain} />
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
         <Title>
           ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}
