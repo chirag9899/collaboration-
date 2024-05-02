@@ -179,7 +179,7 @@ export default function Header({ networks }) {
           </IconWrapper>
 
           <HeaderItemWrapper>
-            <Button
+            {/* <Button
               onClick={() => {
                 router.push({
                   pathname: "/space/beravote-test-space/singleSpace",
@@ -188,7 +188,7 @@ export default function Header({ networks }) {
               }}
             >
               Beravote space
-            </Button>
+            </Button> */}
             {isHomePage && (
               <ExternalLinkWrapper>
                 <Link href="/space/new" passHref legacyBehavior>

@@ -108,7 +108,7 @@ function Menu({ networks }) {
   if (showMenu) {
     return (
       <MenuWrapper onClick={(e) => e.stopPropagation()}>
-        <MenuItem>
+        {/* <MenuItem>
           <ItemWrapper
             passHref
             legacyBehavior
@@ -121,7 +121,7 @@ function Menu({ networks }) {
               <span>Beravote space</span>
             </div>
           </ItemWrapper>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem>
           <ItemWrapper passHref legacyBehavior href="/space/new">
             <div>
