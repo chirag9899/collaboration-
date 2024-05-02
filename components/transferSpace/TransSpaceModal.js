@@ -19,8 +19,9 @@ import { signedApiData } from "services/chainApi";
 import { useDispatch, useSelector } from "react-redux";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { loginAddressSelector } from "store/reducers/accountSlice";
-import { newErrorToast } from "store/reducers/toastSlice";
+import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import nextApi from "services/nextApi";
+import { useRouter } from "next/router";
 
 const TransferSpaceModal = ({
   open,
@@ -36,6 +37,7 @@ const TransferSpaceModal = ({
   const connectedWallet = useSelector(connectedWalletSelector);
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { transferAddress } = formData;
 
@@ -88,8 +90,15 @@ const TransferSpaceModal = ({
         signedData,
       );
 
-      if (response) {
+      if (response?.error && response?.error?.message) {
         setIsLoading(false);
+        closeModal();
+        dispatch(newErrorToast(response.error.message));
+      } else {
+        setIsLoading(false);
+        closeModal();
+        router.push("/");
+        dispatch(newSuccessToast("Successfully space transfered"));
       }
     } catch (error) {
       setIsLoading(false);
