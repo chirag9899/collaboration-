@@ -4,6 +4,11 @@ import NoData from "./NoData";
 import { text_light_major } from "./styles/colors";
 import Pagination from "./pagination";
 import SpacePost from "./spacePost";
+import { useApolloQuery } from "hooks/useApolloApi";
+import { PROPOSALS_LIST_QUERY } from "helpers/queries";
+import { useEffect, useState } from "react";
+import { getBeraProposalFromContract } from "helpers/beravoteSpace";
+import { getAllProposals } from "helpers/proposalIds";
 
 const Title = styled.div`
   ${p_20_semibold};
@@ -24,12 +29,37 @@ export default function SpacePostList({
   spaces,
   showSpace = false,
 }) {
+  const [data, setData] = useState([]);
+  const { apolloQuery } = useApolloQuery();
+
+  const fetchProposals = async () => {
+    const result = await apolloQuery({
+      query: PROPOSALS_LIST_QUERY,
+      variables: {
+        proposalVote_proposalId: "223",
+        limit: 100,
+        skip: 0,
+      },
+    });
+
+    // const proposals =await getBeraProposalFromContract("5")
+    // console.log(proposals,"proposals")
+
+    const allProposals = await getAllProposals();
+    console.log(allProposals,"allProposals")
+    setData(allProposals);
+  };
+
+  useEffect(() => {
+    fetchProposals();
+  }, []);
+
   const items = Array.isArray(posts) ? posts : posts?.items ?? [];
   return (
     <div>
       {title && <Title>{title}</Title>}
       <PostsWrapper>
-        {items.map((item, index) => (
+        {data?.map((item, index) => (
           <SpacePost
             key={index}
             data={item}
@@ -43,7 +73,7 @@ export default function SpacePostList({
         {posts?.page && (
           <Pagination
             page={posts?.page}
-            total={posts?.total}
+            total={data?.length}
             pageSize={posts?.pageSize}
           />
         )}
