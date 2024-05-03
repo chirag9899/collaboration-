@@ -78,7 +78,7 @@ export default function Index({
   }, [address, dispatch]);
 
   const desc =
-    "One of the governance products powered by dVote. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
+    "BeraVote is a gas-less, community driven governance infrastructure that is designed to power the voting and communiting involvement for berachain projects and DAOs";
   return (
     <>
       <Seo desc={desc} />
