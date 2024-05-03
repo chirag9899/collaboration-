@@ -21,7 +21,7 @@ import useEthApis from "hooks/useEthApis";
 import Modal from "../Modal";
 import { ErrorMessage } from "../styled/errorMessage";
 import { useSelector } from "react-redux";
-import { loginAddressSelector } from "store/reducers/accountSlice";
+import { addressSelector } from "store/reducers/accountSlice";
 
 const AddIncentive = ({
   open,
@@ -31,6 +31,7 @@ const AddIncentive = ({
   onSubmit,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState(0);
+  const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
     incentiveAmount: 0,
@@ -42,7 +43,7 @@ const AddIncentive = ({
     tokenErr: null,
   });
 
-  const address = useSelector(loginAddressSelector);
+  const address = useSelector(addressSelector);
 
   const { tokenAddress, incentiveAmount, addincentive, availableBal } =
     formdata;
@@ -197,7 +198,7 @@ const AddIncentive = ({
               approveToken(
                 address,
                 tokenAddress,
-                "0xa5544006EACd0D5665033eBd721cAdF761a2BFF8",
+                beravoteAddress,
               );
             }}
           >

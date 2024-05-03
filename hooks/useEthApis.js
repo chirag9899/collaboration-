@@ -42,7 +42,7 @@ const useEthApis = () => {
       const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
 
       const allowance = await token.allowance(
-        userAddress.value,
+        userAddress,
         beravoteAddress,
       );
 
