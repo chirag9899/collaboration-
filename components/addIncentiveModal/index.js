@@ -57,7 +57,7 @@ const AddIncentive = ({
   }));
 
   const getTokenBalance = async () => {
-    const { result, error } = await getBalance(tokenAddress);
+    const { result, error } = await getBalance(address, tokenAddress);
     if (error) {
       setErrors((prev) => {
         return {
