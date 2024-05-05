@@ -296,7 +296,14 @@ export default function PostVote({ proposal }) {
               </Tooltip>
             </div>
           )}
-          {belowThreshold && <RedText>Insufficient</RedText>}
+          {belowThreshold && <RedText> balance at height {snapshot} is lower than voting threshold {
+            bigNumber2Locale(
+              fromAssetUnit(
+                proposal.networksConfig.networks[0].assets[0].votingThreshold,
+                proposal?.networksConfig?.decimals,
+              ),
+            )
+          } {proposal.networksConfig?.symbol}</RedText>}
         </>
       );
     }
