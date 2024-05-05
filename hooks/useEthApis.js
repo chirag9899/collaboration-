@@ -14,13 +14,14 @@ const useEthApis = () => {
     }
   }
 
-  async function getBalance(address) {
-    const isValid = isValidEthereumAddress(address);
+  async function getBalance(walletAddress, tokenAddress) {
+    const isValid = isValidEthereumAddress(tokenAddress);
 
     try {
       setIsLoading(true);
       if (isValid) {
-        const balance = await ethersProvider.getBalance(address);
+        const token = new ethers.Contract(tokenAddress, erc20.abi, ethersProvider);
+        const balance = await token.balanceOf(walletAddress);
         const etherString = ethers.utils.formatEther(balance);
         setIsLoading(false);
         return { result: etherString, error: null };
@@ -42,7 +43,7 @@ const useEthApis = () => {
       const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
 
       const allowance = await token.allowance(
-        userAddress.value,
+        userAddress,
         beravoteAddress,
       );
 

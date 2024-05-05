@@ -167,6 +167,18 @@ export const loginAccountSelector = createSelector(
     },
   );
 
+export const addressSelector = createSelector(
+  loginNetworkSelector,
+  accountSelector,
+  (network, account) => {
+    if (!account) {
+      return null;
+    }
+
+    return account.address;
+  },
+);
+
 export const proxySelector = createSelector(
   loginNetworkSelector,
   rawProxySelector,
