@@ -30,7 +30,7 @@ const AddIncentive = ({
   title = "Add Incentive",
   onSubmit,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState(1);
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
@@ -45,14 +45,14 @@ const AddIncentive = ({
 
   const address = useSelector(addressSelector);
 
-  const { tokenAddress, incentiveAmount, addincentive, availableBal } =
+  const { tokenAddress, incentiveAmount, addIncentive, availableBal } =
     formdata;
   const { tokenErr } = errors;
 
   const { getBalance, approveToken } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
-    value: i,
+    value: i + 1,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
 
@@ -107,7 +107,7 @@ const AddIncentive = ({
   };
 
   const onSubmitHandler = () => {
-    onSubmit(formdata);
+    onSubmit({ ...formdata, selectedOptions });
   };
   return (
     <Modal
@@ -179,6 +179,7 @@ const AddIncentive = ({
         <InputWrapper>
           <SectionTitle>preferred option</SectionTitle>
           <DropdownSelector
+            disabled={addIncentive}
             options={options}
             value={selectedOptions}
             onSelect={(value) => {
@@ -195,11 +196,7 @@ const AddIncentive = ({
             primary
             className="action_btn"
             onClick={() => {
-              approveToken(
-                address,
-                tokenAddress,
-                beravoteAddress,
-              );
+              approveToken(address, tokenAddress, beravoteAddress);
             }}
           >
             Approve token

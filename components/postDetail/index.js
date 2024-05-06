@@ -72,7 +72,7 @@ export default function PostDetail({
       <SiderWrapper>
         <PostInfo data={data} space={space} />
         <PostResults data={data} voteStatus={voteStatus} space={space} />
-        <PostIncentive space={space}/>
+        <PostIncentive data={data} space={space}/>
       </SiderWrapper>
     </Wrapper>
   );
