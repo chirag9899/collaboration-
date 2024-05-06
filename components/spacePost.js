@@ -139,7 +139,7 @@ const CustomBtn = styled(Button)`
     margin-right: 8px !important;
   }
 `;
-export default function SpacePost({ data, spaces, space }) {
+export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
@@ -153,7 +153,9 @@ export default function SpacePost({ data, spaces, space }) {
     <Wrapper>
       {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
       <TitleWrapper>
-        <Title>{data.title}</Title>
+        <Title>
+          {postNum} - {data.title}
+        </Title>
         <ButtonsWrapper>
           <CustomBtn primary block onClick={openModal}>
             Add incentive

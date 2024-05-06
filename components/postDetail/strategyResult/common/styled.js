@@ -3,7 +3,7 @@ import { p_14_medium } from "styles/textStyles";
 
 export const Divider = styled.div`
   height: 1px;
-  background: #f0f3f8;
+  background: var(--border-color);
   margin: 12px 0;
 `;
 

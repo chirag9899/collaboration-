@@ -60,6 +60,7 @@ export default function SpacePostList({
       <PostsWrapper>
         {data?.slice(0, showCount).map((item, index) => (
           <SpacePost
+            postNum={index + 1}
             key={index}
             data={item}
             showSpace={showSpace}

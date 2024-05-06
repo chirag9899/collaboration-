@@ -159,7 +159,7 @@ const MenuItem = styled.div`
 
 const MenuDivider = styled.div`
   height: 1px;
-  background: #f0f3f8;
+  background: var(--border-color);
   margin: 12px 0;
 `;
 

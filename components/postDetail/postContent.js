@@ -50,7 +50,7 @@ const LeftWrapper = styled.div`
 
 const Divider = styled.div`
   height: 1px;
-  background: #f0f3f8;
+  background:  var(--border-color);
   margin: 20px 0;
   ${(p) =>
     p.margin &&
