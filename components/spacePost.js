@@ -14,7 +14,7 @@ import AddIncentive from "./addIncentiveModal";
 
 const Wrapper = styled.div`
   background: ${bg_white};
-  border: 1px solid #f0f3f8;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   ${shadow_100}
   ${p_24};

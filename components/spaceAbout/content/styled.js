@@ -11,7 +11,7 @@ export const Container = styled.div`
 `;
 
 export const TextWrapper = styled(Text)`
-  border: 1px solid #fff;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   text-align: start;
   padding-left: 20px;
@@ -26,7 +26,7 @@ export const PanelWrapper = styled(Panel)`
 `;
 
 export const TextPlaceholder = styled(Text)`
-  border: 1px solid #fff;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   text-align: center;
   padding-left: 20px;

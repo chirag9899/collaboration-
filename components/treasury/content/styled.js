@@ -30,7 +30,7 @@ export const ConfirmButton = styled(Button)`
 `;
 
 export const TextWrapper = styled(Text)`
-  border: 1px solid #fff;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   text-align: start;
   padding-left: 20px;
