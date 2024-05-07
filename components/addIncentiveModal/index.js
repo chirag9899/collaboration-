@@ -37,20 +37,21 @@ const AddIncentive = ({
     incentiveAmount: 0,
     addIncentive: false,
     availableBal: 0,
+    allowance: 0,
   });
 
   const [errors, setErrors] = useState({
     tokenErr: null,
-    amountErr: null
+    amountErr: null,
   });
 
   const address = useSelector(addressSelector);
 
-  const { tokenAddress, incentiveAmount, addIncentive, availableBal } =
+  const { tokenAddress, incentiveAmount, addIncentive, availableBal, allowance } =
     formdata;
   const { tokenErr, amountErr } = errors;
 
-  const { getBalance, approveToken } = useEthApis();
+  const { getBalance, approveToken, getAllowance } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
     value: i + 1,
@@ -70,13 +71,16 @@ const AddIncentive = ({
         return {
           ...prev,
           availableBal: 0,
+          allowance: 0,
         };
       });
     } else {
+      const allowance = await getAllowance(address, tokenAddress, beravoteAddress);
       setFormdata((prev) => {
         return {
           ...prev,
           availableBal: parseFloat(result),
+          allowance: parseFloat(allowance.result)
         };
       });
       setErrors((prev) => {
@@ -101,6 +105,9 @@ const AddIncentive = ({
       if (value > availableBal) {
         amountError = "Incentive amount is greater than balance.";
        }
+      if(value > allowance){
+        amountError = "Incentive amount is greater than allowance.";
+      }
       setErrors((prev) => {
         return {
           ...prev,

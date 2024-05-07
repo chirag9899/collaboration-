@@ -3,11 +3,11 @@ import { useState } from "react";
 import erc20 from "../abi/erc20.json";
 import beravoteAbi from "../abi/beravote.json";
 import { useSelector } from "react-redux";
-import { loginAddressSelector } from "store/reducers/accountSlice";
+import { addressSelector  } from "store/reducers/accountSlice";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const address = useSelector(loginAddressSelector);
+  const address = useSelector(addressSelector);
   const ethersProvider =
     typeof window !== "undefined" && window.ethereum
       ? new ethers.providers.Web3Provider(window.ethereum)
@@ -34,6 +34,31 @@ const useEthApis = () => {
         );
         const balance = await token.balanceOf(walletAddress);
         const etherString = ethers.utils.formatEther(balance);
+        setIsLoading(false);
+        return { result: etherString, error: null };
+      } else {
+        setIsLoading(false);
+        throw new Error("Please enter a valid address");
+      }
+    } catch (error) {
+      setIsLoading(false);
+      return { result: null, error: error.message };
+    }
+  }
+
+  async function getAllowance(walletAddress, tokenAddress, beravoteAddress) {
+    const isValid = isValidEthereumAddress(tokenAddress);
+
+    try {
+      setIsLoading(true);
+      if (isValid) {
+        const token = new ethers.Contract(
+          tokenAddress,
+          erc20.abi,
+          ethersProvider,
+        );
+        const allowance = await token.allowance(walletAddress, beravoteAddress);
+        const etherString = ethers.utils.formatEther(allowance);
         setIsLoading(false);
         return { result: etherString, error: null };
       } else {
@@ -113,7 +138,7 @@ const useEthApis = () => {
     console.log(tx);
   }
 
-  return { getBalance, isLoading, approveToken, addBeraVoteRewardAmount };
+  return { getBalance, getAllowance, isLoading, approveToken, addBeraVoteRewardAmount };
 };
 
 export default useEthApis;
