@@ -152,12 +152,12 @@ export default function SpacePost({ data, spaces, space, postNum }) {
 
   const handleAddIncentive = async (value) => {
     await addBeraVoteRewardAmount(
-      data?._id,
+      data?.id,
       value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
       value.incentiveAmount,
       value.tokenAddress,
-      data?.startDate,
-      data?.endDate,
+      data?.votingStartTime,
+      data?.votingEndTime,
     );
   };
   return (

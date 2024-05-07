@@ -114,8 +114,6 @@ const useEthApis = () => {
     start,
     end,
   ) {
-    console.log('executed')
-    console.log(id, option, rewardAmount, rewardToken, start, end, "values");
     // return;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
