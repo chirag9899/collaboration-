@@ -1,5 +1,7 @@
 import gql from "graphql-tag";
 
+// current endpoint for that query is:
+// https://api.goldsky.com/api/public/project_clvfcu44n75u401sufb5v2s5o/subgraphs/IGovernanceModule-berachain-public-testnet/1/gn
 export const PROPOSALS_LIST_QUERY = gql`
   query ProposalVoted(
     $proposalVote_proposalId: String!

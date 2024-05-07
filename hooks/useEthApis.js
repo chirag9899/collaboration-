@@ -148,27 +148,30 @@ const useEthApis = () => {
 
       if (address) {
         const client = new ApolloClient({
-          uri: `${process.env.NEXT_PUBLIC_GRAPH_ENDPOINT}/${process.env.NEXT_PUBLIC_MERKLE_ADDRESS}/graphql`,
+          uri: `${process.env.NEXT_PUBLIC_GRAPH_ENDPOINT}/graphql`,
           cache: new InMemoryCache(),
         });
 
         const claimsQuery = gql`
-          query rewarderewards($account: String!) {
-            claims(account: $account) {
-              token
-              index
-              amount
-              merkleProof
-            }
-            claimInfo {
-              totalBalance
-              totalClaimed
-            }
+          query rewarderewards($account: String!, $chainId: Int!) {
+          claims(account: $account, chainId: $chainId) {
+            token
+            index
+            amount
+            merkleProof
           }
-        `;
+          claimInfo {
+            totalBalance
+            totalClaimed
+          }
+        }
+      `;
         const { data } = await client.query({
           query: claimsQuery,
-          variables: { account: address },
+          variables: 
+          { account: address,
+            chainId: 80085
+          },
         });
         claimInfo = data.claimInfo;
 
