@@ -52,6 +52,34 @@ const AddIncentive = ({
   const { tokenErr, amountErr } = errors;
 
   const { getBalance, approveToken, getAllowance } = useEthApis();
+  // Adding for the reference.
+  // function getTotalScoresForOption(scores, option) {
+  //   switch (option.toString()) {
+  //     case '1': {
+  //       //yes
+  //       return scores.yesCount;
+  //     }
+  //     case '2': {
+  //       //no
+  //       return scores.noCount;
+  //     }
+  //     case '3': {
+  //       // no with veto
+  //       return scores.noWithVetoCount;
+  //     }
+  //     case '4': {
+  //       //abstain
+  //       return scores.abstainCount;
+  //     }
+  //   }
+  // }
+
+  // const scores = proposal.finalTallyResult;
+  // you take that from getBeraProposalFromContract function
+
+  // const totalScores = BigInt(scores.yesCount) + BigInt(scores.abstainCount) + BigInt(scores.noCount) + BigInt(scores.noWithVetoCount);
+
+  // let scoreBigInt = BigInt(option) == ALL_OPTIONS ? totalScores : getTotalScoresForOption(scores, option);
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
     value: i + 1,
