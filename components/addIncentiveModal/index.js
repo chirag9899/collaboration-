@@ -41,13 +41,14 @@ const AddIncentive = ({
 
   const [errors, setErrors] = useState({
     tokenErr: null,
+    amountErr: null
   });
 
   const address = useSelector(addressSelector);
 
   const { tokenAddress, incentiveAmount, addIncentive, availableBal } =
     formdata;
-  const { tokenErr } = errors;
+  const { tokenErr, amountErr } = errors;
 
   const { getBalance, approveToken } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
@@ -75,7 +76,7 @@ const AddIncentive = ({
       setFormdata((prev) => {
         return {
           ...prev,
-          availableBal: parseFloat(result).toFixed(2),
+          availableBal: parseFloat(result),
         };
       });
       setErrors((prev) => {
@@ -95,6 +96,18 @@ const AddIncentive = ({
         [name]: type === "checkbox" ? checked : value,
       };
     });
+    if(name === "incentiveAmount"){
+      let amountError;
+      if (value > availableBal) {
+        amountError = "Incentive amount is greater than balance.";
+       }
+      setErrors((prev) => {
+        return {
+          ...prev,
+          amountErr: amountError
+        }
+      });
+    }
   };
 
   const maxIncentiveHandler = () => {
@@ -147,7 +160,7 @@ const AddIncentive = ({
             <SectionTitle>incentive amount</SectionTitle>
             <div class="available_amount">
               <span>available :</span>
-              <span>{availableBal}</span>
+              <span>{parseFloat(availableBal).toFixed(5)}</span>
             </div>
           </LabelWrapper>
           <InputGroup>
@@ -171,6 +184,7 @@ const AddIncentive = ({
             </BtnWrapper>
           </InputGroup>
         </InputWrapper>
+        {amountErr && <ErrorMessage>{amountErr}</ErrorMessage>}
         <CheckBox
           onChangeHandler={onChangeHandler}
           label="Add incentives for Voting on any option"
@@ -189,7 +203,7 @@ const AddIncentive = ({
         </InputWrapper>
 
         <ActionsWrapper>
-          <BtnWrapper className="action_btn" primary onClick={onSubmitHandler}>
+          <BtnWrapper className="action_btn" disabled={!!amountErr} primary onClick={onSubmitHandler}>
             Add Incentive
           </BtnWrapper>
           <BtnWrapper
