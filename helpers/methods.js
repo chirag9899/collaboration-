@@ -3,6 +3,10 @@ export function getDecimals(amount) {
   return 0;
 }
 
+export function formatAmount(value) {
+  return parseInt(value).toFixed(2);
+}
+
 export async function tokenData(token) {
   let success = false;
   try {

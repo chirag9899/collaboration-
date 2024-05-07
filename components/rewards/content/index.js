@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import {
   Wrapper,
   TitalWrapper,
@@ -15,17 +14,25 @@ import Button from "@/components/Button";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { useRouter } from "next/router";
 import useEthApis from "hooks/useEthApis";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { formatAmount } from "helpers/methods";
 
 export default function Content() {
-  const dispatch = useDispatch();
+  const [claimInfo, setClaimInfo] = useState({
+    totalBalance: 0,
+    totalClaimed: 0,
+  });
+  const { totalBalance, totalClaimed } = claimInfo;
   const router = useRouter();
   const { getRewards } = useEthApis();
 
   async function loadRewards() {
     const data = await getRewards();
     const { rewards, claimInfo } = data;
-    console.log(data, "data");
+    setClaimInfo({
+      totalBalance: formatAmount(claimInfo?.totalBalance ?? 0),
+      totalClaimed: formatAmount(claimInfo?.totalClaimed ?? 0),
+    });
   }
 
   useEffect(() => {
@@ -56,11 +63,11 @@ export default function Content() {
       <ClaimWrapper>
         <ClaimSection className="text-left">
           <TextWrapper>Total all spaces unclaimed rewards</TextWrapper>
-          <Amount>$ 72.22</Amount>
+          <Amount>$ {totalBalance}</Amount>
         </ClaimSection>
         <ClaimSection className="text-left">
           <TextWrapper>Total all spaces claimed rewards</TextWrapper>
-          <Amount>$ 93.39</Amount>
+          <Amount>$ {totalClaimed}</Amount>
         </ClaimSection>
       </ClaimWrapper>
 
