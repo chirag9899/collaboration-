@@ -32,21 +32,8 @@ export default function SpacePostList({
 }) {
   const [data, setData] = useState([]);
   const [showCount, setShowCount] = useState(limit);
-  const { apolloQuery } = useApolloQuery();
 
   const fetchProposals = async () => {
-    const result = await apolloQuery({
-      query: PROPOSALS_LIST_QUERY,
-      variables: {
-        proposalVote_proposalId: "223",
-        limit: 100,
-        skip: 0,
-      },
-    });
-
-    // const proposals =await getBeraProposalFromContract("5")
-    // console.log(proposals,"proposals")
-
     const allProposals = await getAllProposals();
     setData(allProposals);
   };
