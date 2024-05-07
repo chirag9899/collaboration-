@@ -14,10 +14,23 @@ import NoData from "@/components/NoData";
 import Button from "@/components/Button";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { useRouter } from "next/router";
+import useEthApis from "hooks/useEthApis";
+import { useEffect } from "react";
 
 export default function Content() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { getRewards } = useEthApis();
+
+  async function loadRewards() {
+    const data = await getRewards();
+    const { rewards, claimInfo } = data;
+    console.log(data, "data");
+  }
+
+  useEffect(() => {
+    loadRewards();
+  }, []);
 
   const handleGoBack = () => {
     router.back();

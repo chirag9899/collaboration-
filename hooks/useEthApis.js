@@ -3,7 +3,10 @@ import { useState } from "react";
 import erc20 from "../abi/erc20.json";
 import beravoteAbi from "../abi/beravote.json";
 import { useSelector } from "react-redux";
-import { addressSelector  } from "store/reducers/accountSlice";
+import { addressSelector } from "store/reducers/accountSlice";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import gql from "graphql-tag";
+import { getTokenInfo, tokenData } from "helpers/methods";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +141,75 @@ const useEthApis = () => {
     console.log(tx);
   }
 
-  return { getBalance, getAllowance, isLoading, approveToken, addBeraVoteRewardAmount };
+  async function getRewards() {
+    try {
+      const claims = [];
+      let claimInfo = { totalBalance: 0, totalClaimed: 0 };
+
+      if (address) {
+        const client = new ApolloClient({
+          uri: `${process.env.NEXT_PUBLIC_GRAPH_ENDPOINT}/${process.env.NEXT_PUBLIC_MERKLE_ADDRESS}/graphql`,
+          cache: new InMemoryCache(),
+        });
+
+        const claimsQuery = gql`
+          query rewarderewards($account: String!) {
+            claims(account: $account) {
+              token
+              index
+              amount
+              merkleProof
+            }
+            claimInfo {
+              totalBalance
+              totalClaimed
+            }
+          }
+        `;
+        const { data } = await client.query({
+          query: claimsQuery,
+          variables: { account: address },
+        });
+        claimInfo = data.claimInfo;
+
+        for (let i = 0; i < data.claims.length; i++) {
+          const token = await getTokenInfo(data.claims[i].token);
+          const tokendata = await tokenData(data.claims[i].token);
+          if (token) {
+            const claim = {
+              version: 3,
+              claimable: parseFloat(
+                ethers.utils.formatUnits(data.claims[i].amount, token.decimals),
+              ),
+              claimableRaw: BigNumber.from(data.claims[i].amount),
+              canClaim: true,
+              hasClaimed: false,
+              rewardToken: token,
+              claimData: data.claims[i],
+              rewardTokenPrice: tokendata.price,
+              rewardTokenLogo: tokendata.logo,
+            };
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            claims.push(claim);
+          }
+        }
+      }
+      return { rewards: claims, claimInfo };
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+  }
+
+  return {
+    getBalance,
+    getAllowance,
+    isLoading,
+    approveToken,
+    addBeraVoteRewardAmount,
+    getRewards,
+  };
 };
 
 export default useEthApis;
