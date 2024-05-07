@@ -30,29 +30,31 @@ const AddIncentive = ({
   title = "Add Incentive",
   onSubmit,
 }) => {
-  const [selectedOptions, setSelectedOptions] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState(1);
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
     incentiveAmount: 0,
     addIncentive: false,
     availableBal: 0,
+    allowance: 0,
   });
 
   const [errors, setErrors] = useState({
     tokenErr: null,
+    amountErr: null,
   });
 
   const address = useSelector(addressSelector);
 
-  const { tokenAddress, incentiveAmount, addincentive, availableBal } =
+  const { tokenAddress, incentiveAmount, addIncentive, availableBal, allowance } =
     formdata;
-  const { tokenErr } = errors;
+  const { tokenErr, amountErr } = errors;
 
-  const { getBalance, approveToken } = useEthApis();
+  const { getBalance, approveToken, getAllowance } = useEthApis();
   const options = ["For", "Against", "Abstain"].map((item, i) => ({
     key: i,
-    value: i,
+    value: i + 1,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
 
@@ -69,13 +71,16 @@ const AddIncentive = ({
         return {
           ...prev,
           availableBal: 0,
+          allowance: 0,
         };
       });
     } else {
+      const allowance = await getAllowance(address, tokenAddress, beravoteAddress);
       setFormdata((prev) => {
         return {
           ...prev,
-          availableBal: parseFloat(result).toFixed(2),
+          availableBal: parseFloat(result),
+          allowance: parseFloat(allowance.result)
         };
       });
       setErrors((prev) => {
@@ -95,6 +100,21 @@ const AddIncentive = ({
         [name]: type === "checkbox" ? checked : value,
       };
     });
+    if(name === "incentiveAmount"){
+      let amountError;
+      if (value > availableBal) {
+        amountError = "Incentive amount is greater than balance.";
+       }
+      if(value > allowance){
+        amountError = "Incentive amount is greater than allowance.";
+      }
+      setErrors((prev) => {
+        return {
+          ...prev,
+          amountErr: amountError
+        }
+      });
+    }
   };
 
   const maxIncentiveHandler = () => {
@@ -107,7 +127,7 @@ const AddIncentive = ({
   };
 
   const onSubmitHandler = () => {
-    onSubmit(formdata);
+    onSubmit({ ...formdata, selectedOptions });
   };
   return (
     <Modal
@@ -147,7 +167,7 @@ const AddIncentive = ({
             <SectionTitle>incentive amount</SectionTitle>
             <div class="available_amount">
               <span>available :</span>
-              <span>{availableBal}</span>
+              <span>{parseFloat(availableBal).toFixed(5)}</span>
             </div>
           </LabelWrapper>
           <InputGroup>
@@ -171,6 +191,7 @@ const AddIncentive = ({
             </BtnWrapper>
           </InputGroup>
         </InputWrapper>
+        {amountErr && <ErrorMessage>{amountErr}</ErrorMessage>}
         <CheckBox
           onChangeHandler={onChangeHandler}
           label="Add incentives for Voting on any option"
@@ -179,6 +200,7 @@ const AddIncentive = ({
         <InputWrapper>
           <SectionTitle>preferred option</SectionTitle>
           <DropdownSelector
+            disabled={addIncentive}
             options={options}
             value={selectedOptions}
             onSelect={(value) => {
@@ -188,18 +210,14 @@ const AddIncentive = ({
         </InputWrapper>
 
         <ActionsWrapper>
-          <BtnWrapper className="action_btn" primary onClick={onSubmitHandler}>
+          <BtnWrapper className="action_btn" disabled={!!amountErr} primary onClick={onSubmitHandler}>
             Add Incentive
           </BtnWrapper>
           <BtnWrapper
             primary
             className="action_btn"
             onClick={() => {
-              approveToken(
-                address,
-                tokenAddress,
-                beravoteAddress,
-              );
+              approveToken(address, tokenAddress, beravoteAddress);
             }}
           >
             Approve token

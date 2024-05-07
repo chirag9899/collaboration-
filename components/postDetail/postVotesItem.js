@@ -12,7 +12,7 @@ import { white_text_color } from "../styles/colors";
 
 const Item = styled.div`
   padding: 20px 0;
-  border-bottom: 1px solid #f0f3f8;
+  border-bottom: 1px solid var(--border-color);
 `;
 
 const InfoWrapper = styled.div`

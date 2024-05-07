@@ -21,7 +21,7 @@ const PopupCard = styled.div`
   display: flex;
   flex-wrap: wrap;
   width: 288px;
-  color: var(--neutral-1);;
+  color: var(--neutral-1);
   > div:first-child {
     display: flex;
     align-items: center;
@@ -34,7 +34,7 @@ const Divider = styled.div`
   margin-bottom: 12px;
   height: 1px;
   width: 100%;
-  background-color: #f0f3f8;
+  background-color: var(--border-color);
 `;
 
 export default function Voter({

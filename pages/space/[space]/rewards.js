@@ -2,7 +2,12 @@ import { useDispatch } from "react-redux";
 import Seo from "@/components/seo";
 import Layout from "@/components/layout";
 import { ssrNextApi } from "services/nextApi";
-import CheckRewards from "@/components/rewards";
+// import CheckRewards from "@/components/rewards";
+import dynamic from "next/dynamic";
+const CheckRewards = dynamic(() => import("@/components/rewards"), {
+  ssr: false,
+  loading:"Loading...."
+});
 
 export default function Index({ allNetworks }) {
   const dispatch = useDispatch();

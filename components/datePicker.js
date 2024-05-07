@@ -151,7 +151,7 @@ const DateHeader = styled(Flex)`
 
 const Divider = styled.div`
   height: 1px;
-  background: #f0f3f8;
+  background: var(--border-color);
   margin: 16px 0;
 `;
 

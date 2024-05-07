@@ -9,6 +9,8 @@ import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "../styles/colors";
 import { useRouter } from "next/router";
 import { Text } from "../styled/text";
+import useEthApis from "hooks/useEthApis";
+import { ethers } from "ethers";
 
 const ButtonsWrapper = styled.div`
   width: 100%;
@@ -47,14 +49,24 @@ const TextWrapper = styled(Text)`
 `;
 
 export default function PostIncentive({ data, voteStatus, space }) {
+  console.log(data, "data here");
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
     router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
 
-  const handleAddIncentive = (value) => {
-    console.log("handleAddIncentive click", value);
+  const { addBeraVoteRewardAmount } = useEthApis();
+
+  const handleAddIncentive = async (value) => {
+    await addBeraVoteRewardAmount(
+      data?._id,
+      value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
+      value.incentiveAmount,
+      value.tokenAddress,
+      data?.startDate,
+      data?.endDate,
+    );
   };
   return (
     <Panel>

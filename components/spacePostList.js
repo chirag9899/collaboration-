@@ -2,13 +2,13 @@ import styled from "styled-components";
 import { p_20_semibold } from "../styles/textStyles";
 import NoData from "./NoData";
 import { text_light_major } from "./styles/colors";
-import Pagination from "./pagination";
 import SpacePost from "./spacePost";
 import { useApolloQuery } from "hooks/useApolloApi";
 import { PROPOSALS_LIST_QUERY } from "helpers/queries";
 import { useEffect, useState } from "react";
 import { getBeraProposalFromContract } from "helpers/beravoteSpace";
 import { getAllProposals } from "helpers/proposalIds";
+import LoadButtons from "./LoadButtons/LoadButtons";
 
 const Title = styled.div`
   ${p_20_semibold};
@@ -28,8 +28,10 @@ export default function SpacePostList({
   space,
   spaces,
   showSpace = false,
+  limit = 10,
 }) {
   const [data, setData] = useState([]);
+  const [showCount, setShowCount] = useState(limit);
   const { apolloQuery } = useApolloQuery();
 
   const fetchProposals = async () => {
@@ -46,21 +48,19 @@ export default function SpacePostList({
     // console.log(proposals,"proposals")
 
     const allProposals = await getAllProposals();
-    console.log(allProposals,"allProposals")
     setData(allProposals);
   };
 
   useEffect(() => {
     fetchProposals();
   }, []);
-
-  const items = Array.isArray(posts) ? posts : posts?.items ?? [];
   return (
     <div>
       {title && <Title>{title}</Title>}
       <PostsWrapper>
-        {data?.map((item, index) => (
+        {data?.slice(0, showCount).map((item, index) => (
           <SpacePost
+            postNum={index + 1}
             key={index}
             data={item}
             showSpace={showSpace}
@@ -69,14 +69,13 @@ export default function SpacePostList({
           />
         ))}
 
-        {items.length === 0 && <NoData message="No current active proposals" />}
-        {posts?.page && (
-          <Pagination
-            page={posts?.page}
-            total={data?.length}
-            pageSize={posts?.pageSize}
-          />
-        )}
+        {data.length === 0 && <NoData message="No current active proposals" />}
+        <LoadButtons
+          data={data}
+          showCount={showCount}
+          setShowCount={setShowCount}
+          limit={limit}
+        />
       </PostsWrapper>
     </div>
   );

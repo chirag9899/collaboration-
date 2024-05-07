@@ -14,7 +14,7 @@ import AddIncentive from "./addIncentiveModal";
 
 const Wrapper = styled.div`
   background: ${bg_white};
-  border: 1px solid #f0f3f8;
+  border: 1px solid var(--border-color);
   border-radius: 10px;
   ${shadow_100}
   ${p_24};
@@ -37,6 +37,10 @@ const Title = styled.h3`
   font-weight: bold !important;
   flex-grow: 1;
   margin-bottom: 0px !important;
+  width: 45%;
+  @media screen and (max-width: 800px) {
+    min-width: 100% !important;
+  }
 `;
 
 const InfoWrapper = styled(FlexBetween)`
@@ -56,6 +60,9 @@ const LeftWrapper = styled(Flex)`
   > :not(:first-child)::before {
     margin: 0 8px;
   }
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const RightWrapper = styled(Flex)`
@@ -68,16 +75,26 @@ const RightWrapper = styled(Flex)`
   > :not(:first-child)::before {
     margin: 0 8px;
   }
+  @media screen and (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const TitleWrapper = styled(FlexBetween)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
 `;
 
 const PostQuorom = styled.div`
   font-weight: bold;
+  width: 15;
+  @media screen and (max-width: 800px) {
+    min-width: 100% !important;
+  }
 `;
 
 const IncentivesWrapper = styled.div`
@@ -95,7 +112,14 @@ const IncentivesWrapper = styled.div`
 `;
 
 const ButtonsWrapper = styled.div`
-  min-width: 150px;
+  width: 35%;
+  display: flex;
+  justify-content: center;
+  @media screen and (max-width: 800px) {
+    min-width: 100% !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 `;
 const CustomBtn = styled(Button)`
   cursor: pointer;
@@ -115,7 +139,7 @@ const CustomBtn = styled(Button)`
     margin-right: 8px !important;
   }
 `;
-export default function SpacePost({ data, spaces, space }) {
+export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
@@ -129,7 +153,9 @@ export default function SpacePost({ data, spaces, space }) {
     <Wrapper>
       {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
       <TitleWrapper>
-        <Title>{data.title}</Title>
+        <Title>
+          {postNum} - {data.title}
+        </Title>
         <ButtonsWrapper>
           <CustomBtn primary block onClick={openModal}>
             Add incentive

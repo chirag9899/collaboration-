@@ -105,10 +105,13 @@ export const SocialLinks = ({ socialfields, title }) => {
     );
   }
 
-  return (
-    <Wrapper>
-      {title && <Name>{title}</Name>}
-      <Value>{socialLinksList}</Value>
-    </Wrapper>
-  );
+  if(socialLinksArray.length > 0){
+    return (
+      <Wrapper>
+        {title && <Name>{title}</Name>}
+        <Value>{socialLinksList}</Value>
+      </Wrapper>
+    );
+  }
+  return null
 };

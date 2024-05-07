@@ -28,11 +28,17 @@ const Header = styled(OptionWrapper)`
   padding: 0 16px;
 `;
 
-const DropdownSelector = ({ options = [], value, onSelect = () => {} }) => {
+const DropdownSelector = ({
+  options = [],
+  value,
+  onSelect = () => {},
+  disabled = false,
+}) => {
   return (
     <Wrapper>
       <DropdownWrapper>
         <StyledDropdown
+          disabled={disabled}
           selection
           options={options}
           onChange={(_, { value }) => {

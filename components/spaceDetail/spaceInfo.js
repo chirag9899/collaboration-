@@ -61,11 +61,11 @@ export default function SpaceInfo({
 }) {
   const [count, setCount] = useState(null);
   const socialfields = {
-    website: space?.website,
-    twitter: space?.twitter,
-    github: space?.github,
-    docs: space?.docs,
-    forum: space?.forum,
+    website: space?.website ?? null,
+    twitter: space?.twitter ?? null,
+    github: space?.github ?? null,
+    docs: space?.docs ?? null,
+    forum: space?.forum ?? null,
   };
   useEffect(() => {
     const fetchCount = async () => {
@@ -86,7 +86,6 @@ export default function SpaceInfo({
     fetchCount();
   }, [space.id]);
 
-
   return (
     <Wrapper>
       <IconWrapper>
@@ -97,7 +96,12 @@ export default function SpaceInfo({
         <Name title={space.name}>
           {stringElipsis(space.name, 12)}
           {space.verified && (
-            <Image src="./imgs/icons/verified.svg" alt="name" width={20} height={20} />
+            <Image
+              src="./imgs/icons/verified.svg"
+              alt="name"
+              width={20}
+              height={20}
+            />
           )}
         </Name>
         <MembersCount>
@@ -112,7 +116,7 @@ export default function SpaceInfo({
         spaceId={spaceId}
         defaultPage={defaultPage}
         activeTab={activeTab}
-        isAuth={address===space?.address}
+        isAuth={address === space?.address}
       />
       <SocialIconsWrapper>
         <SocialLinks socialfields={socialfields} />
