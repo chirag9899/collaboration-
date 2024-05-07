@@ -11,6 +11,8 @@ import Button from "./Button";
 import { useRouter } from "next/router";
 import useModal from "hooks/useModal";
 import AddIncentive from "./addIncentiveModal";
+import { ethers } from "ethers";
+import useEthApis from "hooks/useEthApis";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -146,8 +148,17 @@ export default function SpacePost({ data, spaces, space, postNum }) {
     router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
 
-  const handleAddIncentive = (value) => {
-    console.log("handleAddIncentive click", value);
+  const { addBeraVoteRewardAmount } = useEthApis();
+
+  const handleAddIncentive = async (value) => {
+    await addBeraVoteRewardAmount(
+      data?._id,
+      value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
+      value.incentiveAmount,
+      value.tokenAddress,
+      data?.startDate,
+      data?.endDate,
+    );
   };
   return (
     <Wrapper>
