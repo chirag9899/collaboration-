@@ -34,6 +34,7 @@ const AddIncentive = ({
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
+    tokenPrice: 0,
     incentiveAmount: 0,
     addIncentive: false,
     availableBal: 0,
@@ -47,11 +48,11 @@ const AddIncentive = ({
 
   const address = useSelector(addressSelector);
 
-  const { tokenAddress, incentiveAmount, addIncentive, availableBal, allowance } =
+  const { tokenAddress, incentiveAmount, addIncentive, availableBal, allowance, tokenPrice } =
     formdata;
   const { tokenErr, amountErr } = errors;
 
-  const { getBalance, approveToken, getAllowance } = useEthApis();
+  const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } = useEthApis();
   // Adding for the reference.
   // function getTotalScoresForOption(scores, option) {
   //   switch (option.toString()) {
@@ -100,15 +101,18 @@ const AddIncentive = ({
           ...prev,
           availableBal: 0,
           allowance: 0,
+          tokenPrice: 0
         };
       });
     } else {
       const allowance = await getAllowance(address, tokenAddress, beravoteAddress);
+      const price = await getBerachainSubgraphPrice(tokenAddress);
       setFormdata((prev) => {
         return {
           ...prev,
           availableBal: parseFloat(result),
-          allowance: parseFloat(allowance.result)
+          allowance: parseFloat(allowance.result),
+          tokenPrice: parseFloat(price),
         };
       });
       setErrors((prev) => {
@@ -120,7 +124,7 @@ const AddIncentive = ({
     }
   };
 
-  const onChangeHandler = (event) => {
+  const onChangeHandler = (event) =>  {
     const { value, name, type, checked } = event.target;
     setFormdata((prev) => {
       return {
@@ -130,12 +134,20 @@ const AddIncentive = ({
     });
     if(name === "incentiveAmount"){
       let amountError;
+      if (value <= 0) {
+        amountError = "Incentive amount is should be bigger than 0.";
+      }
       if (value > availableBal) {
         amountError = "Incentive amount is greater than balance.";
        }
       if(value > allowance){
         amountError = "Incentive amount is greater than allowance.";
       }
+      // check token reward amount value
+      if(tokenPrice * value < 1){
+        amountError = "Incentives must be more than $1 in value";
+      }
+
       setErrors((prev) => {
         return {
           ...prev,
