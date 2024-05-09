@@ -5,7 +5,7 @@ import {
   StyledProgressBar,
 } from "./styled";
 
-const ProgressBar = ({ value, max, footer = false }) => {
+const ProgressBar = ({ value, max, footer = false ,finalTallyResult}) => {
   return (
     <ProgressBarContainer>
       <StyledProgressBar value={value} max={max} />
@@ -13,7 +13,7 @@ const ProgressBar = ({ value, max, footer = false }) => {
         <ProgressFooter>
           <div>
             <span>Yes</span>
-            <span>100.00%</span>
+            <span>{finalTallyResult.yesCount}</span>
           </div>
           <div>
             <span>Min. Support</span>
@@ -21,7 +21,7 @@ const ProgressBar = ({ value, max, footer = false }) => {
           </div>
           <div>
             <span>No</span>
-            <span>0.00%</span>
+            <span>{finalTallyResult.noCount}</span>
           </div>
         </ProgressFooter>
       )}
