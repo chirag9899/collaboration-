@@ -175,7 +175,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
             Check rewards
           </CustomBtn>
         </ButtonsWrapper>
-        <PostQuorom>Quorom:{data.finalTallyParams.quorum}</PostQuorom>
+        <PostQuorom>Quorum:{data.finalTallyParams.quorum}</PostQuorom>
       </TitleWrapper>
       <InfoWrapper>
         <LeftWrapper>
@@ -186,10 +186,11 @@ export default function SpacePost({ data, spaces, space, postNum }) {
         </LeftWrapper>
         <RightWrapper>
           <ProgressBar
-            value={51}
+            value={data.totalVotes}
             max={100}
             footer={true}
             finalTallyResult={data.finalTallyResult}
+            thresholdPercentage={data.thresholdPercentage}
           />
         </RightWrapper>
       </InfoWrapper>

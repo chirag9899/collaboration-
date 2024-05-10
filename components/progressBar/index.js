@@ -1,23 +1,38 @@
 import React from "react";
 import {
+  PointerSection,
   ProgressBarContainer,
   ProgressFooter,
+  ProgressPointer,
+  ProgressTop,
   StyledProgressBar,
 } from "./styled";
 
-const ProgressBar = ({ value, max, footer = false ,finalTallyResult}) => {
+const ProgressBar = ({
+  value,
+  max,
+  footer = false,
+  finalTallyResult,
+  thresholdPercentage,
+}) => {
   return (
     <ProgressBarContainer>
+      <ProgressTop>
+        <PointerSection left={thresholdPercentage}>
+          <span>Pass threshold</span>
+          <ProgressPointer></ProgressPointer>
+        </PointerSection>
+        <PointerSection left="60%">
+          <span>Quorum</span>
+          <ProgressPointer></ProgressPointer>
+        </PointerSection>
+      </ProgressTop>
       <StyledProgressBar value={value} max={max} />
       {footer && (
         <ProgressFooter>
           <div>
             <span>Yes</span>
             <span>{finalTallyResult.yesCount}</span>
-          </div>
-          <div>
-            <span>Min. Support</span>
-            <span>51%</span>
           </div>
           <div>
             <span>No</span>

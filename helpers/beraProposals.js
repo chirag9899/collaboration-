@@ -127,6 +127,11 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
       const isQuorumMet = totalVotes >= requiredQuorumVotes;
       const isVetoed = percentageNoWithVeto >= vetoThresholdPercentage;
       const isThresholdPassed = percentageYes >= thresholdPercentage;
+      // console.log(totalVotes, "totalVotes");
+      // console.log(requiredQuorumVotes,"requiredQuorumVotes")
+
+      const totalvotesPercentage =
+        percentageYes + percentageAbstain + percentageNo + percentageNoWithVeto;
 
       const proposalData = {
         ...proposal,
@@ -136,6 +141,7 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
         isVetoed,
         isThresholdPassed,
         quorumPercentage,
+        totalVotes: totalvotesPercentage,
         finalTallyParams: {
           quorum: Number(quorum * 100).toFixed() + "%",
           threshold: Number(threshold * 100).toFixed() + "%",
@@ -147,12 +153,14 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
           noCount: Number(percentageNo).toFixed(2) + "%",
           noWithVetoCount: Number(percentageNoWithVeto).toFixed(2) + "%",
         },
+        thresholdPercentage: Number(thresholdPercentage)+ "%",
       };
 
       allProposals.push(proposalData);
     }
     continue;
   }
+  // console.log(allProposals, "allProposals");
   setIsLoading(false);
   return { allProposals, totalCount: ids.length };
 }
