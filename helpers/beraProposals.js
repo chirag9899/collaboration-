@@ -6,17 +6,22 @@ const rpcUrl = "https://rpc.ankr.com/berachain_testnet";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
 
-async function getBerachainProposalsId(limit = 100, skip = 0) {
+async function getBerachainProposalsId(first = 1000, skip = 0) {
   try {
     const query = gql`
-      query proposalSubmitteds {
-        proposalSubmitteds(orderDirection: desc) {
+      query proposalSubmitteds($first: Int, $skip: Int) {
+        proposalSubmitteds(
+          first: $first
+          skip: $skip
+          orderBy: proposalId
+          orderDirection: desc
+        ) {
           proposalId
         }
       }
     `;
     const variables = {
-      limit,
+      first,
       skip,
     };
     const graphQLClient = new ApolloClient({
@@ -117,13 +122,17 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
       const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
       const vetoThresholdPercentage = BigInt(Math.ceil(vetoThreshold * 100));
       const totalVotes = yesCount + abstainCount + noCount + noWithVetoCount;
-      const percentageYes = Number((yesCount * 100n) / totalVotes);
-      const percentageNoWithVeto = Number(
-        (noWithVetoCount * 100n) / totalVotes,
-      );
+      const percentageYes =
+        yesCount > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
+      const percentageNoWithVeto =
+        percentageNoWithVeto > 0
+          ? Number((noWithVetoCount * 100n) / totalVotes)
+          : 0;
       const requiredQuorumVotes = (quorumPercentage * totalVotes) / BigInt(100);
-      const percentageAbstain = Number((abstainCount * 100n) / totalVotes);
-      const percentageNo = Number((noCount * 100n) / totalVotes);
+      const percentageAbstain =
+        percentageAbstain > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
+      const percentageNo =
+        percentageNo > 0 ? Number((noCount * 100n) / totalVotes) : 0;
       const isQuorumMet = totalVotes >= requiredQuorumVotes;
       const isVetoed = percentageNoWithVeto >= vetoThresholdPercentage;
       const isThresholdPassed = percentageYes >= thresholdPercentage;
@@ -153,7 +162,7 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
           noCount: Number(percentageNo).toFixed(2) + "%",
           noWithVetoCount: Number(percentageNoWithVeto).toFixed(2) + "%",
         },
-        thresholdPercentage: Number(thresholdPercentage)+ "%",
+        thresholdPercentage: Number(thresholdPercentage) + "%",
       };
 
       allProposals.push(proposalData);
