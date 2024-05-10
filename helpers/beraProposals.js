@@ -123,16 +123,15 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
       const vetoThresholdPercentage = BigInt(Math.ceil(vetoThreshold * 100));
       const totalVotes = yesCount + abstainCount + noCount + noWithVetoCount;
       const percentageYes =
-        yesCount > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
+        totalVotes > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
       const percentageNoWithVeto =
-        percentageNoWithVeto > 0
-          ? Number((noWithVetoCount * 100n) / totalVotes)
-          : 0;
+        totalVotes > 0 ? Number((noWithVetoCount * 100n) / totalVotes) : 0;
+
       const requiredQuorumVotes = (quorumPercentage * totalVotes) / BigInt(100);
       const percentageAbstain =
-        percentageAbstain > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
+        totalVotes > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
       const percentageNo =
-        percentageNo > 0 ? Number((noCount * 100n) / totalVotes) : 0;
+        totalVotes > 0 ? Number((noCount * 100n) / totalVotes) : 0;
       const isQuorumMet = totalVotes >= requiredQuorumVotes;
       const isVetoed = percentageNoWithVeto >= vetoThresholdPercentage;
       const isThresholdPassed = percentageYes >= thresholdPercentage;

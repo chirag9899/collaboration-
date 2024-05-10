@@ -35,6 +35,14 @@ const ProgressBar = ({
             <span>{finalTallyResult.yesCount}</span>
           </div>
           <div>
+            <span>Abstain</span>
+            <span>{finalTallyResult.abstainCount}</span>
+          </div>
+          <div>
+            <span>No With Veto</span>
+            <span>{finalTallyResult.noWithVetoCount}</span>
+          </div>
+          <div>
             <span>No</span>
             <span>{finalTallyResult.noCount}</span>
           </div>
