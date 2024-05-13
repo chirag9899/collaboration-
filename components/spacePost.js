@@ -165,7 +165,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
       <TitleWrapper>
         <Title>
-          {postNum} - {data.title}
+          {data.id} - {data.title}
         </Title>
         <ButtonsWrapper>
           <CustomBtn primary block onClick={openModal}>
