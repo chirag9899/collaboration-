@@ -22,6 +22,30 @@ export const LIST_TAB_ITEMS = [
   },
 ];
 
+export const SPACE_LIST_TAB_ITEMS = [
+  {
+    value: "proposals-all",
+    name: "All Proposals",
+  },
+  {
+    value: "proposals-active",
+    name: "Active",
+  },
+  {
+    value: "proposals-pending",
+    name: "Pending",
+    tooltip: "Waiting for the start date",
+  },
+  {
+    value: "proposals-closed",
+    name: "Closed",
+  },
+  {
+    value: "proposals-rejected",
+    name: "Rejected",
+  },
+];
+
 export const EmptyQuery = {
   total: 0,
   page: 1,

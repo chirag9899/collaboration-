@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Layout from "components/layout";
 import Breadcrumb from "components/breadcrumb";
-// import ListInfo from "components/listInfo";
-import ListTab from "components/listTab";
-import PostList from "components/postList";
-import { EmptyQuery, LIST_TAB_ITEMS } from "frontedUtils/constants";
+import { EmptyQuery, SPACE_LIST_TAB_ITEMS } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Seo from "@/components/seo";
@@ -27,7 +24,8 @@ import { primary_color } from "@/components/styles/colors";
 import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
 import SpacePostList from "@/components/spacePostList";
-// import Treasury from "@/components/treasury";
+import SpaceListTab from "@/components/spaceListTab";
+
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
 });
@@ -179,10 +177,7 @@ export default function List({
     proposalList = terminatedProposals(closedProposals, "terminated");
   }
 
-  const listTabs = [...LIST_TAB_ITEMS];
-  if (address !== space?.address) {
-    listTabs.pop();
-  }
+  const listTabs = [...SPACE_LIST_TAB_ITEMS];
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
@@ -235,9 +230,7 @@ export default function List({
                   )}
                 </BreadcrumbWrapper>
                 <ListInfo spaceId={spaceId} space={space} />
-                <ListTab
-                  loginAddress={address}
-                  spaceAddress={space?.address}
+                <SpaceListTab
                   spaceId={spaceId}
                   activeTab={activeTab}
                   onActiveTab={setTab}
