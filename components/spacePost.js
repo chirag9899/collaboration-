@@ -59,6 +59,7 @@ const LeftWrapper = styled(Flex)`
   flex-wrap: wrap;
   justify-content: center;
   width: 30%;
+  height: 165px;
 
   > :not(:first-child)::before {
     margin: 0 8px;
@@ -143,6 +144,30 @@ const CustomBtn = styled(Button)`
     margin-right: 8px !important;
   }
 `;
+
+const ContentWrapper = styled.div`
+  display: flex;
+`;
+
+const Status = styled.div`
+  margin-right: 15px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  color: rgb(0, 255, 0);
+  font-weight: 500;
+  background-color: rgba(0, 255, 0, 0.1);
+  max-height: 35px;
+`;
+const Summary = styled.div`
+  margin-right: 15px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  color: var(--primary);
+  font-weight: 500;
+  background-color: var(--primary);
+  background-color: rgba(235, 182, 0, 0.1);
+  text-align: center;
+`;
 export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
@@ -191,6 +216,11 @@ export default function SpacePost({ data, spaces, space, postNum }) {
           </IncentivesWrapper>
         </LeftWrapper>
         <RightWrapper>
+          <ContentWrapper>
+            <Status>status</Status>
+            <Summary>{data.summary}</Summary>
+          </ContentWrapper>
+
           <ProgressBar
             value={data.totalvotesPercentage}
             max={100}
