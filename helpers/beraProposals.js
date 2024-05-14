@@ -135,11 +135,11 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
       const isQuorumMet = totalVotes >= requiredQuorumVotes;
       const isVetoed = percentageNoWithVeto >= vetoThresholdPercentage;
       const isThresholdPassed = percentageYes >= thresholdPercentage;
-      // console.log(totalVotes, "totalVotes");
-      // console.log(requiredQuorumVotes,"requiredQuorumVotes")
-
       const totalvotesPercentage =
         percentageYes + percentageAbstain + percentageNo + percentageNoWithVeto;
+
+      const quorumPer =
+        (totalvotesPercentage / (quorum * 100)).toFixed(2) + "%";
 
       const proposalData = {
         ...proposal,
@@ -148,7 +148,8 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
         isQuorumMet,
         isVetoed,
         isThresholdPassed,
-        quorumPercentage,
+        quorumPer,
+        quorumPercentage: quorumPercentage.toString() + "%",
         totalvotesPercentage: totalvotesPercentage,
         totalVotes: totalVotes.toString(),
         finalTallyParams: {

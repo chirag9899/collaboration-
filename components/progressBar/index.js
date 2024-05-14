@@ -14,6 +14,7 @@ const ProgressBar = ({
   footer = false,
   finalTallyResult,
   thresholdPercentage,
+  quorumPercentage
 }) => {
   return (
     <ProgressBarContainer>
@@ -22,7 +23,7 @@ const ProgressBar = ({
           <span>Pass threshold</span>
           <ProgressPointer></ProgressPointer>
         </PointerSection>
-        <PointerSection left="60%">
+        <PointerSection left={quorumPercentage}>
           <span>Quorum</span>
           <ProgressPointer></ProgressPointer>
         </PointerSection>
