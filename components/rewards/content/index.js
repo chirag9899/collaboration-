@@ -22,9 +22,11 @@ export default function Content() {
     totalBalance: 0,
     totalClaimed: 0,
   });
+  const [claiming, setClaiming] = useState("");
+  const [rewardClaimedMsg, setRewardClaimedMsg] = useState("");
   const { totalBalance, totalClaimed } = claimInfo;
   const router = useRouter();
-  const { getRewards } = useEthApis();
+  const { getRewards, claimAllRewards } = useEthApis();
 
   async function loadRewards() {
     const data = await getRewards();
@@ -42,6 +44,18 @@ export default function Content() {
   const handleGoBack = () => {
     router.back();
   };
+
+  async function claimAll() {
+    try {
+      setClaiming("all");
+      await claimAllRewards(rewards);
+      setRewardClaimedMsg("all");
+      setClaiming("");
+      await loadRewards();
+    } catch (e) {
+      setClaiming("");
+    }
+  }
 
   return (
     <Wrapper>
@@ -80,6 +94,7 @@ export default function Content() {
           type="button"
           className="button px-[22px]"
           disabled=""
+          onClick={claimAll}
         >
           claim all
         </Button>

@@ -13,6 +13,7 @@ import useModal from "hooks/useModal";
 import AddIncentive from "./addIncentiveModal";
 import { ethers } from "ethers";
 import useEthApis from "hooks/useEthApis";
+import { formatNumber } from "utils";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -58,6 +59,7 @@ const LeftWrapper = styled(Flex)`
   flex-wrap: wrap;
   justify-content: center;
   width: 30%;
+  height: 165px;
 
   > :not(:first-child)::before {
     margin: 0 8px;
@@ -102,6 +104,7 @@ const PostQuorom = styled.div`
 const IncentivesWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   span {
     font-weight: bold;
     align-items: center;
@@ -141,6 +144,30 @@ const CustomBtn = styled(Button)`
     margin-right: 8px !important;
   }
 `;
+
+const ContentWrapper = styled.div`
+  display: flex;
+`;
+
+const Status = styled.div`
+  margin-right: 15px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  color: rgb(0, 255, 0);
+  font-weight: 500;
+  background-color: rgba(0, 255, 0, 0.1);
+  max-height: 35px;
+`;
+const Summary = styled.div`
+  margin-right: 15px;
+  padding: 5px 10px;
+  border-radius: 50px;
+  color: var(--primary);
+  font-weight: 500;
+  background-color: var(--primary);
+  background-color: rgba(235, 182, 0, 0.1);
+  text-align: center;
+`;
 export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
@@ -165,7 +192,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
       <TitleWrapper>
         <Title>
-          {postNum} - {data.title}
+          {data.id} - {data.title}
         </Title>
         <ButtonsWrapper>
           <CustomBtn primary block onClick={openModal}>
@@ -175,17 +202,33 @@ export default function SpacePost({ data, spaces, space, postNum }) {
             Check rewards
           </CustomBtn>
         </ButtonsWrapper>
-        <PostQuorom>Quorom:10%</PostQuorom>
+        <PostQuorom>Quorum:{data.quorumPer}</PostQuorom>
       </TitleWrapper>
       <InfoWrapper>
         <LeftWrapper>
           <IncentivesWrapper>
-            <span>Incentives/Votes</span>
-            <Input type="text" value="$555" disabled={true} />
+            <span>Votes</span>
+            <Input
+              type="text"
+              value={formatNumber(data.totalVotes)}
+              disabled={true}
+            />
           </IncentivesWrapper>
         </LeftWrapper>
         <RightWrapper>
-          <ProgressBar value={51} max={100} footer={true} />
+          <ContentWrapper>
+            <Status>status</Status>
+            <Summary>{data.summary}</Summary>
+          </ContentWrapper>
+
+          <ProgressBar
+            value={data.totalvotesPercentage}
+            max={100}
+            footer={true}
+            finalTallyResult={data.finalTallyResult}
+            thresholdPercentage={data.thresholdPercentage}
+            quorumPercentage={data.quorumPercentage}
+          />
         </RightWrapper>
       </InfoWrapper>
       {/* </HardLink> */}

@@ -15,6 +15,7 @@ const useEthApis = () => {
     typeof window !== "undefined" && window.ethereum
       ? new ethers.providers.Web3Provider(window.ethereum)
       : null;
+
   function isValidEthereumAddress(address) {
     try {
       const normalizedAddress = ethers.utils.getAddress(address);
@@ -153,23 +154,23 @@ const useEthApis = () => {
 
         const claimsQuery = gql`
           query rewarderewards($account: String!, $chainId: Int!) {
-          claims(account: $account, chainId: $chainId) {
-            token
-            index
-            amount
-            merkleProof
+            claims(account: $account, chainId: $chainId) {
+              token
+              index
+              amount
+              merkleProof
+            }
+            claimInfo {
+              totalBalance
+              totalClaimed
+            }
           }
-          claimInfo {
-            totalBalance
-            totalClaimed
-          }
-        }
-      `;
+        `;
         const { data } = await client.query({
           query: claimsQuery,
-          variables: 
-          { account: address,
-            chainId: 80085
+          variables: {
+            account: address,
+            chainId: 80085,
           },
         });
         claimInfo = data.claimInfo;
@@ -204,6 +205,96 @@ const useEthApis = () => {
     }
   }
 
+  async function getBerachainSubgraphPrice(
+    address,
+    first = 10,
+    skip = 0,
+    orderDirection = "desc",
+  ) {
+    try {
+      const query = gql`
+        query getDexCoins(
+          $address: Bytes!
+          $first: Int!
+          $skip: Int!
+          $orderDirection: OrderDirection!
+        ) {
+          dexCoins(
+            where: { coin_: { address: $address } }
+            first: $first
+            skip: $skip
+            orderDirection: $orderDirection
+          ) {
+            amount
+            latestPriceUsd {
+              id
+              price
+            }
+            coin {
+              id
+              decimals
+              address
+              name
+              symbol
+              origin
+              denom
+            }
+          }
+        }
+      `;
+      const variables = {
+        address: address.toLowerCase(),
+        first,
+        skip,
+        orderDirection,
+      };
+      const graphQLClient = new ApolloClient({
+        uri: "https://api.goldsky.com/api/public/project_clqy1ct1fqf18010n972w2xg7/subgraphs/dex-test/v0.0.1/gn",
+        cache: new InMemoryCache(),
+      });
+
+      const { data } = await graphQLClient.query({
+        query,
+        variables,
+      });
+      // console.log("price", data.dexCoins[0].latestPriceUsd.price);
+      if (data.dexCoins.length > 0) {
+        return data.dexCoins[0].latestPriceUsd.price;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      console.log(e);
+      return 0;
+    }
+  }
+  async function claimAllRewards(rewards) {
+    //prepare array
+    const claims = [];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const signer = ethersProvider.getSigner();
+    for (let i = 0; i < rewards.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      claims.push({
+        token: rewards[i].claimData.token,
+        index: rewards[i].claimData.index,
+        amount: rewards[i].claimData.amount,
+        merkleProof: rewards[i].claimData.merkleProof,
+      });
+    }
+
+    const merkleContract = new ethers.Contract(
+      MERKLE_ADDRESS,
+      merkle.abi,
+      signer,
+    );
+    const tx = await merkleContract.claimMulti(userAddress.value, claims);
+    await tx.wait(1);
+    console.log(tx);
+  }
+
   return {
     getBalance,
     getAllowance,
@@ -211,6 +302,8 @@ const useEthApis = () => {
     approveToken,
     addBeraVoteRewardAmount,
     getRewards,
+    getBerachainSubgraphPrice,
+    claimAllRewards
   };
 };
 

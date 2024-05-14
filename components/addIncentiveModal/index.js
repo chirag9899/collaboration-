@@ -34,6 +34,7 @@ const AddIncentive = ({
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
+    tokenPrice: 0,
     incentiveAmount: 0,
     addIncentive: false,
     availableBal: 0,
@@ -47,11 +48,18 @@ const AddIncentive = ({
 
   const address = useSelector(addressSelector);
 
-  const { tokenAddress, incentiveAmount, addIncentive, availableBal, allowance } =
-    formdata;
+  const {
+    tokenAddress,
+    incentiveAmount,
+    addIncentive,
+    availableBal,
+    allowance,
+    tokenPrice,
+  } = formdata;
   const { tokenErr, amountErr } = errors;
 
-  const { getBalance, approveToken, getAllowance } = useEthApis();
+  const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
+    useEthApis();
   // Adding for the reference.
   // function getTotalScoresForOption(scores, option) {
   //   switch (option.toString()) {
@@ -80,7 +88,7 @@ const AddIncentive = ({
   // const totalScores = BigInt(scores.yesCount) + BigInt(scores.abstainCount) + BigInt(scores.noCount) + BigInt(scores.noWithVetoCount);
 
   // let scoreBigInt = BigInt(option) == ALL_OPTIONS ? totalScores : getTotalScoresForOption(scores, option);
-  const options = ["For", "Against", "Abstain"].map((item, i) => ({
+  const options = ["Yes", "No", "No with veto", "Abstain"].map((item, i) => ({
     key: i,
     value: i + 1,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
@@ -100,15 +108,22 @@ const AddIncentive = ({
           ...prev,
           availableBal: 0,
           allowance: 0,
+          tokenPrice: 0,
         };
       });
     } else {
-      const allowance = await getAllowance(address, tokenAddress, beravoteAddress);
+      const allowance = await getAllowance(
+        address,
+        tokenAddress,
+        beravoteAddress,
+      );
+      const price = await getBerachainSubgraphPrice(tokenAddress);
       setFormdata((prev) => {
         return {
           ...prev,
           availableBal: parseFloat(result),
-          allowance: parseFloat(allowance.result)
+          allowance: parseFloat(allowance.result),
+          tokenPrice: parseFloat(price),
         };
       });
       setErrors((prev) => {
@@ -128,19 +143,27 @@ const AddIncentive = ({
         [name]: type === "checkbox" ? checked : value,
       };
     });
-    if(name === "incentiveAmount"){
+    if (name === "incentiveAmount") {
       let amountError;
+      if (value <= 0) {
+        amountError = "Incentive amount is should be bigger than 0.";
+      }
       if (value > availableBal) {
         amountError = "Incentive amount is greater than balance.";
-       }
-      if(value > allowance){
+      }
+      if (value > allowance) {
         amountError = "Incentive amount is greater than allowance.";
       }
+      // check token reward amount value
+      if (tokenPrice * value < 1) {
+        amountError = "Incentives must be more than $1 in value";
+      }
+
       setErrors((prev) => {
         return {
           ...prev,
-          amountErr: amountError
-        }
+          amountErr: amountError,
+        };
       });
     }
   };
@@ -238,7 +261,12 @@ const AddIncentive = ({
         </InputWrapper>
 
         <ActionsWrapper>
-          <BtnWrapper className="action_btn" disabled={!!amountErr} primary onClick={onSubmitHandler}>
+          <BtnWrapper
+            className="action_btn"
+            disabled={!!amountErr}
+            primary
+            onClick={onSubmitHandler}
+          >
             Add Incentive
           </BtnWrapper>
           <BtnWrapper

@@ -25,3 +25,11 @@ export const PROPOSALS_LIST_QUERY = gql`
     }
   }
 `;
+
+export const All_PROPOSALS_LIST_QUERY = gql`
+  query proposalSubmitteds {
+    proposalSubmitteds(orderDirection: desc) {
+      proposalId
+    }
+  }
+`;

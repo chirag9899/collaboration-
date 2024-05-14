@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import { p_20_semibold } from "../styles/textStyles";
 import NoData from "./NoData";
-import { text_light_major } from "./styles/colors";
+import { black, text_light_major } from "./styles/colors";
 import SpacePost from "./spacePost";
-import { useApolloQuery } from "hooks/useApolloApi";
-import { PROPOSALS_LIST_QUERY } from "helpers/queries";
 import { useEffect, useState } from "react";
-import { getBeraProposalFromContract } from "helpers/beravoteSpace";
-import { getAllProposals } from "helpers/proposalIds";
-import LoadButtons from "./LoadButtons/LoadButtons";
+import { getBeraAllProposals } from "helpers/beraProposals";
+import Button from "./Button";
 
 const Title = styled.div`
   ${p_20_semibold};
@@ -22,30 +19,76 @@ const PostsWrapper = styled.div`
   }
 `;
 
+const LoadBtnWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0px;
+`;
+
+const LoadButton = styled(Button)`
+  margin-left: 20px;
+  color: ${black} !important;
+  border-radius: 0px !important;
+  &:hover {
+    color: ${black} !important;
+  }
+  @media screen and (max-width: 800px) {
+    padding: 8px 22px;
+    margin: auto;
+    width: 100%;
+    text-align: center;
+  }
+`;
+
 export default function SpacePostList({
   title,
   posts,
   space,
   spaces,
   showSpace = false,
-  limit = 10,
+  limit = 5,
 }) {
   const [data, setData] = useState([]);
-  const [showCount, setShowCount] = useState(limit);
+  const [from, setFrom] = useState(0);
+  const [to, setTo] = useState(5);
+  const [totalCount, setTotalCount] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchProposals = async () => {
-    const allProposals = await getAllProposals();
-    setData(allProposals);
+  const fetchProposals = async (from, to) => {
+    const { allProposals, totalCount } = await getBeraAllProposals(
+      from,
+      to,
+      setIsLoading,
+    );
+    setTotalCount(totalCount);
+    setData((prev) => [...prev, ...allProposals]);
   };
 
   useEffect(() => {
-    fetchProposals();
+    fetchProposals(from, to);
   }, []);
+
+  const handleLoadMore = () => {
+    if (to < totalCount) {
+      setFrom(from + limit);
+      setTo(to + limit);
+      fetchProposals(from + limit, to + limit);
+    }
+  };
+
+  const handleLoadLess = () => {
+    if (from > 0) {
+      setFrom(from - limit);
+      setTo(to - limit);
+      setData(data.slice(0, -5));
+    }
+  };
   return (
     <div>
       {title && <Title>{title}</Title>}
       <PostsWrapper>
-        {data?.slice(0, showCount).map((item, index) => (
+        {data.map((item, index) => (
           <SpacePost
             postNum={index + 1}
             key={index}
@@ -57,12 +100,27 @@ export default function SpacePostList({
         ))}
 
         {data.length === 0 && <NoData message="No current active proposals" />}
-        <LoadButtons
-          data={data}
-          showCount={showCount}
-          setShowCount={setShowCount}
-          limit={limit}
-        />
+        <LoadBtnWrapper>
+          {to > limit && (
+            <LoadButton
+              primary
+              className="button button-modern"
+              onClick={handleLoadLess}
+            >
+              Load Less
+            </LoadButton>
+          )}
+          {from < totalCount && (
+            <LoadButton
+              isLoading={isLoading}
+              primary
+              className="button button-modern"
+              onClick={handleLoadMore}
+            >
+              Load More
+            </LoadButton>
+          )}
+        </LoadBtnWrapper>
       </PostsWrapper>
     </div>
   );
