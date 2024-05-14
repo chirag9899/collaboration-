@@ -13,6 +13,7 @@ import useModal from "hooks/useModal";
 import AddIncentive from "./addIncentiveModal";
 import { ethers } from "ethers";
 import useEthApis from "hooks/useEthApis";
+import { formatNumber } from "utils";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -102,6 +103,7 @@ const PostQuorom = styled.div`
 const IncentivesWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   span {
     font-weight: bold;
     align-items: center;
@@ -180,13 +182,17 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       <InfoWrapper>
         <LeftWrapper>
           <IncentivesWrapper>
-            <span>Incentives/Votes</span>
-            <Input type="text" value="$555" disabled={true} />
+            <span>Votes</span>
+            <Input
+              type="text"
+              value={formatNumber(data.totalVotes)}
+              disabled={true}
+            />
           </IncentivesWrapper>
         </LeftWrapper>
         <RightWrapper>
           <ProgressBar
-            value={data.totalVotes}
+            value={data.totalvotesPercentage}
             max={100}
             footer={true}
             finalTallyResult={data.finalTallyResult}

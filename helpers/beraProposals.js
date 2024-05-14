@@ -149,7 +149,8 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
         isVetoed,
         isThresholdPassed,
         quorumPercentage,
-        totalVotes: totalvotesPercentage,
+        totalvotesPercentage: totalvotesPercentage,
+        totalVotes: totalVotes.toString(),
         finalTallyParams: {
           quorum: Number(quorum * 100).toFixed() + "%",
           threshold: Number(threshold * 100).toFixed() + "%",
