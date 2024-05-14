@@ -55,6 +55,29 @@ export default function Erc20TokenConfig({
     [chain, isMounted],
   );
 
+  const fetchErc721TokenMetadata = useCallback(
+    async (contractAddress) => {
+      setIsLoadingMetadata(true);
+      try {
+        const { result, error } = await nextApi.fetch(
+          `evm/chain/${chain}/erc721/contract/${contractAddress}`,
+        );
+        if (error) {
+          dispatch(newErrorToast("Please enter a valid contract address"))
+          return;
+        }
+        if (isMounted.current) {
+          setSymbol(result?.symbol);
+          setDecimals(18);
+        }
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+    },
+    [chain, isMounted]
+  );
+
+
   useEffect(() => {
     if (assetType === "native") {
       setSymbol(nativeTokenInfo?.symbol);
@@ -64,22 +87,36 @@ export default function Erc20TokenConfig({
       setSymbol("");
       setDecimals(0);
     } else {
-      setSymbol("");
-      setDecimals(0);
-      fetchErc20TokenMetadata(contractAddress);
+      if (assetType === "contract") {
+        setSymbol("");
+        setDecimals(0);
+        fetchErc20TokenMetadata(contractAddress);
+      } else if (assetType === "contract-erc721") {
+        setSymbol("");
+        setDecimals(18);
+        fetchErc721TokenMetadata(contractAddress);
+      }
     }
-  }, [fetchErc20TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
+  }, [fetchErc20TokenMetadata, fetchErc721TokenMetadata, assetType, contractAddress, nativeTokenInfo]);
 
   useEffect(() => {
     if (contractAddress) {
       if (asset?.type === "erc20" && asset?.contract === contractAddress) {
         return;
+      } else if (asset?.type === "erc721" && asset?.contract === contractAddress) {
+        return;
       }
-
-      setPartialAsset({
-        type: "erc20",
-        contract: contractAddress,
-      });
+      if (assetType === "contract") {
+        setPartialAsset({
+          type: "erc20",
+          contract: contractAddress,
+        });
+      } else if (assetType === "contract-erc721") {
+        setPartialAsset({
+          type: "erc721",
+          contract: contractAddress,
+        });
+      }
     } else {
       if (asset?.type === undefined && asset?.contract === undefined) {
         return;
@@ -113,6 +150,25 @@ export default function Erc20TokenConfig({
       </FieldWrapper>
 
       {assetType === "contract" && (
+        <FieldWrapper>
+          <Title>
+            Asset Contract{" "}
+            {assetTicker === "" && prevContract && (
+              <ContractButton onClick={onClickPrevContract}>
+                {prevContract}
+              </ContractButton>
+            )}
+          </Title>
+          <LoadingInput
+            value={assetTicker}
+            onChange={onChangeHandler}
+            placeholder="Enter an contract address"
+            onBlur={onBlurHandler}
+            isLoading={isLoadingMetadata}
+          />
+        </FieldWrapper>
+      )}
+      {assetType === "contract-erc721" && (
         <FieldWrapper>
           <Title>
             Asset Contract{" "}
