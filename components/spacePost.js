@@ -14,6 +14,8 @@ import AddIncentive from "./addIncentiveModal";
 import { ethers } from "ethers";
 import useEthApis from "hooks/useEthApis";
 import { formatNumber } from "utils";
+import { useSelector } from "react-redux";
+import { addressSelector } from "store/reducers/accountSlice";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -143,6 +145,11 @@ const CustomBtn = styled(Button)`
     height: 24px;
     margin-right: 8px !important;
   }
+  &:disabled {
+    cursor: not-allowed !important;
+    color: var(--neutral-4) !important;
+    border-color: var(--neutral-4) !important;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -187,6 +194,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
   const onCheckRewards = () => {
     router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
+  const address = useSelector(addressSelector);
 
   const { addBeraVoteRewardAmount } = useEthApis();
 
@@ -208,10 +216,10 @@ export default function SpacePost({ data, spaces, space, postNum }) {
           {data.id} - {data.title}
         </Title>
         <ButtonsWrapper>
-          <CustomBtn primary block onClick={openModal}>
+          <CustomBtn disabled={!address} primary block onClick={openModal}>
             Add incentive
           </CustomBtn>
-          <CustomBtn primary block onClick={onCheckRewards}>
+          <CustomBtn disabled={!address} primary block onClick={onCheckRewards}>
             Check rewards
           </CustomBtn>
         </ButtonsWrapper>
