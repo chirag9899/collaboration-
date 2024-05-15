@@ -2,11 +2,12 @@ import { ethers } from "ethers";
 import { useState } from "react";
 import erc20 from "../abi/erc20.json";
 import beravoteAbi from "../abi/beravote.json";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
 import { getTokenInfo, tokenData } from "helpers/methods";
+import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,7 @@ const useEthApis = () => {
       ? new ethers.providers.Web3Provider(window.ethereum)
       : null;
 
+  const dispatch = useDispatch();
   function isValidEthereumAddress(address) {
     try {
       const normalizedAddress = ethers.utils.getAddress(address);
@@ -100,9 +102,11 @@ const useEthApis = () => {
       );
       await approveTx.wait(1);
       console.log(approveTx);
+      dispatch(newSuccessToast("Token allowance updated!"));
       return true;
     } catch (e) {
       console.log(e);
+      dispatch(newErrorToast("Token approval failed!"));
       return false;
     }
   }
@@ -140,9 +144,11 @@ const useEthApis = () => {
       );
       await tx.wait(1);
       console.log(tx);
+      dispatch(newSuccessToast("Incentive added!"));
       return true;
     }catch(e){
       console.log(e);
+      dispatch(newErrorToast("Error adding incentive!"));
       return false;
     }
   }
