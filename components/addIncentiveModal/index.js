@@ -46,6 +46,11 @@ const AddIncentive = ({
     amountErr: null,
   });
 
+  const [notifications, setNotifications] = useState({
+    transactionSuccess: null,
+    transactionFailed: null,
+  });
+
   const address = useSelector(addressSelector);
 
   const {
@@ -57,6 +62,7 @@ const AddIncentive = ({
     tokenPrice,
   } = formdata;
   const { tokenErr, amountErr } = errors;
+  const {transactionSuccess, transactionFailed} = notifications;
 
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
@@ -260,6 +266,12 @@ const AddIncentive = ({
           />
         </InputWrapper>
 
+        <InputWrapper>
+          {transactionSuccess && <p>{transactionSuccess}</p>}
+          {transactionFailed && <ErrorMessage>{transactionFailed}</ErrorMessage>}
+        </InputWrapper>
+
+
         <ActionsWrapper>
           <BtnWrapper
             className="action_btn"
@@ -272,8 +284,14 @@ const AddIncentive = ({
           <BtnWrapper
             primary
             className="action_btn"
-            onClick={() => {
-              approveToken(address, tokenAddress, beravoteAddress);
+            onClick={async () => {
+              if(await approveToken(address, tokenAddress, beravoteAddress)){
+                // show message that the transaction succeeded
+                setNotifications({transactionSuccess: "Approved!", transactionFailed: null });
+            }else{
+                // Show error
+                setNotifications({transactionSuccess: null, transactionFailed: "Approval failed" });
+              }
             }}
           >
             Approve token

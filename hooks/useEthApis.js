@@ -115,30 +115,36 @@ const useEthApis = () => {
     start,
     end,
   ) {
-    // return;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const signer = ethersProvider.getSigner();
-    const token = new ethers.Contract(rewardToken, erc20.abi, signer);
-    const decimals = await token.decimals();
-    const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
-    const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
+    try {
+      // return;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const signer = ethersProvider.getSigner();
+      const token = new ethers.Contract(rewardToken, erc20.abi, signer);
+      const decimals = await token.decimals();
+      const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
+      const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
 
-    const bribeContract = new ethers.Contract(
-      beravoteAddress,
-      beravoteAbi.abi,
-      signer,
-    );
-    const tx = await bribeContract.add_reward_amount(
-      id,
-      option,
-      rewardToken,
-      amount,
-      start,
-      end,
-    );
-    await tx.wait(1);
-    console.log(tx);
+      const bribeContract = new ethers.Contract(
+        beravoteAddress,
+        beravoteAbi.abi,
+        signer,
+      );
+      const tx = await bribeContract.add_reward_amount(
+        id,
+        option,
+        rewardToken,
+        amount,
+        start,
+        end,
+      );
+      await tx.wait(1);
+      console.log(tx);
+      return true;
+    }catch(e){
+      console.log(e);
+      return false;
+    }
   }
 
   async function getRewards() {
