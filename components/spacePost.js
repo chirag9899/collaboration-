@@ -153,9 +153,20 @@ const Status = styled.div`
   margin-right: 15px;
   padding: 5px 10px;
   border-radius: 50px;
-  color: rgb(0, 255, 0);
+  text-transform: capitalize;
+  color: ${(props) =>
+    props.status === "passed" || props.status === "active"
+      ? "rgb(0, 255, 0)"
+      : props.status === "closed"
+      ? "rgb(210, 215, 211)"
+      : "red"};
   font-weight: 500;
-  background-color: rgba(0, 255, 0, 0.1);
+  background-color: ${(props) =>
+    props.status === "passed" || props.status === "active"
+      ? "rgba(0, 255, 0, 0.1)"
+      : props.status === "closed"
+      ? "rgba(210, 215, 211, 0.1)"
+      : "rgba(255, 0, 0, 0.1)"};
   max-height: 35px;
 `;
 const Summary = styled.div`
@@ -217,8 +228,8 @@ export default function SpacePost({ data, spaces, space, postNum }) {
         </LeftWrapper>
         <RightWrapper>
           <ContentWrapper>
-            <Status>status</Status>
-            <Summary>{data.summary}</Summary>
+            <Status status={data.status}>{data.status}</Status>
+            <Summary>{data.metadata}</Summary>
           </ContentWrapper>
 
           <ProgressBar

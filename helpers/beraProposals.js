@@ -5,6 +5,36 @@ const governanceAddress = "0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2";
 const rpcUrl = "https://rpc.ankr.com/berachain_testnet";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
+function getproposalStatus(
+  value,
+  isQuorumMet,
+  isVetoed,
+  isThresholdPassed,
+  depositEndTime,
+) {
+  const currentTime = new Date().getTime();
+  if (value === 0 || value === 1 || value === 2) {
+    if (isVetoed || depositEndTime < currentTime) {
+      return "closed";
+    }
+    if (!isQuorumMet || !isThresholdPassed) {
+      return "expired";
+    }
+    if (isQuorumMet || isThresholdPassed) {
+      return "passed";
+    }
+    return "active";
+  }
+  if (value === 3) {
+    return "passed";
+  }
+  if (value === 4) {
+    return "Rejected";
+  }
+  if (value === 5) {
+    return "closed";
+  }
+}
 
 async function getBerachainProposalsId(first = 1000, skip = 0) {
   try {
@@ -164,6 +194,13 @@ export async function getBeraAllProposals(from, to, setIsLoading) {
           noWithVetoCount: Number(percentageNoWithVeto).toFixed(2) + "%",
         },
         thresholdPercentage: Number(thresholdPercentage) + "%",
+        status: getproposalStatus(
+          proposal.status,
+          isQuorumMet,
+          isVetoed,
+          isThresholdPassed,
+          proposal.depositEndTime,
+        ),
       };
 
       allProposals.push(proposalData);
