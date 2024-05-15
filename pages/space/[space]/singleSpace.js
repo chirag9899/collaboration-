@@ -240,7 +240,8 @@ export default function List({
                 />
               </HeaderWrapper>
               <PostWrapper>
-                <SpacePostList posts={proposalList} space={space} />
+                {/* ToDo: make the status depend on the active tab */}
+                <SpacePostList posts={proposalList} space={space} status={0} />
               </PostWrapper>
             </MainWrapper>
           )}

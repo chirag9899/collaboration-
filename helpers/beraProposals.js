@@ -36,26 +36,40 @@ function getproposalStatus(
   }
 }
 
-async function getBerachainProposalsId(first = 1000, skip = 0) {
+async function getBerachainProposalsId(first = 1000, skip = 0, status = 0) {
   try {
-    const query = gql`
-      query proposalSubmitteds($first: Int, $skip: Int) {
-        proposalSubmitteds(
-          first: $first
-          skip: $skip
-          orderBy: proposalId
-          orderDirection: desc
-        ) {
-          proposalId
+    let query = gql`
+        query proposals($status:Int, $first: Int, $skip: Int){
+            proposals(
+                first: $first
+                skip: $skip
+                orderBy: submitTime
+                orderDirection: desc
+                where: {status: $status}) {
+                id
+            }
         }
-      }
     `;
+    if(status == 0){
+      query = gql`
+          query proposals($first: Int, $skip: Int){
+              proposals(
+                  first: $first
+                  skip: $skip
+                  orderBy: submitTime
+                  orderDirection: desc) {
+                  id
+              }
+          }
+      `;
+    }
     const variables = {
       first,
       skip,
+      status
     };
     const graphQLClient = new ApolloClient({
-      uri: "https://api.goldsky.com/api/public/project_clvfcu44n75u401sufb5v2s5o/subgraphs/IGovernanceModule-berachain-public-testnet/1/gn",
+      uri: "https://api.goldsky.com/api/public/project_clvfcu44n75u401sufb5v2s5o/subgraphs/governance/1.0.2/gn",
       cache: new InMemoryCache(),
     });
 
@@ -63,7 +77,7 @@ async function getBerachainProposalsId(first = 1000, skip = 0) {
       query,
       variables,
     });
-    return data.proposalSubmitteds.map((item) => item.proposalId);
+    return data.proposals.map((item) => item.id);
   } catch (e) {
     return null;
   }
@@ -132,14 +146,14 @@ async function getBeraProposalFromContract(proposalId) {
   }
 }
 
-export async function getBeraAllProposals(from, to, setIsLoading) {
+export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
   setIsLoading(true);
-  const ids = await getBerachainProposalsId();
+  const ids = await getBerachainProposalsId(1000, 0, status);
 
   const allProposals = [];
 
   for (let i = from; i < to; i++) {
-    const proposal = await getBeraProposalFromContract(ids[i]);
+    const proposal = await getBeraProposalFromContract(parseInt(ids[i]));
     if (proposal) {
       const quorum = parseFloat(proposal.finalTallyParams.quorum);
       const threshold = parseFloat(proposal.finalTallyParams.threshold);
