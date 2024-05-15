@@ -151,7 +151,8 @@ const ContentWrapper = styled.div`
 
 const Status = styled.div`
   margin-right: 15px;
-  padding: 5px 10px;
+  padding: 3px 10px;
+  font-size: 12px;
   border-radius: 50px;
   text-transform: capitalize;
   color: ${(props) =>
@@ -160,7 +161,7 @@ const Status = styled.div`
       : props.status === "closed"
       ? "rgb(210, 215, 211)"
       : "red"};
-  font-weight: 500;
+  font-weight: bold;
   background-color: ${(props) =>
     props.status === "passed" || props.status === "active"
       ? "rgba(0, 255, 0, 0.1)"
@@ -171,10 +172,11 @@ const Status = styled.div`
 `;
 const Summary = styled.div`
   margin-right: 15px;
-  padding: 5px 10px;
+  padding: 3px 10px;
+  font-size: 12px;
   border-radius: 50px;
   color: var(--primary);
-  font-weight: 500;
+  font-weight: bold;
   background-color: var(--primary);
   background-color: rgba(235, 182, 0, 0.1);
   text-align: center;
