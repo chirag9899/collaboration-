@@ -49,6 +49,8 @@ export const BtnWrapper = styled(Button)`
   }
   &:disabled {
     cursor: not-allowed !important;
+    color: var(--neutral-4) !important;
+    border-color: var(--neutral-4) !important;
   }
   > img {
     width: 24px;
@@ -111,6 +113,11 @@ export const InputGroup = styled.div`
     margin-right: 0px;
     &:hover {
       color: var(--peach) !important;
+    }
+    &:disabled {
+      cursor: not-allowed !important;
+      color: var(--neutral-4) !important;
+      border-color: var(--neutral-4) !important;
     }
   }
 

@@ -39,7 +39,7 @@ export const ProgressPointer = styled.div`
 export const PointerSection = styled.div`
   position: absolute;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   top: 0;
   text-transform: capitalize;
   left: ${(props) => props.left};

@@ -62,7 +62,7 @@ const AddIncentive = ({
     tokenPrice,
   } = formdata;
   const { tokenErr, amountErr } = errors;
-  const {transactionSuccess, transactionFailed} = notifications;
+  const { transactionSuccess, transactionFailed } = notifications;
 
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
@@ -242,7 +242,7 @@ const AddIncentive = ({
               block
               className="max_btn"
               onClick={maxIncentiveHandler}
-              disabled={tokenAddress === ""}
+              disabled={tokenAddress === "" || !address}
             >
               Max
             </BtnWrapper>
@@ -268,14 +268,15 @@ const AddIncentive = ({
 
         <InputWrapper>
           {transactionSuccess && <p>{transactionSuccess}</p>}
-          {transactionFailed && <ErrorMessage>{transactionFailed}</ErrorMessage>}
+          {transactionFailed && (
+            <ErrorMessage>{transactionFailed}</ErrorMessage>
+          )}
         </InputWrapper>
-
 
         <ActionsWrapper>
           <BtnWrapper
             className="action_btn"
-            disabled={!!amountErr}
+            disabled={!!amountErr || !address}
             primary
             onClick={onSubmitHandler}
           >
@@ -284,13 +285,20 @@ const AddIncentive = ({
           <BtnWrapper
             primary
             className="action_btn"
+            disabled={!address}
             onClick={async () => {
-              if(await approveToken(address, tokenAddress, beravoteAddress)){
+              if (await approveToken(address, tokenAddress, beravoteAddress)) {
                 // show message that the transaction succeeded
-                setNotifications({transactionSuccess: "Approved!", transactionFailed: null });
-            }else{
+                setNotifications({
+                  transactionSuccess: "Approved!",
+                  transactionFailed: null,
+                });
+              } else {
                 // Show error
-                setNotifications({transactionSuccess: null, transactionFailed: "Approval failed" });
+                setNotifications({
+                  transactionSuccess: null,
+                  transactionFailed: "Approval failed",
+                });
               }
             }}
           >
