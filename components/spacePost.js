@@ -14,6 +14,8 @@ import AddIncentive from "./addIncentiveModal";
 import { ethers } from "ethers";
 import useEthApis from "hooks/useEthApis";
 import { formatNumber } from "utils";
+import { useSelector } from "react-redux";
+import { addressSelector } from "store/reducers/accountSlice";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -143,6 +145,11 @@ const CustomBtn = styled(Button)`
     height: 24px;
     margin-right: 8px !important;
   }
+  &:disabled {
+    cursor: not-allowed !important;
+    color: var(--neutral-4) !important;
+    border-color: var(--neutral-4) !important;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -151,19 +158,32 @@ const ContentWrapper = styled.div`
 
 const Status = styled.div`
   margin-right: 15px;
-  padding: 5px 10px;
+  padding: 3px 10px;
+  font-size: 12px;
   border-radius: 50px;
-  color: rgb(0, 255, 0);
-  font-weight: 500;
-  background-color: rgba(0, 255, 0, 0.1);
+  text-transform: capitalize;
+  color: ${(props) =>
+    props.status === "passed" || props.status === "active"
+      ? "rgb(0, 255, 0)"
+      : props.status === "closed"
+      ? "rgb(210, 215, 211)"
+      : "red"};
+  font-weight: bold;
+  background-color: ${(props) =>
+    props.status === "passed" || props.status === "active"
+      ? "rgba(0, 255, 0, 0.1)"
+      : props.status === "closed"
+      ? "rgba(210, 215, 211, 0.1)"
+      : "rgba(255, 0, 0, 0.1)"};
   max-height: 35px;
 `;
 const Summary = styled.div`
   margin-right: 15px;
-  padding: 5px 10px;
+  padding: 3px 10px;
+  font-size: 12px;
   border-radius: 50px;
   color: var(--primary);
-  font-weight: 500;
+  font-weight: bold;
   background-color: var(--primary);
   background-color: rgba(235, 182, 0, 0.1);
   text-align: center;
@@ -174,6 +194,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
   const onCheckRewards = () => {
     router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
+  const address = useSelector(addressSelector);
 
   const { addBeraVoteRewardAmount } = useEthApis();
 
@@ -195,10 +216,10 @@ export default function SpacePost({ data, spaces, space, postNum }) {
           {data.id} - {data.title}
         </Title>
         <ButtonsWrapper>
-          <CustomBtn primary block onClick={openModal}>
+          <CustomBtn disabled={!address} primary block onClick={openModal}>
             Add incentive
           </CustomBtn>
-          <CustomBtn primary block onClick={onCheckRewards}>
+          <CustomBtn disabled={!address} primary block onClick={onCheckRewards}>
             Check rewards
           </CustomBtn>
         </ButtonsWrapper>
@@ -217,8 +238,8 @@ export default function SpacePost({ data, spaces, space, postNum }) {
         </LeftWrapper>
         <RightWrapper>
           <ContentWrapper>
-            <Status>status</Status>
-            <Summary>{data.summary}</Summary>
+            <Status status={data.status}>{data.status}</Status>
+            <Summary>{data.metadata}</Summary>
           </ContentWrapper>
 
           <ProgressBar

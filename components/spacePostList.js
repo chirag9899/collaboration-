@@ -48,6 +48,7 @@ export default function SpacePostList({
   spaces,
   showSpace = false,
   limit = 5,
+  status = 0,
 }) {
   const [data, setData] = useState([]);
   const [from, setFrom] = useState(0);
@@ -60,6 +61,7 @@ export default function SpacePostList({
       from,
       to,
       setIsLoading,
+      status
     );
     setTotalCount(totalCount);
     setData((prev) => [...prev, ...allProposals]);

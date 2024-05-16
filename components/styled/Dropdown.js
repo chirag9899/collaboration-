@@ -40,6 +40,7 @@ const StyledDropdown = styled(Dropdown)`
 
     > .item {
       border-top: none !important;
+      color: #fff;
 
       &.selected,
       &:hover {

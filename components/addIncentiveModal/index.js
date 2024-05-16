@@ -236,7 +236,7 @@ const AddIncentive = ({
               block
               className="max_btn"
               onClick={maxIncentiveHandler}
-              disabled={tokenAddress === ""}
+              disabled={tokenAddress === "" || !address}
             >
               Max
             </BtnWrapper>
@@ -263,7 +263,7 @@ const AddIncentive = ({
         <ActionsWrapper>
           <BtnWrapper
             className="action_btn"
-            disabled={!!amountErr}
+            disabled={!!amountErr || !address}
             primary
             onClick={onSubmitHandler}
           >
@@ -272,8 +272,9 @@ const AddIncentive = ({
           <BtnWrapper
             primary
             className="action_btn"
-            onClick={() => {
-              approveToken(address, tokenAddress, beravoteAddress);
+            disabled={!address}
+            onClick={async () => {
+              await approveToken(address, tokenAddress, beravoteAddress)
             }}
           >
             Approve token
