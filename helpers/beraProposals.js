@@ -146,9 +146,9 @@ async function getBeraProposalFromContract(proposalId) {
   }
 }
 
-export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
+export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
   setIsLoading(true);
-  const ids = await getBerachainProposalsId(1000, 0, status);
+  const ids = await getBerachainProposalsId(1000, 0, 1);
 
   const allProposals = [];
 
