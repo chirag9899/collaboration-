@@ -14,21 +14,32 @@ const ProgressBar = ({
   footer = false,
   finalTallyResult,
   thresholdPercentage,
-  quorumPercentage
+  requiredQuorumPercentage,
+  quorumPercentage,
 }) => {
   return (
     <ProgressBarContainer>
       <ProgressTop>
-        <PointerSection left={thresholdPercentage}>
-          <span>Pass threshold</span>
+        {requiredQuorumPercentage !== quorumPercentage && <PointerSection left={requiredQuorumPercentage}>
+          <span>Required quorum</span>
           <ProgressPointer></ProgressPointer>
-        </PointerSection>
+        </PointerSection>}
         <PointerSection left={quorumPercentage}>
           <span>Quorum</span>
           <ProgressPointer></ProgressPointer>
         </PointerSection>
       </ProgressTop>
       <StyledProgressBar value={value} max={max} />
+      <ProgressTop>
+        <PointerSection left={thresholdPercentage}>
+          <span>Pass threshold</span>
+          <ProgressPointer></ProgressPointer>
+        </PointerSection>
+        <PointerSection left={finalTallyResult.yesCount}>
+          <span>Yes</span>
+          <ProgressPointer></ProgressPointer>
+        </PointerSection>
+      </ProgressTop>
       {footer && (
         <ProgressFooter>
           <div>

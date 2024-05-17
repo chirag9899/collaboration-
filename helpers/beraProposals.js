@@ -162,16 +162,17 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
       const abstainCount = BigInt(proposal.finalTallyResult.abstainCount);
       const noCount = BigInt(proposal.finalTallyResult.noCount);
       const noWithVetoCount = BigInt(proposal.finalTallyResult.noWithVetoCount);
-      const quorumPercentage = BigInt(Math.ceil(quorum * 100));
+      const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
       const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
       const vetoThresholdPercentage = BigInt(Math.ceil(vetoThreshold * 100));
       const totalVotes = yesCount + abstainCount + noCount + noWithVetoCount;
+      const quorumPercentage = (parseInt(totalVotes.toString()) / quorum) * 100;
       const percentageYes =
         totalVotes > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
       const percentageNoWithVeto =
         totalVotes > 0 ? Number((noWithVetoCount * 100n) / totalVotes) : 0;
 
-      const requiredQuorumVotes = (quorumPercentage * totalVotes) / BigInt(100);
+      const requiredQuorumVotes = (requiredQuorumPercentage * totalVotes) / BigInt(100);
       const percentageAbstain =
         totalVotes > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
       const percentageNo =
@@ -193,7 +194,8 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
         isVetoed,
         isThresholdPassed,
         quorumPer,
-        quorumPercentage: quorumPercentage.toString() + "%",
+        requiredQuorumPercentage: Number(requiredQuorumPercentage).toFixed() + "%",
+        quorumPercentage: Number(quorumPercentage).toFixed() + "%",
         totalvotesPercentage: totalvotesPercentage,
         totalVotes: totalVotes.toString(),
         finalTallyParams: {
