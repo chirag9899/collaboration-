@@ -225,3 +225,48 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
   setIsLoading(false);
   return { allProposals, totalCount: ids.length };
 }
+
+
+export async function getBeraProposals(data) {
+  const { status, first, skip } = data;
+  try {
+    let proposals = [];
+
+      const client = new ApolloClient({
+        uri: `${process.env.NEXT_PUBLIC_NEW_GRAPH_ENDPOINT}`,
+        cache: new InMemoryCache(),
+      });
+
+      const claimsQuery = gql`
+        query proposals($status: Int, $first: Int, $skip: Int) {
+          proposals(
+            first: $first
+            skip: $skip
+            orderBy: submitTime
+            orderDirection: desc
+            where: { status: $status }
+          ) {
+            content
+            id
+            status
+            proposer
+            submitTime
+          }
+        }
+      `;
+      const { data } = await client.query({
+        query: claimsQuery,
+        variables: {
+          first: first,
+          skip: skip,
+          status: status,
+        },
+      });
+      proposals = data;
+    console.log(proposals,"proposals")
+    return {...data};
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}

@@ -25,6 +25,7 @@ import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
 import SpacePostList from "@/components/spacePostList";
 import SpaceListTab from "@/components/spaceListTab";
+import { getBeraProposals } from "helpers/beraProposals";
 
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -107,6 +108,7 @@ export default function List({
   closedProposals,
   activeTab,
   defaultPage,
+  beraProposals
 }) {
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
@@ -119,6 +121,7 @@ export default function List({
   const isEvm = chain?.chainType == "evm";
 
   const router = useRouter();
+  console.log(beraProposals,"beraProposals")
 
   const { open, openModal, closeModal } = useModal();
   useEffect(() => {
@@ -241,7 +244,11 @@ export default function List({
               </HeaderWrapper>
               <PostWrapper>
                 {/* ToDo: make the status depend on the active tab */}
-                <SpacePostList posts={proposalList} space={space} status={0} />
+                <SpacePostList
+                  posts={proposalList}
+                  space={space}
+                  status={tab}
+                />
               </PostWrapper>
             </MainWrapper>
           )}
@@ -302,12 +309,19 @@ export async function getServerSideProps(context) {
 
   const pageSize = 20;
 
+  const config = {
+    first: 1000,
+    skip: 0,
+    status: 1,
+  };
+
   const [
     { result: space },
     { result: proposals },
     { result: pendingProposals },
     { result: activeProposals },
     { result: closedProposals },
+    { result: beraProposals },
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     ssrNextApi.fetch(`${spaceId}/proposals`, {
@@ -326,6 +340,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "proposals-closed" ? nPage : 1,
       pageSize,
     }),
+    await getBeraProposals(config)
   ]);
 
   if (!space) {
@@ -342,6 +357,7 @@ export async function getServerSideProps(context) {
       activeProposals: activeProposals ?? EmptyQuery,
       closedProposals: closedProposals ?? EmptyQuery,
       defaultPage: { tab: activeTab ?? null, page: nPage },
+      beraProposals:beraProposals??null,
     },
   };
 }
