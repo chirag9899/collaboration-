@@ -4,6 +4,8 @@ import {
   ProgressBarContainer,
   ProgressFooter,
   ProgressPointer,
+  ProgressPointerBottom,
+  ProgressPointerLabelBottom,
   ProgressTop,
   StyledProgressBar,
 } from "./styled";
@@ -15,29 +17,24 @@ const ProgressBar = ({
   finalTallyResult,
   thresholdPercentage,
   requiredQuorumPercentage,
-  quorumPercentage,
 }) => {
   return (
     <ProgressBarContainer>
       <ProgressTop>
-        {requiredQuorumPercentage !== quorumPercentage && <PointerSection left={requiredQuorumPercentage}>
-          <span>Required quorum</span>
-          <ProgressPointer></ProgressPointer>
-        </PointerSection>}
-        <PointerSection left={quorumPercentage}>
-          <span>Quorum</span>
+        <PointerSection left={finalTallyResult.yesCount}>
+          <span>Yes</span>
           <ProgressPointer></ProgressPointer>
         </PointerSection>
       </ProgressTop>
       <StyledProgressBar value={value} max={max} />
       <ProgressTop>
         <PointerSection left={thresholdPercentage}>
-          <span>Pass threshold</span>
-          <ProgressPointer></ProgressPointer>
+          <ProgressPointerLabelBottom>Pass threshold</ProgressPointerLabelBottom>
+          <ProgressPointerBottom></ProgressPointerBottom>
         </PointerSection>
-        <PointerSection left={finalTallyResult.yesCount}>
-          <span>Yes</span>
-          <ProgressPointer></ProgressPointer>
+        <PointerSection left={requiredQuorumPercentage}>
+          <ProgressPointerLabelBottom>Required quorum</ProgressPointerLabelBottom>
+          <ProgressPointerBottom></ProgressPointerBottom>
         </PointerSection>
       </ProgressTop>
       {footer && (

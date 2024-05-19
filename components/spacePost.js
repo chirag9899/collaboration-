@@ -248,7 +248,6 @@ export default function SpacePost({ data, spaces, space, postNum }) {
             footer={true}
             finalTallyResult={data.finalTallyResult}
             thresholdPercentage={data.thresholdPercentage}
-            quorumPercentage={data.quorumPercentage}
             requiredQuorumPercentage={data.requiredQuorumPercentage}
           />
         </RightWrapper>

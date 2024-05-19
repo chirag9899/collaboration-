@@ -28,12 +28,21 @@ export const ProgressTop = styled.div`
   height: 25px;
   position: relative;
 `;
-
 export const ProgressPointer = styled.div`
   border: 1px solid ${white_text_color};
   position: absolute;
   top: 20px;
   height: 12px;
+`;
+export const ProgressPointerBottom = styled.div`
+  border: 1px solid ${white_text_color};
+  position: absolute;
+  top: 0px;
+  height: 12px;
+`;
+
+export const ProgressPointerLabelBottom = styled.span`
+  margin-top: 10px;
 `;
 
 export const PointerSection = styled.div`
