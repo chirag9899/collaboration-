@@ -9,6 +9,11 @@ const Wrapper = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 32px;
+  align-items: center;
+  .copied_text {
+    color: var(--neutral-3);
+    font-weight: 500;
+  }
 `;
 
 const ShareItem = styled.span`
@@ -63,6 +68,7 @@ export default function Share({ uid }) {
           <CopySvg className="copy" />
         </Tooltip>
       </ShareItem>
+      {isCopied && <span className="copied_text">Link is copied </span>}
     </Wrapper>
   );
 }

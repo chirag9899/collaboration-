@@ -63,32 +63,32 @@ export const SocialLinks = ({ socialfields, title }) => {
     switch (key) {
       case "website":
         return (
-          <Link title={key} href={value}>
+          <Link title={key} href={value} target="_blank">
             <Website />
           </Link>
         );
       case "twitter":
         return (
-          <Link title={key} href={value}>
+          <Link title={key} href={value} target="_blank">
             <TwitterSvg />
           </Link>
         );
       case "github":
         return (
-          <Link title={key} href={value}>
+          <Link title={key} href={value} target="_blank">
             <GithubSvg />
           </Link>
         );
       case "docs":
         return (
-          <Link title={key} href={value}>
+          <Link title={key} href={value} target="_blank">
             <Docs />
           </Link>
         );
 
       case "forum":
         return (
-          <Link title={key} href={value}>
+          <Link title={key} href={value} target="_blank">
             <Forum />
           </Link>
         );
