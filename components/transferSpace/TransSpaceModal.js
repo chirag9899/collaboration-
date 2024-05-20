@@ -152,7 +152,7 @@ const TransferSpaceModal = ({
               className="button button-modern"
               onClick={closeModal}
             >
-              Cancel
+              Abort
             </BtnWrapper>
           </ActionsWrapper>
         </ModalBodyWrapper>
@@ -161,8 +161,9 @@ const TransferSpaceModal = ({
       <Confirmation
         open={openConfirm}
         closeModal={() => setOpenConfirm(false)}
-        message="The new address full control over the space.Are you sure to transfer?"
+        message="The new address full control over the space. Are you sure to transfer?"
         onConfirmation={onTransferSpace}
+        confirmBtnTitle = "Proceed"
       />
     </>
   );

@@ -18,6 +18,7 @@ const Confirmation = ({
   title = "Confirmation",
   message,
   onConfirmation,
+  confirmBtnTitle = "Yes",
 }) => {
   return (
     <Modal open={open} footer={footer} closeBar={false}>
@@ -40,7 +41,7 @@ const Confirmation = ({
             className="button button-modern"
             onClick={onConfirmation}
           >
-            Yes
+            {confirmBtnTitle}
           </BtnWrapper>
           <BtnWrapper
             primary
