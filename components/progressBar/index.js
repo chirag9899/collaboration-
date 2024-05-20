@@ -29,11 +29,11 @@ const ProgressBar = ({
       <StyledProgressBar value={value} max={max} />
       <ProgressTop>
         <PointerSection left={thresholdPercentage}>
-          <ProgressPointerLabelBottom>Pass threshold</ProgressPointerLabelBottom>
+          <ProgressPointerLabelBottom>Passed</ProgressPointerLabelBottom>
           <ProgressPointerBottom></ProgressPointerBottom>
         </PointerSection>
         <PointerSection left={requiredQuorumPercentage}>
-          <ProgressPointerLabelBottom>Required quorum</ProgressPointerLabelBottom>
+          <ProgressPointerLabelBottom>Quorum</ProgressPointerLabelBottom>
           <ProgressPointerBottom></ProgressPointerBottom>
         </PointerSection>
       </ProgressTop>
