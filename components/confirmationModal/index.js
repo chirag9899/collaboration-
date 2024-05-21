@@ -7,9 +7,9 @@ import {
   ModalBodyWrapper,
   ActionsWrapper,
   Text,
-  BtnWrapper,
 } from "./styled";
 import Image from "next/image";
+import Button from "../Button";
 
 const Confirmation = ({
   open,
@@ -36,20 +36,20 @@ const Confirmation = ({
       <ModalBodyWrapper>
         <Text>{message}</Text>
         <ActionsWrapper>
-          <BtnWrapper
+          <Button
             primary
-            className="button button-modern"
+            className="button modal_primary_btn"
             onClick={onConfirmation}
           >
             {confirmBtnTitle}
-          </BtnWrapper>
-          <BtnWrapper
+          </Button>
+          <Button
             primary
-            className="button button-modern"
+            className="button modal_primary_btn"
             onClick={closeModal}
           >
             No
-          </BtnWrapper>
+          </Button>
         </ActionsWrapper>
       </ModalBodyWrapper>
     </Modal>

@@ -142,7 +142,7 @@ button {
 .ui.modal
   button:not([class*="CloseButton"]):not([class*="max_btn"]):not(
     [class*="action_btn"]
-  ),
+  ):not([class*="modal_primary_btn"]),
 .button-modern {
   background: transparent !important;
   border-radius: 100px;
