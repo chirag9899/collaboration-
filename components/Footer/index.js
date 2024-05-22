@@ -20,6 +20,18 @@ const SvgMap = new Map([
 const Wrapper = styled.footer`
   flex: 0 0 auto;
   background: var(--background);
+  .support_text {
+    font-size: 18px;
+    text-align: end;
+    padding: 10px;
+    color: var(--neutral-3);
+    font-weight: 400;
+    margin-top: 55px;
+    width: 400px;
+    > span {
+      color: red !important;
+    }
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -159,6 +171,9 @@ export default function Footer({ github }) {
           </LeftWrapper>
           <RightWrapper>
             <FooterLogoSvg />
+            <div className="support_text">
+              Support W/<span>❤️</span> at the 🐻Beraden
+            </div>
           </RightWrapper>
         </ContentWrapper>
         <BottomWrapper>
