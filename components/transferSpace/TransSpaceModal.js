@@ -5,8 +5,6 @@ import {
   HeadWrapper,
   ModalBodyWrapper,
   ActionsWrapper,
-  Text,
-  BtnWrapper,
   InputWrapper,
   ModalWrapper,
 } from "./styled";
@@ -23,6 +21,7 @@ import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
 import Confirmation from "../confirmationModal";
+import Button from "../Button";
 
 const TransferSpaceModal = ({
   open,
@@ -138,22 +137,22 @@ const TransferSpaceModal = ({
             />
           </InputWrapper>
           <ActionsWrapper>
-            <BtnWrapper
+            <Button
               disabled={transferAddress === ""}
               primary
-              className="button button-modern"
+              className="button modal_primary_btn"
               onClick={() => setOpenConfirm(true)}
               isLoading={isLoading}
             >
               Transfer
-            </BtnWrapper>
-            <BtnWrapper
+            </Button>
+            <Button
               primary
-              className="button button-modern"
+              className="button modal_primary_btn"
               onClick={closeModal}
             >
-              Cancel
-            </BtnWrapper>
+              Abort
+            </Button>
           </ActionsWrapper>
         </ModalBodyWrapper>
       </ModalWrapper>
@@ -161,8 +160,9 @@ const TransferSpaceModal = ({
       <Confirmation
         open={openConfirm}
         closeModal={() => setOpenConfirm(false)}
-        message="The new address full control over the space.Are you sure to transfer?"
+        message="The new address full control over the space. Are you sure to transfer?"
         onConfirmation={onTransferSpace}
+        confirmBtnTitle="Proceed"
       />
     </>
   );

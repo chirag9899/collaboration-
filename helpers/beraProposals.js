@@ -146,9 +146,9 @@ async function getBeraProposalFromContract(proposalId) {
   }
 }
 
-export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
+export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
   setIsLoading(true);
-  const ids = await getBerachainProposalsId(1000, 0, status);
+  const ids = await getBerachainProposalsId(1000, 0, 1);
 
   const allProposals = [];
 
@@ -162,16 +162,17 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
       const abstainCount = BigInt(proposal.finalTallyResult.abstainCount);
       const noCount = BigInt(proposal.finalTallyResult.noCount);
       const noWithVetoCount = BigInt(proposal.finalTallyResult.noWithVetoCount);
-      const quorumPercentage = BigInt(Math.ceil(quorum * 100));
+      const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
       const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
       const vetoThresholdPercentage = BigInt(Math.ceil(vetoThreshold * 100));
       const totalVotes = yesCount + abstainCount + noCount + noWithVetoCount;
+      const quorumPercentage = (parseInt(totalVotes.toString()) / quorum) * 100;
       const percentageYes =
         totalVotes > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
       const percentageNoWithVeto =
         totalVotes > 0 ? Number((noWithVetoCount * 100n) / totalVotes) : 0;
 
-      const requiredQuorumVotes = (quorumPercentage * totalVotes) / BigInt(100);
+      const requiredQuorumVotes = (requiredQuorumPercentage * totalVotes) / BigInt(100);
       const percentageAbstain =
         totalVotes > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
       const percentageNo =
@@ -193,7 +194,8 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
         isVetoed,
         isThresholdPassed,
         quorumPer,
-        quorumPercentage: quorumPercentage.toString() + "%",
+        requiredQuorumPercentage: Number(requiredQuorumPercentage).toFixed() + "%",
+        quorumPercentage: Number(quorumPercentage).toFixed() + "%",
         totalvotesPercentage: totalvotesPercentage,
         totalVotes: totalVotes.toString(),
         finalTallyParams: {
@@ -224,4 +226,49 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 0) {
   // console.log(allProposals, "allProposals");
   setIsLoading(false);
   return { allProposals, totalCount: ids.length };
+}
+
+
+export async function getBeraProposals(data) {
+  const { status, first, skip } = data;
+  try {
+    let proposals = [];
+
+      const client = new ApolloClient({
+        uri: `${process.env.NEXT_PUBLIC_NEW_GRAPH_ENDPOINT}`,
+        cache: new InMemoryCache(),
+      });
+
+      const claimsQuery = gql`
+        query proposals($status: Int, $first: Int, $skip: Int) {
+          proposals(
+            first: $first
+            skip: $skip
+            orderBy: submitTime
+            orderDirection: desc
+            where: { status: $status }
+          ) {
+            content
+            id
+            status
+            proposer
+            submitTime
+          }
+        }
+      `;
+      const { data } = await client.query({
+        query: claimsQuery,
+        variables: {
+          first: first,
+          skip: skip,
+          status: status,
+        },
+      });
+      proposals = data;
+    console.log(proposals,"proposals")
+    return {...data};
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
 }

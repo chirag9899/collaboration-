@@ -58,7 +58,8 @@ const DateWrapper = styled.div`
   z-index: 1;
   right: 0;
   padding: 24px;
-  background: ${bg_white};
+  /* background: ${bg_white}; */
+  background-color: var(--background-3);
   box-shadow: 0px 4px 31px rgba(26, 33, 44, 0.06),
     0px 0.751293px 8px rgba(26, 33, 44, 0.04);
 
@@ -102,8 +103,8 @@ const DateWrapper = styled.div`
     justify-content: center;
     border-radius: 0;
     margin: 0 !important;
-    :hover {
-      background: var(--plum);
+    &:hover {
+      background: var(--gray-1);
     }
   }
 
@@ -113,7 +114,7 @@ const DateWrapper = styled.div`
   }
 
   .react-datepicker__day--selected {
-    background: var(--peach);
+    background: var(--yellow-1);
   }
 
   .react-datepicker__day--outside-month {
