@@ -100,7 +100,7 @@ const TransferSpaceModal = ({
         setIsLoading(false);
         closeModal();
         router.push("/");
-        dispatch(newSuccessToast("Successfully space transfered"));
+        dispatch(newSuccessToast("Space transfer completed!"));
       }
     } catch (error) {
       setIsLoading(false);
