@@ -12,6 +12,7 @@ export const networks = Object.freeze({
   moonbeam: "moonbeam",
   moonriver: "moonriver",
   taiko: "taiko",
+  "taiko-mainnet": "taiko-mainnet",
   linea: "linea",
   blast: "blast",
   berachain: "berachain",
