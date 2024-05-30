@@ -9,7 +9,7 @@ import {
   ModalWrapper,
 } from "./styled";
 import Image from "next/image";
-import { SectionTitle } from "../styled/sectionTitle";
+import { SectionTitle, WarningTitle } from "../styled/sectionTitle";
 import Input from "../Input";
 import validate from "bitcoin-address-validation";
 import { request, AddressPurpose } from "@sats-connect/core";
@@ -126,6 +126,15 @@ const TransferSpaceModal = ({
           </CloseBar>
         </HeadWrapper>
         <ModalBodyWrapper>
+          <WarningTitle>
+            <span>&#9888;</span>{" "}
+            <h5>
+              Before transferring control of the space to a new address, ensure
+              that you trust this address. Signing a message will give the new
+              address full control over the space. Proceed with caution!
+            </h5>
+          </WarningTitle>
+
           <InputWrapper>
             <SectionTitle>Transfer To</SectionTitle>
             <Input
@@ -151,7 +160,7 @@ const TransferSpaceModal = ({
               className="button modal_primary_btn"
               onClick={closeModal}
             >
-              Abort
+              Cancel
             </Button>
           </ActionsWrapper>
         </ModalBodyWrapper>
