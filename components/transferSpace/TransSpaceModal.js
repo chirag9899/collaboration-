@@ -11,7 +11,7 @@ import {
   ModalWrapper,
 } from "./styled";
 import Image from "next/image";
-import { SectionTitle } from "../styled/sectionTitle";
+import { SectionTitle, WarningTitle } from "../styled/sectionTitle";
 import Input from "../Input";
 import validate from "bitcoin-address-validation";
 import { request, AddressPurpose } from "@sats-connect/core";
@@ -22,6 +22,8 @@ import { loginAddressSelector } from "store/reducers/accountSlice";
 import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import nextApi from "services/nextApi";
 import { useRouter } from "next/router";
+import Confirmation from "../confirmationModal";
+import Button from "../Button";
 
 const TransferSpaceModal = ({
   open,
@@ -33,6 +35,7 @@ const TransferSpaceModal = ({
   const [formData, setFormData] = useState({
     transferAddress: "",
   });
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const connectedWallet = useSelector(connectedWalletSelector);
   const address = useSelector(loginAddressSelector);
@@ -110,49 +113,68 @@ const TransferSpaceModal = ({
   };
 
   return (
-    <ModalWrapper open={open} footer={footer} closeBar={false}>
-      <HeadWrapper>
-        <StyledTitle>{title}</StyledTitle>
-        <CloseBar onClick={closeModal}>
-          <Image
-            src="/imgs/icons/close.svg"
-            alt="close"
-            width={24}
-            height={24}
-          />
-        </CloseBar>
-      </HeadWrapper>
-      <ModalBodyWrapper>
-        <InputWrapper>
-          <SectionTitle>Transfer To</SectionTitle>
-          <Input
-            type="text"
-            placeholder="Address"
-            value={transferAddress}
-            name="transferAddress"
-            onChange={onChangeHandler}
-          />
-        </InputWrapper>
-        <ActionsWrapper>
-          <BtnWrapper
-            disabled={transferAddress === ""}
-            primary
-            className="button button-modern"
-            onClick={onTransferSpace}
-            isLoading={isLoading}
-          >
-            Transfer
-          </BtnWrapper>
-          <BtnWrapper
-            primary
-            className="button button-modern"
-            onClick={closeModal}
-          >
-            Cancel
-          </BtnWrapper>
-        </ActionsWrapper>
-      </ModalBodyWrapper>
-    </ModalWrapper>
+    <>
+      <ModalWrapper open={open} footer={footer} closeBar={false}>
+        <HeadWrapper>
+          <StyledTitle>{title}</StyledTitle>
+          <CloseBar onClick={closeModal}>
+            <Image
+              src="/imgs/icons/close.svg"
+              alt="close"
+              width={24}
+              height={24}
+            />
+          </CloseBar>
+        </HeadWrapper>
+        <ModalBodyWrapper>
+          <WarningTitle>
+            <span>&#9888;</span>{" "}
+            <h5>
+              Before transferring control of the space to a new address, ensure
+              that you trust this address. Signing a message will give the new
+              address full control over the space. Proceed with caution!
+            </h5>
+          </WarningTitle>
+
+          <InputWrapper>
+            <SectionTitle>Transfer To</SectionTitle>
+            <Input
+              type="text"
+              placeholder="Address"
+              value={transferAddress}
+              name="transferAddress"
+              onChange={onChangeHandler}
+            />
+          </InputWrapper>
+          <ActionsWrapper>
+            <Button
+              disabled={transferAddress === ""}
+              primary
+              className="button modal_primary_btn"
+              onClick={() => setOpenConfirm(true)}
+              isLoading={isLoading}
+            >
+              Transfer
+            </Button>
+            <Button
+              primary
+              className="button modal_primary_btn"
+              onClick={closeModal}
+            >
+              Cancel
+            </Button>
+          </ActionsWrapper>
+        </ModalBodyWrapper>
+      </ModalWrapper>
+
+      <Confirmation
+        open={openConfirm}
+        closeModal={() => setOpenConfirm(false)}
+        message="The new address full control over the space. Are you sure to transfer?"
+        onConfirmation={onTransferSpace}
+        confirmBtnTitle="Proceed"
+      />
+    </>
   );
 };
 
