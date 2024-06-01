@@ -1,8 +1,3 @@
-import {
-  web3Enable,
-  isWeb3Injected,
-  web3FromAddress,
-} from "@polkadot/extension-dapp";
 import { stringToHex } from "@polkadot/util";
 import { ethers } from "ethers";
 import { validate } from "bitcoin-address-validation";
@@ -56,27 +51,28 @@ export const signMessageUniversal = async (text, address, connectedWallet) => {
       const result = await singByXverse(text, address);
       return result;
     }
-  } else {
-    if (!isWeb3Injected) {
-      throw new Error("Polkadot Extension is not installed");
-    }
+  } 
+  // else {
+  //   if (!isWeb3Injected) {
+  //     throw new Error("Polkadot Extension is not installed");
+  //   }
 
-    if (!address) {
-      throw new Error("Sign address is missing");
-    }
+  //   if (!address) {
+  //     throw new Error("Sign address is missing");
+  //   }
 
-    await web3Enable("dvote.ai");
-    const injector = await web3FromAddress(address);
+  //   await web3Enable("dvote.ai");
+  //   const injector = await web3FromAddress(address);
 
-    const data = stringToHex(text);
-    const result = await injector.signer.signRaw({
-      type: "bytes",
-      data,
-      address,
-    });
+  //   const data = stringToHex(text);
+  //   const result = await injector.signer.signRaw({
+  //     type: "bytes",
+  //     data,
+  //     address,
+  //   });
 
-    return result.signature;
-  }
+  //   return result.signature;
+  // }
 };
 
 export const signApiData = async (data, address, connectedWallet) => {
