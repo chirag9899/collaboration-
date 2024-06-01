@@ -33,7 +33,6 @@ const TransferSpaceModal = ({
   const [formData, setFormData] = useState({
     transferAddress: "",
   });
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openConfirm, setOpenConfirm] = useState(false);
   const connectedWallet = useSelector(connectedWalletSelector);
