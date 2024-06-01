@@ -78,7 +78,7 @@ export default function Index({
   }, [address, dispatch]);
 
   const desc =
-    "One of the governance products powered by dVote";
+    "A public good gas-less governance infra for Runes, ordinals and BRC-20.";
   return (
     <>
       <Seo desc={desc} />
