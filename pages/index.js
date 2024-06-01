@@ -76,7 +76,7 @@ export default function Index({
   }, [address, dispatch]);
 
   const desc =
-    "One of the governance products powered by dVote. It supports relay chains, para chains and assets on Statemine/Statemint, gas free and voting strategies customizable.";
+    "One of the governance products powered by dVote";
   return (
     <>
       <Seo desc={desc} />

@@ -5,8 +5,6 @@ import {
   HeadWrapper,
   ModalBodyWrapper,
   ActionsWrapper,
-  Text,
-  BtnWrapper,
   InputWrapper,
   ModalWrapper,
 } from "./styled";
@@ -37,6 +35,7 @@ const TransferSpaceModal = ({
   });
   const [openConfirm, setOpenConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
   const connectedWallet = useSelector(connectedWalletSelector);
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
@@ -55,6 +54,7 @@ const TransferSpaceModal = ({
   };
 
   const onTransferSpace = async () => {
+    setOpenConfirm(false);
     try {
       setIsLoading(true);
       let pubkey = address;
