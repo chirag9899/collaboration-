@@ -18,7 +18,7 @@ export default function SocialFields({
   setSocialFields,
   socialErrors,
 }) {
-  const { website,twitter, github, docs, forum } = socialfields;
+  const { website, twitter, github, docs, forum } = socialfields;
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     setSocialFields((props) => {

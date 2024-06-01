@@ -11,3 +11,13 @@ export const SectionTitle = styled.span`
   color: var(--neutral-1);
   margin-bottom: 16px;
 `;
+
+export const WarningTitle = styled.div`
+  margin-bottom: 16px;
+  > h5 {
+    display: inline;
+  }
+  > span {
+    color: var(--yellow);
+  }
+`;
