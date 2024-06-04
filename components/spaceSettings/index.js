@@ -2,8 +2,13 @@ import _ from "lodash";
 import React, { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { PanelWrapper, Wrapper, BtnsGroup } from "./styled";
+import { PanelWrapper, Wrapper, BtnsGroup, InputWrapper } from "./styled";
 import Button from "../Button";
+import { SectionTitle } from "../styled/sectionTitle";
+import Input from "../Input";
+import { ErrorMessage } from "../styled/errorMessage";
+import { useDispatch } from "react-redux";
+import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 
 const animatedComponents = makeAnimated();
 
@@ -17,6 +22,7 @@ const customStyles = {
   menu: (provided) => ({
     ...provided,
     backgroundColor: "var(--background-0)",
+    zIndex: 5,
   }),
   multiValue: (provided) => ({
     ...provided,
@@ -47,47 +53,95 @@ const customStyles = {
   }),
   input: (provided) => ({
     ...provided,
-    color: "var(--white)",
+    color: "var(--white) !importent",
   }),
 };
 
 const SpaceSettings = ({ allSpaces }) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [selectedMultiOptions, setSelectedMultiOptions] = useState(null);
+  const [selectedSingleOption, setSelectedSingleOption] = useState(null);
+  const [token, setToken] = useState({
+    singleToken: null,
+    multiToken: null,
+  });
+  const [tokenErr, setTokenErr] = useState({
+    singleToken: "",
+    multiToken: "",
+  });
+  // const { singleTokenErr, multiTokenErr } = tokenErr;
 
-  const handleChange = (selectedOptions) => {
-    setSelectedOptions(selectedOptions);
-    console.log("Selected options:", selectedOptions);
+  const dispatch = useDispatch();
+
+  const { singleToken, multiToken } = token;
+  const ApiUrl = `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces`;
+
+  const handleOptionChange = (selectedOption, type) => {
+    if (type === "single") {
+      setSelectedSingleOption(selectedOption);
+    } else {
+      setSelectedMultiOptions(selectedOption);
+    }
   };
 
-  const hideSpaceHandler = async () => {
-    for (let i = 0; i < selectedOptions.length; i++) {
-      const spaceName = selectedOptions[i].name;
+  const hideSpaceHandler = async (type) => {
+    if (type === "single") {
+      const spaceName = selectedSingleOption?.name;
       try {
-        const { result, error } = await fetch(
-          `https://evm.dvote.ai/api/spaces/${spaceName}/hide/eech2iphooy0een9vaeziemplotva`,
-          { method: "POST" },
+        const response = await fetch(
+          `${ApiUrl}/${spaceName}/hide/${singleToken}`,
         );
-        if (result) {
-          console.log(result, "result");
+        if (response.status===200) {
+          dispatch(newSuccessToast(`${spaceName} space hide successfully`));
         }
       } catch (error) {
-        console.log(error, "error here");
+        newErrorToast(`Something wrong!`);
+      }
+    } else {
+      for (let i = 0; i < selectedMultiOptions.length; i++) {
+        const spaceName = selectedMultiOptions[i]?.name;
+        try {
+          const response = await fetch(
+            `${ApiUrl}/${spaceName}/hide/${multiToken}`,
+          );
+          if (response.status===200) {
+            dispatch(
+              newSuccessToast(`${spaceName} space hide successfully`),
+            );
+          }
+        } catch (error) {
+          newErrorToast(`Something wrong!`);
+        }
       }
     }
   };
-  const showSpaceHandler = async () => {
-    for (let i = 0; i < selectedOptions.length; i++) {
-      const spaceName = selectedOptions[i].name;
+  const showSpaceHandler = async (type) => {
+    if (type === "single") {
+      const spaceName = selectedSingleOption.name;
       try {
-        const { result, error } = await fetch(
-          `https://evm.dvote.ai/api/spaces/${spaceName}/show/eech2iphooy0een9vaeziemplotva`,
-          { method: "POST" },
+        const response = await fetch(
+          `${ApiUrl}/${spaceName}/show/${singleToken}`,
         );
-        if (result) {
-          console.log(result, "result");
+        if (response.status===200) {
+          dispatch(newSuccessToast(`${spaceName} space show successfully`));
         }
       } catch (error) {
-        console.log(error, "error here");
+        newErrorToast(`Something wrong!`);
+      }
+    } else {
+      for (let i = 0; i < selectedMultiOptions.length; i++) {
+        const spaceName = selectedMultiOptions[i]?.name;
+        try {
+          const response = await fetch(
+            `${ApiUrl}/${spaceName}/show/${multiToken}`,
+          );
+          if (response.status===200) {
+            dispatch(
+              newSuccessToast(`${spaceName} space show successfully`),
+            );
+          }
+        } catch (error) {
+          newErrorToast(`Something wrong!`);
+        }
       }
     }
   };
@@ -105,46 +159,119 @@ const SpaceSettings = ({ allSpaces }) => {
     (item) => !item.space.verified,
   );
 
-  const renderTasteFilters = () => (
-    <div className="taste-filters">
-      {selectedOptions.map((selectedTaste) => (
-        <span key={selectedTaste} className="taste-filter">
-          {selectedTaste.label}
-          <button
-            onClick={() =>
-              setSelectedOptions(
-                selectedOptions.filter((t) => t !== selectedTaste),
-              )
-            }
-          >
-            x
-          </button>
-        </span>
-      ))}
-    </div>
-  );
+  // const renderTasteFilters = () => (
+  //   <div className="taste-filters">
+  //     {selectedOptions.map((selectedTaste) => (
+  //       <span key={selectedTaste} className="taste-filter">
+  //         {selectedTaste.label}
+  //         <button
+  //           onClick={() =>
+  //             setSelectedOptions(
+  //               selectedOptions.filter((t) => t !== selectedTaste),
+  //             )
+  //           }
+  //         >
+  //           x
+  //         </button>
+  //       </span>
+  //     ))}
+  //   </div>
+  // );
+
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setToken((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
   return (
     <Wrapper>
-      <PanelWrapper>
+      <PanelWrapper head={<h3>Single Space Settings</h3>}>
+        <InputWrapper>
+          <SectionTitle>Token address</SectionTitle>
+          <Input
+            type="text"
+            placeholder="Enter seceret token"
+            value={singleToken}
+            name="singleToken"
+            onChange={onChangeHandler}
+          />
+          {/* {singleTokenErr && <ErrorMessage>{singleTokenErr}</ErrorMessage>} */}
+        </InputWrapper>
+
+        <Select
+          closeMenuOnSelect={false}
+          components={animatedComponents}
+          options={options}
+          styles={customStyles}
+          onChange={(value) => handleOptionChange(value, "single")}
+        />
+
+        {/* {renderTasteFilters()} */}
+        <BtnsGroup>
+          <Button
+            disabled={singleToken === "" || !selectedSingleOption}
+            primary
+            onClick={() => hideSpaceHandler("single")}
+          >
+            Hide space
+          </Button>
+          <Button
+            disabled={singleToken === "" || !selectedSingleOption}
+            primary
+            onClick={() => showSpaceHandler("single")}
+          >
+            Show space
+          </Button>
+          {/* <Button primary onClick={verifySpaceHandler}>
+            Verify space
+          </Button> */}
+        </BtnsGroup>
+      </PanelWrapper>
+      <PanelWrapper head={<h3>Multiple Spaces Settings</h3>}>
+        <InputWrapper>
+          <SectionTitle>Token address</SectionTitle>
+          <Input
+            type="text"
+            placeholder="Enter seceret token"
+            value={multiToken}
+            name="multiToken"
+            onChange={onChangeHandler}
+          />
+          {/* {multiTokenErr && <ErrorMessage>{multiTokenErr}</ErrorMessage>} */}
+        </InputWrapper>
+
         <Select
           closeMenuOnSelect={false}
           components={animatedComponents}
           isMulti
           options={options}
           styles={customStyles}
-          onChange={handleChange}
+          onChange={(value) => handleOptionChange(value, "multiple")}
         />
+
         {/* {renderTasteFilters()} */}
         <BtnsGroup>
-          <Button primary onClick={hideSpaceHandler}>
-            {selectedOptions.length > 1 ? "Hide all spaces" : "Hide space"}
+          <Button
+            disabled={multiToken === "" || !selectedMultiOptions}
+            primary
+            onClick={() => hideSpaceHandler("multiple")}
+          >
+            Hide all spaces
           </Button>
-          <Button primary onClick={showSpaceHandler}>
-            {selectedOptions.length > 1 ? "Show all spaces" : "Show space"}
+          <Button
+            disabled={multiToken === "" || !selectedMultiOptions}
+            primary
+            onClick={() => showSpaceHandler("multiple")}
+          >
+            Show all spaces
           </Button>
-          <Button primary onClick={verifySpaceHandler}>
-            {selectedOptions.length > 1 ? "Verify all spaces" : "Verify space"}
-          </Button>
+          {/* <Button primary onClick={verifySpaceHandler}>
+            Verify all spaces
+          </Button> */}
         </BtnsGroup>
       </PanelWrapper>
     </Wrapper>
