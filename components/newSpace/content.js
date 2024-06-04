@@ -96,8 +96,18 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
   const [proposalThreshold, setProposalThreshold] = useState("0");
   const [selectedOptions, setSelectedOptions] = useState(["balance-of"]);
   const options = [
-    { value: "balance-of", text: "balance-of" },
-    { value: "quadratic-balance-of", text: "quadratic-balance-of" },
+    {
+      value: "balance-of",
+      text: "balance-of",
+      description:
+        "This strategy returns the balance of the voter for a specific token.",
+    },
+    {
+      value: "quadratic-balance-of",
+      text: "quadratic-balance-of",
+      description:
+        "This strategy takes the square root of your voting power (token balance multiplied by voting weight).",
+    },
   ];
   const [prevContract, setPrevContract] = useState(null);
 
@@ -133,9 +143,9 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
         });
       setSelectedOptions(spaceDetails?.weightStrategy);
       let chain = chainMap.get(spaceDetails?.networks[0].network);
-      const isEvm = chain.chainType == 'evm';
-      const isBtc = chain.chainType == 'btc';
-      if (isBtc){
+      const isEvm = chain.chainType == "evm";
+      const isBtc = chain.chainType == "btc";
+      if (isBtc) {
         setPrevContract(spaceDetails?.assets[0]?.symbol);
       } else if (isEvm) {
         setPrevContract(spaceDetails?.assets[0]?.contract);
