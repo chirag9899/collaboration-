@@ -55,6 +55,7 @@
     "react-is": "^18.2.0",
     "react-mde": "^11.5.0",
     "react-redux": "^7.2.5",
+    "react-select": "^5.8.0",
     "sanitize-html": "^2.6.1",
     "sass": "^1.72.0",
     "sats-connect": "2.3.x",

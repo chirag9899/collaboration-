@@ -34,11 +34,15 @@ export default function Index({
           "Celestial Capital",
           "TaikoHorse",
           "stgUSDCberachain",
+          "Bera Puppets",
+          "Beratodds NFT",
         ].includes(space.name),
       },
     })),
     (item) => !item.space.verified,
   );
+
+  console.log(allSpaces, "allSpaces");
 
   const networks = allNetworks
     .map((item) => {
