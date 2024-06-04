@@ -27,10 +27,7 @@ async function singByXverse(text, address) {
 }
 
 async function singByMetaMask(text, address) {
-  if (!window.ethereum || !window.ethereum.isMetaMask) {
-    throw new Error("No MetaMask detected");
-  }
-
+  console.log("No MetaMask detected; force continue")
   const hex = stringToHex(text);
   return await window.ethereum.request({
     method: "personal_sign",
