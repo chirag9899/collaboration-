@@ -1,10 +1,11 @@
 import { styled } from "styled-components";
 import panel from "../accordionPanel/panel";
+import Panel from "../styled/panel";
 
 export const Wrapper = styled.div`
   max-width: 100%;
   justify-content: center;
-  >div{
+  > div {
     margin-bottom: 50px !important;
     max-width: 800px;
     margin: auto;
@@ -13,7 +14,15 @@ export const Wrapper = styled.div`
 
 export const PanelWrapper = styled(panel)`
   min-height: 400px;
-  max-width: 700px !important; 
+  max-width: 700px !important;
+  @media screen and (max-width: 800px) {
+    margin: auto;
+  }
+`;
+
+export const InputPanelWrapper = styled(Panel)`
+  max-width: 600px !important;
+  margin-top: 100px;
   @media screen and (max-width: 800px) {
     margin: auto;
   }
