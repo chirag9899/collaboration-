@@ -9,13 +9,18 @@ import {
   setAvailableNetworks,
 } from "store/reducers/accountSlice";
 import _ from "lodash";
-import SpaceSettings from "@/components/spaceSettings";
+import dynamic from "next/dynamic";
+// import SpaceSettings from "@/components/spaceSettings";
+const SpaceSettings = dynamic(() => import("@/components/spaceSettings"), {
+  ssr: false,
+});
 
 export default function Index({ spaces, allNetworks }) {
   const allSpaces = _.sortBy(
     Object.entries(spaces).map(([name, space]) => ({
       name,
       space,
+     ...space,
     })),
     (item) => !item.space.verified,
   );
