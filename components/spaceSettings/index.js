@@ -1,8 +1,14 @@
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { PanelWrapper, Wrapper, BtnsGroup, InputWrapper } from "./styled";
+import {
+  PanelWrapper,
+  Wrapper,
+  BtnsGroup,
+  InputWrapper,
+  InputPanelWrapper,
+} from "./styled";
 import Button from "../Button";
 import { SectionTitle } from "../styled/sectionTitle";
 import Input from "../Input";
@@ -18,6 +24,12 @@ const customStyles = {
     backgroundColor: "var(--background-0)",
     color: "var(--white)",
     cursor: "pointer",
+    borderColor: "var(--white)",
+    outline: "none",
+    boxShadow: "none",
+    ":hover": {
+      borderColor: "var(--white)",
+    },
   }),
   menu: (provided) => ({
     ...provided,
@@ -44,14 +56,18 @@ const customStyles = {
     ...provided,
     backgroundColor:
       state.isSelected || state.isFocused
-        ? "var(--background-0)"
+        ? "var(--peach)"
         : "var(--background)",
     cursor: "pointer",
     "&:hover": {
-      backgroundColor: "var(--background-0)",
+      backgroundColor: "var(--plum)",
     },
   }),
   input: (provided) => ({
+    ...provided,
+    color: "var(--white) !importent",
+  }),
+  singleValue: (provided, state) => ({
     ...provided,
     color: "var(--white) !importent",
   }),
@@ -60,20 +76,18 @@ const customStyles = {
 const SpaceSettings = ({ allSpaces }) => {
   const [selectedMultiOptions, setSelectedMultiOptions] = useState(null);
   const [selectedSingleOption, setSelectedSingleOption] = useState(null);
-  const [token, setToken] = useState({
-    singleToken: null,
-    multiToken: null,
-  });
-  const [tokenErr, setTokenErr] = useState({
-    singleToken: "",
-    multiToken: "",
-  });
-  // const { singleTokenErr, multiTokenErr } = tokenErr;
+  const [token, setToken] = useState(null);
+  const [secretToken, setSecretToken] = useState(null);
+  const [tokenErr, setTokenErr] = useState();
 
   const dispatch = useDispatch();
 
-  const { singleToken, multiToken } = token;
   const ApiUrl = `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces`;
+
+  useEffect(() => {
+    const sessionToken = sessionStorage.getItem("secret_token");
+    setSecretToken(sessionToken);
+  }, [sessionStorage]);
 
   const handleOptionChange = (selectedOption, type) => {
     if (type === "single") {
@@ -85,12 +99,12 @@ const SpaceSettings = ({ allSpaces }) => {
 
   const hideSpaceHandler = async (type) => {
     if (type === "single") {
-      const spaceName = selectedSingleOption?.name;
+      const spaceName = selectedSingleOption?.id;
       try {
         const response = await fetch(
-          `${ApiUrl}/${spaceName}/hide/${singleToken}`,
+          `${ApiUrl}/${spaceName}/hide/${secretToken}`,
         );
-        if (response.status===200) {
+        if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space hide successfully`));
         }
       } catch (error) {
@@ -98,15 +112,13 @@ const SpaceSettings = ({ allSpaces }) => {
       }
     } else {
       for (let i = 0; i < selectedMultiOptions.length; i++) {
-        const spaceName = selectedMultiOptions[i]?.name;
+        const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${ApiUrl}/${spaceName}/hide/${multiToken}`,
+            `${ApiUrl}/${spaceName}/hide/${secretToken}`,
           );
-          if (response.status===200) {
-            dispatch(
-              newSuccessToast(`${spaceName} space hide successfully`),
-            );
+          if (response.status === 200) {
+            dispatch(newSuccessToast(`${spaceName} space hide successfully`));
           }
         } catch (error) {
           newErrorToast(`Something wrong!`);
@@ -116,12 +128,12 @@ const SpaceSettings = ({ allSpaces }) => {
   };
   const showSpaceHandler = async (type) => {
     if (type === "single") {
-      const spaceName = selectedSingleOption.name;
+      const spaceName = selectedSingleOption.id;
       try {
         const response = await fetch(
-          `${ApiUrl}/${spaceName}/show/${singleToken}`,
+          `${ApiUrl}/${spaceName}/show/${secretToken}`,
         );
-        if (response.status===200) {
+        if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space show successfully`));
         }
       } catch (error) {
@@ -129,15 +141,13 @@ const SpaceSettings = ({ allSpaces }) => {
       }
     } else {
       for (let i = 0; i < selectedMultiOptions.length; i++) {
-        const spaceName = selectedMultiOptions[i]?.name;
+        const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${ApiUrl}/${spaceName}/show/${multiToken}`,
+            `${ApiUrl}/${spaceName}/show/${secretToken}`,
           );
-          if (response.status===200) {
-            dispatch(
-              newSuccessToast(`${spaceName} space show successfully`),
-            );
+          if (response.status === 200) {
+            dispatch(newSuccessToast(`${spaceName} space show successfully`));
           }
         } catch (error) {
           newErrorToast(`Something wrong!`);
@@ -149,133 +159,135 @@ const SpaceSettings = ({ allSpaces }) => {
     console.log("verifyspace handler");
   };
 
-  const options = _.sortBy(
+  const onSubmitToken = () => {
+    if (!token) {
+      setTokenErr("Please enter token first");
+    } else {
+      setTokenErr(null);
+      sessionStorage.setItem("secret_token", token);
+      setSecretToken(sessionStorage.getItem("secret_token"));
+    }
+  };
+
+  const singleOptions = _.sortBy(
     Object.entries(allSpaces).map(([name, space]) => ({
       value: space.name,
-      label: space.name,
+      label: space.id ? space.name + " - " + space.id : space.name,
       id: space._id,
       ...space,
     })),
     (item) => !item.space.verified,
   );
 
-  // const renderTasteFilters = () => (
-  //   <div className="taste-filters">
-  //     {selectedOptions.map((selectedTaste) => (
-  //       <span key={selectedTaste} className="taste-filter">
-  //         {selectedTaste.label}
-  //         <button
-  //           onClick={() =>
-  //             setSelectedOptions(
-  //               selectedOptions.filter((t) => t !== selectedTaste),
-  //             )
-  //           }
-  //         >
-  //           x
-  //         </button>
-  //       </span>
-  //     ))}
-  //   </div>
-  // );
+  const multipleOptions = _.sortBy(
+    Object.entries(allSpaces).map(([name, space]) => ({
+      value: space.name,
+      label: space.description
+        ? space.name + " - " + space.description
+        : space.name,
+      id: space._id,
+      ...space,
+    })),
+    (item) => !item.space.verified,
+  );
 
   const onChangeHandler = (e) => {
-    const { name, value } = e.target;
-    setToken((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    const { value } = e.target;
+    setToken(value);
   };
-  return (
-    <Wrapper>
-      <PanelWrapper head={<h3>Single Space Settings</h3>}>
-        <InputWrapper>
-          <SectionTitle>Token address</SectionTitle>
-          <Input
-            type="text"
-            placeholder="Enter seceret token"
-            value={singleToken}
-            name="singleToken"
-            onChange={onChangeHandler}
+
+  if (!secretToken) {
+    return (
+      <Wrapper>
+        <InputPanelWrapper>
+          <InputWrapper>
+            <SectionTitle>Token address</SectionTitle>
+            <Input
+              type="text"
+              placeholder="Enter seceret token"
+              value={token}
+              name="singleToken"
+              onChange={onChangeHandler}
+            />
+            {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
+          </InputWrapper>
+
+          <BtnsGroup>
+            <Button primary onClick={onSubmitToken}>
+              Submit
+            </Button>
+          </BtnsGroup>
+        </InputPanelWrapper>
+      </Wrapper>
+    );
+  } else {
+    return (
+      <Wrapper>
+        <PanelWrapper head={<h3>Single Space Settings</h3>}>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isClearable
+            options={singleOptions}
+            styles={customStyles}
+            placeholder="Select space"
+            onChange={(value) => handleOptionChange(value, "single")}
           />
-          {/* {singleTokenErr && <ErrorMessage>{singleTokenErr}</ErrorMessage>} */}
-        </InputWrapper>
 
-        <Select
-          closeMenuOnSelect={false}
-          components={animatedComponents}
-          options={options}
-          styles={customStyles}
-          onChange={(value) => handleOptionChange(value, "single")}
-        />
-
-        {/* {renderTasteFilters()} */}
-        <BtnsGroup>
-          <Button
-            disabled={singleToken === "" || !selectedSingleOption}
-            primary
-            onClick={() => hideSpaceHandler("single")}
-          >
-            Hide space
-          </Button>
-          <Button
-            disabled={singleToken === "" || !selectedSingleOption}
-            primary
-            onClick={() => showSpaceHandler("single")}
-          >
-            Show space
-          </Button>
-          {/* <Button primary onClick={verifySpaceHandler}>
+          {/* {renderTasteFilters()} */}
+          <BtnsGroup>
+            <Button
+              disabled={!selectedSingleOption}
+              primary
+              onClick={() => hideSpaceHandler("single")}
+            >
+              Hide space
+            </Button>
+            <Button
+              disabled={!selectedSingleOption}
+              primary
+              onClick={() => showSpaceHandler("single")}
+            >
+              Show space
+            </Button>
+            {/* <Button primary onClick={verifySpaceHandler}>
             Verify space
           </Button> */}
-        </BtnsGroup>
-      </PanelWrapper>
-      <PanelWrapper head={<h3>Multiple Spaces Settings</h3>}>
-        <InputWrapper>
-          <SectionTitle>Token address</SectionTitle>
-          <Input
-            type="text"
-            placeholder="Enter seceret token"
-            value={multiToken}
-            name="multiToken"
-            onChange={onChangeHandler}
+          </BtnsGroup>
+        </PanelWrapper>
+        <PanelWrapper head={<h3>Multiple Spaces Settings</h3>}>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            placeholder="Select multiple spaces"
+            options={multipleOptions}
+            styles={customStyles}
+            onChange={(value) => handleOptionChange(value, "multiple")}
           />
-          {/* {multiTokenErr && <ErrorMessage>{multiTokenErr}</ErrorMessage>} */}
-        </InputWrapper>
-
-        <Select
-          closeMenuOnSelect={false}
-          components={animatedComponents}
-          isMulti
-          options={options}
-          styles={customStyles}
-          onChange={(value) => handleOptionChange(value, "multiple")}
-        />
-
-        {/* {renderTasteFilters()} */}
-        <BtnsGroup>
-          <Button
-            disabled={multiToken === "" || !selectedMultiOptions}
-            primary
-            onClick={() => hideSpaceHandler("multiple")}
-          >
-            Hide all spaces
-          </Button>
-          <Button
-            disabled={multiToken === "" || !selectedMultiOptions}
-            primary
-            onClick={() => showSpaceHandler("multiple")}
-          >
-            Show all spaces
-          </Button>
-          {/* <Button primary onClick={verifySpaceHandler}>
+          <BtnsGroup>
+            <Button
+              disabled={!selectedMultiOptions}
+              primary
+              onClick={() => hideSpaceHandler("multiple")}
+            >
+              Hide all spaces
+            </Button>
+            <Button
+              disabled={!selectedMultiOptions}
+              primary
+              onClick={() => showSpaceHandler("multiple")}
+            >
+              Show all spaces
+            </Button>
+            {/* <Button primary onClick={verifySpaceHandler}>
             Verify all spaces
           </Button> */}
-        </BtnsGroup>
-      </PanelWrapper>
-    </Wrapper>
-  );
+          </BtnsGroup>
+        </PanelWrapper>
+      </Wrapper>
+    );
+  }
 };
 
 export default SpaceSettings;
