@@ -220,6 +220,8 @@ export function getExplorerUrl(network) {
       return `https://moonscan.io`;
     case "taiko":
       return `https://explorer.katla.taiko.xyz`;
+    case "taiko-mainnet":
+      return `https://taikoscan.io`;
     case "linea":
       return `https://lineascan.build`;
     case "blast":

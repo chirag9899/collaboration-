@@ -29,12 +29,12 @@ export default function Index({
     })),
     (item) => !item.space.verified
   );
-  const networks = allNetworks
-    .map((item) => ({
+  const networks = allNetworks.map((item) => {
+    return {
       name: item.network,
       ...item,
-    }))
-    .filter((item) => item.network !== "linea" && item.network !== "blast");
+    };
+  });
   const [userSpaces, setUsersSpaces] = useState([]);
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
