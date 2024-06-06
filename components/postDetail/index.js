@@ -56,6 +56,8 @@ export default function PostDetail({
   myVote,
   isSafari = false,
 }) {
+  const showIncentiveCard =
+    process.env.NEXT_PUBLIC_SHOW_INCENTIVE_CARD === "true";
   return (
     <Wrapper>
       <MainWrapper>
@@ -72,7 +74,7 @@ export default function PostDetail({
       <SiderWrapper>
         <PostInfo data={data} space={space} />
         <PostResults data={data} voteStatus={voteStatus} space={space} />
-        {/* <PostIncentive data={data} space={space}/> */}
+        {showIncentiveCard && <PostIncentive data={data} space={space} />}
       </SiderWrapper>
     </Wrapper>
   );
