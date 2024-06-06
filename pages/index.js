@@ -24,30 +24,16 @@ export default function Index({
     Object.entries(spaces).map(([name, space]) => ({
       name,
       space: {
-        ...space,
-        verified: [
-          "runestone",
-          "runestone collection",
-          "pfpepe",
-          "Ethereal Nexus",
-          "Celestial Capital ",
-          "Celestial Capital",
-          "TaikoHorse",
-          "stgUSDCberachain",
-        ].includes(space.name),
+        ...space
       },
     })),
-    (item) => !item.space.verified,
+    (item) => !item.space.verified
   );
-
   const networks = allNetworks
-    .map((item) => {
-      return {
-        name: item.network,
-        ...item,
-      };
-    })
-    .filter((item) => item.network !== "linea" && item.network !== "blast");
+    .map((item) => ({
+      name: item.network,
+      ...item,
+    }))
   const [userSpaces, setUsersSpaces] = useState([]);
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
