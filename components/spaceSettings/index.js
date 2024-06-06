@@ -65,15 +65,16 @@ const customStyles = {
   }),
   input: (provided) => ({
     ...provided,
-    color: "var(--white) !importent",
+    color: "var(--white) !important",
   }),
   singleValue: (provided, state) => ({
     ...provided,
-    color: "var(--white) !importent",
+    color: "var(--white) !important",
   }),
 };
 
-const SpaceSettings = ({ allSpaces }) => {
+const SpaceSettings = () => {
+  const [spaces, setSpaces] = useState([]);
   const [selectedMultiOptions, setSelectedMultiOptions] = useState(null);
   const [selectedSingleOption, setSelectedSingleOption] = useState(null);
   const [token, setToken] = useState(null);
@@ -82,12 +83,27 @@ const SpaceSettings = ({ allSpaces }) => {
 
   const dispatch = useDispatch();
 
-  const ApiUrl = `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces`;
-
   useEffect(() => {
     const sessionToken = sessionStorage.getItem("secret_token");
     setSecretToken(sessionToken);
-  }, [sessionStorage]);
+    fetchSpaces();
+  }, []);
+
+  const fetchSpaces = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces-without-filter`);
+      const data = await response.json();
+      if (typeof data === 'object') {
+        const spacesArray = Object.keys(data).map(key => data[key]);
+        setSpaces(spacesArray);
+      } else {
+        console.error("Unexpected response data:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching spaces:", error);
+    }
+  };
+
 
   const handleOptionChange = (selectedOption, type) => {
     if (type === "single") {
@@ -102,66 +118,124 @@ const SpaceSettings = ({ allSpaces }) => {
       const spaceName = selectedSingleOption?.id;
       try {
         const response = await fetch(
-          `${ApiUrl}/${spaceName}/hide/${secretToken}`,
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`
         );
         if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space hide successfully`));
         }
       } catch (error) {
-        newErrorToast(`Something wrong!`);
+        dispatch(newErrorToast(`Something wrong!`));
       }
     } else {
       for (let i = 0; i < selectedMultiOptions.length; i++) {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${ApiUrl}/${spaceName}/hide/${secretToken}`,
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`
           );
           if (response.status === 200) {
             dispatch(newSuccessToast(`${spaceName} space hide successfully`));
           }
         } catch (error) {
-          newErrorToast(`Something wrong!`);
+          dispatch(newErrorToast(`Something wrong!`));
         }
       }
     }
   };
+
   const showSpaceHandler = async (type) => {
     if (type === "single") {
       const spaceName = selectedSingleOption.id;
       try {
         const response = await fetch(
-          `${ApiUrl}/${spaceName}/show/${secretToken}`,
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`
         );
         if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space show successfully`));
         }
       } catch (error) {
-        newErrorToast(`Something wrong!`);
+        dispatch(newErrorToast(`Something wrong!`));
       }
     } else {
       for (let i = 0; i < selectedMultiOptions.length; i++) {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${ApiUrl}/${spaceName}/show/${secretToken}`,
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`
           );
           if (response.status === 200) {
             dispatch(newSuccessToast(`${spaceName} space show successfully`));
           }
         } catch (error) {
-          newErrorToast(`Something wrong!`);
+          dispatch(newErrorToast(`Something wrong!`));
         }
       }
     }
   };
-  const verifySpaceHandler = () => {
-    console.log("verifyspace handler");
+
+  const verifySpaceHandler = async (type) => {
+    if (type === "single") {
+      const spaceName = selectedSingleOption?.id;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`
+        );
+        if (response.status === 200) {
+          dispatch(newSuccessToast(`${spaceName} space verified successfully`));
+        }
+      } catch (error) {
+        dispatch(newErrorToast(`Something wrong!`));
+      }
+    } else {
+      for (let i = 0; i < selectedMultiOptions.length; i++) {
+        const spaceName = selectedMultiOptions[i]?.id;
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`
+          );
+          if (response.status === 200) {
+            dispatch(newSuccessToast(`${spaceName} space verified successfully`));
+          }
+        } catch (error) {
+          dispatch(newErrorToast(`Something wrong!`));
+        }
+      }
+    }
+  };
+
+  const unverifySpaceHandler = async (type) => {
+    if (type === "single") {
+      const spaceName = selectedSingleOption?.id;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`
+        );
+        if (response.status === 200) {
+          dispatch(newSuccessToast(`${spaceName} space unverified successfully`));
+        }
+      } catch (error) {
+        dispatch(newErrorToast(`Something wrong!`));
+      }
+    } else {
+      for (let i = 0; i < selectedMultiOptions.length; i++) {
+        const spaceName = selectedMultiOptions[i]?.id;
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`
+          );
+          if (response.status === 200) {
+            dispatch(newSuccessToast(`${spaceName} space unverified successfully`));
+          }
+        } catch (error) {
+          dispatch(newErrorToast(`Something wrong!`));
+        }
+      }
+    }
   };
 
   const onSubmitToken = () => {
     if (!token) {
-      setTokenErr("Please enter token first");
+      setTokenErr("Please enter secret token first");
     } else {
       setTokenErr(null);
       sessionStorage.setItem("secret_token", token);
@@ -170,25 +244,29 @@ const SpaceSettings = ({ allSpaces }) => {
   };
 
   const singleOptions = _.sortBy(
-    Object.entries(allSpaces).map(([name, space]) => ({
-      value: space.name,
-      label: space.id ? space.name + " - " + space.id : space.name,
-      id: space._id,
-      ...space,
-    })),
-    (item) => !item.space.verified,
+    Array.isArray(spaces)
+      ? spaces.map((space) => ({
+        value: space.name,
+        label: space.id ? space.name + " - " + space.id : space.name,
+        id: space._id,
+        ...space,
+      }))
+      : [],
+    (item) => !item.verified
   );
 
   const multipleOptions = _.sortBy(
-    Object.entries(allSpaces).map(([name, space]) => ({
-      value: space.name,
-      label: space.description
-        ? space.name + " - " + space.description
-        : space.name,
-      id: space._id,
-      ...space,
-    })),
-    (item) => !item.space.verified,
+    Array.isArray(spaces)
+      ? spaces.map((space) => ({
+        value: space.name,
+        label: space.description
+          ? space.name + " - " + space.description
+          : space.name,
+        id: space._id,
+        ...space,
+      }))
+      : [],
+    (item) => !item.verified
   );
 
   const onChangeHandler = (e) => {
@@ -201,10 +279,11 @@ const SpaceSettings = ({ allSpaces }) => {
       <Wrapper>
         <InputPanelWrapper>
           <InputWrapper>
-            <SectionTitle>Token address</SectionTitle>
+            <SectionTitle>Secret Token</SectionTitle>
+            <p><b>Please keep the secret token confidential. If it is leaked, request a rotation immediately!</b></p>
             <Input
               type="text"
-              placeholder="Enter seceret token"
+              placeholder="Enter secret token"
               value={token}
               name="singleToken"
               onChange={onChangeHandler}
@@ -214,7 +293,7 @@ const SpaceSettings = ({ allSpaces }) => {
 
           <BtnsGroup>
             <Button primary onClick={onSubmitToken}>
-              Submit
+              Provide
             </Button>
           </BtnsGroup>
         </InputPanelWrapper>
@@ -223,39 +302,8 @@ const SpaceSettings = ({ allSpaces }) => {
   } else {
     return (
       <Wrapper>
-        <PanelWrapper head={<h3>Single Space Settings</h3>}>
-          <Select
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            isClearable
-            options={singleOptions}
-            styles={customStyles}
-            placeholder="Select space"
-            onChange={(value) => handleOptionChange(value, "single")}
-          />
-
-          {/* {renderTasteFilters()} */}
-          <BtnsGroup>
-            <Button
-              disabled={!selectedSingleOption}
-              primary
-              onClick={() => hideSpaceHandler("single")}
-            >
-              Hide space
-            </Button>
-            <Button
-              disabled={!selectedSingleOption}
-              primary
-              onClick={() => showSpaceHandler("single")}
-            >
-              Show space
-            </Button>
-            {/* <Button primary onClick={verifySpaceHandler}>
-            Verify space
-          </Button> */}
-          </BtnsGroup>
-        </PanelWrapper>
-        <PanelWrapper head={<h3>Multiple Spaces Settings</h3>}>
+        <PanelWrapper head={<h3>Hide Space</h3>}>
+          <p>Hidden space would be hidden from <b>All Spaces</b></p>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
@@ -271,19 +319,50 @@ const SpaceSettings = ({ allSpaces }) => {
               primary
               onClick={() => hideSpaceHandler("multiple")}
             >
-              Hide all spaces
+              Hide
             </Button>
             <Button
               disabled={!selectedMultiOptions}
               primary
               onClick={() => showSpaceHandler("multiple")}
             >
-              Show all spaces
+              Show
             </Button>
-            {/* <Button primary onClick={verifySpaceHandler}>
-            Verify all spaces
-          </Button> */}
           </BtnsGroup>
+        </PanelWrapper>
+        <PanelWrapper head={<h3>Verify Space</h3>}>
+          <p>Verified space would receive <b>verified checkmark</b></p>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            placeholder="Select multiple spaces"
+            options={multipleOptions}
+            styles={customStyles}
+            onChange={(value) => handleOptionChange(value, "multiple")}
+          />
+          <BtnsGroup>
+            <Button
+              disabled={!selectedMultiOptions}
+              primary
+              onClick={() => verifySpaceHandler("multiple")}
+            >
+              Verify
+            </Button>
+            <Button
+              disabled={!selectedMultiOptions}
+              primary
+              onClick={() => unverifySpaceHandler("multiple")}
+            >
+              Disable Verification
+            </Button>
+          </BtnsGroup>
+        </PanelWrapper>
+        <PanelWrapper head={<h3>Settings</h3>}>
+          <p><b>Refresh</b> space list manually</p>
+          <BtnsGroup><Button primary onClick={fetchSpaces}>
+            Refresh Spaces List
+          </Button></BtnsGroup>
         </PanelWrapper>
       </Wrapper>
     );
