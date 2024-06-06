@@ -23,17 +23,21 @@ const Option = styled.span`
   width: 100%;
   cursor: pointer;
 
-  .option_value{
+  .option_value {
     min-width: 160px;
   }
 
-  .option_desc{
+  .option_desc {
     font-size: 12px;
     font-weight: 400;
+    display: none;
   }
 
   &:hover {
     background-color: var(--plum);
+    .option_desc {
+      display: inline-block;
+    }
   }
 `;
 
@@ -56,7 +60,7 @@ export default function DropdownList({
     <Wrapper>
       {(options || []).map((option) => (
         <Option key={option.value} onClick={() => onSelectOption(option.value)}>
-         <span className="option_value"> {option.value}</span>
+          <span className="option_value"> {option.value}</span>
           {option?.description && (
             <span className="option_desc"> {` ${option.description}`}</span>
           )}
