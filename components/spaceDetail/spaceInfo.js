@@ -36,6 +36,11 @@ const Name = styled.div`
   ${p_18_semibold};
   color: var(--neutral-1);
   text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  >img{
+    margin-left: 5px !important;
+  }
 `;
 
 const SocialIconsWrapper = styled.div`
@@ -97,7 +102,7 @@ export default function SpaceInfo({
           {stringElipsis(space.name, 12)}
           {space.verified && (
             <Image
-              src="./imgs/icons/verified.svg"
+              src="/imgs/icons/verified.svg"
               alt="name"
               width={20}
               height={20}
