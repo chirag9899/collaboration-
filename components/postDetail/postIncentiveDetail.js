@@ -53,7 +53,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
-    router.push(`/space/${space.id}/rewards?id=beravote-${space._id}`);
+    router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
 
   const { addBeraVoteRewardAmount } = useEthApis();

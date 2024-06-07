@@ -192,7 +192,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
-    router.push(`/space/${space.id}/rewards?id=beravote-${space._id}`);
+    router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
   const address = useSelector(addressSelector);
 
