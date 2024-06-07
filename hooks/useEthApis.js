@@ -135,7 +135,7 @@ const useEthApis = () => {
         signer,
       );
       const tx = await bribeContract.add_reward_amount(
-        `bera-${id}`,
+        `beravote-${id}`,
         option,
         rewardToken,
         amount,
