@@ -26,6 +26,7 @@ import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "@/components/styles/colors";
 import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
+import VerifySpaceModal from "@/components/verifySpaceModal";
 // import Treasury from "@/components/treasury";
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -216,6 +217,21 @@ export default function List({
                       },
                     ]}
                   />
+                   {isEvm && address === space?.address&&!space.verified && (
+                    <>
+                      <ButtonWrapper onClick={openModal}>
+                        Verify Space
+                      </ButtonWrapper>
+                      {open && (
+                        <VerifySpaceModal
+                          title="Verify Space"
+                          open={open}
+                          closeModal={closeModal}
+                          spaceId={spaceId}
+                        />
+                      )}
+                    </>
+                  )} 
                   {isEvm && address === space?.address && (
                     <>
                       <ButtonWrapper onClick={openModal}>

@@ -49,7 +49,6 @@ const TextWrapper = styled(Text)`
 `;
 
 export default function PostIncentive({ data, voteStatus, space }) {
-  console.log(data, "data here");
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
   const onCheckRewards = () => {
@@ -60,7 +59,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
 
   const handleAddIncentive = async (value) => {
     await addBeraVoteRewardAmount(
-      data?._id,
+      data?.cid,
       value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
       value.incentiveAmount,
       value.tokenAddress,
@@ -90,6 +89,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"
           onSubmit={handleAddIncentive}
+          choices={data.choices}
         />
       )}
     </Panel>
