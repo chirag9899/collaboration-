@@ -63,8 +63,8 @@ export default function PostIncentive({ data, voteStatus, space }) {
       value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
       value.incentiveAmount,
       value.tokenAddress,
-      data?.startDate,
-      data?.endDate,
+      data?.startTime,
+      data?.endTime,
     );
   };
   return (
