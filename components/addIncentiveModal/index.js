@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
 
 const AddIncentive = ({
+  choices,
   open,
   closeModal,
   footer = false,
@@ -88,7 +89,7 @@ const AddIncentive = ({
   // const totalScores = BigInt(scores.yesCount) + BigInt(scores.abstainCount) + BigInt(scores.noCount) + BigInt(scores.noWithVetoCount);
 
   // let scoreBigInt = BigInt(option) == ALL_OPTIONS ? totalScores : getTotalScoresForOption(scores, option);
-  const options = ["Yes", "No", "No with veto", "Abstain"].map((item, i) => ({
+  const options = choices.map((item, i) => ({
     key: i,
     value: i + 1,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
