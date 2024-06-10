@@ -120,6 +120,16 @@ export default function Home({
     );
   });
 
+  const getAllSpaces = () => {
+    const filtredAllSpaces = allSpaces.filter((item) => {
+      return joinedSpaces.every(
+        (joinedItem) => joinedItem.space !== item.space.id,
+      );
+    });
+
+    return filtredAllSpaces;
+  };
+
   return (
     <Wrapper>
       <SearchBarWrapper>
@@ -161,7 +171,7 @@ export default function Home({
       )}
       {isSpaces && (
         <Space
-          spaces={allSpaces}
+          spaces={getAllSpaces()}
           limit={30}
           title="All Spaces"
           totalCount={spaces.length}
