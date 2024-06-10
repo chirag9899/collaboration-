@@ -5,6 +5,8 @@ import useDropDown from "hooks/useDropDown";
 // import Networks from "./network";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useSelector } from "react-redux";
+import { joinedSpacesSelector } from "store/reducers/accountSlice";
 // import UserSpaces from "./userSpaces";
 const Networks = dynamic(() => import("./network"), {
   ssr: true,
@@ -74,6 +76,7 @@ export default function Home({
   const [search, setSearch] = useState("");
   const [ownSpaces, setOwnSpaces] = useState(userSpaces);
 
+  const joinedSpaces = useSelector(joinedSpacesSelector);
   const {
     options,
     handleSelect,
@@ -111,6 +114,12 @@ export default function Home({
     setOwnSpaces(userSpaces);
   }, [userSpaces]);
 
+  const finalResult = allSpaces.filter((item) => {
+    return joinedSpaces.some(
+      (joinedItem) => joinedItem.space === item.space.id,
+    );
+  });
+
   return (
     <Wrapper>
       <SearchBarWrapper>
@@ -140,6 +149,14 @@ export default function Home({
           limit={30}
           title="Your Spaces"
           totalCount={userSpaces.length}
+        />
+      )}
+      {isSpaces && finalResult.length > 0 && (
+        <Space
+          spaces={finalResult}
+          limit={30}
+          title="Joined Spaces"
+          totalCount={finalResult.length}
         />
       )}
       {isSpaces && (

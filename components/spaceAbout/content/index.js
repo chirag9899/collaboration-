@@ -8,11 +8,18 @@ import {
   Wrapper,
 } from "./styled";
 
-
 const Content = ({ space }) => {
   return (
     <Wrapper>
       <PanelWrapper>
+        <Container>
+          <Title>Token Contract</Title>
+          {space?.networks?.[0]?.assets?.[0]?.contract ? (
+            <TextWrapper>{space.networks[0].assets[0].contract}</TextWrapper>
+          ) : (
+            <TextPlaceholder>No token found</TextPlaceholder>
+          )}
+        </Container>
         <Container>
           <Title>Owner</Title>
           {space?.address ? (
