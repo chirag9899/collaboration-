@@ -217,7 +217,7 @@ export default function List({
                       },
                     ]}
                   />
-                   {isEvm && address === space?.address&&!space.verified && (
+                   {/* {isEvm && address === space?.address &&!space.verified && (
                     <>
                       <ButtonWrapper onClick={openModal}>
                         Verify Space
@@ -231,7 +231,7 @@ export default function List({
                         />
                       )}
                     </>
-                  )} 
+                  )}  */}
                   {isEvm && address === space?.address && (
                     <>
                       <ButtonWrapper onClick={openModal}>
