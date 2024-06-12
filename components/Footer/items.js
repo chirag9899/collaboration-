@@ -3,22 +3,22 @@ const footerItems = [
     label: "Apps",
     items: [
       // { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
-      { name: "Dvote.ai", link: "https://dvote.ai/" },
+      { name: "Dvote.ai", link: "https://evm.dvote.ai/" },
     ],
   },
-  // {
-  //   label: "Resources",
-  //   items: [
-  //     {
-  //       name: "Documentation",
-  //       link: "https://quicksnap.gitbook.io/",
-  //     },
-  //     {
-  //       name: "Medium",
-  //       link: "https://medium.com/@quicksnap-finance",
-  //     },
-  //   ],
-  // },
+  {
+    label: "Resources",
+    items: [
+      {
+        name: "Documentation",
+        link: "https://quicksnap.gitbook.io/dvote-documentation",
+      },
+      {
+        name: "Medium",
+        link: "https://medium.com/@dvote_ai",
+      },
+    ],
+  },
   {
     label: "Social Links",
     items: [
@@ -36,13 +36,13 @@ const footerItems = [
       {
         name: "Twitter",
         icon: "twitter.svg",
-        link: "https://twitter.com/dvote_ai",
+        link: "https://x.com/dvote_btc",
       },
-      // {
-      //   name: "Discord",
-      //   icon: "discord.svg",
-      //   link: "https://discord.gg/HMYeVRJgDC",
-      // },
+      {
+        name: "Discord",
+        icon: "discord.svg",
+        link: "https://discord.gg/ncsnrWN9VG",
+      },
     ],
   },
   // {
