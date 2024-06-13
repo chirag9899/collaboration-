@@ -67,6 +67,7 @@ export const chains = [
   { id: '0xe708', chainName: 'linea', name: 'linea', chainType: 'evm', blockExplorerUrl: 'https://lineascan.build', rpc: 'https://linea.blockpi.network/v1/rpc/public', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x13e31', chainName: 'blast', name: 'blast', chainType: 'evm', blockExplorerUrl: 'https://blastscan.io', rpc: 'https://rpc.blast.io', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x138d5', chainName: 'berachain', name: 'Berachain Artio', chainType: 'evm', blockExplorerUrl: 'https://artio.beratrail.io', rpc: 'https://artio.rpc.berachain.com', nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 } },
+  { id: '0x138d4', chainName: 'berachain-b2', name: 'Berachain bArtio B2 Public Testnet', chainType: 'evm', blockExplorerUrl: 'https://bartio.beratrail.io', rpc: 'https://bitter-rough-owl.bera-bartio.quiknode.pro/4e2fcb78f8ac6cd2d04e471385cb875623f4c57a', nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 } },
   { id: '0x1068', chainName: 'merlin', name: 'Merlin Mainnet', chainType: 'evm', blockExplorerUrl: 'https://scan.merlinchain.io', rpc: 'https://rpc.merlinchain.io', nativeCurrency: { name: 'BTC', symbol: 'BTC', decimals: 18 } },
   { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
   { id: '2f7c', chainName: 'ordcollection', chainType: 'btc' },
@@ -76,10 +77,10 @@ export const chains = [
 export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, name: chain.name, id: chain.id, chainType: chain.chainType, rpc: chain.rpc, blockExplorerUrl: chain.blockExplorerUrl, nativeCurrency: chain.nativeCurrency }]));
 
 const walletToChains = {
-  'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
+  'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'berachain-b2'],
   'unisat': ['brc20', 'ordcollection', 'runes'],
   'xverse': ['brc20', 'ordcollection', 'runes'],
-  'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
+  'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'berachain-b2'],
 }
 
 export function supportedChains(selectedWallet) {
