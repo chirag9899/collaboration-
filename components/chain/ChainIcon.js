@@ -17,6 +17,7 @@ import { ReactComponent as Rococo } from "../../public/imgs/icons/chain/rococo.s
 import { ReactComponent as Taiko } from "../../public/imgs/icons/chain/taiko.svg";
 import { ReactComponent as Linea } from "../../public/imgs/icons/chain/linea.svg";
 import { ReactComponent as Berachain } from "../../public/imgs/icons/chain/berachain.svg";
+import { ReactComponent as BerachainB2 } from "../../public/imgs/icons/chain/berachain.svg";
 import { ReactComponent as Brc20 } from "../../public/imgs/icons/chain/bitcoin.svg";
 import { ReactComponent as Merlin } from "../../public/imgs/icons/chain/merlin.svg";
 import { ReactComponent as Runes } from "../../public/imgs/icons/chain/runes.svg";
@@ -65,6 +66,7 @@ const svgs = {
   Altair,
   Rococo,
   Taiko,
+  BerachainB2,
   Linea,
   Berachain,
   Brc20,
@@ -98,9 +100,15 @@ const pngs = {
 const resolvePngs = (png) => png.src ?? png;
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+const formatChainName = (name) => {
+  return name
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join('');
+};
 
 function ResolveChainIcon({ chainName = "", size = 24 }) {
-  chainName = capitalize(chainName);
+  chainName = formatChainName(chainName);
 
   let Icon = <Default viewBox="0 0 24 24" width={size} height={size} />;
 

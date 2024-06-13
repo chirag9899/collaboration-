@@ -226,6 +226,8 @@ export function getExplorerUrl(network) {
       return `https://blastexplorer.io`;
     case "berachain":
       return `https://artio.beratrail.io`;
+    case "berachain-b2":
+      return `https://bartio.beratrail.io`;
     case "merlin":
       return `https://scan.merlinchain.io`;
     case "statemine":

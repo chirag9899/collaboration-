@@ -2,12 +2,8 @@ const { Web3 } = require("web3");
 const web3 = {};
 const IGovernanceModuleBerachain = require("../abi/IGovernanceModuleBerachain.abi.json");
 const governanceAddress = "0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2";
-
-web3.berachain_artio = new Web3(
-  new Web3.providers.WebsocketProvider(
-    "wss://bold-warmhearted-breeze.bera-artio.quiknode.pro/9236cc4b1502f1ab816bd5b7bd4bff156c64cee2",
-  ),
-); // seems more stable
+const rpcUrl = "https://rpc.ankr.com/berachain_testnet";
+web3.berachain_artio = new Web3(new Web3.providers.HttpProvider(rpcUrl)); // removed leak or private provider
 
 export async function getBeraProposalFromContract(proposalId) {
   try {
