@@ -40,7 +40,7 @@ const useEthApis = () => {
         );
         const balance = await token.balanceOf(walletAddress);
         const decimals = await token.decimals();
-        const etherString = ethers.formatUnits(balance, decimals);
+        const etherString = ethers.utils.formatUnits(balance, decimals);
         setIsLoading(false);
         return { result: etherString, error: null };
       } else {
