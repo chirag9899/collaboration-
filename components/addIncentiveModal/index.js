@@ -118,7 +118,8 @@ const AddIncentive = ({
         tokenAddress,
         beravoteAddress,
       );
-      const price = await getBerachainSubgraphPrice(tokenAddress);
+      //const price = await getBerachainSubgraphPrice(tokenAddress);
+      const price = 1;
       setFormdata((prev) => {
         return {
           ...prev,
