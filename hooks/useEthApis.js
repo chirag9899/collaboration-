@@ -65,7 +65,8 @@ const useEthApis = () => {
           ethersProvider,
         );
         const allowance = await token.allowance(walletAddress, beravoteAddress);
-        const etherString = ethers.utils.formatEther(allowance);
+        const decimals = await token.decimals();
+        const etherString = ethers.utils.formatUnits(allowance, decimals);
         setIsLoading(false);
         return { result: etherString, error: null };
       } else {

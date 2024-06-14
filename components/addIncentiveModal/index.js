@@ -153,6 +153,8 @@ const AddIncentive = ({
       if (value > availableBal) {
         amountError = "Incentive amount is greater than balance.";
       }
+      console.log(value)
+      console.log(allowance)
       if (value > allowance) {
         amountError = "Incentive amount is greater than allowance.";
       }
