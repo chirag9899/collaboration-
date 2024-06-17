@@ -57,14 +57,11 @@ export default function SpacePostList({
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchProposals = async (from, to) => {
-    const { allProposals, totalCount } = await getBeraAllProposals(
-      from,
-      to,
-      setIsLoading,
-      status
-    );
-    setTotalCount(totalCount);
-    setData((prev) => [...prev, ...allProposals]);
+    const result = posts.slice(from,to)
+    setIsLoading(true)
+    setTotalCount(posts.length);
+    setData((prev) => [...prev, ...result]);
+    setIsLoading(false)
   };
 
   useEffect(() => {
@@ -90,7 +87,7 @@ export default function SpacePostList({
     <div>
       {title && <Title>{title}</Title>}
       <PostsWrapper>
-        {data.map((item, index) => (
+        {data?.map((item, index) => (
           <SpacePost
             postNum={index + 1}
             key={index}
@@ -112,7 +109,7 @@ export default function SpacePostList({
               Load Less
             </LoadButton>
           )}
-          {from < totalCount && (
+          {to < totalCount && (
             <LoadButton
               isLoading={isLoading}
               primary

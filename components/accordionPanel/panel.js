@@ -21,8 +21,8 @@ const Items = styled.article`
   margin-top: 16px;
 `;
 
-function AccordionPanel({ head, children, secondary = false }) {
-  const [fold, setFold] = useState(false);
+function AccordionPanel({ head, children, secondary = false, folded = false }) {
+  const [fold, setFold] = useState(folded);
 
   return (
     <Panel>

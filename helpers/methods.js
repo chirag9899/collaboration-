@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function getDecimals(amount) {
   if (amount % 1 != 0) return amount.toString().split(".")[1].length;
   return 0;
@@ -65,4 +67,8 @@ export async function getTokenInfo(tokenAddress) {
     console.log(ex);
     console.log("------------------------------------");
   }
+}
+
+export function getDateFromTimestamp(timestamp) {
+  return moment(+timestamp * 1000).format("MMM Do, YYYY HH:mm");
 }

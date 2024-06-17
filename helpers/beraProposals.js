@@ -5,7 +5,40 @@ const governanceAddress = "0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2";
 const rpcUrl = "https://rpc.ankr.com/berachain_testnet";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
+import { formatNumber } from "utils";
+import { getDateFromTimestamp } from "./methods";
 function getproposalStatus(
+  value,
+  isQuorumMet,
+  isVetoed,
+  isThresholdPassed,
+  depositEndTime,
+) {
+  const currentTime = new Date().getTime();
+  if (value === 0 || value === 1 || value === 2) {
+    if (isVetoed || depositEndTime < currentTime) {
+      return "closed";
+    }
+    if (!isQuorumMet || !isThresholdPassed) {
+      return "expired";
+    }
+    if (isQuorumMet || isThresholdPassed) {
+      return "passed";
+    }
+    return "active";
+  }
+  if (value === 3) {
+    return "passed";
+  }
+  if (value === 4) {
+    return "Rejected";
+  }
+  if (value === 5) {
+    return "closed";
+  }
+}
+
+function getBeraproposalStatus(
   value,
   isQuorumMet,
   isVetoed,
@@ -39,34 +72,36 @@ function getproposalStatus(
 async function getBerachainProposalsId(first = 1000, skip = 0, status = 0) {
   try {
     let query = gql`
-        query proposals($status:Int, $first: Int, $skip: Int){
-            proposals(
-                first: $first
-                skip: $skip
-                orderBy: submitTime
-                orderDirection: desc
-                where: {status: $status}) {
-                id
-            }
+      query proposals($status: Int, $first: Int, $skip: Int) {
+        proposals(
+          first: $first
+          skip: $skip
+          orderBy: submitTime
+          orderDirection: desc
+          where: { status: $status }
+        ) {
+          id
         }
+      }
     `;
-    if(status == 0){
+    if (status == 0) {
       query = gql`
-          query proposals($first: Int, $skip: Int){
-              proposals(
-                  first: $first
-                  skip: $skip
-                  orderBy: submitTime
-                  orderDirection: desc) {
-                  id
-              }
+        query proposals($first: Int, $skip: Int) {
+          proposals(
+            first: $first
+            skip: $skip
+            orderBy: submitTime
+            orderDirection: desc
+          ) {
+            id
           }
+        }
       `;
     }
     const variables = {
       first,
       skip,
-      status
+      status,
     };
     const graphQLClient = new ApolloClient({
       uri: "https://api.goldsky.com/api/public/project_clvfcu44n75u401sufb5v2s5o/subgraphs/governance/1.0.2/gn",
@@ -172,7 +207,8 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
       const percentageNoWithVeto =
         totalVotes > 0 ? Number((noWithVetoCount * 100n) / totalVotes) : 0;
 
-      const requiredQuorumVotes = (requiredQuorumPercentage * totalVotes) / BigInt(100);
+      const requiredQuorumVotes =
+        (requiredQuorumPercentage * totalVotes) / BigInt(100);
       const percentageAbstain =
         totalVotes > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
       const percentageNo =
@@ -194,7 +230,8 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
         isVetoed,
         isThresholdPassed,
         quorumPer,
-        requiredQuorumPercentage: Number(requiredQuorumPercentage).toFixed() + "%",
+        requiredQuorumPercentage:
+          Number(requiredQuorumPercentage).toFixed() + "%",
         quorumPercentage: Number(quorumPercentage).toFixed() + "%",
         totalvotesPercentage: totalvotesPercentage,
         totalVotes: totalVotes.toString(),
@@ -228,47 +265,231 @@ export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
   return { allProposals, totalCount: ids.length };
 }
 
-
 export async function getBeraProposals(data) {
   const { status, first, skip } = data;
   try {
     let proposals = [];
 
-      const client = new ApolloClient({
-        uri: `${process.env.NEXT_PUBLIC_NEW_GRAPH_ENDPOINT}`,
-        cache: new InMemoryCache(),
-      });
+    const client = new ApolloClient({
+      uri: `${process.env.NEXT_PUBLIC_NEW_GRAPH_ENDPOINT}`,
+      cache: new InMemoryCache(),
+    });
 
-      const claimsQuery = gql`
-        query proposals($status: Int, $first: Int, $skip: Int) {
-          proposals(
-            first: $first
-            skip: $skip
-            orderBy: submitTime
-            orderDirection: desc
-            where: { status: $status }
-          ) {
-            content
-            id
-            status
-            proposer
-            submitTime
-          }
+    const claimsQuery = gql`
+      query proposals($status: Int, $first: Int, $skip: Int) {
+        proposalCreateds(
+          first: 1000
+          orderBy: id
+          orderDirection: asc
+          skip: 0
+          subgraphError: allow
+        ) {
+          block_number
+          calldatas
+          contractId_
+          description
+          id
+          proposalId
+          proposer
+          signatures
+          targets
+          timestamp_
+          transactionHash_
+          values
+          voteEnd
+          voteStart
         }
-      `;
-      const { data } = await client.query({
-        query: claimsQuery,
-        variables: {
-          first: first,
-          skip: skip,
-          status: status,
-        },
-      });
-      proposals = data;
-    console.log(proposals,"proposals")
-    return {...data};
+      }
+    `;
+    const { data } = await client.query({
+      query: claimsQuery,
+      variables: {
+        first: first,
+        skip: skip,
+        status: status,
+      },
+    });
+    proposals = data;
+    console.log(proposals, "proposals");
+    return { ...data };
   } catch (e) {
     console.log(e);
+    return [];
+  }
+}
+
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+// First Query to get proposals
+const GET_PROPOSALS = gql`
+  query proposals {
+    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
+            id
+            reason
+            weight
+          }
+        }
+      }
+    }
+  }
+`;
+
+// Second Query to get supports by proposalId
+const GET_SUPPORTS = gql`
+  query votes($proposalId: BigInt!) {
+    proposalSupports(where: { proposal_: { proposalId: $proposalId } }) {
+      weight
+      id
+      support
+      votes {
+        weight
+        reason
+        params
+        id
+      }
+      proposal {
+        description
+        eta
+        executed
+        id
+        proposalId
+        proposer {
+          id
+        }
+      }
+    }
+  }
+`;
+
+// First Query to get proposals
+const GET_PROPOSALS_CREATEDS = gql`
+  query proposals($proposalId: BigInt!) {
+    proposalCreateds(where: { proposal_: { proposalId: $proposalId } }) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
+            id
+            reason
+            weight
+          }
+        }
+      }
+    }
+  }
+`;
+
+export async function getProposalSupports(proposals) {
+  const proposalsWithSupports = [];
+  const totalVotes = 0;
+  for (const proposal of proposals) {
+    const proposalId = proposal.proposalId;
+    const supportsData = await client.query({
+      query: GET_SUPPORTS,
+      variables: { proposalId },
+    });
+
+    const supports = supportsData.data.proposalSupports;
+    const votesCount = supports.reduce(
+      (accumulator, currentValue) => +accumulator + +currentValue.weight,
+      0,
+    );
+
+    const description = proposal.description;
+    const newlineIndex = description.split("\n");
+
+    const proposalWithSupports = {
+      ...proposal,
+      supports: supportsData.data.proposalSupports,
+      totalVotes: formatNumber(votesCount),
+      title: newlineIndex[0],
+      voteEnd: getDateFromTimestamp(proposal.voteEnd),
+      voteStart: getDateFromTimestamp(proposal.voteStart),
+      quorumPer: "20%",
+      totalvotesPercentage: "98",
+      finalTallyResult: {
+        yesCount: Number(20).toFixed(2) + "%",
+        abstainCount: Number(30).toFixed(2) + "%",
+        noCount: Number(10).toFixed(2) + "%",
+        noWithVetoCount: Number(11).toFixed(2) + "%",
+      },
+      finalTallyParams: {
+        quorum: Number(10 * 100).toFixed() + "%",
+        threshold: Number(20 * 100).toFixed() + "%",
+        vetoThreshold: Number(30 * 100).toFixed() + "%",
+      },
+      thresholdPercentage: Number(50) + "%",
+      status: getBeraproposalStatus(
+        3,
+        true,
+        true,
+        "dcsdcsdds",
+        "2024-08-02",
+      ),
+      metadata:"Test"
+    };
+
+    proposalsWithSupports.push(proposalWithSupports);
+  }
+  return proposalsWithSupports;
+}
+
+export async function getProposalCreateds(proposals) {
+  const proposalsWithCreateds = [];
+  for (const proposal of proposals) {
+    const proposalId = proposal.proposalId;
+    const supportsData = await client.query({
+      query: GET_PROPOSALS_CREATEDS,
+      variables: { proposalId },
+    });
+
+    proposalsWithCreateds.push(...supportsData.data.proposalCreateds);
+  }
+  return proposalsWithCreateds;
+}
+
+export async function getBerachainProposals(orderBy, orderDirection) {
+  try {
+    const { data } = await client.query({ query: GET_PROPOSALS });
+    const proposals = data.proposalCreateds.map((pc) => pc.proposal);
+    const proposalsSupports = await getProposalSupports(proposals);
+    const proposalsCreateds = await getProposalCreateds(proposals);
+
+    return {
+      proposals: proposalsSupports,
+      proposalsCreateds: proposalsCreateds,
+    };
+  } catch (e) {
+    console.error(e);
     return [];
   }
 }
