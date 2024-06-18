@@ -6,6 +6,10 @@ export function setCookie(cname, cvalue, exdays) {
 }
 
 export function getCookie(cname) {
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
   let name = cname + "=";
   let ca = document.cookie.split(";");
   for (let i = 0; i < ca.length; i++) {

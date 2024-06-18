@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   CloseBar,
   StyledTitle,
@@ -14,7 +14,7 @@ import {
 } from "./styled";
 import Image from "next/image";
 import { SectionTitle } from "../styled/sectionTitle";
-import Input from "../Input";
+import Input from "../input";
 import CheckBox from "../styled/checkBox";
 import DropdownSelector from "../DropdownSelector";
 import useEthApis from "hooks/useEthApis";
@@ -22,6 +22,8 @@ import Modal from "../Modal";
 import { ErrorMessage } from "../styled/errorMessage";
 import { useSelector } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
+import Loader from "../Button/Loader";
+import { ethers } from "ethers";
 
 const AddIncentive = ({
   choices,
@@ -46,6 +48,7 @@ const AddIncentive = ({
     tokenErr: null,
     amountErr: null,
   });
+  const [isLoading, setIsLoading] = useState(false); 
 
   const address = useSelector(addressSelector);
 
@@ -61,129 +64,136 @@ const AddIncentive = ({
 
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
-  // Adding for the reference.
-  // function getTotalScoresForOption(scores, option) {
-  //   switch (option.toString()) {
-  //     case '1': {
-  //       //yes
-  //       return scores.yesCount;
-  //     }
-  //     case '2': {
-  //       //no
-  //       return scores.noCount;
-  //     }
-  //     case '3': {
-  //       // no with veto
-  //       return scores.noWithVetoCount;
-  //     }
-  //     case '4': {
-  //       //abstain
-  //       return scores.abstainCount;
-  //     }
-  //   }
-  // }
 
-  // const scores = proposal.finalTallyResult;
-  // you take that from getBeraProposalFromContract function
-
-  // const totalScores = BigInt(scores.yesCount) + BigInt(scores.abstainCount) + BigInt(scores.noCount) + BigInt(scores.noWithVetoCount);
-
-  // let scoreBigInt = BigInt(option) == ALL_OPTIONS ? totalScores : getTotalScoresForOption(scores, option);
   const options = choices.map((item, i) => ({
     key: i,
     value: i + 1,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
 
-  const getTokenBalance = async () => {
+  const getTokenBalanceAndAllowance = async () => {
     const { result, error } = await getBalance(address, tokenAddress);
     if (error) {
-      setErrors((prev) => {
-        return {
-          ...prev,
-          tokenErr: error,
-        };
-      });
-      setFormdata((prev) => {
-        return {
-          ...prev,
-          availableBal: 0,
-          allowance: 0,
-          tokenPrice: 0,
-        };
-      });
+      setErrors((prev) => ({
+        ...prev,
+        tokenErr: error,
+      }));
+      setFormdata((prev) => ({
+        ...prev,
+        availableBal: 0,
+        allowance: 0,
+        tokenPrice: 0,
+      }));
     } else {
-      const allowance = await getAllowance(
+      const allowanceResult = await getAllowance(
         address,
         tokenAddress,
-        beravoteAddress,
+        beravoteAddress
       );
       //const price = await getBerachainSubgraphPrice(tokenAddress);
       const price = 1;
-      setFormdata((prev) => {
-        return {
-          ...prev,
-          availableBal: parseFloat(result),
-          allowance: parseFloat(allowance.result),
-          tokenPrice: parseFloat(price),
-        };
-      });
-      setErrors((prev) => {
-        return {
-          ...prev,
-          tokenErr: null,
-        };
-      });
+      const newAvailableBal = parseFloat(result);
+      const newAllowance = parseFloat(allowanceResult.result);
+      setFormdata((prev) => ({
+        ...prev,
+        availableBal: parseFloat(result),
+        allowance: parseFloat(allowanceResult.result),
+        tokenPrice: parseFloat(price),
+      }));
+      setErrors((prev) => ({
+        ...prev,
+        tokenErr: null,
+      }));
+
+    // Revalidate incentive amount after getting new balance and allowance
+    validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
     }
   };
 
+  useEffect(() => {
+    if (open) {
+      getTokenBalanceAndAllowance();
+    }
+  }, [open, address, tokenAddress]);
+
+  const validateIncentiveAmount = (amount, availableBal, allowance) => {
+    let amountError = null;
+    if (amount <= 0) {
+      amountError = "Incentive amount should be bigger than 0.";
+    } else if (amount > availableBal) {
+      amountError = "Incentive amount is greater than balance.";
+    } else if (amount > allowance) {
+      amountError = "Incentive amount is greater than allowance.";
+    }
+  
+    setErrors((prev) => ({
+      ...prev,
+      amountErr: amountError,
+    }));
+  };
+
+  
   const onChangeHandler = (event) => {
     const { value, name, type, checked } = event.target;
-    setFormdata((prev) => {
-      return {
-        ...prev,
-        [name]: type === "checkbox" ? checked : value,
-      };
-    });
+    console.log(value ,availableBal, allowance)
+    setFormdata((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
     if (name === "incentiveAmount") {
+      validateIncentiveAmount(value, availableBal, allowance);
       let amountError;
       if (value <= 0) {
-        amountError = "Incentive amount is should be bigger than 0.";
-      }
-      if (value > availableBal) {
+        amountError = "Incentive amount should be bigger than 0.";
+      } else if (value > availableBal) {
         amountError = "Incentive amount is greater than balance.";
-      }
-      console.log(value)
-      console.log(allowance)
-      if (value > allowance) {
+      } else if (value > allowance) {
         amountError = "Incentive amount is greater than allowance.";
       }
-      // check token reward amount value
-      if (tokenPrice * value < 1) {
-        amountError = "Incentives must be more than $1 in value";
-      }
 
-      setErrors((prev) => {
-        return {
-          ...prev,
-          amountErr: amountError,
-        };
-      });
+      // @todo- correct this later
+      // check token reward amount value
+      // if (tokenPrice * value < 1) {
+      //   amountError = "Incentives must be more than $1 in value";
+      // }
+      setErrors((prev) => ({
+        ...prev,
+        amountErr: amountError,
+      }));
     }
   };
 
   const maxIncentiveHandler = () => {
-    setFormdata((prev) => {
-      return {
-        ...prev,
-        incentiveAmount: availableBal,
-      };
-    });
+    setFormdata((prev) => ({
+      ...prev,
+      incentiveAmount: availableBal,
+    }));
   };
 
-  const onSubmitHandler = () => {
-    onSubmit({ ...formdata, selectedOptions });
+  // const onSubmitHandler = async () => {
+  //   await onSubmit({ ...formdata, selectedOptions });
+  //   closeModal();
+  // };
+  // const onApproveTokenHandler = async () => {
+  //   await approveToken(address, tokenAddress, beravoteAddress);
+  //   await getTokenBalanceAndAllowance(); // Refresh balance and allowance after approval
+  // };
+  const onSubmitHandler = async () => {
+    setIsLoading(true); // Start loading
+    await onSubmit({ ...formdata, selectedOptions });
+    setIsLoading(false); // Stop loading
+    closeModal();
   };
+
+  const onApproveTokenHandler = async () => {
+    setIsLoading(true); // Start loading
+    const amountToApprove = ethers.utils.parseUnits(incentiveAmount.toString(), 18); 
+    await approveToken(address, tokenAddress, beravoteAddress, amountToApprove);
+    await getTokenBalanceAndAllowance(); // Refresh balance and allowance after approval
+    setIsLoading(false); // Stop loading
+  };
+
+
   return (
     <Modal
       size="large"
@@ -206,22 +216,22 @@ const AddIncentive = ({
       </HeadWrapper>
       <ModalBodyWrapper>
         <InputWrapper>
-          <SectionTitle>token address</SectionTitle>
+          <SectionTitle>Token Address</SectionTitle>
           <Input
             type="text"
             placeholder="Address"
             value={tokenAddress}
             name="tokenAddress"
-            onBlur={getTokenBalance}
+            onBlur={getTokenBalanceAndAllowance}
             onChange={onChangeHandler}
           />
           {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
         <InputWrapper>
           <LabelWrapper>
-            <SectionTitle>incentive amount</SectionTitle>
-            <div class="available_amount">
-              <span>available :</span>
+            <SectionTitle>Incentive Amount</SectionTitle>
+            <div className="available_amount">
+              <span>Available :</span>
               <span>{parseFloat(availableBal).toFixed(5)}</span>
             </div>
           </LabelWrapper>
@@ -230,7 +240,7 @@ const AddIncentive = ({
               className="number_field"
               type="number"
               min="0"
-              placeholder="amount"
+              placeholder="Amount"
               value={incentiveAmount}
               name="incentiveAmount"
               onChange={onChangeHandler}
@@ -253,36 +263,37 @@ const AddIncentive = ({
           name="addIncentive"
         />
         <InputWrapper>
-          <SectionTitle>preferred option</SectionTitle>
+          <SectionTitle>Preferred Option</SectionTitle>
           <DropdownSelector
             disabled={addIncentive}
             options={options}
             value={selectedOptions}
-            onSelect={(value) => {
-              setSelectedOptions(value);
-            }}
+            onSelect={(value) => setSelectedOptions(value)}
           />
         </InputWrapper>
-
         <ActionsWrapper>
-          <BtnWrapper
-            className="action_btn"
-            disabled={!!amountErr || !address}
-            primary
-            onClick={onSubmitHandler}
-          >
-            Add Incentive
-          </BtnWrapper>
-          <BtnWrapper
-            primary
-            className="action_btn"
-            disabled={!address}
-            onClick={async () => {
-              await approveToken(address, tokenAddress, beravoteAddress)
-            }}
-          >
-            Approve token
-          </BtnWrapper>
+          {isLoading ? (
+            <Loader /> 
+          ) : (
+            <>
+              <BtnWrapper
+                className="action_btn"
+                disabled={!!amountErr || !address}
+                primary
+                onClick={onSubmitHandler}
+              >
+                Add Incentive
+              </BtnWrapper>
+              <BtnWrapper
+                primary
+                className="action_btn"
+                disabled={!address}
+                onClick={onApproveTokenHandler}
+              >
+                Approve Token
+              </BtnWrapper>
+            </>
+          )}
         </ActionsWrapper>
       </ModalBodyWrapper>
     </Modal>
