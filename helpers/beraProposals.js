@@ -38,35 +38,26 @@ function getproposalStatus(
   }
 }
 
-function getBeraproposalStatus(
-  value,
-  isQuorumMet,
-  isVetoed,
-  isThresholdPassed,
-  depositEndTime,
-) {
+function getBeraproposalStatus(executed, queued, canceled, voteEnd) {
   const currentTime = new Date().getTime();
-  if (value === 0 || value === 1 || value === 2) {
-    if (isVetoed || depositEndTime < currentTime) {
-      return "closed";
-    }
-    if (!isQuorumMet || !isThresholdPassed) {
-      return "expired";
-    }
-    if (isQuorumMet || isThresholdPassed) {
-      return "passed";
-    }
-    return "active";
+  const lastDate = new Date(voteEnd).getTime();
+
+  if (executed && queued) {
+    return "executed";
   }
-  if (value === 3) {
-    return "passed";
+
+  if (!executed && queued) {
+    return "pending";
   }
-  if (value === 4) {
-    return "Rejected";
+
+  if (canceled) {
+    return "calceled";
   }
-  if (value === 5) {
+
+  if(currentTime>lastDate){
     return "closed";
   }
+  return "active"
 }
 
 async function getBerachainProposalsId(first = 1000, skip = 0, status = 0) {
@@ -449,13 +440,12 @@ export async function getProposalSupports(proposals) {
       },
       thresholdPercentage: Number(50) + "%",
       status: getBeraproposalStatus(
-        3,
-        true,
-        true,
-        "dcsdcsdds",
-        "2024-08-02",
+        proposal.executed,
+        proposal.queued,
+        proposal.canceled,
+        proposal.voteEnd,
       ),
-      metadata:"Test"
+      metadata: "Test",
     };
 
     proposalsWithSupports.push(proposalWithSupports);
@@ -483,6 +473,8 @@ export async function getBerachainProposals(orderBy, orderDirection) {
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
     const proposalsSupports = await getProposalSupports(proposals);
     const proposalsCreateds = await getProposalCreateds(proposals);
+
+    console.log(proposals, "proposals");
 
     return {
       proposals: proposalsSupports,

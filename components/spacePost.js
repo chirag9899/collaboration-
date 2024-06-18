@@ -175,16 +175,20 @@ const Status = styled.div`
   text-transform: capitalize;
   color: ${(props) =>
     props.status === "passed" || props.status === "active"
-      ? "rgb(0, 255, 0)"
+      ? "rgb(114,91,255)"
       : props.status === "closed"
       ? "rgb(210, 215, 211)"
+      : props.status === "executed"
+      ? "rgb(0, 255, 0)"
       : "red"};
   font-weight: bold;
   background-color: ${(props) =>
     props.status === "passed" || props.status === "active"
-      ? "rgba(0, 255, 0, 0.1)"
+      ? "rgba(114,91,255, 0.1)"
       : props.status === "closed"
       ? "rgba(210, 215, 211, 0.1)"
+      : props.status === "executed"
+      ? "rgba(0, 255, 0, 0.1)"
       : "rgba(255, 0, 0, 0.1)"};
   max-height: 35px;
 `;
