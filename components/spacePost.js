@@ -304,6 +304,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       {/* </HardLink> */}
       {open && (
         <AddIncentive
+          choices={["For", "Abstain", "No With Veto","No"]}
           open={open}
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"
