@@ -173,27 +173,9 @@ const Status = styled.div`
   font-size: 12px;
   border-radius: 50px;
   text-transform: capitalize;
-  color: ${(props) =>
-    props.status === "passed" || props.status === "active"
-      ? "rgb(114,91,255)"
-      : props.status === "closed"
-      ? "rgb(210, 215, 211)"
-      : props.status === "executed"
-      ? "rgb(0, 255, 0)"
-      : props.status === "pending"
-      ? "var(--primary)"
-      : "red"};
+  color: ${(props) => props.statusDetails.color};
   font-weight: bold;
-  background-color: ${(props) =>
-    props.status === "passed" || props.status === "active"
-      ? "rgba(114,91,255, 0.1)"
-      : props.status === "closed"
-      ? "rgba(210, 215, 211, 0.1)"
-      : props.status === "executed"
-      ? "rgba(0, 255, 0, 0.1)"
-      :props.status === "pending"
-      ? "rgba(235, 182, 0, 0.1)"
-      : "rgba(255, 0, 0, 0.1)"};
+  background-color: ${(props) => props.statusDetails.backgroundColor};
   max-height: 35px;
 `;
 const Summary = styled.div`
@@ -219,6 +201,9 @@ const Content = styled.div`
     }
     .markdown-body code {
       background-color: var(--background-1) !important;
+    }
+    .markdown-body pre {
+      background-color: transparent !important;
     }
   }
 `;
@@ -277,7 +262,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       <InfoWrapper>
         <LeftWrapper>
           <IncentivesWrapper>
-            <span>Votes</span>
+            <span>Total Voters</span>
             <Input type="text" value={data.totalVotes} disabled={true} />
           </IncentivesWrapper>
           <DateSection>
@@ -287,7 +272,9 @@ export default function SpacePost({ data, spaces, space, postNum }) {
         </LeftWrapper>
         <RightWrapper>
           <ContentWrapper>
-            <Status status={data.status}>{data.status}</Status>
+            <Status statusDetails={data.statusDetails}>
+              {data.statusDetails.status}
+            </Status>
             {/* <Summary>{data.metadata}</Summary> */}
           </ContentWrapper>
           <ProgressBar
