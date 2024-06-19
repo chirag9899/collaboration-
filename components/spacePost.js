@@ -180,6 +180,8 @@ const Status = styled.div`
       ? "rgb(210, 215, 211)"
       : props.status === "executed"
       ? "rgb(0, 255, 0)"
+      : props.status === "pending"
+      ? "var(--primary)"
       : "red"};
   font-weight: bold;
   background-color: ${(props) =>
@@ -189,6 +191,8 @@ const Status = styled.div`
       ? "rgba(210, 215, 211, 0.1)"
       : props.status === "executed"
       ? "rgba(0, 255, 0, 0.1)"
+      :props.status === "pending"
+      ? "rgba(235, 182, 0, 0.1)"
       : "rgba(255, 0, 0, 0.1)"};
   max-height: 35px;
 `;
@@ -284,7 +288,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
         <RightWrapper>
           <ContentWrapper>
             <Status status={data.status}>{data.status}</Status>
-            <Summary>{data.metadata}</Summary>
+            {/* <Summary>{data.metadata}</Summary> */}
           </ContentWrapper>
           <ProgressBar
             value={data.totalvotesPercentage}
@@ -304,7 +308,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       {/* </HardLink> */}
       {open && (
         <AddIncentive
-          choices={["For", "Abstain", "No With Veto","No"]}
+          choices={["For", "Abstain", "Against"]}
           open={open}
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"

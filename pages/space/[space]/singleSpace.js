@@ -25,7 +25,7 @@ import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
 import SpacePostList from "@/components/spacePostList";
 import SpaceListTab from "@/components/spaceListTab";
-import { getBeraProposals, getBerachainProposals } from "helpers/beraProposals";
+import { getBerachainProposals } from "helpers/beraProposals";
 
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -301,11 +301,9 @@ export async function getServerSideProps(context) {
 
   const [
     { result: space },
-    { result: beraProposals },
     data,
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
-    await getBeraProposals(config),
     await getBerachainProposals(config),
   ]);
   if (!space) {
@@ -318,7 +316,6 @@ export async function getServerSideProps(context) {
       space: space || null,
       activeTab,
       defaultPage: { tab: activeTab ?? null, page: nPage },
-      beraProposals: beraProposals ?? null,
       berachainProposals: data.proposals ?? null,
     },
   };
