@@ -79,7 +79,7 @@ const useEthApis = () => {
     }
   }
 
-  async function approveToken(userAddress, tokenAddress, beravoteAddress) {
+  async function approveToken(userAddress, tokenAddress, beravoteAddress, amountToApprove) {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -98,10 +98,9 @@ const useEthApis = () => {
         await resetAllowanceTx.wait(1);
       }
 
-      const approveTx = await token.approve(
-        beravoteAddress,
-        ethers.constants.MaxUint256,
-      );
+      // for max ethers.constants.MaxUint256
+      const approveTx = await token.approve(beravoteAddress, amountToApprove);
+
       await approveTx.wait(1);
       console.log(approveTx);
       dispatch(newSuccessToast("Token allowance updated!"));

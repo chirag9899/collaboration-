@@ -1,10 +1,10 @@
 import styled from "styled-components";
 // import HardLink from "components/hardLink";
-import { p_16_semibold, p_18_semibold } from "styles/textStyles";
+import { p_14_normal, p_16_semibold, p_18_semibold } from "styles/textStyles";
 import { shadow_100, shadow_200 } from "styles/globalCss";
 import { p_24 } from "../styles/paddings";
 import { Flex, FlexBetween } from "@osn/common-ui";
-import { bg_white, primary_color } from "./styles/colors";
+import { bg_white, primary_color, white_text_color } from "./styles/colors";
 import Input from "./Input";
 import ProgressBar from "./progressBar";
 import Button from "./Button";
@@ -13,9 +13,11 @@ import useModal from "hooks/useModal";
 import AddIncentive from "./addIncentiveModal";
 import { ethers } from "ethers";
 import useEthApis from "hooks/useEthApis";
-import { formatNumber } from "utils";
 import { useSelector } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
+import Accordion from "./accordionPanel/accordion";
+import { MarkdownPreviewer } from "@osn/previewer";
+import panel from "./accordionPanel/panel";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -66,8 +68,17 @@ const LeftWrapper = styled(Flex)`
   > :not(:first-child)::before {
     margin: 0 8px;
   }
+
   @media screen and (max-width: 800px) {
     width: 100%;
+  }
+`;
+
+const DateSection = styled.div`
+  > p {
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-weight: 600;
   }
 `;
 
@@ -162,19 +173,9 @@ const Status = styled.div`
   font-size: 12px;
   border-radius: 50px;
   text-transform: capitalize;
-  color: ${(props) =>
-    props.status === "passed" || props.status === "active"
-      ? "rgb(0, 255, 0)"
-      : props.status === "closed"
-      ? "rgb(210, 215, 211)"
-      : "red"};
+  color: ${(props) => props.statusDetails.color};
   font-weight: bold;
-  background-color: ${(props) =>
-    props.status === "passed" || props.status === "active"
-      ? "rgba(0, 255, 0, 0.1)"
-      : props.status === "closed"
-      ? "rgba(210, 215, 211, 0.1)"
-      : "rgba(255, 0, 0, 0.1)"};
+  background-color: ${(props) => props.statusDetails.backgroundColor};
   max-height: 35px;
 `;
 const Summary = styled.div`
@@ -188,6 +189,41 @@ const Summary = styled.div`
   background-color: rgba(235, 182, 0, 0.1);
   text-align: center;
 `;
+
+const Content = styled.div`
+  ${p_14_normal};
+  color: var(--neutral-1);
+  .osn-previewer {
+    .markdown-body {
+      > p {
+        color: ${white_text_color};
+      }
+    }
+    .markdown-body code {
+      background-color: var(--background-1) !important;
+    }
+    .markdown-body pre {
+      background-color: transparent !important;
+    }
+  }
+`;
+
+const AccordinWrapper = styled(Accordion)`
+  margin-top: 15px !important;
+`;
+const PanelWrapper = styled(panel)`
+  min-height: 400px;
+  max-width: 700px !important;
+
+  .Items {
+    max-width: 500px;
+    word-wrap: break-word;
+  }
+  @media screen and (max-width: 800px) {
+    margin: auto;
+  }
+`;
+
 export default function SpacePost({ data, spaces, space, postNum }) {
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
@@ -212,9 +248,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
     <Wrapper>
       {/* <HardLink href={`/space/${data.space}/proposal/${data.cid}`}> */}
       <TitleWrapper>
-        <Title>
-          {data.id} - {data.title}
-        </Title>
+        <Title>{data.title}</Title>
         <ButtonsWrapper>
           <CustomBtn disabled={!address} primary block onClick={openModal}>
             Add incentive
@@ -228,20 +262,21 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       <InfoWrapper>
         <LeftWrapper>
           <IncentivesWrapper>
-            <span>Votes</span>
-            <Input
-              type="text"
-              value={formatNumber(data.totalVotes)}
-              disabled={true}
-            />
+            <span>Total Voters</span>
+            <Input type="text" value={data.totalVotes} disabled={true} />
           </IncentivesWrapper>
+          <DateSection>
+            <p>Start: {data.voteStart}</p>
+            <p>End: {data.voteEnd}</p>
+          </DateSection>
         </LeftWrapper>
         <RightWrapper>
           <ContentWrapper>
-            <Status status={data.status}>{data.status}</Status>
-            <Summary>{data.metadata}</Summary>
+            <Status statusDetails={data.statusDetails}>
+              {data.statusDetails.status}
+            </Status>
+            {/* <Summary>{data.metadata}</Summary> */}
           </ContentWrapper>
-
           <ProgressBar
             value={data.totalvotesPercentage}
             max={100}
@@ -252,9 +287,15 @@ export default function SpacePost({ data, spaces, space, postNum }) {
           />
         </RightWrapper>
       </InfoWrapper>
+      <PanelWrapper folded={true} head={<h5>Description:- {data.title}</h5>}>
+        <Content>
+          <MarkdownPreviewer content={data?.description} />
+        </Content>
+      </PanelWrapper>
       {/* </HardLink> */}
       {open && (
         <AddIncentive
+          choices={["For", "Abstain", "Against"]}
           open={open}
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"

@@ -1,274 +1,288 @@
-const { Web3 } = require("web3");
-const web3 = {};
-const ProposalIdsBerachain = require("../abi/proposalIds.json");
-const governanceAddress = "0x7b5Fe22B5446f7C62Ea27B8BD71CeF94e03f3dF2";
-const rpcUrl = "https://rpc.ankr.com/berachain_testnet";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { formatNumber } from "utils";
+import { getDateFromTimestamp } from "./methods";
 import gql from "graphql-tag";
-function getproposalStatus(
-  value,
-  isQuorumMet,
-  isVetoed,
-  isThresholdPassed,
-  depositEndTime,
-) {
-  const currentTime = new Date().getTime();
-  if (value === 0 || value === 1 || value === 2) {
-    if (isVetoed || depositEndTime < currentTime) {
-      return "closed";
-    }
-    if (!isQuorumMet || !isThresholdPassed) {
-      return "expired";
-    }
-    if (isQuorumMet || isThresholdPassed) {
-      return "passed";
-    }
-    return "active";
-  }
-  if (value === 3) {
-    return "passed";
-  }
-  if (value === 4) {
-    return "Rejected";
-  }
-  if (value === 5) {
-    return "closed";
-  }
-}
 
-async function getBerachainProposalsId(first = 1000, skip = 0, status = 0) {
-  try {
-    let query = gql`
-        query proposals($status:Int, $first: Int, $skip: Int){
-            proposals(
-                first: $first
-                skip: $skip
-                orderBy: submitTime
-                orderDirection: desc
-                where: {status: $status}) {
-                id
-            }
-        }
-    `;
-    if(status == 0){
-      query = gql`
-          query proposals($first: Int, $skip: Int){
-              proposals(
-                  first: $first
-                  skip: $skip
-                  orderBy: submitTime
-                  orderDirection: desc) {
-                  id
-              }
-          }
-      `;
-    }
-    const variables = {
-      first,
-      skip,
-      status
-    };
-    const graphQLClient = new ApolloClient({
-      uri: "https://api.goldsky.com/api/public/project_clvfcu44n75u401sufb5v2s5o/subgraphs/governance/1.0.2/gn",
-      cache: new InMemoryCache(),
-    });
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
+  cache: new InMemoryCache(),
+});
 
-    const { data } = await graphQLClient.query({
-      query,
-      variables,
-    });
-    return data.proposals.map((item) => item.id);
-  } catch (e) {
-    return null;
-  }
-}
-
-web3.berachain_artio = new Web3(new Web3.providers.HttpProvider(rpcUrl));
-async function getWeb3(abi, contractAddress) {
-  return new web3.berachain_artio.eth.Contract(abi, contractAddress);
-}
-
-async function getBeraProposalFromContract(proposalId) {
-  try {
-    const contract = await getWeb3(ProposalIdsBerachain, governanceAddress);
-    const rawProposal = await contract.methods.getProposal(proposalId).call();
-    const tallyResult = {};
-    if (
-      rawProposal.finalTallyResult.yesCount === "0" &&
-      rawProposal.finalTallyResult.abstainCount === "0" &&
-      rawProposal.finalTallyResult.noCount === "0" &&
-      rawProposal.finalTallyResult.noWithVetoCount === "0"
-    ) {
-      const rawTally = await contract.methods
-        .getProposalTallyResult(proposalId)
-        .call();
-      tallyResult.yesCount = BigInt(rawTally.yesCount);
-      tallyResult.abstainCount = BigInt(rawTally.abstainCount);
-      tallyResult.noCount = BigInt(rawTally.noCount);
-      tallyResult.noWithVetoCount = BigInt(rawTally.noWithVetoCount);
-    } else {
-      tallyResult.yesCount = BigInt(rawProposal.finalTallyResult.yesCount);
-      tallyResult.abstainCount = BigInt(
-        rawProposal.finalTallyResult.abstainCount,
-      );
-      tallyResult.noCount = BigInt(rawProposal.finalTallyResult.noCount);
-      tallyResult.noWithVetoCount = BigInt(
-        rawProposal.finalTallyResult.noWithVetoCount,
-      );
-    }
-    const tallyParams = await contract.methods
-      .getTallyParams(proposalId)
-      .call();
-    const tallyParamsResult = {};
-    tallyParamsResult.quorum = tallyParams.quorum;
-    tallyParamsResult.threshold = tallyParams.threshold;
-    tallyParamsResult.vetoThreshold = tallyParams.vetoThreshold;
-    const proposal = {
-      id: parseInt(rawProposal.id),
-      messages: rawProposal.messages,
-      status: parseInt(rawProposal.status),
-      finalTallyResult: tallyResult,
-      finalTallyParams: tallyParamsResult,
-      submitTime: parseInt(rawProposal.submitTime),
-      depositEndTime: parseInt(rawProposal.depositEndTime),
-      totalDeposit: rawProposal.totalDeposit,
-      votingStartTime: parseInt(rawProposal.votingStartTime),
-      votingEndTime: parseInt(rawProposal.votingEndTime),
-      metadata: rawProposal.metadata,
-      title: rawProposal.title,
-      summary: rawProposal.summary,
-      proposer: rawProposal.proposer,
-    };
-
-    return proposal;
-  } catch (error) {
-    console.log("Error getting proposal:", error);
-  }
-}
-
-export async function getBeraAllProposals(from, to, setIsLoading, status = 1) {
-  setIsLoading(true);
-  const ids = await getBerachainProposalsId(1000, 0, 1);
-
-  const allProposals = [];
-
-  for (let i = from; i < to; i++) {
-    const proposal = await getBeraProposalFromContract(parseInt(ids[i]));
-    if (proposal) {
-      const quorum = parseFloat(proposal.finalTallyParams.quorum);
-      const threshold = parseFloat(proposal.finalTallyParams.threshold);
-      const vetoThreshold = parseFloat(proposal.finalTallyParams.vetoThreshold);
-      const yesCount = BigInt(proposal.finalTallyResult.yesCount);
-      const abstainCount = BigInt(proposal.finalTallyResult.abstainCount);
-      const noCount = BigInt(proposal.finalTallyResult.noCount);
-      const noWithVetoCount = BigInt(proposal.finalTallyResult.noWithVetoCount);
-      const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
-      const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
-      const vetoThresholdPercentage = BigInt(Math.ceil(vetoThreshold * 100));
-      const totalVotes = yesCount + abstainCount + noCount + noWithVetoCount;
-      const quorumPercentage = (parseInt(totalVotes.toString()) / quorum) * 100;
-      const percentageYes =
-        totalVotes > 0 ? Number((yesCount * 100n) / totalVotes) : 0;
-      const percentageNoWithVeto =
-        totalVotes > 0 ? Number((noWithVetoCount * 100n) / totalVotes) : 0;
-
-      const requiredQuorumVotes = (requiredQuorumPercentage * totalVotes) / BigInt(100);
-      const percentageAbstain =
-        totalVotes > 0 ? Number((abstainCount * 100n) / totalVotes) : 0;
-      const percentageNo =
-        totalVotes > 0 ? Number((noCount * 100n) / totalVotes) : 0;
-      const isQuorumMet = totalVotes >= requiredQuorumVotes;
-      const isVetoed = percentageNoWithVeto >= vetoThresholdPercentage;
-      const isThresholdPassed = percentageYes >= thresholdPercentage;
-      const totalvotesPercentage =
-        percentageYes + percentageAbstain + percentageNo + percentageNoWithVeto;
-
-      const quorumPer =
-        (totalvotesPercentage / (quorum * 100)).toFixed(2) + "%";
-
-      const proposalData = {
-        ...proposal,
-        percentageAbstain,
-        percentageNo,
-        isQuorumMet,
-        isVetoed,
-        isThresholdPassed,
-        quorumPer,
-        requiredQuorumPercentage: Number(requiredQuorumPercentage).toFixed() + "%",
-        quorumPercentage: Number(quorumPercentage).toFixed() + "%",
-        totalvotesPercentage: totalvotesPercentage,
-        totalVotes: totalVotes.toString(),
-        finalTallyParams: {
-          quorum: Number(quorum * 100).toFixed() + "%",
-          threshold: Number(threshold * 100).toFixed() + "%",
-          vetoThreshold: Number(vetoThreshold * 100).toFixed() + "%",
-        },
-        finalTallyResult: {
-          yesCount: Number(percentageYes).toFixed(2) + "%",
-          abstainCount: Number(percentageAbstain).toFixed(2) + "%",
-          noCount: Number(percentageNo).toFixed(2) + "%",
-          noWithVetoCount: Number(percentageNoWithVeto).toFixed(2) + "%",
-        },
-        thresholdPercentage: Number(thresholdPercentage) + "%",
-        status: getproposalStatus(
-          proposal.status,
-          isQuorumMet,
-          isVetoed,
-          isThresholdPassed,
-          proposal.depositEndTime,
-        ),
-      };
-
-      allProposals.push(proposalData);
-    }
-    continue;
-  }
-  // console.log(allProposals, "allProposals");
-  setIsLoading(false);
-  return { allProposals, totalCount: ids.length };
-}
-
-
-export async function getBeraProposals(data) {
-  const { status, first, skip } = data;
-  try {
-    let proposals = [];
-
-      const client = new ApolloClient({
-        uri: `${process.env.NEXT_PUBLIC_NEW_GRAPH_ENDPOINT}`,
-        cache: new InMemoryCache(),
-      });
-
-      const claimsQuery = gql`
-        query proposals($status: Int, $first: Int, $skip: Int) {
-          proposals(
-            first: $first
-            skip: $skip
-            orderBy: submitTime
-            orderDirection: desc
-            where: { status: $status }
-          ) {
-            content
+// First Query to get proposals
+const GET_PROPOSALS = gql`
+  query proposals {
+    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
             id
-            status
-            proposer
-            submitTime
+            reason
+            weight
           }
         }
-      `;
-      const { data } = await client.query({
-        query: claimsQuery,
-        variables: {
-          first: first,
-          skip: skip,
-          status: status,
-        },
-      });
-      proposals = data;
-    console.log(proposals,"proposals")
-    return {...data};
+      }
+    }
+  }
+`;
+
+// Second Query to get supports by proposalId
+const GET_SUPPORTS = gql`
+  query votes($proposalId: BigInt!) {
+    proposalSupports(where: { proposal_: { proposalId: $proposalId } }) {
+      weight
+      id
+      support
+      votes {
+        weight
+        reason
+        params
+        id
+      }
+      proposal {
+        description
+        eta
+        executed
+        id
+        proposalId
+        proposer {
+          id
+        }
+      }
+    }
+  }
+`;
+
+// First Query to get proposals
+const GET_PROPOSALS_CREATEDS = gql`
+  query proposals {
+    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
+            id
+            reason
+            weight
+            voter {
+              id
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
+  const currentTime = new Date().getTime();
+  const lastDate = new Date(voteEnd).getTime();
+
+  const status = executed
+    ? "executed"
+    : canceled
+    ? "canceled"
+    : queued
+    ? !executed
+      ? "pending execution"
+      : "pending"
+    : currentTime > lastDate
+    ? "closed"
+    : "active";
+
+  const statusStyles = {
+    passed: {
+      color: "rgb(114,91,255)",
+      backgroundColor: "rgba(114,91,255, 0.1)",
+    },
+    active: {
+      color: "rgb(114,91,255)",
+      backgroundColor: "rgba(114,91,255, 0.1)",
+    },
+    closed: {
+      color: "rgb(210, 215, 211)",
+      backgroundColor: "rgba(210, 215, 211, 0.1)",
+    },
+    executed: {
+      color: "rgb(0, 255, 0)",
+      backgroundColor: "rgba(0, 255, 0, 0.1)",
+    },
+    "pending execution": {
+      color: "rgb(0, 255, 0)",
+      backgroundColor: "rgba(0, 255, 0, 0.1)",
+    },
+    pending: {
+      color: "var(--primary)",
+      backgroundColor: "rgba(235, 182, 0, 0.1)",
+    },
+    default: {
+      color: "red",
+      backgroundColor: "rgba(255, 0, 0, 0.1)",
+    },
+  };
+
+  const { color, backgroundColor } =
+    statusStyles[status] || statusStyles.default;
+
+  return { status, color, backgroundColor };
+}
+
+const calculateSupportLengths = (supports, supportType) => {
+  let totalLength = 0;
+  let specificSupportLength = 0;
+  let mergedVotes = [];
+  let totalWeight = 0;
+  let specificWeight = 0;
+
+  supports.forEach((item) => {
+    totalLength += item.votes.length;
+    item.votes.forEach((vote) => {
+      const voteWeight = vote.weight;
+      totalWeight += +voteWeight;
+      if (item.support === supportType) {
+        specificSupportLength++;
+        specificWeight += +voteWeight;
+      }
+      mergedVotes.push({ ...vote, support: item.support });
+    });
+  });
+
+  return [
+    totalLength,
+    specificSupportLength,
+    mergedVotes,
+    totalWeight,
+    specificWeight,
+  ];
+};
+
+export async function getProposalSupports(proposals) {
+  const proposalsWithSupports = [];
+  for (const proposal of proposals) {
+    const proposalId = proposal.proposalId;
+    const supportsData = await client.query({
+      query: GET_SUPPORTS,
+      variables: { proposalId },
+    });
+
+    const supports = supportsData.data.proposalSupports;
+    const votesCount = supports.reduce(
+      (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
+      0,
+    );
+
+    const description = proposal.description;
+    const newlineIndex = description.split("\n");
+    const againstSupports = calculateSupportLengths(
+      proposal?.supports ?? [],
+      0,
+    );
+    const forSupports = calculateSupportLengths(proposal?.supports ?? [], 1);
+    const abstainSupports = calculateSupportLengths(
+      proposal?.supports ?? [],
+      2,
+    );
+    const forCount = forSupports.length > 0 ? forSupports[1] : 0;
+    const againstCount = againstSupports.length > 0 ? againstSupports[1] : 0;
+    const abstainCount = abstainSupports.length > 0 ? abstainSupports[1] : 0;
+    const totalVotes = forCount + againstCount + abstainCount;
+
+    const againstVotesPer =
+      totalVotes > 0 ? Number((againstCount * 100) / totalVotes) : 0;
+    const forVotesPer =
+      totalVotes > 0 ? Number((forCount * 100) / totalVotes) : 0;
+    const abstainVotesPer =
+      totalVotes > 0 ? Number((abstainCount * 100) / totalVotes) : 0;
+
+    const quorum = parseFloat(0.2);
+    const threshold = parseFloat(0.5);
+    const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
+    const quorumPercentage = parseInt(totalVotes.toString()) / quorum + "%";
+    const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
+
+    const totalvotesPercentage =
+      againstVotesPer + forVotesPer + abstainVotesPer;
+
+    const proposalWithSupports = {
+      ...proposal,
+      supports: supportsData.data.proposalSupports,
+      totalVotes: formatNumber(votesCount),
+      title: newlineIndex[0],
+      voteEnd: getDateFromTimestamp(proposal.voteEnd),
+      voteStart: getDateFromTimestamp(proposal.voteStart),
+      quorumPer: quorumPercentage,
+      totalvotesPercentage: totalvotesPercentage,
+      finalTallyResult: {
+        forCount: Number(forVotesPer).toFixed(2) + "%",
+        abstainCount: Number(abstainVotesPer).toFixed(2) + "%",
+        againstCount: Number(againstVotesPer).toFixed(2) + "%",
+      },
+      thresholdPercentage: Number(thresholdPercentage) + "%",
+      statusDetails: getProposalStatusDetails(
+        proposal.executed,
+        proposal.queued,
+        proposal.canceled,
+        proposal.voteEnd,
+      ),
+      metadata: "Test",
+      requiredQuorumPercentage:
+        Number(requiredQuorumPercentage).toFixed() + "%",
+    };
+
+    proposalsWithSupports.push(proposalWithSupports);
+  }
+  return proposalsWithSupports;
+}
+
+export async function getProposalCreateds(proposals) {
+  const proposalsWithCreateds = [];
+  for (const proposal of proposals) {
+    const proposalId = proposal.proposalId;
+    const supportsData = await client.query({
+      query: GET_PROPOSALS_CREATEDS,
+      variables: { proposalId },
+    });
+
+    proposalsWithCreateds.push(...supportsData.data.proposalCreateds);
+  }
+  return proposalsWithCreateds;
+}
+
+export async function getBerachainProposals() {
+  try {
+    const { data } = await client.query({ query: GET_PROPOSALS });
+    const proposals = data.proposalCreateds.map((pc) => pc.proposal);
+    const proposalsSupports = await getProposalSupports(proposals);
+    const proposalsCreateds = await getProposalCreateds(proposals);
+
+    return {
+      proposals: proposalsSupports,
+      proposalsCreateds: proposalsCreateds,
+    };
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return [];
   }
 }

@@ -25,7 +25,7 @@ import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
 import SpacePostList from "@/components/spacePostList";
 import SpaceListTab from "@/components/spaceListTab";
-import { getBeraProposals } from "helpers/beraProposals";
+import { getBerachainProposals } from "helpers/beraProposals";
 
 const Treasury = dynamic(() => import("@/components/treasury"), {
   ssr: false,
@@ -102,13 +102,9 @@ const BreadcrumbWrapper = styled.div`
 export default function List({
   spaceId,
   space,
-  proposals,
-  pendingProposals,
-  activeProposals,
-  closedProposals,
   activeTab,
   defaultPage,
-  beraProposals
+  berachainProposals,
 }) {
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
@@ -121,7 +117,6 @@ export default function List({
   const isEvm = chain?.chainType == "evm";
 
   const router = useRouter();
-  console.log(beraProposals,"beraProposals")
 
   const { open, openModal, closeModal } = useModal();
   useEffect(() => {
@@ -151,36 +146,25 @@ export default function List({
     );
   }, [dispatch, space]);
 
-  const filterProposals = (data, filterby) => {
-    return {
-      ...data,
-      items: data?.items.filter((item) => item.status !== filterby),
-    };
-  };
-  const terminatedProposals = (data, filterby) => {
-    return {
-      ...data,
-      items: data?.items.filter((item) => item.status === filterby),
-    };
-  };
 
   if (!space) {
     return null;
   }
   let proposalList = EmptyQuery;
   if (!tab || tab === "proposals-all") {
-    proposalList = filterProposals(proposals, "terminated");
+    proposalList = berachainProposals;
   } else if (tab === "proposals-pending") {
-    proposalList = pendingProposals;
+    proposalList = berachainProposals;
   } else if (tab === "proposals-active") {
-    proposalList = activeProposals;
+    proposalList = berachainProposals;
   } else if (tab === "proposals-closed") {
-    proposalList = filterProposals(closedProposals, "terminated");
+    proposalList = berachainProposals;
   } else if (tab === "proposals-terminated") {
-    proposalList = terminatedProposals(closedProposals, "terminated");
+    proposalList = berachainProposals;
   }
 
   const listTabs = [...SPACE_LIST_TAB_ITEMS];
+  console.log(berachainProposals, "berachainProposals");
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
@@ -317,32 +301,11 @@ export async function getServerSideProps(context) {
 
   const [
     { result: space },
-    { result: proposals },
-    { result: pendingProposals },
-    { result: activeProposals },
-    { result: closedProposals },
-    { result: beraProposals },
+    data,
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
-    ssrNextApi.fetch(`${spaceId}/proposals`, {
-      page: activeTab === "proposals-all" ? nPage : 1,
-      pageSize,
-    }),
-    ssrNextApi.fetch(`${spaceId}/proposals/pending`, {
-      page: activeTab === "proposals-pending" ? nPage : 1,
-      pageSize,
-    }),
-    ssrNextApi.fetch(`${spaceId}/proposals/active`, {
-      page: activeTab === "proposals-active" ? nPage : 1,
-      pageSize,
-    }),
-    ssrNextApi.fetch(`${spaceId}/proposals/closed`, {
-      page: activeTab === "proposals-closed" ? nPage : 1,
-      pageSize,
-    }),
-    await getBeraProposals(config)
+    await getBerachainProposals(config),
   ]);
-
   if (!space) {
     to404(context);
   }
@@ -352,12 +315,8 @@ export async function getServerSideProps(context) {
       spaceId,
       space: space || null,
       activeTab,
-      proposals: proposals ?? EmptyQuery,
-      pendingProposals: pendingProposals ?? EmptyQuery,
-      activeProposals: activeProposals ?? EmptyQuery,
-      closedProposals: closedProposals ?? EmptyQuery,
       defaultPage: { tab: activeTab ?? null, page: nPage },
-      beraProposals:beraProposals??null,
+      berachainProposals: data.proposals ?? null,
     },
   };
 }

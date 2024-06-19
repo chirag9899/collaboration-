@@ -21,8 +21,8 @@ const ProgressBar = ({
   return (
     <ProgressBarContainer>
       <ProgressTop>
-        <PointerSection left={finalTallyResult.yesCount}>
-          <span>Yes</span>
+        <PointerSection left={finalTallyResult.forCount}>
+          <span>For</span>
           <ProgressPointer></ProgressPointer>
         </PointerSection>
       </ProgressTop>
@@ -40,20 +40,16 @@ const ProgressBar = ({
       {footer && (
         <ProgressFooter>
           <div>
-            <span>Yes</span>
-            <span>{finalTallyResult.yesCount}</span>
+            <span>For</span>
+            <span>{finalTallyResult.forCount}</span>
           </div>
           <div>
             <span>Abstain</span>
             <span>{finalTallyResult.abstainCount}</span>
           </div>
           <div>
-            <span>No With Veto</span>
-            <span>{finalTallyResult.noWithVetoCount}</span>
-          </div>
-          <div>
-            <span>No</span>
-            <span>{finalTallyResult.noCount}</span>
+            <span>Against</span>
+            <span>{finalTallyResult.againstCount}</span>
           </div>
         </ProgressFooter>
       )}
