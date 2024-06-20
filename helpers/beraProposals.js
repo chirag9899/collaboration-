@@ -38,7 +38,7 @@ const GET_PROPOSALS = gql`
 `;
 
 function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
-  const currentTime = new Date().getTime();
+  const currentTime = Math.floor(Date.now() / 1000);
   const lastDate = new Date(voteEnd).getTime();
 
   const status = executed
@@ -129,12 +129,12 @@ export function getFiltredProposals(proposals) {
 
     const description = proposal.description;
     const newlineIndex = description.split("\n");
-    const againstSupports = calculateSupportLengths(
+    const abstainSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       0,
     );
     const forSupports = calculateSupportLengths(proposal?.supports ?? [], 1);
-    const abstainSupports = calculateSupportLengths(
+    const againstSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       2,
     );

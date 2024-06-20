@@ -104,7 +104,11 @@ export default function List({
   space,
   activeTab,
   defaultPage,
-  berachainProposals,
+  allProposalList,
+  activeProposalList,
+  pendingProposalList,
+  closedProposalList,
+  rejectedProposalList
 }) {
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
@@ -112,6 +116,7 @@ export default function List({
   const [showContent, setShowContent] = useState("proposals-all");
   const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
   const account = useSelector(loginAccountSelector);
+  const [proposalList, setProposalList] = useState(allProposalList);
 
   let chain = chainMap.get(account?.network);
   const isEvm = chain?.chainType == "evm";
@@ -146,25 +151,35 @@ export default function List({
     );
   }, [dispatch, space]);
 
-
   if (!space) {
     return null;
   }
-  let proposalList = EmptyQuery;
-  if (!tab || tab === "proposals-all") {
-    proposalList = berachainProposals;
-  } else if (tab === "proposals-pending") {
-    proposalList = berachainProposals;
-  } else if (tab === "proposals-active") {
-    proposalList = berachainProposals;
-  } else if (tab === "proposals-closed") {
-    proposalList = berachainProposals;
-  } else if (tab === "proposals-terminated") {
-    proposalList = berachainProposals;
-  }
+
+  useEffect(() => {
+    console.log(tab, "useEffect call");
+  
+    switch (tab) {
+      case "proposals-rejected":
+        setProposalList(rejectedProposalList);
+        break;
+      case "proposals-pending":
+        setProposalList(pendingProposalList);
+        break;
+      case "proposals-active":
+        setProposalList(activeProposalList);
+        break;
+      case "proposals-closed":
+        setProposalList(closedProposalList);
+        break;
+      default:
+        setProposalList(allProposalList);
+    }
+  }, [tab]);
+
+  console.log(allProposalList,"allProposalList")
+  
 
   const listTabs = [...SPACE_LIST_TAB_ITEMS];
-  console.log(berachainProposals, "berachainProposals");
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
@@ -299,10 +314,7 @@ export async function getServerSideProps(context) {
     status: 1,
   };
 
-  const [
-    { result: space },
-    data,
-  ] = await Promise.all([
+  const [{ result: space }, data] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     await getBerachainProposals(config),
   ]);
@@ -310,13 +322,39 @@ export async function getServerSideProps(context) {
     to404(context);
   }
 
+  let allProposalList = [];
+  let activeProposalList = [];
+  let pendingProposalList = [];
+  let closedProposalList = [];
+  let rejectedProposalList = []
+
+  allProposalList = data.proposals;
+  pendingProposalList = data.proposals.filter(
+    (item) =>
+      item.statusDetails.status === "pending" ||
+      item.statusDetails.status === "pending execution",
+  );
+  activeProposalList = data.proposals.filter(
+    (item) => item.statusDetails.status === "active",
+  );
+  closedProposalList = data.proposals.filter(
+    (item) => item.statusDetails.status === "closed",
+  );
+  rejectedProposalList = data.proposals.filter(
+    (item) => item.statusDetails.status === "rejcted",
+  );
+
   return {
     props: {
       spaceId,
       space: space || null,
       activeTab,
       defaultPage: { tab: activeTab ?? null, page: nPage },
-      berachainProposals: data.proposals ?? null,
+      allProposalList,
+      activeProposalList,
+      pendingProposalList,
+      closedProposalList,
+      rejectedProposalList
     },
   };
 }

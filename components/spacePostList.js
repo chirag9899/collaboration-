@@ -48,7 +48,7 @@ export default function SpacePostList({
   spaces,
   showSpace = false,
   limit = 5,
-  status = 0,
+  status,
 }) {
   const [data, setData] = useState([]);
   const [from, setFrom] = useState(0);
@@ -57,16 +57,22 @@ export default function SpacePostList({
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchProposals = async (from, to) => {
-    const result = posts.slice(from,to)
-    setIsLoading(true)
+    const result = posts?.length > 0 ? posts?.slice(from, to) : [];
+    setIsLoading(true);
     setTotalCount(posts.length);
     setData((prev) => [...prev, ...result]);
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   useEffect(() => {
+    setData([]);
+    setFrom(0);
+    setTo(5);
+  }, [status]);
+
+  useEffect(() => {
     fetchProposals(from, to);
-  }, []);
+  }, [posts]);
 
   const handleLoadMore = () => {
     if (to < totalCount) {
