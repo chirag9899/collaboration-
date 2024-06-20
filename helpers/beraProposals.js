@@ -37,65 +37,6 @@ const GET_PROPOSALS = gql`
   }
 `;
 
-// Second Query to get supports by proposalId
-const GET_SUPPORTS = gql`
-  query votes($proposalId: BigInt!) {
-    proposalSupports(where: { proposal_: { proposalId: $proposalId } }) {
-      weight
-      id
-      support
-      votes {
-        weight
-        reason
-        params
-        id
-      }
-      proposal {
-        description
-        eta
-        executed
-        id
-        proposalId
-        proposer {
-          id
-        }
-      }
-    }
-  }
-`;
-
-// First Query to get proposals
-const GET_PROPOSALS_CREATEDS = gql`
-  query proposals {
-    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
-      proposal {
-        proposalId
-        description
-        canceled
-        eta
-        executed
-        id
-        queued
-        voteEnd
-        voteStart
-        supports {
-          weight
-          support
-          id
-          votes {
-            id
-            reason
-            weight
-            voter {
-              id
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
 function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
   const currentTime = new Date().getTime();
   const lastDate = new Date(voteEnd).getTime();
@@ -178,17 +119,10 @@ const calculateSupportLengths = (supports, supportType) => {
   ];
 };
 
-export async function getProposalSupports(proposals) {
+export function getFiltredProposals(proposals) {
   const proposalsWithSupports = [];
   for (const proposal of proposals) {
-    const proposalId = proposal.proposalId;
-    const supportsData = await client.query({
-      query: GET_SUPPORTS,
-      variables: { proposalId },
-    });
-
-    const supports = supportsData.data.proposalSupports;
-    const votesCount = supports.reduce(
+    const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
     );
@@ -227,7 +161,7 @@ export async function getProposalSupports(proposals) {
 
     const proposalWithSupports = {
       ...proposal,
-      supports: supportsData.data.proposalSupports,
+      supports: proposal.supports,
       totalVotes: formatNumber(votesCount),
       title: newlineIndex[0],
       voteEnd: getDateFromTimestamp(proposal.voteEnd),
@@ -256,30 +190,14 @@ export async function getProposalSupports(proposals) {
   return proposalsWithSupports;
 }
 
-export async function getProposalCreateds(proposals) {
-  const proposalsWithCreateds = [];
-  for (const proposal of proposals) {
-    const proposalId = proposal.proposalId;
-    const supportsData = await client.query({
-      query: GET_PROPOSALS_CREATEDS,
-      variables: { proposalId },
-    });
-
-    proposalsWithCreateds.push(...supportsData.data.proposalCreateds);
-  }
-  return proposalsWithCreateds;
-}
-
 export async function getBerachainProposals() {
   try {
     const { data } = await client.query({ query: GET_PROPOSALS });
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
-    const proposalsSupports = await getProposalSupports(proposals);
-    const proposalsCreateds = await getProposalCreateds(proposals);
+    const result = getFiltredProposals(proposals);
 
     return {
-      proposals: proposalsSupports,
-      proposalsCreateds: proposalsCreateds,
+      proposals: result,
     };
   } catch (e) {
     console.error(e);
