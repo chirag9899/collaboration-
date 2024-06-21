@@ -332,7 +332,7 @@ export async function getServerSideProps(context) {
   pendingProposalList = data.proposals.filter(
     (item) =>
       item.statusDetails.status === "pending" ||
-      item.statusDetails.status === "pending execution",
+      item.statusDetails.status === "pending",
   );
   activeProposalList = data.proposals.filter(
     (item) => item.statusDetails.status === "active",

@@ -47,7 +47,7 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
     ? "canceled"
     : queued
     ? !executed
-      ? "pending execution"
+      ? "pending"
       : "pending"
     : currentTime > lastDate
     ? "closed"
@@ -75,8 +75,8 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
       backgroundColor: "rgba(0, 255, 0, 0.1)",
     },
     pending: {
-      color: "var(--primary)",
-      backgroundColor: "rgba(235, 182, 0, 0.1)",
+      color: "var(--netural-11)",
+      backgroundColor: "rgba(139,148,158, 0.1)",
     },
     default: {
       color: "red",

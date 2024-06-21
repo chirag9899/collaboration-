@@ -287,11 +287,11 @@ export default function SpacePost({ data, spaces, space, postNum }) {
           />
         </RightWrapper>
       </InfoWrapper>
-      <PanelWrapper folded={true} head={<h5>Description:- {data.title}</h5>}>
+      {/* <PanelWrapper folded={true} head={<h5>Description:- {data.title}</h5>}>
         <Content>
           <MarkdownPreviewer content={data?.description} />
         </Content>
-      </PanelWrapper>
+      </PanelWrapper> */}
       {/* </HardLink> */}
       {open && (
         <AddIncentive
