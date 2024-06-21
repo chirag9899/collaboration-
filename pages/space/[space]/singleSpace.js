@@ -176,9 +176,6 @@ export default function List({
     }
   }, [tab]);
 
-  console.log(allProposalList,"allProposalList")
-  
-
   const listTabs = [...SPACE_LIST_TAB_ITEMS];
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
@@ -316,7 +313,7 @@ export async function getServerSideProps(context) {
 
   const [{ result: space }, data] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
-    await getBerachainProposals(config),
+    await getBerachainProposals(),
   ]);
   if (!space) {
     to404(context);
@@ -326,22 +323,20 @@ export async function getServerSideProps(context) {
   let activeProposalList = [];
   let pendingProposalList = [];
   let closedProposalList = [];
-  let rejectedProposalList = []
+  let rejectedProposalList = [];
 
   allProposalList = data.proposals;
   pendingProposalList = data.proposals.filter(
-    (item) =>
-      item.statusDetails.status === "pending" ||
-      item.statusDetails.status === "pending",
+    (item) => item.status === "pending"
   );
   activeProposalList = data.proposals.filter(
-    (item) => item.statusDetails.status === "active",
+    (item) => item.status === "active"
   );
   closedProposalList = data.proposals.filter(
-    (item) => item.statusDetails.status === "closed",
+    (item) => item.status === "closed"
   );
   rejectedProposalList = data.proposals.filter(
-    (item) => item.statusDetails.status === "rejcted",
+    (item) => item.status === "terminated"
   );
 
   return {

@@ -37,21 +37,35 @@ const GET_PROPOSALS = gql`
   }
 `;
 
-function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
+function getProposalStatusDetails(executed, queued, canceled, voteEnd, voteStart) {
   const currentTime = Math.floor(Date.now() / 1000);
-  const lastDate = new Date(voteEnd).getTime();
+  let status
+  // "terminated",
+  // "pending",
+  // "active",
+  // "closeToEnd",
+  // "closed"
 
-  const status = executed
-    ? "executed"
-    : canceled
-    ? "canceled"
-    : queued
-    ? !executed
-      ? "pending"
-      : "pending"
-    : currentTime > lastDate
-    ? "closed"
-    : "active";
+  if (!canceled && Number(currentTime) < Number(voteStart)) {
+    status = 'pending'
+  }
+
+  // overkill
+  // if (!canceled && Number(currentTime) >= Number(voteEnd) - 24 * 3600) {
+  //   status = 'closeToEnd'
+  // }
+
+  if (!canceled && Number(currentTime) >= Number(voteEnd)){
+    status = 'closed'
+  }
+
+  if (!canceled && Number(currentTime) <= Number(voteEnd)) {
+    status = 'active'
+  }
+
+  if (canceled) {
+    status = 'terminated'
+  }
 
   const statusStyles = {
     passed: {
@@ -87,7 +101,7 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
   const { color, backgroundColor } =
     statusStyles[status] || statusStyles.default;
 
-  return { status, color, backgroundColor };
+  return { status, color, backgroundColor, status };
 }
 
 const calculateSupportLengths = (supports, supportType) => {
@@ -119,7 +133,7 @@ const calculateSupportLengths = (supports, supportType) => {
   ];
 };
 
-export function getFiltredProposals(proposals) {
+export function getFilteredProposals(proposals) {
   const proposalsWithSupports = [];
   for (const proposal of proposals) {
     const votesCount = proposal.supports.reduce(
@@ -153,20 +167,27 @@ export function getFiltredProposals(proposals) {
     const quorum = parseFloat(0.2);
     const threshold = parseFloat(0.5);
     const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
-    const quorumPercentage = parseInt(totalVotes.toString()) / quorum + "%";
     const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
+    const statusDetails = getProposalStatusDetails(
+      proposal.executed,
+      proposal.queued,
+      proposal.canceled,
+      proposal.voteEnd,
+      proposal.voteStart
+    )
 
     const proposalWithSupports = {
       ...proposal,
       supports: proposal.supports,
       totalVotes: formatNumber(votesCount),
-      title: newlineIndex[0],
+      title: newlineIndex[0].replace('#', ''),
+      description: description.replace(newlineIndex[0], ''),
       voteEnd: getDateFromTimestamp(proposal.voteEnd),
       voteStart: getDateFromTimestamp(proposal.voteStart),
-      quorumPer: quorumPercentage,
+      quorumPer: Number(forVotesPer).toFixed(2) + "%",
       totalvotesPercentage: totalvotesPercentage,
       finalTallyResult: {
         forCount: Number(forVotesPer).toFixed(2) + "%",
@@ -174,13 +195,8 @@ export function getFiltredProposals(proposals) {
         againstCount: Number(againstVotesPer).toFixed(2) + "%",
       },
       thresholdPercentage: Number(thresholdPercentage) + "%",
-      statusDetails: getProposalStatusDetails(
-        proposal.executed,
-        proposal.queued,
-        proposal.canceled,
-        proposal.voteEnd,
-      ),
-      metadata: "Test",
+      status: statusDetails.status,
+      statusDetails: statusDetails,
       requiredQuorumPercentage:
         Number(requiredQuorumPercentage).toFixed() + "%",
     };
@@ -194,7 +210,7 @@ export async function getBerachainProposals() {
   try {
     const { data } = await client.query({ query: GET_PROPOSALS });
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
-    const result = getFiltredProposals(proposals);
+    const result = getFilteredProposals(proposals);
 
     return {
       proposals: result,
