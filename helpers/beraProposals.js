@@ -37,80 +37,35 @@ const GET_PROPOSALS = gql`
   }
 `;
 
-// Second Query to get supports by proposalId
-const GET_SUPPORTS = gql`
-  query votes($proposalId: BigInt!) {
-    proposalSupports(where: { proposal_: { proposalId: $proposalId } }) {
-      weight
-      id
-      support
-      votes {
-        weight
-        reason
-        params
-        id
-      }
-      proposal {
-        description
-        eta
-        executed
-        id
-        proposalId
-        proposer {
-          id
-        }
-      }
-    }
+function getProposalStatusDetails(executed, queued, canceled, voteEnd, voteStart) {
+  const currentTime = Math.floor(Date.now() / 1000);
+  let status
+  // "terminated",
+  // "pending",
+  // "active",
+  // "closeToEnd",
+  // "closed"
+
+  if (!canceled && Number(currentTime) < Number(voteStart)) {
+    status = 'pending'
   }
-`;
 
-// First Query to get proposals
-const GET_PROPOSALS_CREATEDS = gql`
-  query proposals {
-    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
-      proposal {
-        proposalId
-        description
-        canceled
-        eta
-        executed
-        id
-        queued
-        voteEnd
-        voteStart
-        supports {
-          weight
-          support
-          id
-          votes {
-            id
-            reason
-            weight
-            voter {
-              id
-            }
-          }
-        }
-      }
-    }
+  // overkill
+  // if (!canceled && Number(currentTime) >= Number(voteEnd) - 24 * 3600) {
+  //   status = 'closeToEnd'
+  // }
+
+  if (!canceled && Number(currentTime) >= Number(voteEnd)){
+    status = 'closed'
   }
-`;
 
-function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
-  const currentTime = new Date().getTime();
-  const lastDate = new Date(voteEnd).getTime();
+  if (!canceled && Number(currentTime) <= Number(voteEnd)) {
+    status = 'active'
+  }
 
-  const status = executed
-    ? "executed"
-    : canceled
-    ? "canceled"
-    : queued
-    ? !executed
-      ? "pending execution"
-      : "pending"
-    : currentTime > lastDate
-    ? "closed"
-    : "active";
+  if (canceled) {
+    status = 'terminated'
+  }
 
   const statusStyles = {
     passed: {
@@ -134,8 +89,8 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
       backgroundColor: "rgba(0, 255, 0, 0.1)",
     },
     pending: {
-      color: "var(--primary)",
-      backgroundColor: "rgba(235, 182, 0, 0.1)",
+      color: "var(--netural-11)",
+      backgroundColor: "rgba(139,148,158, 0.1)",
     },
     default: {
       color: "red",
@@ -146,7 +101,7 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd) {
   const { color, backgroundColor } =
     statusStyles[status] || statusStyles.default;
 
-  return { status, color, backgroundColor };
+  return { status, color, backgroundColor, status };
 }
 
 const calculateSupportLengths = (supports, supportType) => {
@@ -178,29 +133,22 @@ const calculateSupportLengths = (supports, supportType) => {
   ];
 };
 
-export async function getProposalSupports(proposals) {
+export function getFilteredProposals(proposals) {
   const proposalsWithSupports = [];
   for (const proposal of proposals) {
-    const proposalId = proposal.proposalId;
-    const supportsData = await client.query({
-      query: GET_SUPPORTS,
-      variables: { proposalId },
-    });
-
-    const supports = supportsData.data.proposalSupports;
-    const votesCount = supports.reduce(
+    const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
     );
 
     const description = proposal.description;
     const newlineIndex = description.split("\n");
-    const againstSupports = calculateSupportLengths(
+    const abstainSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       0,
     );
     const forSupports = calculateSupportLengths(proposal?.supports ?? [], 1);
-    const abstainSupports = calculateSupportLengths(
+    const againstSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       2,
     );
@@ -219,20 +167,27 @@ export async function getProposalSupports(proposals) {
     const quorum = parseFloat(0.2);
     const threshold = parseFloat(0.5);
     const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
-    const quorumPercentage = parseInt(totalVotes.toString()) / quorum + "%";
     const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
+    const statusDetails = getProposalStatusDetails(
+      proposal.executed,
+      proposal.queued,
+      proposal.canceled,
+      proposal.voteEnd,
+      proposal.voteStart
+    )
 
     const proposalWithSupports = {
       ...proposal,
-      supports: supportsData.data.proposalSupports,
+      supports: proposal.supports,
       totalVotes: formatNumber(votesCount),
-      title: newlineIndex[0],
+      title: newlineIndex[0].replace('#', ''),
+      description: description.replace(newlineIndex[0], ''),
       voteEnd: getDateFromTimestamp(proposal.voteEnd),
       voteStart: getDateFromTimestamp(proposal.voteStart),
-      quorumPer: quorumPercentage,
+      quorumPer: Number(forVotesPer).toFixed(2) + "%",
       totalvotesPercentage: totalvotesPercentage,
       finalTallyResult: {
         forCount: Number(forVotesPer).toFixed(2) + "%",
@@ -240,13 +195,8 @@ export async function getProposalSupports(proposals) {
         againstCount: Number(againstVotesPer).toFixed(2) + "%",
       },
       thresholdPercentage: Number(thresholdPercentage) + "%",
-      statusDetails: getProposalStatusDetails(
-        proposal.executed,
-        proposal.queued,
-        proposal.canceled,
-        proposal.voteEnd,
-      ),
-      metadata: "Test",
+      status: statusDetails.status,
+      statusDetails: statusDetails,
       requiredQuorumPercentage:
         Number(requiredQuorumPercentage).toFixed() + "%",
     };
@@ -256,30 +206,14 @@ export async function getProposalSupports(proposals) {
   return proposalsWithSupports;
 }
 
-export async function getProposalCreateds(proposals) {
-  const proposalsWithCreateds = [];
-  for (const proposal of proposals) {
-    const proposalId = proposal.proposalId;
-    const supportsData = await client.query({
-      query: GET_PROPOSALS_CREATEDS,
-      variables: { proposalId },
-    });
-
-    proposalsWithCreateds.push(...supportsData.data.proposalCreateds);
-  }
-  return proposalsWithCreateds;
-}
-
 export async function getBerachainProposals() {
   try {
     const { data } = await client.query({ query: GET_PROPOSALS });
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
-    const proposalsSupports = await getProposalSupports(proposals);
-    const proposalsCreateds = await getProposalCreateds(proposals);
+    const result = getFilteredProposals(proposals);
 
     return {
-      proposals: proposalsSupports,
-      proposalsCreateds: proposalsCreateds,
+      proposals: result,
     };
   } catch (e) {
     console.error(e);
