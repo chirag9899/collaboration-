@@ -133,3 +133,9 @@ export const ChoiceWrapper = styled.div`
   line-height: 24px;
   color: var(--neutral-1);
 `;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
