@@ -79,7 +79,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const network = await window.ethereum.request({ method: 'eth_chainId' });
             const accountAddress = accounts[0];
-            if (accountAddress !== '' || accountAddress !== 'undefined' || ethers.utils.isAddress(accountAddress)) {
+            if (accountAddress && ethers.utils.isAddress(accountAddress)) {
               setAddress(accounts[0]);
               setChain(network[0]);
               dispatch(
@@ -91,7 +91,9 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               dispatch(setConnectedWallet(selectedWallet.id))
               dispatch(setShowHeaderMenu(false));
             } else {
-                clearCookie("addressV3");
+              setAccount("")
+              clearCookie("connectedWallet");
+              clearCookie("addressV3");
             }
           } catch (error) {
             console.error('Failed to connect to Metamask:', error);
@@ -108,7 +110,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           try {
             let res = await window.unisat.requestAccounts();
             const accountAddress = res[0];
-              if (accountAddress !== '' || accountAddress !== 'undefined' || validate(accountAddress)) {
+              if (accountAddress && validate(accountAddress)) {
                 setAddress(res[0]);
                 dispatch(
                   setAccount({
@@ -119,6 +121,8 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
                 dispatch(setConnectedWallet(selectedWallet.id))
                 dispatch(setShowHeaderMenu(false));
               } else {
+                setAccount("")
+                clearCookie("connectedWallet");
                 clearCookie("addressV3");
               }
           } catch (error) {
@@ -142,7 +146,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               (address) => address.purpose === AddressPurpose.Ordinals
             );
             const accountAddress = ordinalsAddressItem.address;
-            if (accountAddress !== '' || accountAddress !== 'undefined' || validate(accountAddress)) {
+            if (accountAddress && validate(accountAddress)) {
               setAddress(ordinalsAddressItem.address);
               dispatch(
                 setAccount({
@@ -153,6 +157,8 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               dispatch(setConnectedWallet(selectedWallet.id))
               dispatch(setShowHeaderMenu(false));
             } else {
+              setAccount("")
+              clearCookie("connectedWallet");
               clearCookie("addressV3");
             }
           } catch (error) {
