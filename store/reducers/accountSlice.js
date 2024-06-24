@@ -5,6 +5,8 @@ import { isAddress } from "@polkadot/util-crypto";
 import { btcChains, chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
 import encodeAddressByChain from "../../frontedUtils/chain/addr";
 import nextApi from "services/nextApi";
+import { ethers } from "ethers";
+import { validate } from "bitcoin-address-validation";
 
 const accountSlice = createSlice({
   name: "account",
@@ -24,11 +26,22 @@ const accountSlice = createSlice({
       if (payload) {
         state.account = payload;
         if (typeof window !== "undefined") {
-          setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
+          const accountAddress = payload.address;
+          if (accountAddress && ethers.utils.isAddress(accountAddress)) {
+            setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
+          } else {
+            if (accountAddress && validate(accountAddress)) {
+              setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
+            } else {
+              clearCookie("connectedWallet");
+              clearCookie("addressV3");
+            }
+          }
         }
       } else {
         state.account = null;
         if (typeof window !== "undefined") {
+          clearCookie("connectedWallet");
           clearCookie("addressV3");
         }
       }
