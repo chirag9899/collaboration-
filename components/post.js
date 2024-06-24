@@ -16,6 +16,7 @@ import { Flex, FlexBetween } from "@osn/common-ui";
 import { p_14_medium } from "../styles/componentCss";
 import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "./styles/colors";
+const DEFAULT_ICON_URL = '/imgs/icons/pending.svg';
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -92,8 +93,24 @@ export default function Post({ data, showSpace, space, spaces }) {
   const getSpaceDisplayName = (spaceId) => getSpaceFromId(spaceId)?.name;
   const windowSize = useWindowSize();
   const [showRichInfo, setShowRichInfo] = useState(true);
+  const [spaceIconUrl, setSpaceIconUrl] = useState(DEFAULT_ICON_URL);
 
   useEffect(() => {
+    async function validateImageUrl(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        if (response.ok && response.headers.get('Content-Type').startsWith('image/')) {
+          return url;
+        }
+      } catch (error) {
+        console.error('Error validating image URL:', error);
+      }
+      return DEFAULT_ICON_URL;
+    }
+    const spaceInfo = space ?? getSpaceFromId(data.space);
+    const spaceIcon = getSpaceIconUrl(spaceInfo);
+
+    validateImageUrl(spaceIcon).then(validUrl => setSpaceIconUrl(validUrl));
     if (windowSize.width <= 900) {
       setShowRichInfo(false);
     } else {
@@ -105,10 +122,8 @@ export default function Post({ data, showSpace, space, spaces }) {
     data.networksConfig,
     data.proposerNetwork,
   );
-  const spaceSupportMultiChain = proposerNetworkConfig?.networks?.length > 1;
-
   const spaceInfo = space ?? getSpaceFromId(data.space);
-  const spaceIcon = getSpaceIconUrl(spaceInfo);
+  const spaceSupportMultiChain = proposerNetworkConfig?.networks?.length > 1;
 
   return (
     <Wrapper>
@@ -129,7 +144,7 @@ export default function Post({ data, showSpace, space, spaces }) {
               />
             )}
             {!showRichInfo && (
-              <img width="20px" height="20px" src={spaceIcon} alt="" />
+              <img width="20px" height="20px" src={spaceIconUrl} alt="" />
             )}
             <PostTime post={data} />
             {showSpace && showRichInfo && (
@@ -139,7 +154,11 @@ export default function Post({ data, showSpace, space, spaces }) {
                   width="20px"
                   height="20px"
                   className="ml-4px"
-                  src={spaceIcon}
+                  src={spaceIconUrl}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = DEFAULT_ICON_URL;
+                  }}
                   alt=""
                 />
                 <InternalLink href={`/space/${data.space}`}>

@@ -26,6 +26,9 @@ export const HeadWrapper = styled.div`
 `;
 export const ModalBodyWrapper = styled.div`
   margin-top: 20px;
+  overflow-y: auto;
+  max-height: 406px;
+  overflow-x: hidden;
 `;
 export const Text = styled.p`
   ${p_16_semibold};
@@ -132,4 +135,14 @@ export const ChoiceWrapper = styled.div`
   font-size: 14px;
   line-height: 24px;
   color: var(--neutral-1);
+`;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+export const DetailWrapper = styled.div`
+  margin-bottom: 10px;
 `;

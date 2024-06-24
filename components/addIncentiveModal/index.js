@@ -11,6 +11,8 @@ import {
   LabelWrapper,
   InputGroup,
   ChoiceWrapper,
+  TitleWrapper,
+  DetailWrapper,
 } from "./styled";
 import Image from "next/image";
 import { SectionTitle } from "../styled/sectionTitle";
@@ -24,6 +26,9 @@ import { useSelector } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
 import Loader from "../Button/Loader";
 import { ethers } from "ethers";
+import Tooltip from "../tooltip";
+import AssetDetail from "../newSpace/step2/asset/assetDetail";
+import { noop } from "utils";
 
 const AddIncentive = ({
   choices,
@@ -43,12 +48,15 @@ const AddIncentive = ({
     availableBal: 0,
     allowance: 0,
   });
+  const [assetType, setAssetType] = useState("contract");
+  const [symbol, setSymbol] = useState("");
+  const [decimals, setDecimals] = useState(0);
 
   const [errors, setErrors] = useState({
     tokenErr: null,
     amountErr: null,
   });
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const address = useSelector(addressSelector);
 
@@ -88,7 +96,7 @@ const AddIncentive = ({
       const allowanceResult = await getAllowance(
         address,
         tokenAddress,
-        beravoteAddress
+        beravoteAddress,
       );
       //const price = await getBerachainSubgraphPrice(tokenAddress);
       const price = 1;
@@ -105,8 +113,9 @@ const AddIncentive = ({
         tokenErr: null,
       }));
 
-    // Revalidate incentive amount after getting new balance and allowance
-    validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
+      setSymbol(allowanceResult.symbol);
+      setDecimals(allowanceResult.decimals); // Revalidate incentive amount after getting new balance and allowance
+      validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
     }
   };
 
@@ -125,17 +134,16 @@ const AddIncentive = ({
     } else if (amount > allowance) {
       amountError = "Incentive amount is greater than allowance.";
     }
-  
+
     setErrors((prev) => ({
       ...prev,
       amountErr: amountError,
     }));
   };
 
-  
   const onChangeHandler = (event) => {
     const { value, name, type, checked } = event.target;
-    console.log(value ,availableBal, allowance)
+    console.log(value, availableBal, allowance);
     setFormdata((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
@@ -187,12 +195,14 @@ const AddIncentive = ({
 
   const onApproveTokenHandler = async () => {
     setIsLoading(true); // Start loading
-    const amountToApprove = ethers.utils.parseUnits(incentiveAmount.toString(), 18); 
+    const amountToApprove = ethers.utils.parseUnits(
+      incentiveAmount.toString(),
+      18,
+    );
     await approveToken(address, tokenAddress, beravoteAddress, amountToApprove);
     await getTokenBalanceAndAllowance(); // Refresh balance and allowance after approval
     setIsLoading(false); // Stop loading
   };
-
 
   return (
     <Modal
@@ -227,9 +237,23 @@ const AddIncentive = ({
           />
           {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
+
+        {symbol && decimals && (
+          <DetailWrapper>
+            <AssetDetail
+              symbol={symbol}
+              decimals={decimals}
+              asset={[]}
+              setPartialAsset={noop}
+            />
+          </DetailWrapper>
+        )}
         <InputWrapper>
           <LabelWrapper>
-            <SectionTitle>Incentive Amount</SectionTitle>
+            <TitleWrapper>
+              <SectionTitle>Incentive Amount</SectionTitle>
+              {amountErr && <Tooltip content={amountErr} iconSize={20} />}
+            </TitleWrapper>
             <div className="available_amount">
               <span>Available :</span>
               <span>{parseFloat(availableBal).toFixed(5)}</span>
@@ -256,7 +280,7 @@ const AddIncentive = ({
             </BtnWrapper>
           </InputGroup>
         </InputWrapper>
-        {amountErr && <ErrorMessage>{amountErr}</ErrorMessage>}
+        {/* {amountErr && <ErrorMessage>{amountErr}</ErrorMessage>} */}
         <CheckBox
           onChangeHandler={onChangeHandler}
           label="Add incentives for Voting on any option"
@@ -273,7 +297,7 @@ const AddIncentive = ({
         </InputWrapper>
         <ActionsWrapper>
           {isLoading ? (
-            <Loader /> 
+            <Loader />
           ) : (
             <>
               <BtnWrapper
