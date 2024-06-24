@@ -49,10 +49,10 @@ export default function Connect({ networks }) {
   useEffect(() => {
     if (accounts && accounts.length > 0) {
       const accountAddress = accounts[0].address;
-      if (accountAddress !== '' || accountAddress === 'undefined' || ethers.utils.isAddress(accountAddress)) {
+      if (accountAddress !== '' || accountAddress !== 'undefined' || ethers.utils.isAddress(accountAddress)) {
         setAddress(accountAddress);
       } else {
-        if (accountAddress !== '' || accountAddress === 'undefined' || validate(accountAddress)) {
+        if (accountAddress !== '' || accountAddress !== 'undefined' || validate(accountAddress)) {
           setAddress(accountAddress);
         } else {
           clearCookie("addressV3");
@@ -61,10 +61,10 @@ export default function Connect({ networks }) {
     }
     if (address == null) {
       const cookieAddress = getCookie("addressV3").split("/")[1];
-      if (cookieAddress !== '' || cookieAddress === 'undefined' || ethers.utils.isAddress(cookieAddress)) {
+      if (cookieAddress !== '' || cookieAddress !== 'undefined' || ethers.utils.isAddress(cookieAddress)) {
         setAddress(cookieAddress);
       } else {
-        if (cookieAddress !== '' || cookieAddress === 'undefined' || validate(cookieAddress)) {
+        if (cookieAddress !== '' || cookieAddress !== 'undefined' || validate(cookieAddress)) {
           setAddress(cookieAddress);
         } else {
           clearCookie("addressV3");
