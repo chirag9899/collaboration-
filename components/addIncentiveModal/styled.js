@@ -26,6 +26,8 @@ export const HeadWrapper = styled.div`
 `;
 export const ModalBodyWrapper = styled.div`
   margin-top: 20px;
+  overflow: auto;
+  max-height: 406px;
 `;
 export const Text = styled.p`
   ${p_16_semibold};
@@ -139,3 +141,7 @@ export const TitleWrapper = styled.div`
   align-items: center;
   gap: 5px;
 `;
+
+export const DetailWrapper = styled.div`
+margin-bottom: 10px;
+`

@@ -12,6 +12,7 @@ import {
   InputGroup,
   ChoiceWrapper,
   TitleWrapper,
+  DetailWrapper,
 } from "./styled";
 import Image from "next/image";
 import { SectionTitle } from "../styled/sectionTitle";
@@ -26,6 +27,9 @@ import { addressSelector } from "store/reducers/accountSlice";
 import Loader from "../Button/Loader";
 import { ethers } from "ethers";
 import Tooltip from "../tooltip";
+import AssetTypeSelector from "../newSpace/step2/asset/statemineAssetConfig/assetTypeSelector";
+import AssetDetail from "../newSpace/step2/asset/assetDetail";
+import { noop } from "utils";
 
 const AddIncentive = ({
   choices,
@@ -45,6 +49,9 @@ const AddIncentive = ({
     availableBal: 0,
     allowance: 0,
   });
+  const [assetType, setAssetType] = useState("contract");
+  const [symbol, setSymbol] = useState("");
+  const [decimals, setDecimals] = useState(0);
 
   const [errors, setErrors] = useState({
     tokenErr: null,
@@ -107,7 +114,8 @@ const AddIncentive = ({
         tokenErr: null,
       }));
 
-      // Revalidate incentive amount after getting new balance and allowance
+      setSymbol(allowanceResult.symbol);
+      setDecimals(allowanceResult.decimals); // Revalidate incentive amount after getting new balance and allowance
       validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
     }
   };
@@ -230,6 +238,21 @@ const AddIncentive = ({
           />
           {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
+
+        {symbol && decimals && (
+          <DetailWrapper>
+            <InputWrapper>
+              <SectionTitle>Token Type</SectionTitle>
+              <AssetTypeSelector onSelect={setAssetType} />
+            </InputWrapper>
+            <AssetDetail
+              symbol={symbol}
+              decimals={decimals}
+              asset={[]}
+              setPartialAsset={noop}
+            />
+          </DetailWrapper>
+        )}
         <InputWrapper>
           <LabelWrapper>
             <TitleWrapper>
