@@ -79,7 +79,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const network = await window.ethereum.request({ method: 'eth_chainId' });
             const accountAddress = accounts[0];
-            if (accountAddress !== '' || accountAddress === 'undefined' || ethers.utils.isAddress(accountAddress)) {
+            if (accountAddress !== '' || accountAddress !== 'undefined' || ethers.utils.isAddress(accountAddress)) {
               setAddress(accounts[0]);
               setChain(network[0]);
               dispatch(
@@ -108,7 +108,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           try {
             let res = await window.unisat.requestAccounts();
             const accountAddress = res[0];
-              if (accountAddress !== '' || accountAddress === 'undefined' || validate(accountAddress)) {
+              if (accountAddress !== '' || accountAddress !== 'undefined' || validate(accountAddress)) {
                 setAddress(res[0]);
                 dispatch(
                   setAccount({
@@ -142,7 +142,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
               (address) => address.purpose === AddressPurpose.Ordinals
             );
             const accountAddress = ordinalsAddressItem.address;
-            if (accountAddress !== '' || accountAddress === 'undefined' || validate(accountAddress)) {
+            if (accountAddress !== '' || accountAddress !== 'undefined' || validate(accountAddress)) {
               setAddress(ordinalsAddressItem.address);
               dispatch(
                 setAccount({
