@@ -15,10 +15,12 @@ import {
   connectedWalletSelector
 } from "../../store/reducers/showConnectSlice";
 import { loginAccountSelector } from "store/reducers/accountSlice";
-import { getCookie } from "frontedUtils/cookie";
+import { getCookie, clearCookie } from "frontedUtils/cookie";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { useWeb3Modal, useDisconnect, useWeb3ModalAccount, useWeb3ModalEvents } from "@web3modal/ethers5/react";
 import { _handleChainSelect, _handleWalletSelect } from "./helper";
+import { ethers } from "ethers";
+import { validate } from "bitcoin-address-validation";
 
 const Wrapper = styled.div``;
 
@@ -49,7 +51,16 @@ export default function Connect({ networks }) {
       setAddress(accounts[0].address);
     }
     if (address == null) {
-      setAddress(getCookie("addressV3").split("/")[1]);
+      const cookieAddress = getCookie("addressV3").split("/")[1];
+      if (cookieAddress !== '' || cookieAddress === 'undefined' || ethers.utils.isAddress(cookieAddress)){
+        setAddress(cookieAddress);
+      } else {
+        if (cookieAddress !== '' || cookieAddress === 'undefined' || validate(cookieAddress)) {
+          setAddress(cookieAddress);
+        } else {
+          clearCookie("addressV3");
+        }
+      }
     }
   }, [accounts]);
 
