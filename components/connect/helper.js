@@ -7,9 +7,10 @@ import { switchChain as metamaskSwitchChain } from "@/components/connect/metamas
 import { switchNetwork as unisatSwitchNetwork } from "@/components/connect/unisat/index";
 import { switchNetwork as walletConnectSwitchNetworkWc} from "./walletConnect/web3Modal";
 import { setConnectedWallet } from "store/reducers/showConnectSlice";
+import { clearCookie } from "frontedUtils/cookie";
 import { request, AddressPurpose } from "@sats-connect/core";
-
-
+import { ethers } from "ethers";
+import { validate } from "bitcoin-address-validation";
 import { chainMap, supportedChains } from "frontedUtils/consts/chains";
 
 export const _handleChainSelect = async (connectedWallet, dispatch, address, chainMap, chain) => {
@@ -77,16 +78,21 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           try {
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const network = await window.ethereum.request({ method: 'eth_chainId' });
-            setAddress(accounts[0]);
-            setChain(network[0]);
-            dispatch(
-              setAccount({
-                address: accounts[0],
-                network: "ethereum",
-                pubkey: accounts[0]
-              }));
-            dispatch(setConnectedWallet(selectedWallet.id))
-            dispatch(setShowHeaderMenu(false));
+            const accountAddress = accounts[0];
+            if (accountAddress !== '' || accountAddress === 'undefined' || ethers.utils.isAddress(accountAddress)) {
+              setAddress(accounts[0]);
+              setChain(network[0]);
+              dispatch(
+                setAccount({
+                  address: accounts[0],
+                  network: "ethereum",
+                  pubkey: accounts[0]
+                }));
+              dispatch(setConnectedWallet(selectedWallet.id))
+              dispatch(setShowHeaderMenu(false));
+            } else {
+                clearCookie("addressV3");
+            }
           } catch (error) {
             console.error('Failed to connect to Metamask:', error);
             dispatch(newErrorToast(error.message));
@@ -101,15 +107,20 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
         if (window.unisat) {
           try {
             let res = await window.unisat.requestAccounts();
-            setAddress(res[0]);
-            dispatch(
-              setAccount({
-                address: res[0],
-                network: "brc20",
-                pubkey: await window.unisat.getPublicKey()
-              }));
-            dispatch(setConnectedWallet(selectedWallet.id))
-            dispatch(setShowHeaderMenu(false));
+            const accountAddress = res[0];
+              if (accountAddress !== '' || accountAddress === 'undefined' || validate(accountAddress)) {
+                setAddress(res[0]);
+                dispatch(
+                  setAccount({
+                    address: res[0],
+                    network: "brc20",
+                    pubkey: await window.unisat.getPublicKey()
+                  }));
+                dispatch(setConnectedWallet(selectedWallet.id))
+                dispatch(setShowHeaderMenu(false));
+              } else {
+                clearCookie("addressV3");
+              }
           } catch (error) {
             dispatch(newErrorToast(error.message));
             console.log(error);
@@ -130,15 +141,20 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
             const ordinalsAddressItem = res.result.find(
               (address) => address.purpose === AddressPurpose.Ordinals
             );
-            setAddress(ordinalsAddressItem.address);
-            dispatch(
-              setAccount({
-                address: ordinalsAddressItem.address,
-                network: "brc20",
-                pubkey: ordinalsAddressItem.publicKey
-              }));
-            dispatch(setConnectedWallet(selectedWallet.id))
-            dispatch(setShowHeaderMenu(false));
+            const accountAddress = ordinalsAddressItem.address;
+            if (accountAddress !== '' || accountAddress === 'undefined' || validate(accountAddress)) {
+              setAddress(ordinalsAddressItem.address);
+              dispatch(
+                setAccount({
+                  address: ordinalsAddressItem.address,
+                  network: "brc20",
+                  pubkey: ordinalsAddressItem.publicKey
+                }));
+              dispatch(setConnectedWallet(selectedWallet.id))
+              dispatch(setShowHeaderMenu(false));
+            } else {
+              clearCookie("addressV3");
+            }
           } catch (error) {
             dispatch(newErrorToast(error.message));
             console.log(error);
