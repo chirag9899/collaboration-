@@ -27,7 +27,6 @@ import { addressSelector } from "store/reducers/accountSlice";
 import Loader from "../Button/Loader";
 import { ethers } from "ethers";
 import Tooltip from "../tooltip";
-import AssetTypeSelector from "../newSpace/step2/asset/statemineAssetConfig/assetTypeSelector";
 import AssetDetail from "../newSpace/step2/asset/assetDetail";
 import { noop } from "utils";
 
@@ -241,10 +240,6 @@ const AddIncentive = ({
 
         {symbol && decimals && (
           <DetailWrapper>
-            <InputWrapper>
-              <SectionTitle>Token Type</SectionTitle>
-              <AssetTypeSelector onSelect={setAssetType} />
-            </InputWrapper>
             <AssetDetail
               symbol={symbol}
               decimals={decimals}
