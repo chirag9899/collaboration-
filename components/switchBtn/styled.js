@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Text } from "../styled/text";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -51,4 +52,8 @@ export const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
   &:checked + ${Slider}:before {
     transform: translateX(26px);
   }
+`;
+
+export const TextWrapper = styled(Text)`
+  min-width: 120px;
 `;

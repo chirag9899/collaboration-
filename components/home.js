@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import { joinedSpacesSelector } from "store/reducers/accountSlice";
+import { switchedNetworkSelector } from "store/reducers/showConnectSlice";
 // import UserSpaces from "./userSpaces";
 const Networks = dynamic(() => import("./network"), {
   ssr: true,
@@ -76,6 +77,8 @@ export default function Home({
   const [search, setSearch] = useState("");
   const [ownSpaces, setOwnSpaces] = useState(userSpaces);
 
+  const switchedNetwork = useSelector(switchedNetworkSelector);
+
   const joinedSpaces = useSelector(joinedSpacesSelector);
   const {
     options,
@@ -113,6 +116,13 @@ export default function Home({
   useEffect(() => {
     setOwnSpaces(userSpaces);
   }, [userSpaces]);
+
+  useEffect(() => {
+    const filtred = spaces.filter(
+      (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
+    );
+    setAllSpaces(filtred);
+  }, [switchedNetwork]);
 
   const finalResult = allSpaces.filter((item) => {
     return joinedSpaces.some(
@@ -174,7 +184,7 @@ export default function Home({
           spaces={getAllSpaces()}
           limit={30}
           title="All Spaces"
-          totalCount={spaces.length}
+          totalCount={allSpaces.length}
         />
       )}
       {isNetworks && (
