@@ -121,13 +121,13 @@ export default function Home({
   });
 
   const getAllSpaces = () => {
-    const filtredAllSpaces = allSpaces.filter((item) => {
+    const filteredAllSpaces = allSpaces.filter((item) => {
       return joinedSpaces.every(
         (joinedItem) => joinedItem.space !== item.space.id,
       );
     });
 
-    return filtredAllSpaces;
+    return filteredAllSpaces;
   };
 
   return (
@@ -137,7 +137,7 @@ export default function Home({
           placeholder="Search..."
           search={search}
           onSearchChange={onSearchChange}
-          dropdown={true}
+          dropdown={false}
           dropDownOptions={options}
           onSelectOption={handleSelect}
         />
