@@ -156,6 +156,8 @@ export default function Header({ networks }) {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
+      localStorage.setItem("spacesFilterBy", "berachain-b2");
+      localStorage.setItem("isChecked", JSON.stringify(false));
       const storedValue = localStorage.getItem("isChecked");
 
       if (storedValue !== null) {
