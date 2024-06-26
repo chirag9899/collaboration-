@@ -47,7 +47,7 @@ export default function Asset({
   const assetsCountChanged = useStateChanged(count);
 
   const chainInfo = chainsDef.find((item) => item.network === asset?.chain);
-  const filtredCains = chainsDef.filter(
+  const filteredCains = chainsDef.filter(
     (item) => item.network !== "linea" && item.network !== "blast",
   );
 
@@ -62,10 +62,10 @@ export default function Asset({
   );
 
   useEffect(() => {
-    if (filtredCains.length === 1) {
-      onSelectChain(filtredCains[0]);
+    if (filteredCains.length === 1) {
+      onSelectChain(filteredCains[0]);
     }
-  }, [filtredCains]);
+  }, [filteredCains]);
 
   const onSelectChain = useCallback(
     (chain) => {
@@ -198,10 +198,10 @@ export default function Asset({
         )}
       </Header>
       <MyFieldWrapper>
-        {filtredCains.length > 1 && (
+        {filteredCains.length > 1 && (
           <>
             <Title>Chain</Title>
-            <ChainSelector chains={filtredCains} onSelect={onSelectChain} />
+            <ChainSelector chains={filteredCains} onSelect={onSelectChain} />
           </>
         )}
         <Title>Network: {chainInfo?.name || asset?.name}</Title>

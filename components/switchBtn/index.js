@@ -1,6 +1,11 @@
 import React from "react";
-import { CheckboxInput, Slider, SwitchContainer, Wrapper } from "./styled";
-import { Text } from "../styled/text";
+import {
+  CheckboxInput,
+  Slider,
+  SwitchContainer,
+  Wrapper,
+  TextWrapper,
+} from "./styled";
 
 const Switch = ({ onChange, checked, text, ...inputprops }) => {
   return (
@@ -9,7 +14,7 @@ const Switch = ({ onChange, checked, text, ...inputprops }) => {
         <CheckboxInput onChange={onChange} checked={checked} {...inputprops} />
         <Slider />
       </SwitchContainer>
-      {text && <Text>{text}</Text>}
+      {text && <TextWrapper>{text}</TextWrapper>}
     </Wrapper>
   );
 };

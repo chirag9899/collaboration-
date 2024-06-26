@@ -1,5 +1,6 @@
+"use client";
 import styled from "styled-components";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useOnClickOutside } from "frontedUtils/hooks";
 import Account from "./account";
@@ -8,7 +9,9 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setShowHeaderMenu,
+  setSwitchednetwork,
   showHeaderMenuSelector,
+  switchedNetworkSelector,
 } from "../store/reducers/showConnectSlice";
 import { Flex } from "@osn/common-ui";
 import Menu from "@/components/menu";
@@ -20,11 +23,13 @@ import LogoIcon from "../public/imgs/beravote-logoIcon.svg";
 import { primary_text_color, text_light_major } from "./styles/colors";
 import Image from "next/image";
 import Button from "./Button";
+import Switch from "./switchBtn";
 
 const HeaderItemWrapper = styled.div`
   display: flex;
   gap: 32px;
   margin-left: 10px;
+  align-items: center;
 
   @media screen and (max-width: 800px) {
     display: flex;
@@ -145,6 +150,27 @@ const AccountAndBell = styled.div`
 export default function Header({ networks }) {
   const dispatch = useDispatch();
   const showMenu = useSelector(showHeaderMenuSelector);
+  const switchedNetwork = useSelector(switchedNetworkSelector);
+
+  const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem("isChecked");
+
+      if (storedValue !== null) {
+        setIsChecked(storedValue === "true");
+      }else{
+        localStorage.setItem("spacesFilterBy", "berachain-b2");
+        localStorage.setItem("isChecked", JSON.stringify(false));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const filterBy = localStorage.getItem("spacesFilterBy");
+    dispatch(setSwitchednetwork(filterBy));
+  }, [isChecked]);
 
   const ref = useRef();
   useOnClickOutside(ref, (event) => {
@@ -155,6 +181,17 @@ export default function Header({ networks }) {
   });
   const router = useRouter();
   const isHomePage = router.pathname === "/";
+
+  const onSwitchHandler = (e) => {
+    const { checked } = e.target;
+    const value = {
+      network: checked ? "berachain" : "berachain-b2",
+      switchChecked: checked,
+    };
+    localStorage.setItem("spacesFilterBy", value.network);
+    localStorage.setItem("isChecked", JSON.stringify(value.switchChecked));
+    setIsChecked(checked);
+  };
 
   return (
     <Wrapper>
@@ -189,15 +226,27 @@ export default function Header({ networks }) {
             >
               Beravote space
             </Button> */}
+
             {isHomePage && (
-              <ExternalLinkWrapper>
-                <Link href="/space/new" passHref legacyBehavior>
-                  <InternalLink>
-                    <i className="icon-plus"></i>
-                    Add a Space
-                  </InternalLink>
-                </Link>
-              </ExternalLinkWrapper>
+              <>
+                <Switch
+                  onChange={onSwitchHandler}
+                  checked={isChecked}
+                  text={
+                    switchedNetwork === "berachain"
+                      ? "Berachain Artio"
+                      : "Berachain bArtio B2"
+                  }
+                />
+                <ExternalLinkWrapper>
+                  <Link href="/space/new" passHref legacyBehavior>
+                    <InternalLink>
+                      <i className="icon-plus"></i>
+                      Add a Space
+                    </InternalLink>
+                  </Link>
+                </ExternalLinkWrapper>
+              </>
             )}
             <AccountAndBell>
               <Account networks={networks} />
