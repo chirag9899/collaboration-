@@ -1,21 +1,18 @@
 import styled from "styled-components";
 import SearchBar from "./searchBar";
 import useDropDown from "hooks/useDropDown";
-// import Space from "./space";
-// import Networks from "./network";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";
 import { joinedSpacesSelector } from "store/reducers/accountSlice";
 import { switchedNetworkSelector } from "store/reducers/showConnectSlice";
-// import UserSpaces from "./userSpaces";
+
 const Networks = dynamic(() => import("./network"), {
   ssr: true,
 });
 const Space = dynamic(() => import("./space"), {
   ssr: true,
 });
-
 const UserSpaces = dynamic(() => import("./userSpaces"), {
   ssr: false,
 });
@@ -51,8 +48,6 @@ const FilterDropDownWrapper = styled.div`
 const searchOptions = [
   { label: "spaces", value: "spaces" },
   { label: "networks", value: "networks" },
-  // { label: "strategies", value: "strategies" },
-  // { label: "plugins", value: "plugins" },
 ];
 
 const categoriesOptions = [
@@ -78,8 +73,8 @@ export default function Home({
   const [ownSpaces, setOwnSpaces] = useState(userSpaces);
 
   const switchedNetwork = useSelector(switchedNetworkSelector);
-
   const joinedSpaces = useSelector(joinedSpacesSelector);
+
   const {
     options,
     handleSelect,
@@ -87,43 +82,52 @@ export default function Home({
     handleCategories,
     selectedCategory,
   } = useDropDown(searchOptions);
+
   const isSpaces = selectedOption === "spaces";
   const isNetworks = selectedOption === "networks";
 
-  const filtred = spaces.filter(
-    (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
-  );
+  const updateFilteredSpaces = useCallback(() => {
+    const filtered = spaces.filter(
+      (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
+    );
 
-  const onSearchChange = (event) => {
-    const { value } = event.target;
-    setSearch(value);
-    const searchVal = value.toLowerCase();
-    if (isSpaces && searchVal === "") {
-      setAllSpaces(filtred);
+    setAllSpaces(filtered);
+
+    if (search === "") {
       setOwnSpaces(userSpaces);
     } else {
-      const result = filtred.filter(({ name }) => name.match(searchVal));
+      const searchVal = search.toLowerCase();
+      const result = filtered.filter(({ name }) =>
+        name.toLowerCase().includes(searchVal),
+      );
       setAllSpaces(result);
       setOwnSpaces(
-        userSpaces.filter(({ name }) => name.toLowerCase().match(searchVal)),
+        userSpaces.filter(({ name }) => name.toLowerCase().includes(searchVal)),
       );
     }
+  }, [spaces, switchedNetwork, search, userSpaces]);
 
-    if (isNetworks && searchVal === "") {
-      setAllNetworks(networks);
-    } else {
-      const result = networks.filter(({ name }) => name.match(searchVal));
-      setAllNetworks(result);
+  useEffect(() => {
+    updateFilteredSpaces();
+  }, [updateFilteredSpaces]);
+
+  useEffect(() => {
+    if (isNetworks) {
+      if (search === "") {
+        setAllNetworks(networks);
+      } else {
+        const searchVal = search.toLowerCase();
+        const result = networks.filter(({ name }) =>
+          name.toLowerCase().includes(searchVal),
+        );
+        setAllNetworks(result);
+      }
     }
+  }, [search, isNetworks, networks]);
+
+  const onSearchChange = (event) => {
+    setSearch(event.target.value);
   };
-
-  useEffect(() => {
-    setOwnSpaces(userSpaces);
-  }, [userSpaces]);
-
-  useEffect(() => {
-    setAllSpaces(filtred);
-  }, [switchedNetwork]);
 
   const finalResult = allSpaces.filter((item) => {
     return joinedSpaces.some(
@@ -132,13 +136,11 @@ export default function Home({
   });
 
   const getAllSpaces = () => {
-    const filtredAllSpaces = allSpaces.filter((item) => {
+    return allSpaces.filter((item) => {
       return joinedSpaces.every(
         (joinedItem) => joinedItem.space !== item.space.id,
       );
     });
-
-    return filtredAllSpaces;
   };
 
   return (
@@ -152,17 +154,6 @@ export default function Home({
           dropDownOptions={options}
           onSelectOption={handleSelect}
         />
-        {/* {isSpaces && (
-          <FilterDropDownWrapper>
-            <DropDown
-              options={categoriesOptions}
-              selected={selectedCategory}
-              onSelect={handleCategories}
-              Icon={<Grid />}
-              label="Category"
-            />
-          </FilterDropDownWrapper>
-        )} */}
       </SearchBarWrapper>
       {isSpaces && ownSpaces.length > 0 && (
         <UserSpaces
@@ -196,12 +187,6 @@ export default function Home({
           totalCount={networks.length}
         />
       )}
-      {/* <PostList
-        title="Hottest Proposals"
-        posts={hottestProposals}
-        showSpace={true}
-        spaces={spaces}
-      /> */}
     </Wrapper>
   );
 }

@@ -1,5 +1,3 @@
-// SpaceLogo.js
-
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { makeSquare } from '../styles/globalCss';
@@ -19,20 +17,40 @@ export default function SpaceLogo({ space }) {
   const [spaceIconUrl, setSpaceIconUrl] = useState(DEFAULT_ICON_URL);
 
   useEffect(() => {
-    async function validateImageUrl(url) {
+    let isMounted = true;
+
+    async function preloadImage(url) {
       try {
-        const response = await fetch(url, { method: 'HEAD' });
-        if (response.ok && response.headers.get('Content-Type').startsWith('image/')) {
-          return url;
-        }
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+          if (isMounted) {
+            console.log(`Image loaded: ${url}`);
+            setSpaceIconUrl(url);
+          }
+        };
+        img.onerror = () => {
+          if (isMounted) {
+            console.log(`Image failed to load: ${url}`);
+            setSpaceIconUrl(DEFAULT_ICON_URL);
+          }
+        };
       } catch (error) {
-        console.error('Error validating image URL:', error);
+        console.error('Error loading image:', error);
+        if (isMounted) {
+          setSpaceIconUrl(DEFAULT_ICON_URL);
+        }
       }
-      return DEFAULT_ICON_URL;
     }
 
     const url = getSpaceIconUrl(space);
-    validateImageUrl(url).then(validUrl => setSpaceIconUrl(validUrl));
+    console.log(`Loading image: ${url}`);
+    setSpaceIconUrl(DEFAULT_ICON_URL);
+    preloadImage(url);
+
+    return () => {
+      isMounted = false;
+    };
   }, [space]);
 
   return (
