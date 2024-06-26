@@ -90,15 +90,19 @@ export default function Home({
   const isSpaces = selectedOption === "spaces";
   const isNetworks = selectedOption === "networks";
 
+  const filtred = spaces.filter(
+    (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
+  );
+
   const onSearchChange = (event) => {
     const { value } = event.target;
     setSearch(value);
     const searchVal = value.toLowerCase();
     if (isSpaces && searchVal === "") {
-      setAllSpaces(spaces);
+      setAllSpaces(filtred);
       setOwnSpaces(userSpaces);
     } else {
-      const result = spaces.filter(({ name }) => name.match(searchVal));
+      const result = filtred.filter(({ name }) => name.match(searchVal));
       setAllSpaces(result);
       setOwnSpaces(
         userSpaces.filter(({ name }) => name.toLowerCase().match(searchVal)),
@@ -118,9 +122,6 @@ export default function Home({
   }, [userSpaces]);
 
   useEffect(() => {
-    const filtred = spaces.filter(
-      (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
-    );
     setAllSpaces(filtred);
   }, [switchedNetwork]);
 
