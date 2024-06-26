@@ -223,20 +223,23 @@ export default function Header({ networks }) {
             >
               Beravote space
             </Button> */}
-            <Switch
-              onChange={onSwitchHandler}
-              checked={isChecked}
-              text={switchedNetwork}
-            />
+
             {isHomePage && (
-              <ExternalLinkWrapper>
-                <Link href="/space/new" passHref legacyBehavior>
-                  <InternalLink>
-                    <i className="icon-plus"></i>
-                    Add a Space
-                  </InternalLink>
-                </Link>
-              </ExternalLinkWrapper>
+              <>
+                <Switch
+                  onChange={onSwitchHandler}
+                  checked={isChecked}
+                  text={switchedNetwork}
+                />
+                <ExternalLinkWrapper>
+                  <Link href="/space/new" passHref legacyBehavior>
+                    <InternalLink>
+                      <i className="icon-plus"></i>
+                      Add a Space
+                    </InternalLink>
+                  </Link>
+                </ExternalLinkWrapper>
+              </>
             )}
             <AccountAndBell>
               <Account networks={networks} />
