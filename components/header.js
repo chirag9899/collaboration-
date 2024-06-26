@@ -229,7 +229,11 @@ export default function Header({ networks }) {
                 <Switch
                   onChange={onSwitchHandler}
                   checked={isChecked}
-                  text={switchedNetwork}
+                  text={
+                    switchedNetwork === "berachain"
+                      ? "Berachain Artio"
+                      : "Berachain bArtio B2"
+                  }
                 />
                 <ExternalLinkWrapper>
                   <Link href="/space/new" passHref legacyBehavior>

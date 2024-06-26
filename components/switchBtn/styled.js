@@ -55,5 +55,5 @@ export const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
 `;
 
 export const TextWrapper = styled(Text)`
-  min-width: 120px;
+  min-width: 180px;
 `;
