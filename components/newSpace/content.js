@@ -153,6 +153,7 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
         setPrevContract(spaceDetails?.assets[0]?.symbol);
       }
       setAssets(spaceDetails?.assets);
+      setDescription(spaceDetails?.description)
     }
   }, [spaceDetails]);
 

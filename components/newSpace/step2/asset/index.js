@@ -1,4 +1,3 @@
-import ChainSelector from "@/components/chainSelector";
 import { noop } from "@osn/common-ui";
 import { useCallback, useEffect } from "react";
 import StatemineAssetConfig from "./statemineAssetConfig";
@@ -12,6 +11,7 @@ import RunesTokenConfig from "./runesTokenConfig";
 import styled from "styled-components";
 import useStateChanged from "hooks/useStateChanged";
 import { AssetTypes } from "./constants";
+import ChainSelectorDrop from "@/components/ChainSelecDrop";
 
 const Header = styled.div`
   display: flex;
@@ -47,7 +47,7 @@ export default function Asset({
   const assetsCountChanged = useStateChanged(count);
 
   const chainInfo = chainsDef.find((item) => item.network === asset?.chain);
-  const filtredCains = chainsDef.filter(
+  const filteredCains = chainsDef.filter(
     (item) => item.network !== "linea" && item.network !== "blast",
   );
 
@@ -60,6 +60,12 @@ export default function Asset({
     },
     [asset, setAsset],
   );
+
+  useEffect(() => {
+    if (filteredCains.length === 1) {
+      onSelectChain(filteredCains[0]);
+    }
+  }, [filteredCains]);
 
   const onSelectChain = useCallback(
     (chain) => {
@@ -192,8 +198,16 @@ export default function Asset({
         )}
       </Header>
       <MyFieldWrapper>
-        <Title>Chain</Title>
-        <ChainSelector chains={filtredCains} onSelect={onSelectChain} />
+        {filteredCains.length > 1 && (
+          <>
+            <Title>Chain</Title>
+            {/* <ChainSelector chains={filteredCains} onSelect={onSelectChain} /> */}
+            <ChainSelectorDrop
+              chains={filteredCains}
+              onSelect={onSelectChain}
+            />
+          </>
+        )}
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
         <Title>
           ChainID: {chainInfo?.ss58Format || asset?.ss58Format || 1}
