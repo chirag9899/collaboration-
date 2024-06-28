@@ -11,6 +11,8 @@ const LogoImg = styled.img`
   margin-right: 24px;
 `;
 
+const DEFAULT_ICON_URL = '/imgs/icons/pending.svg';
+
 export default function SpaceLogo({ space }) {
   const [spaceIconUrl, setSpaceIconUrl] = useState(DEFAULT_ICON_URL);
 

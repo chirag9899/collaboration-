@@ -9,7 +9,7 @@ import {
 import { ReactComponent as CheckIcon } from "@osn/common-ui/es/imgs/icons/check.svg";
 import Link from "next/link";
 import { MOBILE_SIZE } from "@osn/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { OnlyDesktop, OnlyMobile } from "@osn/common-ui";
 import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "../styles/colors";
@@ -156,7 +156,7 @@ const EventTypeName = {
   proposalTerminated: "Proposal Terminated",
 };
 
-export default function NotificationItem({ data, onMarkAsRead = () => {} }) {
+export default function NotificationItem({ data, onMarkAsRead = () => { } }) {
   const {
     type,
     createdAt,
@@ -165,6 +165,24 @@ export default function NotificationItem({ data, onMarkAsRead = () => {} }) {
   } = data;
 
   const [read, setRead] = useState(_read);
+  const [spaceIconUrl, setSpaceIconUrl] = useState(DEFAULT_ICON_URL);
+
+  useEffect(() => {
+    async function validateImageUrl(url) {
+      try {
+        const response = await fetch(url, { method: 'HEAD' });
+        if (response.ok && response.headers.get('Content-Type').startsWith('image/')) {
+          return url;
+        }
+      } catch (error) {
+        console.error('Error validating image URL:', error);
+      }
+      return DEFAULT_ICON_URL;
+    }
+
+    const spaceIcon = getSpaceIconUrl(spaceInfo);
+    validateImageUrl(spaceIcon).then(validUrl => setSpaceIconUrl(validUrl));
+  }, [spaceInfo]);
 
   function handleMarkAsRead(data) {
     onMarkAsRead(data);
@@ -193,7 +211,11 @@ export default function NotificationItem({ data, onMarkAsRead = () => {} }) {
               width="20px"
               height="20px"
               className="ml-4px"
-              src={getSpaceIconUrl(spaceInfo)}
+              src={spaceIconUrl}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = DEFAULT_ICON_URL;
+              }}
               alt=""
             />
             <Dot />
