@@ -1,17 +1,20 @@
 // walletUtils.js
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAccount } from "store/reducers/accountSlice";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { switchChain as metamaskSwitchChain } from "@/components/connect/metamask/index";
 import { switchNetwork as unisatSwitchNetwork } from "@/components/connect/unisat/index";
 import { switchNetwork as walletConnectSwitchNetworkWc} from "./walletConnect/web3Modal";
-import { setConnectedWallet } from "store/reducers/showConnectSlice";
+import { connectedWalletSelector, setConnectedWallet } from "store/reducers/showConnectSlice";
 import { clearCookie } from "frontedUtils/cookie";
 import { request, AddressPurpose } from "@sats-connect/core";
 import { ethers } from "ethers";
 import { validate } from "bitcoin-address-validation";
-import { chainMap, supportedChains } from "frontedUtils/consts/chains";
+import { chainMap, getChainName, supportedChains } from "frontedUtils/consts/chains";
+import { Router } from "next/router";
+
+
 
 export const _handleChainSelect = async (connectedWallet, dispatch, address, chainMap, chain) => {
   try {
@@ -69,8 +72,10 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
   );
 };
 
+
  export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu) => {
     // Implement the connection logic for each wallet
+
     switch (selectedWallet.id) {
       case 'metamask':
         // Connect to Metamask
@@ -79,19 +84,22 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
             const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             const network = await window.ethereum.request({ method: 'eth_chainId' });
             const accountAddress = accounts[0];
+            
             if (accountAddress && ethers.utils.isAddress(accountAddress)) {
               setAddress(accounts[0]);
               setChain(network[0]);
               dispatch(
                 setAccount({
                   address: accounts[0],
-                  network: "ethereum",
+                  network: getChainName(network),
                   pubkey: accounts[0]
                 }));
               dispatch(setConnectedWallet(selectedWallet.id))
+              setConnectedWallet()
               dispatch(setShowHeaderMenu(false));
             } else {
-              setAccount("")
+              setChain('')
+              setAccount(null)
               clearCookie("connectedWallet");
               clearCookie("addressV3");
             }
