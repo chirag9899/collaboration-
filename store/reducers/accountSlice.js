@@ -1,12 +1,31 @@
-import { createSelector, createSlice } from "@reduxjs/toolkit";
-
+import { createSelector, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { clearCookie, getCookie, setCookie } from "frontedUtils/cookie";
-import { isAddress } from "@polkadot/util-crypto";
-import { btcChains, chainConfigsMap, evmChains } from "../../frontedUtils/consts/chains";
-import encodeAddressByChain from "../../frontedUtils/chain/addr";
-import nextApi from "services/nextApi";
 import { ethers } from "ethers";
 import { validate } from "bitcoin-address-validation";
+import encodeAddressByChain from "frontedUtils/chain/addr";
+import nextApi from "services/nextApi";
+import { setConnectedWallet } from "./showConnectSlice";
+import { chainConfigsMap } from "frontedUtils/consts/chains";
+
+// Thunk to handle setting account and dispatching setConnectedWallet
+export const setAccount = (payload) => async (dispatch) => {
+  if (payload) {
+    const accountAddress = payload.address;
+    if (accountAddress && (ethers.utils.isAddress(accountAddress) || validate(accountAddress))) {
+      setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
+    } else {
+      clearCookie("connectedWallet");
+      clearCookie("addressV3");
+      dispatch(setConnectedWallet());
+      dispatch(setAccount(null))
+      // history.go(0) //reload
+    }
+  } else {
+    clearCookie("connectedWallet");
+    clearCookie("addressV3");
+  }
+  dispatch(updateAccount(payload));
+};
 
 const accountSlice = createSlice({
   name: "account",
@@ -15,36 +34,15 @@ const accountSlice = createSlice({
     balance: null,
     delegation: null,
     useProxy: false,
-    proxy: null, // the proxy address
+    proxy: null,
     proxyBalance: null,
     proxyDelegation: null,
     availableNetworks: [],
     joinedSpaces: [],
   },
   reducers: {
-    setAccount: (state, { payload }) => {
-      if (payload) {
-        state.account = payload;
-        if (typeof window !== "undefined") {
-          const accountAddress = payload.address;
-          if (accountAddress && ethers.utils.isAddress(accountAddress)) {
-            setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
-          } else {
-            if (accountAddress && validate(accountAddress)) {
-              setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
-            } else {
-              clearCookie("connectedWallet");
-              clearCookie("addressV3");
-            }
-          }
-        }
-      } else {
-        state.account = null;
-        if (typeof window !== "undefined") {
-          clearCookie("connectedWallet");
-          clearCookie("addressV3");
-        }
-      }
+    updateAccount: (state, { payload }) => {
+      state.account = payload;
     },
     setAvailableNetworks: (state, { payload }) => {
       state.availableNetworks = payload;
@@ -71,10 +69,13 @@ const accountSlice = createSlice({
       state.joinedSpaces = payload;
     },
   },
+  extraReducers: (builder) => {
+    // You can handle any additional state changes if needed for the thunk
+  }
 });
 
 export const {
-  setAccount,
+  updateAccount,
   setAvailableNetworks,
   setProxy,
   setBalance,
@@ -88,11 +89,10 @@ export const {
 export const logout = () => async (dispatch) => {
   clearCookie("connectedWallet");
   clearCookie("addressV3");
-  dispatch(setAccount(""));
+  dispatch(setAccount(null));
 };
 
-export const availableNetworksSelector = (state) =>
-  state.account.availableNetworks;
+export const availableNetworksSelector = (state) => state.account.availableNetworks;
 
 export const balanceSelector = (state) => state.account.balance;
 export const delegationSelector = (state) => state.account.delegation;
@@ -166,19 +166,18 @@ export const loginAccountSelector = createSelector(
   },
 );
 
-
-  export const loginAddressSelector = createSelector(
-    loginNetworkSelector,
-    accountSelector,
-    (network, account) => {
-      if (!network || !account) {
-        return null;
-      }
+export const loginAddressSelector = createSelector(
+  loginNetworkSelector,
+  accountSelector,
+  (network, account) => {
+    if (!network || !account) {
+      return null;
+    }
   
-      let encodedAddress = encodeAddressByChain(account.address, network.network);
-      return encodedAddress;
-    },
-  );
+    let encodedAddress = encodeAddressByChain(account.address, network.network);
+    return encodedAddress;
+  },
+);
 
 export const addressSelector = createSelector(
   loginNetworkSelector,

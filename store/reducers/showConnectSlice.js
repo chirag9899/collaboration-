@@ -18,12 +18,14 @@ const showConnectSlice = createSlice({
       state.showConnect = false;
     },
     setConnectedWallet(state, { payload }) {
+
       if (payload) {
         state.connectedWallet = payload;
         if (typeof window !== "undefined") {
           setCookie("connectedWallet", `${payload}`);
         }
       } else {
+        console.log('state updated')
         state.connectedWallet = null;
         if (typeof window !== "undefined") {
           clearCookie("connectedWallet");
