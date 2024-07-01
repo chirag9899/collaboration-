@@ -217,8 +217,6 @@ function Account({ networks, menu }) {
       if (chainId && isConnected) {
         const activeChain = getChainName("0x" + chainId.toString(16));
         let finalAddress = address;
-
-        if (activeChain === "bartio" || activeChain === "artio") {
           dispatch(
             setAccount({
               address: finalAddress,
@@ -226,21 +224,6 @@ function Account({ networks, menu }) {
             })
           );
           setCookie("addressV3", finalAddress);
-        } else {
-          try {
-            await switchChain("bartio");
-            dispatch(
-              setAccount({
-                address: finalAddress,
-                network: "bartio",
-              })
-            );
-            setCookie("addressV3", finalAddress);
-          } catch (error) {
-            console.error("Error switching chain:", error);
-            dispatch(newErrorToast("Failed to switch chain to bartio"));
-          }
-        }
         dispatch(setConnectedWallet("walletConnect"));
       }
 
@@ -346,7 +329,6 @@ function Account({ networks, menu }) {
             <UserIcon />
           </AccountWrapper>
           <MenuDivider />
-          {account?.network !== "bartio" && account?.network !== "artio" && (
             <MenuItem>
               <LogoutWrapper onClick={onSwitch}>
                 Switch Network
@@ -358,7 +340,6 @@ function Account({ networks, menu }) {
                 />
               </LogoutWrapper>
             </MenuItem>
-          )}
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
