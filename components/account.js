@@ -256,10 +256,6 @@ function Account({ networks, menu }) {
   }, [chainId, isConnected, address,account, dispatch, connectedWallet, event.data.event]);
 
 
-  useEffect(() => {
-    console.log("account-->", account, account?.address == '' );
-  }, [account, connectedWallet, dispatch]);
-
   const onSwitch = () => {
     dispatch(setShowNetworkSelector(!showNetwork));
     dispatch(setShowHeaderMenu(false));
