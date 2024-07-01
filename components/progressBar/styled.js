@@ -29,16 +29,26 @@ export const ProgressTop = styled.div`
   position: relative;
 `;
 export const ProgressPointer = styled.div`
-  border: 1px solid ${white_text_color};
+  border: 1px solid var(--dark-blue);
   position: absolute;
-  top: 20px;
-  height: 12px;
+  top: 25px;
+  height: 25px;
+  &:hover {
+    border-color: var(--dark-blue) !important;
+    box-shadow: none;
+    cursor: pointer;
+  }
 `;
 export const ProgressPointerBottom = styled.div`
   border: 1px solid ${white_text_color};
   position: absolute;
   top: 0px;
   height: 12px;
+  &:hover {
+    border-color: ${white_text_color}!important;
+    box-shadow: none;
+    cursor: pointer;
+  }
 `;
 
 export const ProgressPointerLabelBottom = styled.span`
@@ -52,8 +62,8 @@ export const PointerSection = styled.div`
   top: 0;
   text-transform: capitalize;
   left: ${(props) => props.left};
-  >span{
-    font-size: .75rem;
+  > span {
+    font-size: 0.75rem;
     font-weight: 600;
   }
 `;

@@ -41,7 +41,7 @@ const ProgressBar = ({
         <ProgressFooter>
           <div>
             <span>For</span>
-            <span>{finalTallyResult.forCount}</span>
+            <span style={{color:"var(--light-green)"}}>{finalTallyResult.forCount}</span>
           </div>
           <div>
             <span>Abstain</span>
@@ -49,7 +49,7 @@ const ProgressBar = ({
           </div>
           <div>
             <span>Against</span>
-            <span>{finalTallyResult.againstCount}</span>
+            <span style={{color:"var(--dark-red)"}}>{finalTallyResult.againstCount}</span>
           </div>
         </ProgressFooter>
       )}

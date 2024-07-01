@@ -7,14 +7,13 @@ import {
   loginAddressSelector,
   logout,
   availableNetworksSelector,
-  initAccount,
+  setAccount,
 } from "store/reducers/accountSlice";
 import Avatar from "./avatar";
-import { p_14_medium, p_16_semibold } from "../styles/textStyles";
+import { p_14_medium } from "../styles/textStyles";
 import { ReactComponent as UserIcon } from "../public/imgs/icons/user.svg";
 import { shadow_200 } from "../styles/globalCss";
 import { useWindowSize } from "../frontedUtils/hooks";
-// import ButtonPrimary from "@osn/common-ui/es/styled/Button";
 import {
   popUpConnect,
   setShowHeaderMenu,
@@ -23,24 +22,20 @@ import {
   setShowNetworkSelector,
   showNetworkSelector,
   connectedWalletSelector,
-  initWallet,
-  setConnectedWallet,
   closeConnect,
+  setConnectedWallet,
 } from "../store/reducers/showConnectSlice";
-import { ChainIcon } from "@osn/common-ui";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useMetaMaskEventHandlers } from "services/metamask";
 import { bg_white, black } from "./styles/colors";
 import Button from "./Button";
 import ChainSelector from "@/components/chainSelector";
 import { switchChain } from "@/components/connect/metamask/index";
-import { switchNetwork } from "@/components/connect/unisat/index";
 import {
   chainMap,
   getChainName,
   supportedChains,
 } from "../frontedUtils/consts/chains/index";
-import { setAccount } from "../store/reducers/accountSlice";
 import { newErrorToast } from "store/reducers/toastSlice";
 import {
   useWeb3ModalAccount,
@@ -48,10 +43,8 @@ import {
   useWeb3ModalEvents,
   useWeb3Modal,
 } from "@web3modal/ethers5/react";
-import { accountSelector } from "store/reducers/accountSlice";
-import { clearCookie, getCookie } from "frontedUtils/cookie";
+import { clearCookie, getCookie, setCookie } from "frontedUtils/cookie";
 import Image from "next/image";
-import { switchNetworkWc } from "./connect/walletConnect/web3Modal";
 import { _handleChainSelect } from "./connect/helper";
 import NetworkLogo from "./network/networkLogo";
 
@@ -196,55 +189,72 @@ function Account({ networks, menu }) {
   const connectedWallet = useSelector(connectedWalletSelector);
 
   const account = useSelector(loginAccountSelector);
+  const address = useSelector(loginAddressSelector);
   const showConnect = useSelector(showConnectSelector);
   const showNetwork = useSelector(showNetworkSelector);
   const showMenu = useSelector(showHeaderMenuSelector);
 
   const [pageMounted, setPageMounted] = useState(false);
-  const address = useSelector(loginAddressSelector);
   const availableNetworks = useSelector(availableNetworksSelector);
   const spaceSupportMultiChain = networks?.length > 1;
   const dropdownRef = useRef(null);
-  const { address: web3Address, chainId, isConnected } = useWeb3ModalAccount();
+  const { chainId, isConnected } = useWeb3ModalAccount();
   const { open, close } = useWeb3Modal();
   const { disconnect } = useDisconnect();
+  const [cookieValue, setCookieValue] = useState(() => getCookie('addressV3'));
+
 
   useMetaMaskEventHandlers();
 
   useEffect(() => setPageMounted(true), []);
-
+  
   if (!networks || networks.length === 0) {
     return null;
   }
 
-  //current chainChanged
-
   useEffect(() => {
-    if (chainId && isConnected && web3Address) {
-      dispatch(setConnectedWallet("walletConnect"));
-      let chainName = getChainName("0x" + chainId?.toString(16));
-      dispatch(
-        setAccount({
-          address: web3Address,
-          network: chainName,
-        }),
-      );
-    }
+    const handleChainChange = async () => {
+      if (chainId && isConnected) {
+        const activeChain = getChainName("0x" + chainId.toString(16));
+        let finalAddress = address;
 
-    if (
-      event.data.event === "MODAL_CLOSE" &&
-      connectedWallet === "walletConnect"
-    ) {
-      dispatch(closeConnect());
-    }
-  }, [
-    connectedWallet,
-    dispatch,
-    web3Address,
-    chainId,
-    isConnected,
-    event.data.event,
-  ]);
+        if (activeChain === "bartio" || activeChain === "artio") {
+          dispatch(
+            setAccount({
+              address: finalAddress,
+              network: activeChain,
+            })
+          );
+          setCookie("addressV3", finalAddress);
+        } else {
+          try {
+            await switchChain("bartio");
+            dispatch(
+              setAccount({
+                address: finalAddress,
+                network: "bartio",
+              })
+            );
+            setCookie("addressV3", finalAddress);
+          } catch (error) {
+            console.error("Error switching chain:", error);
+            dispatch(newErrorToast("Failed to switch chain to bartio"));
+          }
+        }
+        dispatch(setConnectedWallet("walletConnect"));
+      }
+
+      if (
+        event.data.event === "MODAL_CLOSE" &&
+        connectedWallet === "walletConnect"
+      ) {
+        dispatch(closeConnect());
+      }
+    };
+
+    handleChainChange();
+  }, [chainId, isConnected, address,account, dispatch, connectedWallet, event.data.event]);
+
 
   const onSwitch = () => {
     dispatch(setShowNetworkSelector(!showNetwork));
@@ -256,39 +266,33 @@ function Account({ networks, menu }) {
     dispatch(setConnectedWallet(null));
     dispatch(setShowHeaderMenu(false));
     if (connectedWallet) {
-      connectedWallet == "walletConnect" && disconnect();
+      connectedWallet === "walletConnect" && disconnect();
     }
   };
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         dispatch(setShowNetworkSelector(false));
       }
-    }
+    };
 
-    // Bind the event listener
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [dispatch]);
 
+
   const ConnectWalletButton = (
     <div className="connect">
-      {!account &&
-        (menu ? (
-          <div  onClick={() => dispatch(popUpConnect())}>{connectedWallet ? "Switch Chain" : "Connect Wallet"}</div>
-        ) : (
-          <DarkButton
-            primary
-            onClick={() => dispatch(popUpConnect())}
-            className="button button-modern"
-          >
-            {connectedWallet ? "Switch Chain" : "Connect Wallet"}
-          </DarkButton>
-        ))}
+      { <DarkButton
+          primary
+          onClick={() => dispatch(popUpConnect())}
+          className="button button-modern"
+        >
+          {connectedWallet ? "Switch Chain" : "Connect Wallet"}
+          </DarkButton>}
     </div>
   );
 
@@ -299,7 +303,7 @@ function Account({ networks, menu }) {
         dispatch,
         account?.address,
         chainMap,
-        chain,
+        chain
       );
       dispatch(setShowNetworkSelector(false));
     } catch (error) {
@@ -308,9 +312,9 @@ function Account({ networks, menu }) {
     }
   };
 
-  let selectedNetworks = connectedWallet && supportedChains(connectedWallet);
-  let supportedAvailableNetworks = availableNetworks.filter((network) =>
-    selectedNetworks?.includes(network.network),
+  const selectedNetworks = connectedWallet && supportedChains(connectedWallet);
+  const supportedAvailableNetworks = availableNetworks.filter((network) =>
+    selectedNetworks?.includes(network.network)
   );
 
   const dropdown = (
@@ -324,16 +328,13 @@ function Account({ networks, menu }) {
 
   const Menu = (
     <MenuWrapper onClick={(e) => e.stopPropagation()}>
-      {/*The dark connect button For Mobile only*/}
-      {!account && windowSize.width <= 800 && ConnectWalletButton}
-      {/*The dark connect button For Mobile only*/}
+      {account?.address == '' && windowSize.width <= 800 && ConnectWalletButton}
       {address && (
         <>
           <AccountWrapper>
             <div>
               <Avatar address={address} size={20} />
               {spaceSupportMultiChain && (
-                // <ChainIcon chainName={account?.network} size={16} />
                 <NetworkLogo network={account?.network} size={16} />
               )}
               <IdentityOrAddr
@@ -345,17 +346,19 @@ function Account({ networks, menu }) {
             <UserIcon />
           </AccountWrapper>
           <MenuDivider />
-          <MenuItem>
-            <LogoutWrapper onClick={onSwitch}>
-              Switch Network
-              <Image
-                src="/imgs/icons/switch.svg"
-                alt="switch network"
-                width={24}
-                height={24}
-              />
-            </LogoutWrapper>
-          </MenuItem>
+          {account?.network !== "bartio" && account?.network !== "artio" && (
+            <MenuItem>
+              <LogoutWrapper onClick={onSwitch}>
+                Switch Network
+                <Image
+                  src="/imgs/icons/switch.svg"
+                  alt="switch network"
+                  width={24}
+                  height={24}
+                />
+              </LogoutWrapper>
+            </MenuItem>
+          )}
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
@@ -372,12 +375,10 @@ function Account({ networks, menu }) {
     </MenuWrapper>
   );
 
-  // show ConnectModal on first priority if  showConnect = true
   if (showConnect) {
     return <ConnectModal networks={networks} />;
   }
 
-  // if already connected, show address on right top corner
   if (address && pageMounted) {
     return (
       <Wrapper className="account_modal">
@@ -391,7 +392,6 @@ function Account({ networks, menu }) {
           <div>
             <Avatar address={address} size={20} />
             {spaceSupportMultiChain && (
-              // <ChainIcon chainName={account?.network} size={16} />
               <NetworkLogo network={account?.network} size={16} />
             )}
             <IdentityOrAddr
@@ -407,12 +407,10 @@ function Account({ networks, menu }) {
     );
   }
 
-  // if no address connected, show ConnectButton on right top corner(PC only)
-  if (windowSize.width > 800 && !account) {
+  if (windowSize.width > 800 && account != "") {
     return ConnectWalletButton;
   }
 
-  // show dropdown menu (Mobile only)
   if (showMenu) {
     return <Wrapper className="account">{Menu}</Wrapper>;
   }

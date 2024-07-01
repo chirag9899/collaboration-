@@ -1,45 +1,26 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import Layout from "components/layout";
-import Breadcrumb from "components/breadcrumb";
-import { EmptyQuery, SPACE_LIST_TAB_ITEMS } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
-import Seo from "@/components/seo";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  loginAccountSelector,
-  loginAddressSelector,
-  setAvailableNetworks,
-} from "store/reducers/accountSlice";
-import pick from "lodash.pick";
+import { useDispatch } from "react-redux";
+import { setAvailableNetworks } from "store/reducers/accountSlice";
 import { initAccount } from "store/reducers/accountSlice";
-import dynamic from "next/dynamic";
-import SpaceDetail from "@/components/spaceDetail";
-import SpaceAbout from "@/components/spaceAbout";
 import { useRouter } from "next/router";
-import Button from "@/components/Button";
 import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "@/components/styles/colors";
-import { chainMap } from "frontedUtils/consts/chains";
-import useModal from "hooks/useModal";
-import SpacePostList from "@/components/spacePostList";
-import SpaceListTab from "@/components/spaceListTab";
 import { getBerachainProposals } from "helpers/beraProposals";
+import styled from "styled-components";
+import Layout from "components/layout";
+import Seo from "@/components/seo";
+import pick from "lodash.pick";
+import dynamic from "next/dynamic";
+import Button from "@/components/Button";
+import useModal from "hooks/useModal";
+import SpacePostTable from "@/components/spacePostTable";
+import SpacePostList from "@/components/spacePostList";
 
-const Treasury = dynamic(() => import("@/components/treasury"), {
+const BeraListInfo = dynamic(() => import("components/beraListInfo"), {
   ssr: false,
 });
-const ListInfo = dynamic(() => import("components/listInfo"), {
-  ssr: false,
-});
-
-const TransferSpaceModal = dynamic(
-  () => import("@/components/transferSpace/TransSpaceModal"),
-  {
-    ssr: false,
-  },
-);
 
 const Wrapper = styled.div`
   display: flex;
@@ -52,8 +33,6 @@ const Wrapper = styled.div`
 
 const MainWrapper = styled.div`
   flex: 1 1 auto;
-  /* 100% - sider width - sider margin-left */
-  max-width: calc(100% - 300px - 20px);
   > :not(:first-child) {
     margin-top: 20px;
   }
@@ -93,33 +72,12 @@ const ButtonWrapper = styled(Button)`
   }
 `;
 
-const BreadcrumbWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-export default function List({
-  spaceId,
-  space,
-  activeTab,
-  defaultPage,
-  allProposalList,
-  activeProposalList,
-  pendingProposalList,
-  closedProposalList,
-  rejectedProposalList
-}) {
-  const address = useSelector(loginAddressSelector);
+export default function List({ spaceId, space, allProposalList }) {
   const dispatch = useDispatch();
-  const [tab, setTab] = useState(activeTab);
   const [showContent, setShowContent] = useState("proposals-all");
-  const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
-  const account = useSelector(loginAccountSelector);
   const [proposalList, setProposalList] = useState(allProposalList);
 
-  let chain = chainMap.get(account?.network);
-  const isEvm = chain?.chainType == "evm";
+  console.log(allProposalList, "allProposalList");
 
   const router = useRouter();
 
@@ -127,12 +85,6 @@ export default function List({
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
-
-  useEffect(() => {
-    if (space?.address !== address) {
-      setTab("proposals-all");
-    }
-  }, [address, space]);
 
   useEffect(() => {
     if (router.query.tab) {
@@ -155,29 +107,6 @@ export default function List({
     return null;
   }
 
-  useEffect(() => {
-    console.log(tab, "useEffect call");
-  
-    switch (tab) {
-      case "proposals-rejected":
-        setProposalList(rejectedProposalList);
-        break;
-      case "proposals-pending":
-        setProposalList(pendingProposalList);
-        break;
-      case "proposals-active":
-        setProposalList(activeProposalList);
-        break;
-      case "proposals-closed":
-        setProposalList(closedProposalList);
-        break;
-      default:
-        setProposalList(allProposalList);
-    }
-  }, [tab]);
-
-  const listTabs = [...SPACE_LIST_TAB_ITEMS];
-
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
   return (
     <>
@@ -188,107 +117,18 @@ export default function List({
       />
       <Layout bgHeight="264px" networks={space.networks}>
         <Wrapper>
-          <SpaceDetail
-            space={space}
-            setShowContent={setShowContent}
-            showContent={showContent}
-            onActiveTab={setTab}
-            spaceId={spaceId}
-            defaultPage={defaultPage}
-          />
           {showContent.match(/proposals/) && (
             <MainWrapper>
               <HeaderWrapper>
-                <BreadcrumbWrapper>
-                  <Breadcrumb
-                    routes={[
-                      { name: "Home", link: "/" },
-                      {
-                        name: (
-                          <span style={{ textTransform: "capitalize" }}>
-                            {space.name}
-                          </span>
-                        ),
-                      },
-                    ]}
-                  />
-                  {isEvm && address === space?.address && (
-                    <>
-                      <ButtonWrapper onClick={openModal}>
-                        Transfer Space
-                      </ButtonWrapper>
-                      {open && (
-                        <TransferSpaceModal
-                          title="Transfer Space"
-                          open={open}
-                          closeModal={closeModal}
-                          spaceId={spaceId}
-                        />
-                      )}
-                    </>
-                  )}
-                </BreadcrumbWrapper>
-                <ListInfo spaceId={spaceId} space={space} />
-                <SpaceListTab
-                  spaceId={spaceId}
-                  activeTab={activeTab}
-                  onActiveTab={setTab}
-                  defaultPage={defaultPage}
-                  network={space?.networks[0]?.network}
-                  listTabs={listTabs}
-                />
+                <BeraListInfo spaceId={spaceId} space={space} />
               </HeaderWrapper>
-              <PostWrapper>
-                {/* ToDo: make the status depend on the active tab */}
-                <SpacePostList
-                  posts={proposalList}
-                  space={space}
-                  status={tab}
-                />
-              </PostWrapper>
-            </MainWrapper>
-          )}
-          {showContent === "treasury" && address === space?.address && (
-            <MainWrapper>
-              <HeaderWrapper>
-                <Breadcrumb
-                  routes={[
-                    { name: "Home", link: "/" },
-                    {
-                      name: (
-                        <span style={{ textTransform: "capitalize" }}>
-                          {space.name}
-                        </span>
-                      ),
-                    },
-                  ]}
-                />
-              </HeaderWrapper>
-              <Treasury
-                treasury={treasuryAddress}
-                spaceId={spaceId}
-                address={address}
-                setTreasuryAddress={setTreasuryAddress}
+              <SpacePostTable
+                posts={proposalList}
+                space={space}
+                status={""}
+                title={"Proposals"}
               />
-            </MainWrapper>
-          )}
-          {showContent === "about" && (
-            <MainWrapper>
-              <HeaderWrapper>
-                <Breadcrumb
-                  routes={[
-                    { name: "Home", link: "/" },
-                    {
-                      name: (
-                        <span style={{ textTransform: "capitalize" }}>
-                          {space.name}
-                        </span>
-                      ),
-                    },
-                  ]}
-                />
-              </HeaderWrapper>
-              <SpaceAbout space={space} />
+              {/* <SpacePostList posts={proposalList} space={space} status={""} /> */}
             </MainWrapper>
           )}
         </Wrapper>
@@ -303,14 +143,6 @@ export async function getServerSideProps(context) {
   const nPage = parseInt(page) || 1;
   const activeTab = tab || "proposals-all";
 
-  const pageSize = 20;
-
-  const config = {
-    first: 1000,
-    skip: 0,
-    status: 1,
-  };
-
   const [{ result: space }, data] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     await getBerachainProposals(),
@@ -320,24 +152,8 @@ export async function getServerSideProps(context) {
   }
 
   let allProposalList = [];
-  let activeProposalList = [];
-  let pendingProposalList = [];
-  let closedProposalList = [];
-  let rejectedProposalList = [];
 
   allProposalList = data.proposals;
-  pendingProposalList = data.proposals.filter(
-    (item) => item.status === "pending"
-  );
-  activeProposalList = data.proposals.filter(
-    (item) => item.status === "active"
-  );
-  closedProposalList = data.proposals.filter(
-    (item) => item.status === "closed"
-  );
-  rejectedProposalList = data.proposals.filter(
-    (item) => item.status === "terminated"
-  );
 
   return {
     props: {
@@ -346,10 +162,6 @@ export async function getServerSideProps(context) {
       activeTab,
       defaultPage: { tab: activeTab ?? null, page: nPage },
       allProposalList,
-      activeProposalList,
-      pendingProposalList,
-      closedProposalList,
-      rejectedProposalList
     },
   };
 }

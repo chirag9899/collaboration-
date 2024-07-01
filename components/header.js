@@ -193,6 +193,8 @@ export default function Header({ networks }) {
     setIsChecked(checked);
   };
 
+  console.log('showMenu',showMenu);
+
   return (
     <Wrapper>
       <ContentWrapper ref={ref}>
