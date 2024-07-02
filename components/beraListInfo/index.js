@@ -5,7 +5,7 @@ import Button from "../Button";
 import { primary_color } from "../styles/colors";
 import { p_16_semibold } from "../styles/textStyles";
 import Panel from "../styled/panel";
-import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
+import { ReactComponent as BeraChainImg } from "/public/imgs/icons/bearchain.svg";
 import { useRouter } from "next/router";
 import DelegeteSpaceModal from "../delegateModal";
 import useModal from "hooks/useModal";
@@ -13,6 +13,7 @@ import Flex from "../styled/Flex";
 
 const Wrapper = styled(Panel)`
   padding: 20px;
+  height: 180px;
 `;
 
 const Content = styled(Flex)`
@@ -52,7 +53,8 @@ const ButtonWrapper = styled(Button)`
   color: ${primary_color};
   margin-right: 10px;
   font-size: 12px;
-  padding: 4px 12px !important;
+  padding: 4px 30px !important;
+  border-radius: 0px !important;
   > img {
     width: 24px;
     height: 24px;
@@ -72,16 +74,10 @@ export default function ListInfo({ space }) {
   return (
     <Wrapper>
       <Content>
-        {/* <IconWrapper>
-          <Icon>
-            <SpaceLogo space={space} />
-          </Icon>
-        </IconWrapper> */}
-        {/* <button>back</button> */}
         <div>
           <LogoName>
             <IconWrapper onClick={handleGoBack}>
-              <ArrowLeft />
+              <BeraChainImg />
             </IconWrapper>{" "}
             BeraChain VoteMarket
           </LogoName>

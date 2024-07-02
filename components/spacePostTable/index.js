@@ -8,6 +8,7 @@ import {
   LoadBtnWrapper,
   LoadButton,
   PostsWrapper,
+  ProposalsCount,
   Status,
   StatusWrapper,
   Table,
@@ -23,6 +24,7 @@ import { useSelector } from "react-redux";
 import useModal from "hooks/useModal";
 import AddIncentive from "../addIncentiveModal";
 import { useRouter } from "next/router";
+import { formatNumber } from "utils";
 
 export default function SpacePostTable({
   title,
@@ -90,6 +92,20 @@ export default function SpacePostTable({
   };
   return (
     <>
+      <ProposalsCount>
+        <div>
+          <p>{formatNumber(posts.length)}</p>
+          <span>Proposals</span>
+        </div>
+        <div>
+          <p>{formatNumber(682600)}</p>
+          <span>Holders</span>
+        </div>
+        <div>
+          <p>{formatNumber(21)}</p>
+          <span>Voters</span>
+        </div>
+      </ProposalsCount>
       {title && (
         <HeadWrapper>
           <Title>{title}</Title>

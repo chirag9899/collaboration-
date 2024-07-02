@@ -5,6 +5,7 @@ import Button from "../Button";
 import { shadow_100, shadow_200 } from "styles/globalCss";
 import { p_24 } from "styles/paddings";
 import FlexBetween from "../styled/FlexBetween";
+import Panel from "../styled/panel";
 
 export const TableContainer = styled.div`
   width: 100%;
@@ -230,7 +231,7 @@ export const ButtonsGroup = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     flex-direction: row;
-    gap:10px;
+    gap: 10px;
   }
 `;
 export const CustomBtn = styled(Button)`
@@ -243,6 +244,7 @@ export const CustomBtn = styled(Button)`
   margin-bottom: 10px;
   border: 1px solid ${primary_color} !important;
   min-width: 130px !important;
+  border-radius: 0px !important;
   &:hover {
     border: 1px solid var(--peach) !important;
   }
@@ -275,4 +277,20 @@ export const Status = styled.div`
   background-color: ${(props) => props.statusDetails.backgroundColor};
   max-height: 35px;
   width: fit-content;
+`;
+
+export const ProposalsCount = styled(Panel)`
+  padding: 20px 30px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  >div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    >p{
+      font-weight: bold;
+    }
+  }
 `;
