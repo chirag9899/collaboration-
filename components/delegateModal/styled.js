@@ -40,7 +40,7 @@ export const BtnWrapper = styled(Button)`
   padding: 10px 50px !important;
   box-shadow: none;
   border: 1px solid ${primary_color} !important;
-  border-radius: 0px !important;
+  border-radius: 5px !important;
   &:hover {
     border: 1px solid var(--peach) !important;
   }

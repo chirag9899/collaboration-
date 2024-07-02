@@ -54,7 +54,7 @@ const ButtonWrapper = styled(Button)`
   margin-right: 10px;
   font-size: 12px;
   padding: 4px 30px !important;
-  border-radius: 0px !important;
+  border-radius: 5px !important;
   > img {
     width: 24px;
     height: 24px;

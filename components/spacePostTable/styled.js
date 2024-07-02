@@ -244,7 +244,7 @@ export const CustomBtn = styled(Button)`
   margin-bottom: 10px;
   border: 1px solid ${primary_color} !important;
   min-width: 130px !important;
-  border-radius: 0px !important;
+  border-radius: 5px !important;
   &:hover {
     border: 1px solid var(--peach) !important;
   }
