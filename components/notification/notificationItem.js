@@ -14,6 +14,8 @@ import { OnlyDesktop, OnlyMobile } from "@osn/common-ui";
 import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "../styles/colors";
 
+const DEFAULT_ICON_URL = '/imgs/icons/pending.svg';
+
 const NotificationItemWrapper = styled.div`
   &:hover {
     .unread-dot {
