@@ -5,6 +5,7 @@ import Button from "../Button";
 import { shadow_100, shadow_200 } from "styles/globalCss";
 import { p_24 } from "styles/paddings";
 import FlexBetween from "../styled/FlexBetween";
+import Panel from "../styled/panel";
 
 export const TableContainer = styled.div`
   width: 100%;
@@ -75,6 +76,28 @@ export const TableCell = styled.td`
   .fw_bold {
     font-weight: 600 !important;
   }
+  .rewards {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px;
+    > span {
+      margin-bottom: -4px;
+    }
+    > div > div > div {
+      width: 200px !important;
+    }
+    > div {
+      text-align: left !important;
+    }
+  }
+
+  .rewards_popup {
+    .popup_title {
+      p {
+        font-weight: bold;
+      }
+    }
+  }
   .green {
     color: var(--light-green);
   }
@@ -103,6 +126,15 @@ export const TableCell = styled.td`
       padding-left: 12px;
       font-weight: bold;
       text-align: left;
+    }
+    .rewards {
+      justify-content: end;
+      > div > div {
+        left: -80px;
+      }
+      > div > div > div > div {
+        left: 190px;
+      }
     }
   }
 `;
@@ -230,7 +262,7 @@ export const ButtonsGroup = styled.div`
     margin-top: 10px;
     margin-bottom: 10px;
     flex-direction: row;
-    gap:10px;
+    gap: 10px;
   }
 `;
 export const CustomBtn = styled(Button)`
@@ -243,6 +275,7 @@ export const CustomBtn = styled(Button)`
   margin-bottom: 10px;
   border: 1px solid ${primary_color} !important;
   min-width: 130px !important;
+  border-radius: 5px !important;
   &:hover {
     border: 1px solid var(--peach) !important;
   }
@@ -275,4 +308,20 @@ export const Status = styled.div`
   background-color: ${(props) => props.statusDetails.backgroundColor};
   max-height: 35px;
   width: fit-content;
+`;
+
+export const ProposalsCount = styled(Panel)`
+  padding: 20px 30px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > p {
+      font-weight: bold;
+    }
+  }
 `;

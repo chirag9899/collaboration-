@@ -8,6 +8,7 @@ import {
   LoadBtnWrapper,
   LoadButton,
   PostsWrapper,
+  ProposalsCount,
   Status,
   StatusWrapper,
   Table,
@@ -23,6 +24,9 @@ import { useSelector } from "react-redux";
 import useModal from "hooks/useModal";
 import AddIncentive from "../addIncentiveModal";
 import { useRouter } from "next/router";
+import { formatNumber } from "utils";
+import Tooltip from "../tooltip";
+import CheckRewardsModal from "../checkRewardsModal";
 
 export default function SpacePostTable({
   title,
@@ -36,6 +40,7 @@ export default function SpacePostTable({
   const [to, setTo] = useState(5);
   const [totalCount, setTotalCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
   const address = useSelector(addressSelector);
 
   const router = useRouter();
@@ -90,6 +95,20 @@ export default function SpacePostTable({
   };
   return (
     <>
+      <ProposalsCount>
+        <div>
+          <p>{formatNumber(posts.length)}</p>
+          <span>Proposals</span>
+        </div>
+        <div>
+          <p>{formatNumber(682600)}</p>
+          <span>Holders</span>
+        </div>
+        <div>
+          <p>{formatNumber(21)}</p>
+          <span>Voters</span>
+        </div>
+      </ProposalsCount>
       {title && (
         <HeadWrapper>
           <Title>{title}</Title>
@@ -108,17 +127,18 @@ export default function SpacePostTable({
           <Table>
             <thead>
               <TableRow>
-                <TableHeader colWidth={40}>Proposals</TableHeader>
+                <TableHeader colWidth={35}>Proposals</TableHeader>
+                <TableHeader colWidth={15}>Rewards</TableHeader>
                 <TableHeader colWidth={15}>Vote For</TableHeader>
-                <TableHeader colWidth={15}>Vote Against</TableHeader>
-                <TableHeader colWidth={15}>Total Voters</TableHeader>
+                <TableHeader colWidth={10}>Vote Against</TableHeader>
+                <TableHeader colWidth={10}>Total Voters</TableHeader>
                 <TableHeader colWidth={15}>Actions</TableHeader>
               </TableRow>
             </thead>
             <tbody>
               {data.map((item, index) => (
                 <TableRow key={index}>
-                  <TableCell colWidth={40} data-label="Proposals">
+                  <TableCell colWidth={35} data-label="Proposals">
                     <TitleWrapper>
                       <Title>{item.title}</Title>
                     </TitleWrapper>
@@ -129,6 +149,28 @@ export default function SpacePostTable({
                       <DateSection>{item.voteStart}</DateSection>
                     </StatusWrapper>
                   </TableCell>
+                  <TableCell colWidth={15} data-label="Rewards">
+                    <div className="rewards">
+                      <span className="fw_bold">USD 12112</span>
+                      <Tooltip
+                        content={
+                          <div className="rewards_popup">
+                            <div className="popup_title">
+                              <p>Ethereum</p>
+                            </div>
+                            <div className="popup_body">
+                              <span>$9,576.37 USDC</span>
+                            </div>
+                            <div className="popup_body">
+                              <span>$3,682.31 RPL</span>
+                            </div>
+                          </div>
+                        }
+                        icon={"/imgs/icons/tooltip-info.svg"}
+                        iconSize={14}
+                      />
+                    </div>
+                  </TableCell>
                   <TableCell colWidth={15} data-label="Vote For">
                     <span className="fw_bold green">
                       {item.finalTallyResult.forCount}
@@ -136,7 +178,7 @@ export default function SpacePostTable({
                   </TableCell>
                   <TableCell
                     className="fw_bold"
-                    colWidth={15}
+                    colWidth={10}
                     data-label="Vote Against"
                   >
                     <span className="fw_bold red">
@@ -145,7 +187,7 @@ export default function SpacePostTable({
                   </TableCell>
                   <TableCell
                     className="fw_bold"
-                    colWidth={15}
+                    colWidth={10}
                     data-label="Total Voters"
                   >
                     <span className="fw_bold">{item.totalVotes}</span>
@@ -164,7 +206,7 @@ export default function SpacePostTable({
                         disabled={!address}
                         primary
                         block
-                        onClick={onCheckRewards}
+                        onClick={() => setShowRewards(true)}
                       >
                         Check rewards
                       </CustomBtn>
@@ -206,6 +248,13 @@ export default function SpacePostTable({
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"
           onSubmit={handleAddIncentive}
+        />
+      )}
+
+      {showRewards && (
+        <CheckRewardsModal
+          open={showRewards}
+          closeModal={() => setShowRewards(false)}
         />
       )}
     </>
