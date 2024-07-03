@@ -160,6 +160,7 @@ export default function Tooltip({
   iconSize,
   position,
   offset,
+  icon = "/imgs/icons/tooltip-icon.svg",
 }) {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
@@ -205,7 +206,7 @@ export default function Tooltip({
           {!label && (
             <TooltipIcon
               size={iconSize}
-              src="/imgs/icons/tooltip-icon.svg"
+              src={icon}
               onMouseEnter={onMouseEnterHandler}
               onMouseLeave={onMouseLeaveHandler}
             />

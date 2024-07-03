@@ -3,10 +3,10 @@ import Content from "./content";
 
 const Wrapper = styled.div``;
 
-export default function CheckRewards() {
+export default function CheckRewards({ modal }) {
   return (
     <Wrapper>
-      <Content />
+      <Content modal={modal} />
     </Wrapper>
   );
 }

@@ -17,7 +17,7 @@ import useEthApis from "hooks/useEthApis";
 import { useEffect, useState } from "react";
 import { formatAmount } from "helpers/methods";
 
-export default function Content() {
+export default function Content({ modal = false }) {
   const [claimInfo, setClaimInfo] = useState({
     totalBalance: 0,
     totalClaimed: 0,
@@ -60,12 +60,14 @@ export default function Content() {
   return (
     <Wrapper>
       <TitalWrapper>
-        <Title>
-          <IconWrapper onClick={handleGoBack}>
-            <ArrowLeft />
-          </IconWrapper>
-          Claim rewards
-        </Title>
+        {!modal && (
+          <Title>
+            <IconWrapper onClick={handleGoBack}>
+              <ArrowLeft />
+            </IconWrapper>
+            Claim rewards
+          </Title>
+        )}
         <TextWrapper>
           These rewards are automatically reserved on your behalf, allowing you
           to claim them at your convenience without any time constraints. You

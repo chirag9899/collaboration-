@@ -76,6 +76,28 @@ export const TableCell = styled.td`
   .fw_bold {
     font-weight: 600 !important;
   }
+  .rewards {
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px;
+    > span {
+      margin-bottom: -4px;
+    }
+    > div > div > div {
+      width: 200px !important;
+    }
+    > div {
+      text-align: left !important;
+    }
+  }
+
+  .rewards_popup {
+    .popup_title {
+      p {
+        font-weight: bold;
+      }
+    }
+  }
   .green {
     color: var(--light-green);
   }
@@ -104,6 +126,15 @@ export const TableCell = styled.td`
       padding-left: 12px;
       font-weight: bold;
       text-align: left;
+    }
+    .rewards {
+      justify-content: end;
+      > div > div {
+        left: -80px;
+      }
+      > div > div > div > div {
+        left: 190px;
+      }
     }
   }
 `;
@@ -285,11 +316,11 @@ export const ProposalsCount = styled(Panel)`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  >div{
+  > div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    >p{
+    > p {
       font-weight: bold;
     }
   }
