@@ -170,7 +170,7 @@ export default function SpacePostTable({
                               <span>$9,576.37 USDC</span>
                             </div>
                             <div className="popup_body">
-                            <Image
+                              <Image
                                 src={USDC}
                                 alt="Bitcoin"
                                 width={32}
@@ -209,7 +209,9 @@ export default function SpacePostTable({
                   <TableCell colWidth={15} data-label="Actions">
                     <ButtonsGroup>
                       <CustomBtn
-                        disabled={!address}
+                        disabled={
+                          !address || item.statusDetails.status !== "active"
+                        }
                         primary
                         block
                         onClick={openModal}
