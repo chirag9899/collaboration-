@@ -28,6 +28,7 @@
     "bignumber.js": "^9.0.1",
     "bitcoin-address-validation": "^2.2.3",
     "copy-to-clipboard": "^3.3.1",
+    "cryptocurrency-icons": "^0.18.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.6.1",
     "graphql": "^16.8.1",

@@ -1,22 +1,24 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
-import { useDispatch } from "react-redux";
-import { setAvailableNetworks } from "store/reducers/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addressSelector,
+  setAvailableNetworks,
+} from "store/reducers/accountSlice";
 import { initAccount } from "store/reducers/accountSlice";
 import { useRouter } from "next/router";
-import { p_16_semibold } from "styles/textStyles";
-import { primary_color } from "@/components/styles/colors";
 import { getBerachainProposals } from "helpers/beraProposals";
 import styled from "styled-components";
 import Layout from "components/layout";
 import Seo from "@/components/seo";
 import pick from "lodash.pick";
 import dynamic from "next/dynamic";
-import Button from "@/components/Button";
-import useModal from "hooks/useModal";
 import SpacePostTable from "@/components/spacePostTable";
-import SpacePostList from "@/components/spacePostList";
+import useEthApis from "hooks/useEthApis";
+import { _handleChainSelect } from "@/components/connect/helper";
+import { chainMap } from "frontedUtils/consts/chains";
+import { newErrorToast } from "store/reducers/toastSlice";
 
 const BeraListInfo = dynamic(() => import("components/beraListInfo"), {
   ssr: false,
@@ -54,34 +56,63 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-const PostWrapper = styled.div`
-  margin-top: 24px;
-`;
-
-const ButtonWrapper = styled(Button)`
-  cursor: pointer;
-  ${p_16_semibold};
-  color: ${primary_color};
-  margin-right: 10px;
-  font-size: 12px;
-  padding: 4px 12px !important;
-  > img {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px !important;
-  }
-`;
-
 export default function List({ spaceId, space, allProposalList }) {
   const dispatch = useDispatch();
   const [showContent, setShowContent] = useState("proposals-all");
-  const [proposalList, setProposalList] = useState(allProposalList);
-
-  console.log(allProposalList, "allProposalList");
-
+  const [balance, setBalance] = useState("0.00");
+  const address = useSelector(addressSelector);
   const router = useRouter();
+  const { getBalance } = useEthApis();
 
-  const { open, openModal, closeModal } = useModal();
+  const handleChainSelect = async (chain) => {
+    try {
+      await _handleChainSelect(
+        connectedWallet,
+        dispatch,
+        address,
+        chainMap,
+        chain,
+      );
+      const currentChainId = await window.ethereum.request({
+        method: "eth_chainId",
+      });
+      const bartioNetworkId = chainMap.get(chain.network).id;
+
+      if (currentChainId !== bartioNetworkId) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error switching network:", error);
+      dispatch(newErrorToast(error.message));
+      return false;
+    }
+  };
+
+  const fetchBalance = useCallback(async () => {
+    try {
+      const bartioNetwork = { network: "berachain-b2" };
+      const switched = await handleChainSelect(bartioNetwork);
+      if (switched) {
+        const data = await getBalance(
+          address,
+          "0xbDa130737BDd9618301681329bF2e46A016ff9Ad",
+        );
+        if (data.result) {
+          setBalance(data.result);
+        } else {
+          setBalance("0.00");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  }, [address, getBalance]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, []);
+
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
@@ -120,15 +151,19 @@ export default function List({ spaceId, space, allProposalList }) {
           {showContent.match(/proposals/) && (
             <MainWrapper>
               <HeaderWrapper>
-                <BeraListInfo spaceId={spaceId} space={space} />
+                <BeraListInfo
+                  spaceId={spaceId}
+                  space={space}
+                  balance={balance}
+                />
               </HeaderWrapper>
               <SpacePostTable
-                posts={proposalList}
+                posts={allProposalList.proposalsWithSupports}
+                proposalInfo={allProposalList.proposalInfo}
                 space={space}
                 status={""}
                 title={"Proposals"}
               />
-              {/* <SpacePostList posts={proposalList} space={space} status={""} /> */}
             </MainWrapper>
           )}
         </Wrapper>

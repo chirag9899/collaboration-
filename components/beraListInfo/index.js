@@ -17,7 +17,7 @@ import {
 } from "./styled";
 import Tooltip from "../tooltip";
 
-export default function ListInfo({ space }) {
+export default function ListInfo({ balance }) {
   const { open, openModal, closeModal } = useModal();
 
   const router = useRouter();
@@ -52,7 +52,7 @@ export default function ListInfo({ space }) {
                   iconSize={16}
                 />
               </div>
-              <p>0.00 BGT</p>
+              <p>{balance} BGT</p>
             </Balance>
             <Balance>
               <div>

@@ -23,17 +23,18 @@ import { addressSelector } from "store/reducers/accountSlice";
 import { useSelector } from "react-redux";
 import useModal from "hooks/useModal";
 import AddIncentive from "../addIncentiveModal";
-import { useRouter } from "next/router";
 import { formatNumber } from "utils";
 import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
+import USDC from "cryptocurrency-icons/svg/color/usdc.svg";
+import Image from "next/image";
 
 export default function SpacePostTable({
   title,
   posts,
   limit = 5,
   status = "",
-  space,
+  proposalInfo,
 }) {
   const [data, setData] = useState([]);
   const [from, setFrom] = useState(0);
@@ -43,11 +44,10 @@ export default function SpacePostTable({
   const [showRewards, setShowRewards] = useState(false);
   const address = useSelector(addressSelector);
 
-  const router = useRouter();
+  const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
+    proposalInfo;
+
   const { open, openModal, closeModal } = useModal();
-  const onCheckRewards = () => {
-    router.push(`/space/${space.id}/rewards?id=${space._id}`);
-  };
 
   const fetchProposals = async (from, to) => {
     const result = posts?.length > 0 ? posts?.slice(from, to) : [];
@@ -93,6 +93,7 @@ export default function SpacePostTable({
       data?.votingEndTime,
     );
   };
+
   return (
     <>
       <ProposalsCount>
@@ -105,7 +106,7 @@ export default function SpacePostTable({
           <span>Holders</span>
         </div>
         <div>
-          <p>{formatNumber(21)}</p>
+          <p>{formatNumber(totalVotersCount)}</p>
           <span>Voters</span>
         </div>
       </ProposalsCount>
@@ -114,10 +115,10 @@ export default function SpacePostTable({
           <Title>{title}</Title>
           <div>
             <p>
-              171 <span className="green">Passed</span>
+              {passedProposalsCount} <span className="green">Passed</span>
             </p>
             <p>
-              49 <span className="red">Failed</span>
+              {failedProposalsCount} <span className="red">Failed</span>
             </p>
           </div>
         </HeadWrapper>
@@ -159,9 +160,21 @@ export default function SpacePostTable({
                               <p>Ethereum</p>
                             </div>
                             <div className="popup_body">
+                              <Image
+                                src={USDC}
+                                alt="Bitcoin"
+                                width={32}
+                                height={32}
+                              />
                               <span>$9,576.37 USDC</span>
                             </div>
                             <div className="popup_body">
+                              <Image
+                                src={USDC}
+                                alt="Bitcoin"
+                                width={32}
+                                height={32}
+                              />
                               <span>$3,682.31 RPL</span>
                             </div>
                           </div>
@@ -195,7 +208,9 @@ export default function SpacePostTable({
                   <TableCell colWidth={15} data-label="Actions">
                     <ButtonsGroup>
                       <CustomBtn
-                        disabled={!address}
+                        disabled={
+                          !address || item.statusDetails.status !== "active"
+                        }
                         primary
                         block
                         onClick={openModal}

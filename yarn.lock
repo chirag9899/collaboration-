@@ -1748,6 +1748,7 @@ __metadata:
     bignumber.js: ^9.0.1
     bitcoin-address-validation: ^2.2.3
     copy-to-clipboard: ^3.3.1
+    cryptocurrency-icons: ^0.18.1
     eslint: ^8.38.0
     eslint-config-next: ^13.3.0
     ethereum-blockies-base64: ^1.0.2
@@ -6787,6 +6788,13 @@ __metadata:
     uWebSockets.js:
       optional: true
   checksum: dcaf730a3af32cf081ab49fdb9c31192a738d7e0585585975e581e71a3d7d14df8d3b42ba183e13e34a1fc26645f695362abf30c40369d12652bcee372a484c3
+  languageName: node
+  linkType: hard
+
+"cryptocurrency-icons@npm:^0.18.1":
+  version: 0.18.1
+  resolution: "cryptocurrency-icons@npm:0.18.1"
+  checksum: abf563d9fdc8d481df80d23c96904c92e76a12689ac5fd95c5241d0d5d25391dcda8d710a0741112ac20fdea750b6e2db77bd39ae5d7527c107bb7dfff0e89b8
   languageName: node
   linkType: hard
 
