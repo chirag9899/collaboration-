@@ -147,6 +147,9 @@ const AccountAndBell = styled.div`
   gap: 16px;
 `;
 
+const showBeravoteBtn =
+  process.env.NEXT_PUBLIC_SHOW_BERA_VOTE_BUTTON === "true";
+
 export default function Header({ networks }) {
   const dispatch = useDispatch();
   const showMenu = useSelector(showHeaderMenuSelector);
@@ -160,7 +163,7 @@ export default function Header({ networks }) {
 
       if (storedValue !== null) {
         setIsChecked(storedValue === "true");
-      }else{
+      } else {
         localStorage.setItem("spacesFilterBy", "berachain-b2");
         localStorage.setItem("isChecked", JSON.stringify(false));
       }
@@ -193,8 +196,6 @@ export default function Header({ networks }) {
     setIsChecked(checked);
   };
 
-  console.log('showMenu',showMenu);
-
   return (
     <Wrapper>
       <ContentWrapper ref={ref}>
@@ -218,16 +219,18 @@ export default function Header({ networks }) {
           </IconWrapper>
 
           <HeaderItemWrapper>
-            {/* <Button
-              onClick={() => {
-                router.push({
-                  pathname: "/space/beravote-test-space/singleSpace",
-                  query: { state: "single" },
-                });
-              }}
-            >
-              Beravote space
-            </Button> */}
+            {showBeravoteBtn && (
+              <Button
+                onClick={() => {
+                  router.push({
+                    pathname: "/space/beravote-test-space/singleSpace",
+                    query: { state: "single" },
+                  });
+                }}
+              >
+                Beravote space
+              </Button>
+            )}
 
             {isHomePage && (
               <>

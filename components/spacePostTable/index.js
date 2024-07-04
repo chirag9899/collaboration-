@@ -27,6 +27,8 @@ import { useRouter } from "next/router";
 import { formatNumber } from "utils";
 import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
+import USDC from "cryptocurrency-icons/svg/color/usdc.svg";
+import Image from "next/image";
 
 export default function SpacePostTable({
   title,
@@ -159,9 +161,21 @@ export default function SpacePostTable({
                               <p>Ethereum</p>
                             </div>
                             <div className="popup_body">
+                              <Image
+                                src={USDC}
+                                alt="Bitcoin"
+                                width={32}
+                                height={32}
+                              />
                               <span>$9,576.37 USDC</span>
                             </div>
                             <div className="popup_body">
+                            <Image
+                                src={USDC}
+                                alt="Bitcoin"
+                                width={32}
+                                height={32}
+                              />
                               <span>$3,682.31 RPL</span>
                             </div>
                           </div>

@@ -97,6 +97,12 @@ export const TableCell = styled.td`
         font-weight: bold;
       }
     }
+    .popup_body{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:10px;
+    }
   }
   .green {
     color: var(--light-green);
