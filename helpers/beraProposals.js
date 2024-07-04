@@ -37,9 +37,15 @@ const GET_PROPOSALS = gql`
   }
 `;
 
-function getProposalStatusDetails(executed, queued, canceled, voteEnd, voteStart) {
+function getProposalStatusDetails(
+  executed,
+  queued,
+  canceled,
+  voteEnd,
+  voteStart,
+) {
   const currentTime = Math.floor(Date.now() / 1000);
-  let status
+  let status;
   // "terminated",
   // "pending",
   // "active",
@@ -47,7 +53,7 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd, voteStart
   // "closed"
 
   if (!canceled && Number(currentTime) < Number(voteStart)) {
-    status = 'pending'
+    status = "pending";
   }
 
   // overkill
@@ -55,16 +61,16 @@ function getProposalStatusDetails(executed, queued, canceled, voteEnd, voteStart
   //   status = 'closeToEnd'
   // }
 
-  if (!canceled && Number(currentTime) >= Number(voteEnd)){
-    status = 'closed'
+  if (!canceled && Number(currentTime) >= Number(voteEnd)) {
+    status = "closed";
   }
 
   if (!canceled && Number(currentTime) <= Number(voteEnd)) {
-    status = 'active'
+    status = "active";
   }
 
   if (canceled) {
-    status = 'terminated'
+    status = "terminated";
   }
 
   const statusStyles = {
@@ -135,11 +141,16 @@ const calculateSupportLengths = (supports, supportType) => {
 
 export function getFilteredProposals(proposals) {
   const proposalsWithSupports = [];
+  let totalVotersCount = 0;
+  let passedProposalsCount = 0;
+  let failedProposalsCount = 0;
   for (const proposal of proposals) {
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
     );
+
+    totalVotersCount += votesCount;
 
     const description = proposal.description;
     const newlineIndex = description.split("\n");
@@ -176,15 +187,15 @@ export function getFilteredProposals(proposals) {
       proposal.queued,
       proposal.canceled,
       proposal.voteEnd,
-      proposal.voteStart
-    )
+      proposal.voteStart,
+    );
 
     const proposalWithSupports = {
       ...proposal,
       supports: proposal.supports,
       totalVotes: formatNumber(votesCount),
-      title: newlineIndex[0].replace('#', ''),
-      description: description.replace(newlineIndex[0], ''),
+      title: newlineIndex[0].replace("#", ""),
+      description: description.replace(newlineIndex[0], ""),
       voteEnd: getDateFromTimestamp(proposal.voteEnd),
       voteStart: getDateFromTimestamp(proposal.voteStart),
       quorumPer: Number(forVotesPer).toFixed(2) + "%",
@@ -203,7 +214,21 @@ export function getFilteredProposals(proposals) {
 
     proposalsWithSupports.push(proposalWithSupports);
   }
-  return proposalsWithSupports;
+
+  passedProposalsCount = proposalsWithSupports.filter(
+    (item) => item.statusDetails.status === "closed",
+  ).length;
+  failedProposalsCount = proposalsWithSupports.filter(
+    (item) => item.statusDetails.status === "cancled",
+  ).length;
+  return {
+    proposalsWithSupports,
+    proposalInfo: {
+      totalVotersCount,
+      passedProposalsCount,
+      failedProposalsCount,
+    },
+  };
 }
 
 export async function getBerachainProposals() {

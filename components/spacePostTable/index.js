@@ -23,7 +23,6 @@ import { addressSelector } from "store/reducers/accountSlice";
 import { useSelector } from "react-redux";
 import useModal from "hooks/useModal";
 import AddIncentive from "../addIncentiveModal";
-import { useRouter } from "next/router";
 import { formatNumber } from "utils";
 import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
@@ -35,7 +34,7 @@ export default function SpacePostTable({
   posts,
   limit = 5,
   status = "",
-  space,
+  proposalInfo,
 }) {
   const [data, setData] = useState([]);
   const [from, setFrom] = useState(0);
@@ -45,11 +44,10 @@ export default function SpacePostTable({
   const [showRewards, setShowRewards] = useState(false);
   const address = useSelector(addressSelector);
 
-  const router = useRouter();
+  const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
+    proposalInfo;
+
   const { open, openModal, closeModal } = useModal();
-  const onCheckRewards = () => {
-    router.push(`/space/${space.id}/rewards?id=${space._id}`);
-  };
 
   const fetchProposals = async (from, to) => {
     const result = posts?.length > 0 ? posts?.slice(from, to) : [];
@@ -96,11 +94,6 @@ export default function SpacePostTable({
     );
   };
 
-  const totalVotersCount = posts.reduce(
-    (accumulator, currentValue) => +accumulator + +currentValue.totalVotes,
-    0,
-  );
-
   return (
     <>
       <ProposalsCount>
@@ -122,10 +115,10 @@ export default function SpacePostTable({
           <Title>{title}</Title>
           <div>
             <p>
-              171 <span className="green">Passed</span>
+              {passedProposalsCount} <span className="green">Passed</span>
             </p>
             <p>
-              49 <span className="red">Failed</span>
+              {failedProposalsCount} <span className="red">Failed</span>
             </p>
           </div>
         </HeadWrapper>
