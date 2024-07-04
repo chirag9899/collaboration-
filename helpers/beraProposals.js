@@ -213,14 +213,23 @@ export function getFilteredProposals(proposals) {
     };
 
     proposalsWithSupports.push(proposalWithSupports);
-  }
+    if (
+      statusDetails.status === "closed" &&
+      forVotesPer >= requiredQuorumPercentage &&
+      statusDetails.status !== "terminated" &&
+      abstainVotesPer < requiredQuorumPercentage
+    ) {
+      passedProposalsCount++;
+    }
+    if (
+      forVotesPer < requiredQuorumPercentage ||
+      statusDetails.status === "terminated" ||
+      abstainVotesPer > requiredQuorumPercentage
+    ) {
+      failedProposalsCount++;
+    }
 
-  passedProposalsCount = proposalsWithSupports.filter(
-    (item) => item.statusDetails.status === "closed",
-  ).length;
-  failedProposalsCount = proposalsWithSupports.filter(
-    (item) => item.statusDetails.status === "cancled",
-  ).length;
+  }
   return {
     proposalsWithSupports,
     proposalInfo: {
