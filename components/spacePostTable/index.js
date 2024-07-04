@@ -95,6 +95,12 @@ export default function SpacePostTable({
       data?.votingEndTime,
     );
   };
+
+  const totalVotersCount = posts.reduce(
+    (accumulator, currentValue) => +accumulator + +currentValue.totalVotes,
+    0,
+  );
+
   return (
     <>
       <ProposalsCount>
@@ -107,7 +113,7 @@ export default function SpacePostTable({
           <span>Holders</span>
         </div>
         <div>
-          <p>{formatNumber(21)}</p>
+          <p>{formatNumber(totalVotersCount)}</p>
           <span>Voters</span>
         </div>
       </ProposalsCount>
