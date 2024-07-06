@@ -60,7 +60,6 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
       dispatch(newErrorToast("No wallet connected"));
     }
   } catch (error) {
-    console.log(error)
     throw error;
   }
   // Dispatch closeNetworkSelector when a chain is selected
@@ -70,121 +69,152 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
       network: chain.network,
     }),
   );
+};  
+
+
+
+
+const detectWallets = () => {
+  const providers = window.ethereum.providers || [window.ethereum];
+  let detectedWallets = {};
+
+  providers.forEach((provider, index) => {
+    if (provider.isMetaMask && !provider.isTrust) {
+      detectedWallets.metaMask = provider;
+    } else if (provider.isCoinbaseWallet) {
+      detectedWallets.coinbaseWallet = provider;
+    } else if (provider.isTrust) {
+      detectedWallets.trustWallet = provider;
+    }
+  });
+
+  return detectedWallets;
 };
 
+// Ensure the selected provider is active
+const ensureProviderActive = (provider) => {
+  if (window.ethereum.providers) {
 
- export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu) => {
-    // Implement the connection logic for each wallet
+    window.ethereum.providers.forEach((p, index) => {
+      if (p === provider) {
+        window.ethereum.setSelectedProvider(provider);
+      }
+    });
+  } else {
+    window.ethereum = provider;
+  }
+};
 
-    switch (selectedWallet.id) {
-      case 'metamask':
-        // Connect to Metamask
-        if (window.ethereum) {
-          try {
-            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-            const network = await window.ethereum.request({ method: 'eth_chainId' });
-            const accountAddress = accounts[0];
-            
-            if (accountAddress && ethers.utils.isAddress(accountAddress)) {
-              setAddress(accounts[0]);
-              setChain(network[0]);
-              dispatch(
-                setAccount({
-                  address: accounts[0],
-                  network: getChainName(network),
-                  pubkey: accounts[0]
-                }));
-              dispatch(setConnectedWallet(selectedWallet.id))
-              setConnectedWallet()
-              dispatch(setShowHeaderMenu(false));
-            } else {
-              setChain('')
-              setAccount(null)
-              clearCookie("connectedWallet");
-              clearCookie("addressV3");
-            }
-          } catch (error) {
-            console.error('Failed to connect to Metamask:', error);
-            dispatch(newErrorToast(error.message));
-          }
-        } else {
-          dispatch(newErrorToast("Metamask is not installed"));
-        }
-        dispatch(closeConnect());
-        break;
-      case 'unisat':
-        // Connect to Unisat
-        if (window.unisat) {
-          try {
-            let res = await window.unisat.requestAccounts();
-            const accountAddress = res[0];
-              if (accountAddress && validate(accountAddress)) {
-                setAddress(res[0]);
-                dispatch(
-                  setAccount({
-                    address: res[0],
-                    network: "brc20",
-                    pubkey: await window.unisat.getPublicKey()
-                  }));
-                dispatch(setConnectedWallet(selectedWallet.id))
-                dispatch(setShowHeaderMenu(false));
-              } else {
-                setAccount("")
-                clearCookie("connectedWallet");
-                clearCookie("addressV3");
-              }
-          } catch (error) {
-            dispatch(newErrorToast(error.message));
-            console.log(error);
-          }
-        } else {
-          dispatch(newErrorToast("Unisat is not installed"));
-        }
-        dispatch(closeConnect());
-        break;
-      case 'xverse':
-        // Connect to Xverse
-        if (window.XverseProviders) {
-          try {
-            const res = await request('getAccounts', {
-              purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
-              message: 'We are requesting your bitcoin address',
-            });
-            const ordinalsAddressItem = res.result.find(
-              (address) => address.purpose === AddressPurpose.Ordinals
-            );
-            const accountAddress = ordinalsAddressItem.address;
-            if (accountAddress && validate(accountAddress)) {
-              setAddress(ordinalsAddressItem.address);
-              dispatch(
-                setAccount({
-                  address: ordinalsAddressItem.address,
-                  network: "brc20",
-                  pubkey: ordinalsAddressItem.publicKey
-                }));
-              dispatch(setConnectedWallet(selectedWallet.id))
-              dispatch(setShowHeaderMenu(false));
-            } else {
-              setAccount("")
-              clearCookie("connectedWallet");
-              clearCookie("addressV3");
-            }
-          } catch (error) {
-            dispatch(newErrorToast(error.message));
-            console.log(error);
-          }
-        } else {
-          dispatch(newErrorToast("Xverse is not installed"));
-        }
-        dispatch(closeConnect());
-        break;
-      case 'walletConnect':
-        await open()
-        dispatch(closeConnect());
-        break;
-      default:
-        dispatch(newErrorToast("No wallet found"));
-        dispatch(closeConnect());
-        break;
+export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu) => {
+  if (selectedWallet.id === 'walletConnect') {
+    await open();
+    dispatch(closeConnect());
+    return;
+  }
+
+  // Detect available wallets
+  const wallets = detectWallets();
+  let provider;
+
+  // Ensure the correct provider is selected based on the user's choice
+  if (selectedWallet.id === 'metamask' && wallets.metaMask) {
+    provider = wallets.metaMask;
+  } else if (selectedWallet.id === 'coinbaseWallet' && wallets.coinbaseWallet) {
+    provider = wallets.coinbaseWallet;
+  } else if (selectedWallet.id === 'trustWallet' && wallets.trustWallet) {
+    provider = wallets.trustWallet;
+  } else if (selectedWallet.id === 'unisat' && window.unisat) {
+    provider = window.unisat;
+  } else if (selectedWallet.id === 'xverse' && window.XverseProviders) {
+    provider = window.XverseProviders;
+  } else {
+    dispatch(newErrorToast("No wallet found"));
+    dispatch(closeConnect());
+    return;
+  }
+
+  if (!provider) {
+    dispatch(newErrorToast(`${selectedWallet.id} is not installed`));
+    dispatch(closeConnect());
+    return;
+  }
+
+  // Ensure the selected provider is active
+  ensureProviderActive(provider);
+
+  try {
+    
+    if (selectedWallet.id === 'metamask' || selectedWallet.id === 'coinbaseWallet' || selectedWallet.id === 'trustWallet') {
+      const accounts = await provider.request({ method: 'eth_requestAccounts' });
+      const network = await provider.request({ method: 'eth_chainId' });
+      const accountAddress = accounts[0];
+
+      if (accountAddress && ethers.utils.isAddress(accountAddress)) {
+        setAddress(accountAddress);
+        setChain(network);
+        dispatch(
+          setAccount({
+            address: accountAddress,
+            network: getChainName(network),
+            pubkey: accountAddress
+          })
+        );
+        dispatch(setConnectedWallet(selectedWallet.id));
+        dispatch(setShowHeaderMenu(false));
+      } else {
+        setChain('');
+        dispatch(setAccount(null));
+        clearCookie("connectedWallet");
+        clearCookie("addressV3");
+      }
+    } else if (selectedWallet.id === 'unisat') {
+      let res = await window.unisat.requestAccounts();
+      const accountAddress = res[0];
+      if (accountAddress && validate(accountAddress)) {
+        setAddress(res[0]);
+        dispatch(
+          setAccount({
+            address: res[0],
+            network: "brc20",
+            pubkey: await provider.getPublicKey()
+          })
+        );
+        dispatch(setConnectedWallet(selectedWallet.id));
+        dispatch(setShowHeaderMenu(false));
+      } else {
+        setAccount("");
+        clearCookie("connectedWallet");
+        clearCookie("addressV3");
+      }
+    } else if (selectedWallet.id === 'xverse') {
+      const res = await request('getAccounts', {
+        purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals, AddressPurpose.Stacks],
+        message: 'We are requesting your bitcoin address',
+      });
+      const ordinalsAddressItem = res.result.find(
+        (address) => address.purpose === AddressPurpose.Ordinals
+      );
+      const accountAddress = ordinalsAddressItem.address;
+      if (accountAddress && validate(accountAddress)) {
+        setAddress(ordinalsAddressItem.address);
+        dispatch(
+          setAccount({
+            address: ordinalsAddressItem.address,
+            network: "brc20",
+            pubkey: ordinalsAddressItem.publicKey
+          })
+        );
+        dispatch(setConnectedWallet(selectedWallet.id));
+        dispatch(setShowHeaderMenu(false));
+      } else {
+        setAccount("");
+        clearCookie("connectedWallet");
+        clearCookie("addressV3");
+      }
     }
-  };
+  } catch (error) {
+    dispatch(newErrorToast(error.message));
+  }
+
+  dispatch(closeConnect());
+};
