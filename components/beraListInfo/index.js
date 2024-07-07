@@ -37,8 +37,7 @@ export default function ListInfo({ balance }) {
             BeraChain VoteMarket
           </LogoName>
           <LogoSymbol>
-            A Marketplace to for BeraChain Governance Vote Incentives and
-            Delegation Platform
+            A marketplace for berachain vote incentives and delegation
           </LogoSymbol>
         </HeadingWrapper>
         <BalanceWrapper>

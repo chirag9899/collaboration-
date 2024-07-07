@@ -1,4 +1,4 @@
-import NoData from "../NoData";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { useEffect, useState } from "react";
 import {
   ButtonsGroup,
@@ -28,6 +28,21 @@ import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
 import USDC from "cryptocurrency-icons/svg/color/usdc.svg";
 import Image from "next/image";
+import NoData from "../NoData";
+
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+const GET_HOLDERS = gql`
+  query bgt {
+    tokens {
+      holdersCount
+      totalSupply
+    }
+  }
+`;
 
 export default function SpacePostTable({
   title,
@@ -42,12 +57,27 @@ export default function SpacePostTable({
   const [totalCount, setTotalCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
+  const [holdersCount, setHoldersCount] = useState(0); // New state for holders count
   const address = useSelector(addressSelector);
 
   const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
     proposalInfo;
 
   const { open, openModal, closeModal } = useModal();
+
+  // Fetch holders count on mount
+  useEffect(() => {
+    const fetchHoldersCount = async () => {
+      try {
+        const { data } = await client.query({ query: GET_HOLDERS });
+        setHoldersCount(data.tokens[0].holdersCount);
+      } catch (error) {
+        console.error("Error fetching holders count:", error);
+      }
+    };
+
+    fetchHoldersCount();
+  }, []);
 
   const fetchProposals = async (from, to) => {
     const result = posts?.length > 0 ? posts?.slice(from, to) : [];
@@ -102,7 +132,7 @@ export default function SpacePostTable({
           <span>Proposals</span>
         </div>
         <div>
-          <p>{formatNumber(682600)}</p>
+          <p>{formatNumber(holdersCount)}</p>
           <span>Holders</span>
         </div>
         <div>

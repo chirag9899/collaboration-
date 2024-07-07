@@ -156,12 +156,12 @@ export function getFilteredProposals(proposals) {
     const newlineIndex = description.split("\n");
     const abstainSupports = calculateSupportLengths(
       proposal?.supports ?? [],
-      0,
+      2,
     );
     const forSupports = calculateSupportLengths(proposal?.supports ?? [], 1);
     const againstSupports = calculateSupportLengths(
       proposal?.supports ?? [],
-      2,
+      0,
     );
     const forCount = forSupports.length > 0 ? forSupports[1] : 0;
     const againstCount = againstSupports.length > 0 ? againstSupports[1] : 0;
