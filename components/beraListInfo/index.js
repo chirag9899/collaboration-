@@ -36,9 +36,9 @@ export default function ListInfo({ balance }) {
             </IconWrapper>
             BeraChain VoteMarket
           </LogoName>
-          <LogoSymbol>
+          {/* <LogoSymbol>
             A marketplace for berachain vote incentives and delegation
-          </LogoSymbol>
+          </LogoSymbol> */}
         </HeadingWrapper>
         <BalanceWrapper>
           <BalanceSection>
