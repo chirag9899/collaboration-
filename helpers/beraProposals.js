@@ -191,10 +191,12 @@ export function getFilteredProposals(proposals) {
     const abstainVotesPer =
       totalVotes > 0 ? Number((abstainCount * 100) / totalVotes) : 0;
 
-    const quorum = parseFloat(0.2);
-    const threshold = parseFloat(0.5);
-    const requiredQuorumPercentage = BigInt(Math.ceil(quorum * 100));
-    const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
+    const quorum = 2000000000 * 1e18; // 2 billions in the contract
+    // const threshold = parseFloat(0.5); // create proposal threshold is 1000
+    const forSupportsQuorumTotalWeight = forSupports[4];
+    const againstSupportsQuorumTotalWeight = againstSupports[4];
+    const abstainSupportsQuorumTotalWeight = againstSupports[4];
+    // const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
@@ -206,6 +208,23 @@ export function getFilteredProposals(proposals) {
       proposal.voteStart,
     );
 
+    let quorumNotReached = ''
+    if (
+      forSupportsQuorumTotalWeight < quorum ||
+      abstainSupportsQuorumTotalWeight >= quorum ||
+      againstSupportsQuorumTotalWeight >= quorum
+    ) {
+      quorumNotReached = '(Quorum not reached)';
+    }
+
+    if (
+      statusDetails.status === "closed" &&
+      forSupportsQuorumTotalWeight >= quorum &&
+      statusDetails.status !== "terminated" &&
+      abstainSupportsQuorumTotalWeight < quorum
+    ) {
+      quorumNotReached = '(Proposal executed)';
+    }
     const proposalWithSupports = {
       ...proposal,
       supports: proposal.supports,
@@ -221,26 +240,28 @@ export function getFilteredProposals(proposals) {
         abstainCount: Number(abstainVotesPer).toFixed(2) + "%",
         againstCount: Number(againstVotesPer).toFixed(2) + "%",
       },
-      thresholdPercentage: Number(thresholdPercentage) + "%",
+      // thresholdPercentage: Number(thresholdPercentage) + "%",
       status: statusDetails.status,
       statusDetails: statusDetails,
-      requiredQuorumPercentage:
-        Number(requiredQuorumPercentage).toFixed() + "%",
+      quorumNotReached: quorumNotReached,
+      // requiredQuorumPercentage:
+      //   Number(requiredQuorumPercentage).toFixed() + "%",
     };
 
     proposalsWithSupports.push(proposalWithSupports);
     if (
       statusDetails.status === "closed" &&
-      forVotesPer >= requiredQuorumPercentage &&
+      forSupportsQuorumTotalWeight >= quorum &&
       statusDetails.status !== "terminated" &&
-      abstainVotesPer < requiredQuorumPercentage
+      abstainSupportsQuorumTotalWeight < quorum
     ) {
       passedProposalsCount++;
     }
     if (
-      forVotesPer < requiredQuorumPercentage ||
+      forSupportsQuorumTotalWeight < quorum ||
       statusDetails.status === "terminated" ||
-      abstainVotesPer > requiredQuorumPercentage
+      abstainSupportsQuorumTotalWeight >= quorum ||
+      againstSupportsQuorumTotalWeight >= quorum
     ) {
       failedProposalsCount++;
     }
