@@ -66,7 +66,7 @@ export default function ListInfo({ balance }) {
             </Balance>
           </BalanceSection>
           <DelegateSection>
-            <p>Delegate to bera vote to optimize voting rewards</p>
+            <p>Delegate to BeraVote to optimize voting rewards</p>
             <ButtonWrapper onClick={openModal}>Delegate</ButtonWrapper>
           </DelegateSection>
         </BalanceWrapper>

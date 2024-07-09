@@ -191,7 +191,7 @@ export function getFilteredProposals(proposals) {
     const abstainVotesPer =
       totalVotes > 0 ? Number((abstainCount * 100) / totalVotes) : 0;
 
-    const quorum = 2000000000 * 1e18; // 2 billions in the contract
+    const quorum = 2000000000 * 1e18; // 2 billion in the contract
     // const threshold = parseFloat(0.5); // create proposal threshold is 1000
     const forSupportsQuorumTotalWeight = forSupports[4];
     const againstSupportsQuorumTotalWeight = againstSupports[4];

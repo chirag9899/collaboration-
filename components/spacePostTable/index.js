@@ -19,8 +19,11 @@ import {
   Title,
   TitleWrapper,
 } from "./styled";
-import { addressSelector } from "store/reducers/accountSlice";
-import { useSelector } from "react-redux";
+import { _handleChainSelect } from "../connect/helper";
+import { useDispatch, useSelector } from "react-redux";
+import useEthApis from "hooks/useEthApis";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
+import { getCookie } from "frontedUtils/cookie";
 import useModal from "hooks/useModal";
 import AddIncentive from "../addIncentiveModal";
 import { formatNumber } from "utils";
@@ -29,6 +32,8 @@ import CheckRewardsModal from "../checkRewardsModal";
 import USDC from "cryptocurrency-icons/svg/color/usdc.svg";
 import Image from "next/image";
 import NoData from "../NoData";
+import { chainMap } from "frontedUtils/consts/chains";
+import { newErrorToast } from "store/reducers/toastSlice";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
@@ -57,13 +62,16 @@ export default function SpacePostTable({
   const [totalCount, setTotalCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [showRewards, setShowRewards] = useState(false);
-  const [holdersCount, setHoldersCount] = useState(0); // New state for holders count
-  const address = useSelector(addressSelector);
+  const [holdersCount, setHoldersCount] = useState(0);
+  const dispatch = useDispatch();
+  const connectedWallet = useSelector(connectedWalletSelector);
+  const { open, openModal, closeModal } = useModal();
+  const { addBeraVoteRewardAmount } = useEthApis();
+  const [isSwitching, setIsSwitching] = useState(false);
+  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
   const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
     proposalInfo;
-
-  const { open, openModal, closeModal } = useModal();
 
   // Fetch holders count on mount
   useEffect(() => {
@@ -113,15 +121,69 @@ export default function SpacePostTable({
     }
   };
 
+  const handleChainSelect = async (chain) => {
+    try {
+      await _handleChainSelect(connectedWallet, dispatch, address, chainMap, chain);
+      const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      const bartioNetworkId = chainMap.get(chain.network).id;
+
+      if (currentChainId !== bartioNetworkId) {
+        return false
+      }
+      return true;
+    } catch (error) {
+      console.error("Error switching network:", error);
+      dispatch(newErrorToast(error.message));
+      return false;
+    }
+  };
+
+
+  const handleIncentive = async () => {
+    try {
+      const bartioNetwork = { network: 'berachain-b2' };
+      setIsSwitching(true);
+      const switched = await handleChainSelect(bartioNetwork);
+      console.log(switched)
+      setIsSwitching(false);
+      if (switched) {
+        openModal();
+      }
+
+    } catch (error) {
+      closeModal()
+    }
+  };
+
+  const handleCheckRewards = async () => {
+    try {
+      const bartioNetwork = { network: 'berachain-b2' };
+      setIsSwitching(true);
+      const switched = await handleChainSelect(bartioNetwork);
+      console.log(switched);
+      setIsSwitching(false);
+      if (switched) {
+        onCheckRewards();
+      }
+    } catch (error) {
+      setIsSwitching(false);
+    }
+  };
+
   const handleAddIncentive = async (value) => {
-    await addBeraVoteRewardAmount(
-      data?.id,
-      value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
-      value.incentiveAmount,
-      value.tokenAddress,
-      data?.votingStartTime,
-      data?.votingEndTime,
-    );
+    try {
+      await addBeraVoteRewardAmount(
+        data?.id,
+        value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
+        value.incentiveAmount,
+        value.tokenAddress,
+        data?.startTime,
+        data?.endTime,
+      );
+    } catch (error) {
+      console.error("Error adding incentive:", error);
+      dispatch(newErrorToast(error.message));
+    }
   };
 
   return (
@@ -239,11 +301,12 @@ export default function SpacePostTable({
                     <ButtonsGroup>
                       <CustomBtn
                         disabled={
-                          !address || item.statusDetails.status !== "active"
+                          process.env.NEXT_PUBLIC_SHOW_BERA_VOTE_BUTTON !== "true" &&
+                          (!address || item.statusDetails.status !== "active")
                         }
                         primary
                         block
-                        onClick={openModal}
+                        onClick={handleIncentive}
                       >
                         Add incentive
                       </CustomBtn>
@@ -251,7 +314,7 @@ export default function SpacePostTable({
                         disabled={!address}
                         primary
                         block
-                        onClick={() => setShowRewards(true)}
+                        onClick={handleCheckRewards}
                       >
                         Check rewards
                       </CustomBtn>
