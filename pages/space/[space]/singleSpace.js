@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
-import { useDispatch } from "react-redux";
-import { setAvailableNetworks } from "store/reducers/accountSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addressSelector,
+  loginAccountSelector,
+  setAvailableNetworks,
+} from "store/reducers/accountSlice";
 import { initAccount } from "store/reducers/accountSlice";
 import { useRouter } from "next/router";
 import { getBerachainProposals } from "helpers/beraProposals";
@@ -14,6 +18,10 @@ import dynamic from "next/dynamic";
 import SpacePostTable from "@/components/spacePostTable";
 import { _handleChainSelect } from "@/components/connect/helper";
 import { formatNumber } from "utils";
+import useEthApis from "hooks/useEthApis";
+import { newErrorToast } from "store/reducers/toastSlice";
+import { connectedWalletSelector } from "store/reducers/showConnectSlice";
+import { chainMap } from "frontedUtils/consts/chains";
 
 const BeraListInfo = dynamic(() => import("components/beraListInfo"), {
   ssr: false,
@@ -55,15 +63,68 @@ export default function List({ spaceId, space, allProposalList, bgtBalance }) {
   const dispatch = useDispatch();
   const [showContent, setShowContent] = useState("proposals-all");
   const [balance, setBalance] = useState("0.00");
+  const address = useSelector(addressSelector);
+  const connectedWallet = useSelector(connectedWalletSelector);
+  const account = useSelector(loginAccountSelector);
   const router = useRouter();
 
-  useEffect(() => {
-    if (bgtBalance?.[0]?.balance) {
-      setBalance(formatNumber(bgtBalance[0].balance));
-    } else {
-      setBalance(0.0);
+  const { getBalance } = useEthApis();
+
+  const handleChainSelect = async (chain) => {
+    try {
+      await _handleChainSelect(
+        connectedWallet,
+        dispatch,
+        address,
+        chainMap,
+        chain,
+      );
+      const currentChainId = await window.ethereum.request({
+        method: "eth_chainId",
+      });
+      const bartioNetworkId = chainMap.get(chain.network).id;
+      if (currentChainId !== bartioNetworkId) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error switching network:", error);
+      dispatch(newErrorToast(error.message));
+      return false;
     }
-  }, [bgtBalance]);
+  };
+
+  const fetchBalance = useCallback(async () => {
+    if (!connectedWallet) {
+      setBalance("0.00");
+      return;
+    }
+
+    try {
+      const bartioNetwork = { network: "berachain-b2" };
+      const switched = await handleChainSelect(bartioNetwork);
+      if (switched) {
+        if (bgtBalance?.[0]?.balance) {
+          setBalance(formatNumber(bgtBalance[0].balance));
+        } else {
+          setBalance("0.00");
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  }, [address, getBalance]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [connectedWallet, chainMap]);
+
+  useEffect(() => {
+    if (account?.network !== "berachain-b2") {
+      setBalance("0.00");
+      return;
+    }
+  }, [account]);
 
   useEffect(() => {
     dispatch(initAccount());
