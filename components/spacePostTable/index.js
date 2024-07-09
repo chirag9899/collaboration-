@@ -21,6 +21,7 @@ import {
 } from "./styled";
 import { _handleChainSelect } from "../connect/helper";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import useEthApis from "hooks/useEthApis";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { getCookie } from "frontedUtils/cookie";
@@ -56,6 +57,7 @@ export default function SpacePostTable({
   status = "",
   proposalInfo,
 }) {
+  const router = useRouter();
   const [data, setData] = useState([]);
   const [from, setFrom] = useState(0);
   const [to, setTo] = useState(5);
@@ -69,6 +71,10 @@ export default function SpacePostTable({
   const { addBeraGovRewardAmount } = useEthApis();
   const [isSwitching, setIsSwitching] = useState(false);
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
+
+  const onCheckRewards = () => {
+    router.push(`/space/${space.id}/rewards?id=${space._id}`);
+  };
 
   const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
     proposalInfo;
