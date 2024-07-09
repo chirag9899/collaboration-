@@ -154,6 +154,48 @@ const useEthApis = () => {
     }
   }
 
+  async function addBeraGovRewardAmount(
+    id,
+    option,
+    rewardAmount,
+    rewardToken,
+    start,
+    end,
+  ) {
+    try {
+      // return;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const signer = ethersProvider.getSigner();
+      const token = new ethers.Contract(rewardToken, erc20.abi, signer);
+      const decimals = await token.decimals();
+      const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
+      const beravoteAddress = process.env.NEXT_PUBLIC_BERAGOV_ADDRESS;
+
+      const bribeContract = new ethers.Contract(
+        beravoteAddress,
+        beravoteAbi.abi,
+        signer,
+      );
+      const tx = await bribeContract.add_reward_amount(
+        `beravote-${id}`,
+        option,
+        rewardToken,
+        amount,
+        start,
+        end,
+      );
+      await tx.wait(1);
+      console.log(tx);
+      dispatch(newSuccessToast("Incentive added!"));
+      return true;
+    } catch (e) {
+      console.log(e);
+      dispatch(newErrorToast("Error adding incentive!"));
+      return false;
+    }
+  }
+
   async function getRewards() {
     try {
       const claims = [];
@@ -316,7 +358,8 @@ const useEthApis = () => {
     addBeraVoteRewardAmount,
     getRewards,
     getBerachainSubgraphPrice,
-    claimAllRewards
+    claimAllRewards,
+    addBeraGovRewardAmount,
   };
 };
 

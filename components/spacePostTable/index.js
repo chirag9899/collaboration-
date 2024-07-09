@@ -25,7 +25,7 @@ import useEthApis from "hooks/useEthApis";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
 import { getCookie } from "frontedUtils/cookie";
 import useModal from "hooks/useModal";
-import AddIncentive from "../addIncentiveModal";
+import AddIncentive from "../addIncentiveModalGov";
 import { formatNumber } from "utils";
 import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
@@ -66,7 +66,7 @@ export default function SpacePostTable({
   const dispatch = useDispatch();
   const connectedWallet = useSelector(connectedWalletSelector);
   const { open, openModal, closeModal } = useModal();
-  const { addBeraVoteRewardAmount } = useEthApis();
+  const { addBeraGovRewardAmount } = useEthApis();
   const [isSwitching, setIsSwitching] = useState(false);
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
@@ -172,7 +172,7 @@ export default function SpacePostTable({
 
   const handleAddIncentive = async (value) => {
     try {
-      await addBeraVoteRewardAmount(
+      await addBeraGovRewardAmount(
         data?.id,
         value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
         value.incentiveAmount,
