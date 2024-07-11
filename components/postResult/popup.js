@@ -8,6 +8,7 @@ import { votesSelector, fetchVote } from "store/reducers/voteSlice";
 import { ReactComponent as LoadingSvg } from "public/imgs/icons/loading.svg";
 import BigNumber from "bignumber.js";
 import { bg_white } from "../styles/colors";
+import Image from "next/image";
 
 const ResultWrapper = styled.div`
   z-index: 999;
@@ -179,7 +180,7 @@ export default function Popup({ data, space, isTop }) {
     <ResultWrapper isTop={isTop}>
       <TitleWrapper>
         Results
-        <img src="/imgs/icons/strategy.svg" alt="" />
+        <Image src="/imgs/icons/strategy.svg" alt="" />
       </TitleWrapper>
       <Divider />
       <div>

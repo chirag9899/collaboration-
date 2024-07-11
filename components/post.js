@@ -16,7 +16,8 @@ import { Flex, FlexBetween } from "@osn/common-ui";
 import { p_14_medium } from "../styles/componentCss";
 import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "./styles/colors";
-const DEFAULT_ICON_URL = '/imgs/icons/pending.svg';
+import Image from "next/image";
+const DEFAULT_ICON_URL = "/imgs/icons/pending.svg";
 
 const Wrapper = styled.div`
   background: ${bg_white};
@@ -98,19 +99,22 @@ export default function Post({ data, showSpace, space, spaces }) {
   useEffect(() => {
     async function validateImageUrl(url) {
       try {
-        const response = await fetch(url, { method: 'HEAD' });
-        if (response.ok && response.headers.get('Content-Type').startsWith('image/')) {
+        const response = await fetch(url, { method: "HEAD" });
+        if (
+          response.ok &&
+          response.headers.get("Content-Type").startsWith("image/")
+        ) {
           return url;
         }
       } catch (error) {
-        console.error('Error validating image URL:', error);
+        console.error("Error validating image URL:", error);
       }
       return DEFAULT_ICON_URL;
     }
     const spaceInfo = space ?? getSpaceFromId(data.space);
     const spaceIcon = getSpaceIconUrl(spaceInfo);
 
-    validateImageUrl(spaceIcon).then(validUrl => setSpaceIconUrl(validUrl));
+    validateImageUrl(spaceIcon).then((validUrl) => setSpaceIconUrl(validUrl));
     if (windowSize.width <= 900) {
       setShowRichInfo(false);
     } else {
@@ -144,15 +148,15 @@ export default function Post({ data, showSpace, space, spaces }) {
               />
             )}
             {!showRichInfo && (
-              <img width="20px" height="20px" src={spaceIconUrl} alt="" />
+              <Image width={20} height={20} src={spaceIconUrl} alt="" />
             )}
             <PostTime post={data} />
             {showSpace && showRichInfo && (
               <FromSpace>
                 From
-                <img
-                  width="20px"
-                  height="20px"
+                <Image
+                  width={20}
+                  height={20}
                   className="ml-4px"
                   src={spaceIconUrl}
                   onError={(e) => {

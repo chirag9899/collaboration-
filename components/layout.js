@@ -1,8 +1,5 @@
 import styled, { ThemeProvider } from "styled-components";
-
-import Header from "./header";
 import Main from "./main";
-
 import Toast from "components/toast";
 import Shade from "components/shade";
 import theme from "../styles/theme";
@@ -10,11 +7,12 @@ import { useEffect } from "react";
 import { initAccount } from "store/reducers/accountSlice";
 import { initWallet } from "store/reducers/showConnectSlice";
 import { useDispatch } from "react-redux";
-import NotificationMonitor from "./notification/monitor";
 import Footer from "./Footer";
-import { usePathname } from 'next/navigation'
-import { Web3Modal } from '@/components/connect/walletConnect/web3Modal'
-
+import { usePathname } from "next/navigation";
+import { Web3Modal } from "@/components/connect/walletConnect/web3Modal";
+import dynamic from "next/dynamic";
+const Header = dynamic(() => import("./header"));
+const NotificationMonitor = dynamic(() => import("./notification/monitor"));
 
 const Wrapper = styled.div`
   min-height: 100vh;
@@ -26,11 +24,11 @@ const Wrapper = styled.div`
 
 export default function Layout({ bgHeight, children, networks }) {
   const dispatch = useDispatch();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   useEffect(() => {
     dispatch(initAccount());
-    dispatch(initWallet())
+    dispatch(initWallet());
   }, [dispatch, pathname, networks]);
 
   return (

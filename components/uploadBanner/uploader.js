@@ -4,6 +4,7 @@ import { Flex } from "@osn/common-ui";
 import nextApi from "services/nextApi";
 import { LoadingIcon } from "@osn/common-ui";
 import { ReactComponent as Upload } from "../../public/imgs/icons/upload.svg";
+import Image from "next/image";
 
 const UploadIcon = styled(Upload)`
   flex-basis: 100%;
@@ -171,7 +172,7 @@ function Uploader({ setBannerUrl }) {
           <>
             {currentBanner ? (
               <BannerPreview>
-                <img src={currentBanner} alt="" />
+                <Image src={currentBanner} alt="" />
                 <Delete onClick={handleRemoveBanner}>Delete</Delete>
               </BannerPreview>
             ) : (

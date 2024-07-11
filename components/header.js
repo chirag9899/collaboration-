@@ -13,13 +13,13 @@ import {
 import { Flex } from "@osn/common-ui";
 import Menu from "@/components/menu";
 import NotificationBell from "./notification/bell";
-import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
 import LogoImg from "../public/imgs/dvote.logo.svg";
 import LogoIcon from "../public/imgs/logoIcon.svg";
 import { primary_text_color, text_light_major } from "./styles/colors";
 import Image from "next/image";
 
+// Styled components
 const HeaderItemWrapper = styled.div`
   display: flex;
   gap: 32px;
@@ -72,9 +72,6 @@ const IconWrapper = styled.div`
 
 const ExternalLinkWrapper = styled(Flex)`
   gap: 32px;
-  /* @media screen and (max-width: 800px) {
-    display: none;
-  } */
 `;
 
 const ExternalLink = styled.a`
@@ -151,6 +148,7 @@ export default function Header({ networks }) {
     }
     dispatch(setShowHeaderMenu(false));
   });
+
   const router = useRouter();
   const isHomePage = router.pathname === "/";
 

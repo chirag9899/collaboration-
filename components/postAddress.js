@@ -29,6 +29,7 @@ import {
 import encodeAddressByChain from "../frontedUtils/chain/addr";
 import { Flex } from "@osn/common-ui";
 import { bg_white } from "./styles/colors";
+import Image from "next/image";
 
 const FETCH_BALANCE_ERROR =
   "something went wrong while querying balance, please try again later.";
@@ -267,7 +268,7 @@ export default function PostAddress({ spaceId, proposalCid, size, snapshot }) {
               }
             }}
           />
-          <img src="/imgs/avatar-polkadot.png" alt="" />
+          <Image src="/imgs/avatar-polkadot.png" alt="" />
           {isLoading && <Loading />}
         </InputWrapper>
       )}

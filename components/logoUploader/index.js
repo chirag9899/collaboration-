@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { ReactComponent as UploadSVG } from "./upload.svg";
 import { useRef } from "react";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   position: relative;
@@ -84,7 +85,7 @@ export default function LogoUploader({ imageFile, setImageFile }) {
     <Wrapper>
       {imageFile && (
         <Layer>
-          <img
+          <Image
             style={{ objectFit: "cover" }}
             width="100%"
             height="100%"
