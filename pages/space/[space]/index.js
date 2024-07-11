@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import Layout from "components/layout";
 import Breadcrumb from "components/breadcrumb";
-// import ListInfo from "components/listInfo";
 import ListTab from "components/listTab";
 import PostList from "components/postList";
 import { EmptyQuery, LIST_TAB_ITEMS } from "frontedUtils/constants";
@@ -14,9 +13,9 @@ import {
   loginAccountSelector,
   loginAddressSelector,
   setAvailableNetworks,
-} from "store/reducers/accountSlice";
+  initAccount
+  } from "store/reducers/accountSlice";
 import pick from "lodash.pick";
-import { initAccount } from "store/reducers/accountSlice";
 import dynamic from "next/dynamic";
 import SpaceDetail from "@/components/spaceDetail";
 import SpaceAbout from "@/components/spaceAbout";
@@ -26,19 +25,12 @@ import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "@/components/styles/colors";
 import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
-// import Treasury from "@/components/treasury";
-const Treasury = dynamic(() => import("@/components/treasury"), {
-  ssr: false,
-});
-const ListInfo = dynamic(() => import("components/listInfo"), {
-  ssr: false,
-});
 
+const Treasury = dynamic(() => import("@/components/treasury"), { ssr: false });
+const ListInfo = dynamic(() => import("components/listInfo"), { ssr: false });
 const TransferSpaceModal = dynamic(
   () => import("@/components/transferSpace/TransSpaceModal"),
-  {
-    ssr: false,
-  },
+  { ssr: false },
 );
 
 const Wrapper = styled.div`
@@ -52,7 +44,6 @@ const Wrapper = styled.div`
 
 const MainWrapper = styled.div`
   flex: 1 1 auto;
-  /* 100% - sider width - sider margin-left */
   max-width: calc(100% - 300px - 20px);
   > :not(:first-child) {
     margin-top: 20px;
@@ -67,7 +58,6 @@ const HeaderWrapper = styled.div`
   > :not(:first-child) {
     margin-top: 40px;
   }
-
   @media screen and (max-width: 800px) {
     > :not(:first-child) {
       margin-top: 20px;
@@ -116,11 +106,12 @@ export default function List({
   const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
   const account = useSelector(loginAccountSelector);
 
-  let chain = chainMap.get(account?.network);
-  const isEvm = chain?.chainType == "evm";
+  const chain = chainMap.get(account?.network);
+  const isEvm = chain?.chainType === "evm";
 
   const router = useRouter();
   const { open, openModal, closeModal } = useModal();
+
   useEffect(() => {
     dispatch(initAccount());
   }, [dispatch, space]);
@@ -137,7 +128,7 @@ export default function List({
     } else {
       setShowContent("proposals-all");
     }
-  }, [router]);
+  }, [router.query.tab]);
 
   useEffect(() => {
     dispatch(
@@ -148,41 +139,46 @@ export default function List({
     );
   }, [dispatch, space]);
 
-  const filterProposals = (data, filterby) => {
-    return {
-      ...data,
-      items: data?.items.filter((item) => item.status !== filterby),
-    };
-  };
-  const terminatedProposals = (data, filterby) => {
-    return {
-      ...data,
-      items: data?.items.filter((item) => item.status === filterby),
-    };
-  };
+  const filterProposals = (data, filterby) => ({
+    ...data,
+    items: data?.items.filter((item) => item.status !== filterby),
+  });
+
+  const terminatedProposals = (data, filterby) => ({
+    ...data,
+    items: data?.items.filter((item) => item.status === filterby),
+  });
+
+  const proposalList = useMemo(() => {
+    switch (tab) {
+      case "proposals-pending":
+        return pendingProposals;
+      case "proposals-active":
+        return activeProposals;
+      case "proposals-closed":
+        return filterProposals(closedProposals, "terminated");
+      case "proposals-terminated":
+        return terminatedProposals(closedProposals, "terminated");
+      default:
+        return filterProposals(proposals, "terminated");
+    }
+  }, [tab, proposals, pendingProposals, activeProposals, closedProposals]);
+
 
   if (!space) {
     return null;
   }
-  let proposalList = EmptyQuery;
-  if (!tab || tab === "proposals-all") {
-    proposalList = filterProposals(proposals, "terminated");
-  } else if (tab === "proposals-pending") {
-    proposalList = pendingProposals;
-  } else if (tab === "proposals-active") {
-    proposalList = activeProposals;
-  } else if (tab === "proposals-closed") {
-    proposalList = filterProposals(closedProposals, "terminated");
-  } else if (tab === "proposals-terminated") {
-    proposalList = terminatedProposals(closedProposals, "terminated");
-  }
 
-  const listTabs = [...LIST_TAB_ITEMS];
-  if (address !== space?.address) {
-    listTabs.pop();
-  }
+  const listTabs = useMemo(() => {
+    const tabs = [...LIST_TAB_ITEMS];
+    if (address !== space?.address) {
+      tabs.pop();
+    }
+    return tabs;
+  }, [address, space]);
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
+
   return (
     <>
       <Seo
@@ -237,7 +233,7 @@ export default function List({
                   loginAddress={address}
                   spaceAddress={space?.address}
                   spaceId={spaceId}
-                  activeTab={activeTab}
+                  activeTab={tab}
                   onActiveTab={setTab}
                   defaultPage={defaultPage}
                   network={space?.networks[0]?.network}

@@ -1,13 +1,13 @@
 import styled from "styled-components";
-import SearchBar from "./searchBar";
-import useDropDown from "hooks/useDropDown";
-// import Space from "./space";
-// import Networks from "./network";
-import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { joinedSpacesSelector } from "store/reducers/accountSlice";
-// import UserSpaces from "./userSpaces";
+import useDropDown from "hooks/useDropDown";
+
+const SearchBar = dynamic(() => import("./searchBar"), {
+  ssr: false,
+});
 const Networks = dynamic(() => import("./network"), {
   ssr: true,
 });
@@ -30,7 +30,6 @@ const SearchBarWrapper = styled.div`
   align-items: center;
   gap: 30px;
   @media screen and (max-width: 800px) {
-    display: flex;
     flex-direction: column;
   }
 `;
@@ -65,12 +64,7 @@ const categoriesOptions = [
   { label: "grant", value: "grant", badge: "123" },
 ];
 
-export default function Home({
-  networks,
-  spaces,
-  hottestProposals,
-  userSpaces,
-}) {
+export default function Home({ networks, spaces, hottestProposals, userSpaces }) {
   const [allSpaces, setAllSpaces] = useState(spaces);
   const [allNetworks, setAllNetworks] = useState(networks);
   const [search, setSearch] = useState("");
