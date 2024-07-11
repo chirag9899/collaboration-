@@ -127,22 +127,15 @@ function getProposalStatusDetails(
   return { status, color, backgroundColor, status };
 }
 
-async function calculateFutureEpoch(blocknumber) {
+async function chainHeightAndTime() {
   try {
-    const response = await nextApi.fetch(`/evm/chain/berachain-b2/futureheight/current`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const result = await response.json();
-    const blocksIntoFuture = blocknumber - result.height;
-    const targetTime = result.time + (blocksIntoFuture * result.blocktime);
-    return targetTime;
+    const {result} = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/current`);
+    return result;
   } catch (error) {
-    console.error("Failed to fetch API:", error);
+    console.error("Failed to calculate future epoch:", error);
     throw error;
   }
 }
-
 
 const calculateSupportLengths = (supports, supportType) => {
   let totalLength = 0;
@@ -178,7 +171,14 @@ export async function getFilteredProposals(proposals) {
   let totalVotersCount = 0;
   let passedProposalsCount = 0;
   let failedProposalsCount = 0;
+  const standardChainHeightAndTime = await chainHeightAndTime();
+  console.log(standardChainHeightAndTime)
   for (const proposal of proposals) {
+    function calculateFutureEpoch(blocknumber) {
+      const blocksIntoFuture = blocknumber - standardChainHeightAndTime.height;
+      const targetTime = standardChainHeightAndTime.time + (blocksIntoFuture * (standardChainHeightAndTime.blocktime / 1000));
+      return targetTime;
+    }
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
@@ -220,6 +220,7 @@ export async function getFilteredProposals(proposals) {
       againstVotesPer + forVotesPer + abstainVotesPer;
     const voteStart = await calculateFutureEpoch(proposal.voteStart);
     const voteEnd = await calculateFutureEpoch(proposal.voteEnd);
+    console.log('' + voteEnd)
     const statusDetails = getProposalStatusDetails(
       proposal.executed,
       proposal.queued,
@@ -286,6 +287,7 @@ export async function getFilteredProposals(proposals) {
       failedProposalsCount++;
     }
   }
+  console.log(proposalsWithSupports)
   return {
     proposalsWithSupports,
     proposalInfo: {
@@ -311,7 +313,7 @@ export async function getBerachainProposals() {
     const { data } = await client.query({ query: GET_PROPOSALS });
     const bgtBalance = await getBgtBalance();
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
-    const result = getFilteredProposals(proposals);
+    const result = await getFilteredProposals(proposals);
 
     return {
       bgtBalance: bgtBalance.holders,
