@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { formatNumber } from "utils";
 import { getDateFromTimestamp } from "./methods";
 import gql from "graphql-tag";
+import nextApi from "services/nextApi";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
@@ -126,6 +127,23 @@ function getProposalStatusDetails(
   return { status, color, backgroundColor, status };
 }
 
+async function calculateFutureEpoch(blocknumber) {
+  try {
+    const response = await nextApi.fetch(`/evm/chain/berachain-b2/futureheight/current`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    const blocksIntoFuture = blocknumber - result.height;
+    const targetTime = result.time + (blocksIntoFuture * result.blocktime);
+    return targetTime;
+  } catch (error) {
+    console.error("Failed to fetch API:", error);
+    throw error;
+  }
+}
+
+
 const calculateSupportLengths = (supports, supportType) => {
   let totalLength = 0;
   let specificSupportLength = 0;
@@ -155,7 +173,7 @@ const calculateSupportLengths = (supports, supportType) => {
   ];
 };
 
-export function getFilteredProposals(proposals) {
+export async function getFilteredProposals(proposals) {
   const proposalsWithSupports = [];
   let totalVotersCount = 0;
   let passedProposalsCount = 0;
@@ -200,12 +218,14 @@ export function getFilteredProposals(proposals) {
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
+    const voteStart = await calculateFutureEpoch(proposal.voteStart);
+    const voteEnd = await calculateFutureEpoch(proposal.voteEnd);
     const statusDetails = getProposalStatusDetails(
       proposal.executed,
       proposal.queued,
       proposal.canceled,
-      proposal.voteEnd,
-      proposal.voteStart,
+      voteEnd,
+      voteStart,
     );
 
     let quorumNotReached = ''
@@ -231,8 +251,8 @@ export function getFilteredProposals(proposals) {
       totalVotes: formatNumber(votesCount),
       title: newlineIndex[0].replace("#", ""),
       description: description.replace(newlineIndex[0], ""),
-      voteEnd: getDateFromTimestamp(proposal.voteEnd),
-      voteStart: getDateFromTimestamp(proposal.voteStart),
+      voteEnd: getDateFromTimestamp(voteEnd),
+      voteStart: getDateFromTimestamp(voteStart),
       quorumPer: Number(forVotesPer).toFixed(2) + "%",
       totalvotesPercentage: totalvotesPercentage,
       finalTallyResult: {
