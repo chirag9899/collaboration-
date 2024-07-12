@@ -1,27 +1,16 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addressSelector,
-  loginAccountSelector,
-  setAvailableNetworks,
-} from "store/reducers/accountSlice";
-import { initAccount } from "store/reducers/accountSlice";
-import { useRouter } from "next/router";
 import { getBerachainProposals } from "helpers/beraProposals";
-import styled from "styled-components";
 import Layout from "components/layout";
 import Seo from "@/components/seo";
-import pick from "lodash.pick";
 import dynamic from "next/dynamic";
 import SpacePostTable from "@/components/spacePostTable";
 import { _handleChainSelect } from "@/components/connect/helper";
-import { formatNumber } from "utils";
-import useEthApis from "hooks/useEthApis";
-import { newErrorToast } from "store/reducers/toastSlice";
-import { connectedWalletSelector } from "store/reducers/showConnectSlice";
-import { chainMap } from "frontedUtils/consts/chains";
+import { getCookie } from "frontedUtils/cookie";
+import styled from "styled-components";
+import { ethers } from "ethers";
 
 const BeraListInfo = dynamic(() => import("components/beraListInfo"), {
   ssr: false,
@@ -51,7 +40,6 @@ const HeaderWrapper = styled.div`
   > :not(:first-child) {
     margin-top: 40px;
   }
-
   @media screen and (max-width: 800px) {
     > :not(:first-child) {
       margin-top: 20px;
@@ -59,99 +47,70 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-export default function List({ spaceId, space, allProposalList, bgtBalance }) {
-  const dispatch = useDispatch();
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
+  cache: new InMemoryCache(),
+});
+
+const GET_BGT_BALANCE = gql`
+  query bgt($address: String!) {
+    holders(first: 1, where: { address: $address }) {
+      address
+      balance
+    }
+  }
+`;
+
+export default function List({ spaceId, space, allProposalList }) {
   const [showContent, setShowContent] = useState("proposals-all");
-  const [balance, setBalance] = useState("0.00");
-  const address = useSelector(addressSelector);
-  const connectedWallet = useSelector(connectedWalletSelector);
-  const account = useSelector(loginAccountSelector);
-  const router = useRouter();
+  const [balance, setBalance] = useState("0.0");
+  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
-  const { getBalance } = useEthApis();
+  useEffect(() => {
+    const handleAddressChange = () => {
+      const cookieAddress = getCookie("addressV3")?.split("/")[1] || "";
+      setAddress(cookieAddress);
+    };
 
-  const handleChainSelect = async (chain) => {
-    try {
-      await _handleChainSelect(
-        connectedWallet,
-        dispatch,
-        address,
-        chainMap,
-        chain,
-      );
-      const currentChainId = await window.ethereum.request({
-        method: "eth_chainId",
-      });
-      const bartioNetworkId = chainMap.get(chain.network).id;
-      if (currentChainId !== bartioNetworkId) {
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error("Error switching network:", error);
-      dispatch(newErrorToast(error.message));
-      return false;
-    }
-  };
+    handleAddressChange();
 
-  const fetchBalance = useCallback(async () => {
-    if (!connectedWallet) {
-      setBalance("0.00");
-      return;
-    }
+    const intervalId = setInterval(handleAddressChange, 1000);
 
-    try {
-      const bartioNetwork = { network: "berachain-b2" };
-      const switched = await handleChainSelect(bartioNetwork);
-      if (switched) {
-        if (bgtBalance?.[0]?.balance) {
-          setBalance(formatNumber(bgtBalance[0].balance));
-        } else {
-          setBalance("0.00");
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const validateAndFetchBalance = async () => {
+      if (!ethers.utils.isAddress(address)) {
+        setBalance("0.0");
+        return;
+      } else {
+        try {
+          const { data } = await client.query({
+            query: GET_BGT_BALANCE,
+            variables: { address },
+          });
+
+          const fetchedBalance = data.holders.length > 0 ? data.holders[0].balance : "0.0";
+          const formattedBalance = parseFloat(ethers.utils.formatUnits(fetchedBalance, 18)).toFixed(4);
+          setBalance(formattedBalance);
+        } catch (error) {
+          console.error("Error fetching balance:", error);
+          setBalance("0.0");
         }
       }
-    } catch (error) {
-      console.error("Error fetching balance:", error);
-    }
-  }, [address, getBalance]);
 
-  useEffect(() => {
-    fetchBalance();
-  }, [connectedWallet, chainMap]);
+    };
 
-  useEffect(() => {
-    if (account?.network !== "berachain-b2") {
-      setBalance("0.00");
-      return;
-    }
-  }, [account]);
-
-  useEffect(() => {
-    dispatch(initAccount());
-  }, [dispatch, space]);
-
-  useEffect(() => {
-    if (router.query.tab) {
-      setShowContent(router.query.tab);
-    } else {
-      setShowContent("proposals-all");
-    }
-  }, [router]);
-
-  useEffect(() => {
-    dispatch(
-      setAvailableNetworks(
-        space?.networks?.map((item) => pick(item, ["network", "ss58Format"])) ||
-          [],
-      ),
-    );
-  }, [dispatch, space]);
+    validateAndFetchBalance();
+  }, [address]);
 
   if (!space) {
     return null;
   }
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
+
   return (
     <>
       <Seo
@@ -195,15 +154,12 @@ export async function getServerSideProps(context) {
     ssrNextApi.fetch(`spaces/${spaceId}`),
     await getBerachainProposals(),
   ]);
+
   if (!space) {
     to404(context);
   }
 
-  let allProposalList = [];
-  let bgtBalance = [];
-
-  allProposalList = data.proposals;
-  bgtBalance = data.bgtBalance;
+  let allProposalList = data.proposals;
 
   return {
     props: {
@@ -212,7 +168,6 @@ export async function getServerSideProps(context) {
       activeTab,
       defaultPage: { tab: activeTab ?? null, page: nPage },
       allProposalList,
-      bgtBalance,
     },
   };
 }

@@ -9,10 +9,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const bgtClient = new ApolloClient({
-  uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
-  cache: new InMemoryCache(),
-});
 // First Query to get proposals
 const GET_PROPOSALS = gql`
   query proposals {
@@ -38,18 +34,6 @@ const GET_PROPOSALS = gql`
           }
         }
       }
-    }
-  }
-`;
-
-const GET_BGT_BALANCE = gql`
-  query bgt {
-    holders(
-      first: 1
-      where: { address: "0x000000017b285e694f5a50b1587d41f817e96839" }
-    ) {
-      address
-      balance
     }
   }
 `;
@@ -300,25 +284,13 @@ export async function getFilteredProposals(proposals) {
   };
 }
 
-export async function getBgtBalance() {
-  try {
-    const { data } = await bgtClient.query({ query: GET_BGT_BALANCE });
-    return data;
-  } catch (e) {
-    console.error(e);
-    return [];
-  }
-}
-
 export async function getBerachainProposals() {
   try {
     const { data } = await client.query({ query: GET_PROPOSALS });
-    const bgtBalance = await getBgtBalance();
     const proposals = data.proposalCreateds.map((pc) => pc.proposal);
     const result = await getFilteredProposals(proposals);
 
     return {
-      bgtBalance: bgtBalance.holders,
       proposals: result,
     };
   } catch (e) {

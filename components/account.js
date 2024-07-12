@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 import { memo, useEffect, useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import {
   loginAccountSelector,
   loginAddressSelector,
@@ -202,6 +203,8 @@ function Account({ networks, menu }) {
   const { open, close } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const [cookieValue, setCookieValue] = useState(() => getCookie('addressV3'));
+  const router = useRouter();
+  const isSpecificPage = router.pathname === "/space/[space]/singleSpace"
 
 
   useMetaMaskEventHandlers();
@@ -291,7 +294,7 @@ function Account({ networks, menu }) {
           onClick={() => dispatch(popUpConnect())}
           className="button button-modern"
         >
-          {connectedWallet ? "Switch Chain" : "Connect Wallet"}
+        {connectedWallet && !isSpecificPage ? "Switch Chain" : "Connect Wallet"}
           </DarkButton>}
     </div>
   );
