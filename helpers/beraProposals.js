@@ -127,9 +127,9 @@ function getProposalStatusDetails(
   return { status, color, backgroundColor, status };
 }
 
-async function chainHeightAndTime() {
+async function chainHeightAndTime(blocknumber) {
   try {
-    const {result} = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/current`);
+    const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/${blocknumber}`);
     return result;
   } catch (error) {
     console.error("Failed to calculate future epoch:", error);
@@ -171,13 +171,17 @@ export async function getFilteredProposals(proposals) {
   let totalVotersCount = 0;
   let passedProposalsCount = 0;
   let failedProposalsCount = 0;
-  const standardChainHeightAndTime = await chainHeightAndTime();
-  console.log(standardChainHeightAndTime)
+  const standardChainHeightAndTime = await chainHeightAndTime('current');
   for (const proposal of proposals) {
-    function calculateFutureEpoch(blocknumber) {
-      const blocksIntoFuture = blocknumber - standardChainHeightAndTime.height;
-      const targetTime = standardChainHeightAndTime.time + (blocksIntoFuture * (standardChainHeightAndTime.blocktime / 1000));
-      return targetTime;
+    async function calculateFutureEpoch(blocknumber) {
+      if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)){
+        const exactHeightAndTime = await chainHeightAndTime(blocknumber);
+        return exactHeightAndTime.time;
+      } else {
+        const blocksIntoFuture = blocknumber - standardChainHeightAndTime.height;
+        const targetTime = standardChainHeightAndTime.time + (blocksIntoFuture * (standardChainHeightAndTime.blocktime / 1000));
+        return targetTime;
+      }
     }
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
@@ -220,7 +224,6 @@ export async function getFilteredProposals(proposals) {
       againstVotesPer + forVotesPer + abstainVotesPer;
     const voteStart = await calculateFutureEpoch(proposal.voteStart);
     const voteEnd = await calculateFutureEpoch(proposal.voteEnd);
-    console.log('' + voteEnd)
     const statusDetails = getProposalStatusDetails(
       proposal.executed,
       proposal.queued,
@@ -287,7 +290,6 @@ export async function getFilteredProposals(proposals) {
       failedProposalsCount++;
     }
   }
-  console.log(proposalsWithSupports)
   return {
     proposalsWithSupports,
     proposalInfo: {
