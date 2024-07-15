@@ -1,7 +1,4 @@
-import Layout from "components/layout";
 import { useDispatch, useSelector } from "react-redux";
-import Breadcrumb from "components/breadcrumb";
-import PostDetail from "@/components/postDetail/index";
 import nextApi, { ssrNextApi } from "services/nextApi";
 import { EmptyQuery } from "frontedUtils/constants";
 import { useEffect, useState } from "react";
@@ -14,6 +11,13 @@ import pick from "lodash.pick";
 import Seo from "@/components/seo";
 import { useIsMounted } from "../../../../frontedUtils/hooks";
 import encodeAddressByChain from "../../../../frontedUtils/chain/addr";
+// import Layout from "components/layout";
+import dynamic from "next/dynamic";
+// import Breadcrumb from "components/breadcrumb";
+// import PostDetail from "@/components/postDetail/index";
+const Layout = dynamic(() => import("components/layout"));
+const Breadcrumb = dynamic(() => import("components/breadcrumb"));
+const PostDetail = dynamic(() => import("@/components/postDetail/index"));
 
 export default function Index({
   detail,

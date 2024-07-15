@@ -1,18 +1,21 @@
 import styled, { ThemeProvider } from "styled-components";
-import Main from "./main";
-import Toast from "components/toast";
-import Shade from "components/shade";
+import dynamic from "next/dynamic";
 import theme from "../styles/theme";
 import { useEffect } from "react";
 import { initAccount } from "store/reducers/accountSlice";
 import { initWallet } from "store/reducers/showConnectSlice";
 import { useDispatch } from "react-redux";
-import Footer from "./Footer";
 import { usePathname } from "next/navigation";
 import { Web3Modal } from "@/components/connect/walletConnect/web3Modal";
-import dynamic from "next/dynamic";
+
 const Header = dynamic(() => import("./header"));
-const NotificationMonitor = dynamic(() => import("./notification/monitor"));
+const Main = dynamic(() => import("./main"));
+const Toast = dynamic(() => import("components/toast"), { ssr: false });
+const Shade = dynamic(() => import("components/shade"), { ssr: false });
+const Footer = dynamic(() => import("./Footer"), { ssr: false });
+const NotificationMonitor = dynamic(() => import("./notification/monitor"), {
+  ssr: false,
+});
 
 const Wrapper = styled.div`
   min-height: 100vh;
