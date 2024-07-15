@@ -1,9 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import Layout from "components/layout";
-import Breadcrumb from "components/breadcrumb";
-import ListTab from "components/listTab";
-import PostList from "components/postList";
 import { EmptyQuery, LIST_TAB_ITEMS } from "frontedUtils/constants";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
@@ -13,18 +10,21 @@ import {
   loginAccountSelector,
   loginAddressSelector,
   setAvailableNetworks,
-  initAccount
-  } from "store/reducers/accountSlice";
+  initAccount,
+} from "store/reducers/accountSlice";
 import pick from "lodash.pick";
 import dynamic from "next/dynamic";
-import SpaceDetail from "@/components/spaceDetail";
-import SpaceAbout from "@/components/spaceAbout";
 import { useRouter } from "next/router";
 import Button from "@/components/Button";
 import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "@/components/styles/colors";
 import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
+// import Breadcrumb from "components/breadcrumb";
+// import ListTab from "components/listTab";
+// import PostList from "components/postList";
+// import SpaceDetail from "@/components/spaceDetail";
+// import SpaceAbout from "@/components/spaceAbout";
 
 const Treasury = dynamic(() => import("@/components/treasury"), { ssr: false });
 const ListInfo = dynamic(() => import("components/listInfo"), { ssr: false });
@@ -32,6 +32,11 @@ const TransferSpaceModal = dynamic(
   () => import("@/components/transferSpace/TransSpaceModal"),
   { ssr: false },
 );
+const PostList = dynamic(() => import("components/postList"));
+const ListTab = dynamic(() => import("components/listTab"));
+const Breadcrumb = dynamic(() => import("components/breadcrumb"));
+const SpaceDetail = dynamic(() => import("@/components/spaceDetail"));
+const SpaceAbout = dynamic(() => import("@/components/spaceAbout"));
 
 const Wrapper = styled.div`
   display: flex;
@@ -163,7 +168,6 @@ export default function List({
         return filterProposals(proposals, "terminated");
     }
   }, [tab, proposals, pendingProposals, activeProposals, closedProposals]);
-
 
   if (!space) {
     return null;

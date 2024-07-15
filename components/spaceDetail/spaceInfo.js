@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Panel from "@/components/postDetail/panel";
-import SpaceLogo from "../spaceLogo";
 import { makeSquare } from "styles/globalCss";
 import Image from "next/image";
 import { p_18_semibold } from "styles/textStyles";
@@ -10,6 +9,9 @@ import { SPACE_SIDEBAR_TAB_ITEMS } from "frontedUtils/constants";
 import SidebarTab from "../sidebarTab";
 import nextApi from "services/nextApi";
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+// import SpaceLogo from "../spaceLogo";
+const SpaceLogo = dynamic(() => import("../spaceLogo"));
 
 const Wrapper = styled(Panel)`
   padding: 20px 0px;
@@ -38,7 +40,7 @@ const Name = styled.div`
   text-transform: capitalize;
   display: flex;
   align-items: center;
-  >img{
+  > img {
     margin-left: 5px !important;
   }
 `;
