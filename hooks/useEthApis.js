@@ -196,14 +196,14 @@ const useEthApis = () => {
     }
   }
 
-  async function getRewards() {
+  async function getRewards(space) {
     try {
       const claims = [];
       let claimInfo = { totalBalance: 0, totalClaimed: 0 };
 
       if (address) {
         const client = new ApolloClient({
-          uri: `${process.env.NEXT_PUBLIC_GRAPH_ENDPOINT}/graphql`,
+          uri: `${getGraphEndpointForSpace(space)}/graphql`,
           cache: new InMemoryCache(),
         });
 
@@ -323,7 +323,7 @@ const useEthApis = () => {
       return 0;
     }
   }
-  async function claimAllRewards(rewards) {
+  async function claimAllRewards(rewards, space) {
     //prepare array
     const claims = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -341,13 +341,35 @@ const useEthApis = () => {
     }
 
     const merkleContract = new ethers.Contract(
-      MERKLE_ADDRESS,
+      getMerkleAddressForSpace(space),
       merkle.abi,
       signer,
     );
     const tx = await merkleContract.claimMulti(userAddress.value, claims);
     await tx.wait(1);
     console.log(tx);
+  }
+
+  function getGraphEndpointForSpace(space){
+    switch (space) {
+      case "beragov":{
+        return process.env.NEXT_PUBLIC_GRAPH_GOV_ENDPOINT;
+      }
+      default: {
+        return process.env.NEXT_PUBLIC_GRAPH_ENDPOINT;
+      }
+    }
+  }
+
+  function getMerkleAddressForSpace(space){
+    switch (space) {
+      case "beragov":{
+        return process.env.NEXT_PUBLIC_MERKLE_GOV_ADDRESS;
+      }
+      default: {
+        return process.env.NEXT_PUBLIC_MERKLE_ADDRESS;
+      }
+    }
   }
 
   return {

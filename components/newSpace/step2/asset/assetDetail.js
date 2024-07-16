@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FieldWrapper, Title } from "./styled";
 import { useEffect } from "react";
 import { noop } from "utils";
-import Input from "@/components/Input";
+import Input from "@/components/input";
 
 const Wrapper = styled.div`
   display: flex;

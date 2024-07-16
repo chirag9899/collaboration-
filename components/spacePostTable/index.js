@@ -73,7 +73,7 @@ export default function SpacePostTable({
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
   const onCheckRewards = async () => {
-    await router.push(`/space/berachaingov/rewards`);
+    await router.push(`/space/beragov/rewards`);
   };
 
   const { failedProposalsCount, passedProposalsCount, totalVotersCount } =

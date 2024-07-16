@@ -63,7 +63,7 @@ const GET_BGT_BALANCE = gql`
 
 export default function List({ spaceId, space, allProposalList }) {
   const [showContent, setShowContent] = useState("proposals-all");
-  const [balance, setBalance] = useState("0.0");
+  const [balance, setBalance] = useState("0");
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export default function List({ spaceId, space, allProposalList }) {
   useEffect(() => {
     const validateAndFetchBalance = async () => {
       if (!ethers.utils.isAddress(address)) {
-        setBalance("0.0");
+        setBalance("0");
         return;
       } else {
         try {
@@ -91,12 +91,12 @@ export default function List({ spaceId, space, allProposalList }) {
             variables: { address },
           });
 
-          const fetchedBalance = data.holders.length > 0 ? data.holders[0].balance : "0.0";
+          const fetchedBalance = data.holders.length > 0 ? data.holders[0].balance : "0";
           const formattedBalance = parseFloat(ethers.utils.formatUnits(fetchedBalance, 18)).toFixed(4);
           setBalance(formattedBalance);
         } catch (error) {
           console.error("Error fetching balance:", error);
-          setBalance("0.0");
+          setBalance("0");
         }
       }
 

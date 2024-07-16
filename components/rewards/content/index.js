@@ -22,6 +22,8 @@ export default function Content({ modal = false }) {
     totalBalance: 0,
     totalClaimed: 0,
   });
+  const [claimableRewards, setClaimableRewards] = useState([]);
+  const [totalClaimable, setTotalClaimable] = useState(0);
   const [claiming, setClaiming] = useState("");
   const [rewardClaimedMsg, setRewardClaimedMsg] = useState("");
   const { totalBalance, totalClaimed } = claimInfo;
@@ -29,12 +31,16 @@ export default function Content({ modal = false }) {
   const { getRewards, claimAllRewards } = useEthApis();
 
   async function loadRewards() {
-    const data = await getRewards();
+    const data = await getRewards(router.query.space);
     const { rewards, claimInfo } = data;
     setClaimInfo({
       totalBalance: formatAmount(claimInfo?.totalBalance ?? 0),
       totalClaimed: formatAmount(claimInfo?.totalClaimed ?? 0),
     });
+    setClaimableRewards(rewards);
+    setTotalClaimable(rewards.reduce((acc, curr)=>{
+      return acc + (curr.claimable * curr.rewardTokenPrice);
+    }, 0));
   }
 
   useEffect(() => {
@@ -48,7 +54,7 @@ export default function Content({ modal = false }) {
   async function claimAll() {
     try {
       setClaiming("all");
-      await claimAllRewards(rewards);
+      await claimAllRewards(claimableRewards, router.query.space);
       setRewardClaimedMsg("all");
       setClaiming("");
       await loadRewards();
@@ -89,7 +95,7 @@ export default function Content({ modal = false }) {
 
       <Claim>
         <TextWrapper>
-          Yours to claim: <Amount>$0.00</Amount>
+          Yours to claim: <Amount>${totalClaimable}</Amount>
         </TextWrapper>
         <Button
           data-v-4571bf26=""
