@@ -1,24 +1,23 @@
 import styled from "styled-components";
-import Step1 from "./step1";
-import Step2 from "./step2";
-import Sider from "./sider";
+import dynamic from "next/dynamic";
 import { useDispatch, useSelector } from "react-redux";
 import {
   currentStepSelector,
   setCurrentStep,
 } from "store/reducers/newSpaceSlice";
-import Step3 from "./step3";
 import { useEffect, useMemo, useState } from "react";
 import { imageUrlToBase64 } from "utils";
 import { chainMap } from "../../frontedUtils/consts/chains";
-// import { identicon } from "minidenticons";
+
+const Step1 = dynamic(() => import("./step1"));
+const Step2 = dynamic(() => import("./step2"));
+const Step3 = dynamic(() => import("./step3"));
+const Sider = dynamic(() => import("./sider"));
 
 let identicon = () => {};
-// Import minidenticons only in the browser environment
 if (typeof window !== "undefined") {
   import("minidenticons")
     .then((minidenticons) => {
-      // Your code that uses minidenticons
       identicon = minidenticons.identicon;
     })
     .catch((error) => {
@@ -37,7 +36,6 @@ const Wrapper = styled.div`
 
 const MainWrapper = styled.div`
   flex: 1 1 auto;
-  /* 100% - sider width - sider margin-left */
   max-width: calc(100% - 300px - 20px);
   > :not(:first-child) {
     margin-top: 20px;
@@ -153,7 +151,7 @@ export default function Content({ chainsDef, tokensDef, spaceDetails }) {
         setPrevContract(spaceDetails?.assets[0]?.symbol);
       }
       setAssets(spaceDetails?.assets);
-      setDescription(spaceDetails?.description)
+      setDescription(spaceDetails?.description);
     }
   }, [spaceDetails]);
 

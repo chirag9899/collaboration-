@@ -2,8 +2,6 @@ import { ssrNextApi } from "services/nextApi";
 import dynamic from "next/dynamic";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
 import Layout from "components/layout";
-// import Breadcrumb from "components/breadcrumb";
-// import PostCreate from "@/components/postCreate";
 const Breadcrumb = dynamic(() => import("components/breadcrumb"));
 const PostCreate = dynamic(() => import("@/components/postCreate"));
 

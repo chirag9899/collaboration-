@@ -1,10 +1,8 @@
 import LoadButtons from "@/components/LoadButtons/LoadButtons";
 import InternalLink from "@/components/internalLink";
 import Layout from "@/components/layout";
-// import SpaceListItem from "@/components/spaceListItem";
-import { text_light_major, white_text_color } from "@/components/styles/colors";
+import { text_light_major } from "@/components/styles/colors";
 import _ from "lodash";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +19,7 @@ import { ReactComponent as ArrowLeft } from "../../public/imgs/icons/arrow-left.
 import dynamic from "next/dynamic";
 const SpaceListItem = dynamic(() => import("@/components/spaceListItem"), {
   ssr: false,
-  loading:"Loading...."
+  loading: "Loading....",
 });
 
 const Wrapper = styled.div`
@@ -119,7 +117,6 @@ export default function NetworkSpaces({ allSpaces, allNetworks, limit = 5 }) {
     name: value.id,
     space: { ...value },
   }));
-
 
   const handleGoBack = () => {
     router.back();

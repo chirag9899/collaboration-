@@ -20,11 +20,6 @@ import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "@/components/styles/colors";
 import { chainMap } from "frontedUtils/consts/chains";
 import useModal from "hooks/useModal";
-// import Breadcrumb from "components/breadcrumb";
-// import ListTab from "components/listTab";
-// import PostList from "components/postList";
-// import SpaceDetail from "@/components/spaceDetail";
-// import SpaceAbout from "@/components/spaceAbout";
 
 const Treasury = dynamic(() => import("@/components/treasury"), { ssr: false });
 const ListInfo = dynamic(() => import("components/listInfo"), { ssr: false });
