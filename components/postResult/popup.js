@@ -13,7 +13,7 @@ import Image from "next/image";
 const ResultWrapper = styled.div`
   z-index: 999;
   position: absolute;
-  background:${bg_white};
+  background: ${bg_white};
   filter: drop-shadow(0px 4px 31px rgba(26, 33, 44, 0.06))
     drop-shadow(0px 0.751293px 8px rgba(26, 33, 44, 0.04));
   padding: 24px;
@@ -180,7 +180,12 @@ export default function Popup({ data, space, isTop }) {
     <ResultWrapper isTop={isTop}>
       <TitleWrapper>
         Results
-        <Image src="/imgs/icons/strategy.svg" alt="" />
+        <Image
+          width="100%"
+          height="100%"
+          src="/imgs/icons/strategy.svg"
+          alt=""
+        />
       </TitleWrapper>
       <Divider />
       <div>
