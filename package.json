@@ -75,11 +75,14 @@
     "eslint": "^8.38.0",
     "eslint-config-next": "^13.3.0",
     "file-loader": "^6.2.0",
+    "html-minifier": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.0",
     "jest-environment-node": "^27.3.0",
     "postinstall-postinstall": "^2.1.0",
-    "react-test-renderer": "^17.0.2"
+    "react-test-renderer": "^17.0.2",
+    "sharp": "^0.33.4",
+    "terser-webpack-plugin": "^5.3.10"
   },
   "packageManager": "yarn@3.6.4"
 }

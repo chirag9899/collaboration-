@@ -29,6 +29,7 @@ import {
 import encodeAddressByChain from "../frontedUtils/chain/addr";
 import { Flex } from "@osn/common-ui";
 import { bg_white } from "./styles/colors";
+import Image from "next/image";
 
 const FETCH_BALANCE_ERROR =
   "something went wrong while querying balance, please try again later.";
@@ -47,7 +48,7 @@ const InputWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  
+
   > img {
     position: absolute;
     width: 40px;
@@ -108,7 +109,7 @@ const Input = styled.input`
 const ItemWrapper = styled(Flex)`
   padding: 11px 15px;
   border: 0;
-  background:${bg_white};
+  background: ${bg_white};
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -267,7 +268,12 @@ export default function PostAddress({ spaceId, proposalCid, size, snapshot }) {
               }
             }}
           />
-          <img src="/imgs/avatar-polkadot.png" alt="" />
+          <Image
+            width="100%"
+            height="100%"
+            src="/imgs/avatar-polkadot.png"
+            alt=""
+          />
           {isLoading && <Loading />}
         </InputWrapper>
       )}

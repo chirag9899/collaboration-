@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { OnlyDesktop, OnlyMobile } from "@osn/common-ui";
 import { getSpaceIconUrl } from "frontedUtils/space";
 import { bg_white } from "../styles/colors";
+import Image from "next/image";
 
 const DEFAULT_ICON_URL = '/imgs/icons/pending.svg';
 
@@ -209,9 +210,9 @@ export default function NotificationItem({ data, onMarkAsRead = () => { } }) {
       <Head>
         <TitleWrapper>
           <Flex>
-            <img
-              width="20px"
-              height="20px"
+            <Image
+              width={20}
+              height={20}
               className="ml-4px"
               src={spaceIconUrl}
               onError={(e) => {

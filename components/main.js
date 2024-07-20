@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { memo } from "react";
 
 const Wrapper = styled.main`
   position: relative;
@@ -27,11 +28,14 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-export default function Main({ bgHeight, children }) {
+// Memoize the Main component to prevent unnecessary re-renders
+const Main = memo(({ bgHeight, children }) => {
   return (
     <Wrapper>
       <Background bgHeight={bgHeight} />
       <ChildrenWrapper>{children}</ChildrenWrapper>
     </Wrapper>
   );
-}
+});
+
+export default Main;

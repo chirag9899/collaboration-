@@ -1,9 +1,9 @@
 "use client";
 import styled from "styled-components";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useOnClickOutside } from "frontedUtils/hooks";
-import Account from "./account";
 import { p_16_semibold } from "./styles/textStyles";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,16 +14,28 @@ import {
   switchedNetworkSelector,
 } from "../store/reducers/showConnectSlice";
 import { Flex } from "@osn/common-ui";
-import Menu from "@/components/menu";
-import NotificationBell from "./notification/bell";
-import React from "react";
 import { MOBILE_SIZE } from "@osn/constants";
 import LogoImg from "../public/imgs/beravote-logo.svg";
 import LogoIcon from "../public/imgs/beravote-logoIcon.svg";
 import { primary_text_color, text_light_major } from "./styles/colors";
 import Image from "next/image";
-import Button from "./Button";
-import Switch from "./switchBtn";
+
+// Dynamic imports
+const Account = dynamic(() => import("./account"), {
+  ssr: false,
+});
+const Menu = dynamic(() => import("@/components/menu"), {
+  ssr: false,
+});
+const NotificationBell = dynamic(() => import("./notification/bell"), {
+  ssr: false,
+});
+const Button = dynamic(() => import("./Button"), {
+  ssr: false,
+});
+const Switch = dynamic(() => import("./switchBtn"), {
+  ssr: false,
+});
 
 const HeaderItemWrapper = styled.div`
   display: flex;
@@ -79,9 +91,6 @@ const IconWrapper = styled.div`
 
 const ExternalLinkWrapper = styled(Flex)`
   gap: 32px;
-  /* @media screen and (max-width: 800px) {
-    display: none;
-  } */
 `;
 
 const ExternalLink = styled.a`
@@ -154,7 +163,6 @@ export default function Header({ networks }) {
   const dispatch = useDispatch();
   const showMenu = useSelector(showHeaderMenuSelector);
   const switchedNetwork = useSelector(switchedNetworkSelector);
-
   const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
@@ -173,7 +181,7 @@ export default function Header({ networks }) {
   useEffect(() => {
     const filterBy = localStorage.getItem("spacesFilterBy");
     dispatch(setSwitchednetwork(filterBy));
-  }, [isChecked]);
+  }, [isChecked, dispatch]);
 
   const ref = useRef();
   useOnClickOutside(ref, (event) => {
@@ -182,10 +190,11 @@ export default function Header({ networks }) {
     }
     dispatch(setShowHeaderMenu(false));
   });
-  const router = useRouter();
-  const isHomePage = router.pathname === "/";
 
-  const onSwitchHandler = (e) => {
+  const router = useRouter();
+  const isHomePage = useMemo(() => router.pathname === "/", [router.pathname]);
+
+  const onSwitchHandler = useCallback((e) => {
     const { checked } = e.target;
     const value = {
       network: checked ? "berachain" : "berachain-b2",
@@ -194,7 +203,7 @@ export default function Header({ networks }) {
     localStorage.setItem("spacesFilterBy", value.network);
     localStorage.setItem("isChecked", JSON.stringify(value.switchChecked));
     setIsChecked(checked);
-  };
+  }, []);
 
   return (
     <Wrapper>

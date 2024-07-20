@@ -12,6 +12,7 @@ import { Flex, FlexBetween } from "@osn/common-ui";
 import uniq from "lodash.uniq";
 import { getSpaceAssets } from "frontedUtils/getSpaceAssets";
 import AssetList from "../assetList";
+import Image from "next/image";
 
 const Wrapper = styled.div``;
 
@@ -85,7 +86,7 @@ export default function Details({ space }) {
 
       <DetailsWrapper>
         <DetailsTitle>About</DetailsTitle>
-        <img src="/imgs/icons/info.svg" alt="" />
+        <Image width="100%" height="100%" src="/imgs/icons/info.svg" alt="" />
       </DetailsWrapper>
 
       <Divider />

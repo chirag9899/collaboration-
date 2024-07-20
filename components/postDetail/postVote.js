@@ -43,6 +43,7 @@ import Input from "../Input";
 import Flex from "../styled/Flex";
 import Button from "../Button";
 import { connectedWalletSelector } from "store/reducers/showConnectSlice";
+import { black } from "../styles/colors";
 
 const Wrapper = styled.div`
   > :not(:first-child) {
@@ -114,6 +115,11 @@ const RedText = styled.span`
 
 const VoteBtnWrapper = styled(Button)`
   width: 200px !important;
+  border-radius: 0px !important;
+  color: ${black} !important;
+  &:hover {
+    color: ${black} !important;
+  }
 `;
 
 export default function PostVote({ proposal }) {
@@ -296,14 +302,19 @@ export default function PostVote({ proposal }) {
               </Tooltip>
             </div>
           )}
-          {belowThreshold && <RedText> balance at height {snapshot} is lower than voting threshold {
-            bigNumber2Locale(
-              fromAssetUnit(
-                proposal.networksConfig.networks[0].assets[0].votingThreshold,
-                proposal?.networksConfig?.decimals,
-              ),
-            )
-          } {proposal.networksConfig?.symbol}</RedText>}
+          {belowThreshold && (
+            <RedText>
+              {" "}
+              balance at height {snapshot} is lower than voting threshold{" "}
+              {bigNumber2Locale(
+                fromAssetUnit(
+                  proposal.networksConfig.networks[0].assets[0].votingThreshold,
+                  proposal?.networksConfig?.decimals,
+                ),
+              )}{" "}
+              {proposal.networksConfig?.symbol}
+            </RedText>
+          )}
         </>
       );
     }
@@ -338,6 +349,7 @@ export default function PostVote({ proposal }) {
             isLoading={isLoading}
             onClick={onVote}
             disabled={!canVote}
+            className="button-modern"
           >
             {useProxy ? "Proxy Vote" : "Vote"}
           </VoteBtnWrapper>

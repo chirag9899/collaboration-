@@ -1,12 +1,9 @@
+const TerserPlugin = require('terser-webpack-plugin');
+
 /** @type {import('next').NextConfig} */
 module.exports = {
   transpilePackages: ["@osn/common-ui", "@osn/common", "@osn/rich-text-editor"],
-  compiler: {
-    styledComponents: {
-      ssr: true,
-    },
-  },
-  webpack(config) {
+  webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -31,6 +28,20 @@ module.exports = {
         },
       ],
     });
+    if (!isServer) {
+      config.optimization.minimize = true;
+      config.optimization.minimizer = [
+        new TerserPlugin({
+          terserOptions: {
+            format: {
+              comments: false,
+            },
+          },
+          extractComments: false,
+        }),
+      ];
+    }
+
     return config;
   },
 };

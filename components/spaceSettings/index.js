@@ -91,10 +91,12 @@ const SpaceSettings = () => {
 
   const fetchSpaces = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces-without-filter`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces-without-filter`,
+      );
       const data = await response.json();
-      if (typeof data === 'object') {
-        const spacesArray = Object.keys(data).map(key => data[key]);
+      if (typeof data === "object") {
+        const spacesArray = Object.keys(data).map((key) => data[key]);
         setSpaces(spacesArray);
       } else {
         console.error("Unexpected response data:", data);
@@ -103,7 +105,6 @@ const SpaceSettings = () => {
       console.error("Error fetching spaces:", error);
     }
   };
-
 
   const handleOptionChange = (selectedOption, type) => {
     if (type === "single") {
@@ -118,7 +119,7 @@ const SpaceSettings = () => {
       const spaceName = selectedSingleOption?.id;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`,
         );
         if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space hide successfully`));
@@ -131,7 +132,7 @@ const SpaceSettings = () => {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/hide/${secretToken}`,
           );
           if (response.status === 200) {
             dispatch(newSuccessToast(`${spaceName} space hide successfully`));
@@ -148,7 +149,7 @@ const SpaceSettings = () => {
       const spaceName = selectedSingleOption.id;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`,
         );
         if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space show successfully`));
@@ -161,7 +162,7 @@ const SpaceSettings = () => {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/show/${secretToken}`,
           );
           if (response.status === 200) {
             dispatch(newSuccessToast(`${spaceName} space show successfully`));
@@ -178,7 +179,7 @@ const SpaceSettings = () => {
       const spaceName = selectedSingleOption?.id;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`,
         );
         if (response.status === 200) {
           dispatch(newSuccessToast(`${spaceName} space verified successfully`));
@@ -191,10 +192,12 @@ const SpaceSettings = () => {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/verify/${secretToken}`,
           );
           if (response.status === 200) {
-            dispatch(newSuccessToast(`${spaceName} space verified successfully`));
+            dispatch(
+              newSuccessToast(`${spaceName} space verified successfully`),
+            );
           }
         } catch (error) {
           dispatch(newErrorToast(`Something wrong!`));
@@ -208,10 +211,12 @@ const SpaceSettings = () => {
       const spaceName = selectedSingleOption?.id;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`,
         );
         if (response.status === 200) {
-          dispatch(newSuccessToast(`${spaceName} space unverified successfully`));
+          dispatch(
+            newSuccessToast(`${spaceName} space unverified successfully`),
+          );
         }
       } catch (error) {
         dispatch(newErrorToast(`Something wrong!`));
@@ -221,10 +226,12 @@ const SpaceSettings = () => {
         const spaceName = selectedMultiOptions[i]?.id;
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`
+            `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/unverify/${secretToken}`,
           );
           if (response.status === 200) {
-            dispatch(newSuccessToast(`${spaceName} space unverified successfully`));
+            dispatch(
+              newSuccessToast(`${spaceName} space unverified successfully`),
+            );
           }
         } catch (error) {
           dispatch(newErrorToast(`Something wrong!`));
@@ -246,27 +253,27 @@ const SpaceSettings = () => {
   const singleOptions = _.sortBy(
     Array.isArray(spaces)
       ? spaces.map((space) => ({
-        value: space.name,
-        label: space.id ? space.name + " - " + space.id : space.name,
-        id: space._id,
-        ...space,
-      }))
+          value: space.name,
+          label: space.id ? space.name + " - " + space.id : space.name,
+          id: space._id,
+          ...space,
+        }))
       : [],
-    (item) => !item.verified
+    (item) => !item.verified,
   );
 
   const multipleOptions = _.sortBy(
     Array.isArray(spaces)
       ? spaces.map((space) => ({
-        value: space.name,
-        label: space.description
-          ? space.name + " - " + space.description
-          : space.name,
-        id: space._id,
-        ...space,
-      }))
+          value: space.name,
+          label: space.description
+            ? space.name + " - " + space.description
+            : space.name,
+          id: space._id,
+          ...space,
+        }))
       : [],
-    (item) => !item.verified
+    (item) => !item.verified,
   );
 
   const onChangeHandler = (e) => {
@@ -280,7 +287,12 @@ const SpaceSettings = () => {
         <InputPanelWrapper>
           <InputWrapper>
             <SectionTitle>Secret Token</SectionTitle>
-            <p><b>Please keep the secret token confidential. If it is leaked, request a rotation immediately!</b></p>
+            <p>
+              <b>
+                Please keep the secret token confidential. If it is leaked,
+                request a rotation immediately!
+              </b>
+            </p>
             <Input
               type="text"
               placeholder="Enter secret token"
@@ -303,7 +315,9 @@ const SpaceSettings = () => {
     return (
       <Wrapper>
         <PanelWrapper head={<h3>Hide Space</h3>}>
-          <p>Hidden space would be hidden from <b>All Spaces</b></p>
+          <p>
+            Hidden space would be hidden from <b>All Spaces</b>
+          </p>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
@@ -331,7 +345,9 @@ const SpaceSettings = () => {
           </BtnsGroup>
         </PanelWrapper>
         <PanelWrapper head={<h3>Verify Space</h3>}>
-          <p>Verified space would receive <b>verified checkmark</b></p>
+          <p>
+            Verified space would receive <b>verified checkmark</b>
+          </p>
           <Select
             closeMenuOnSelect={false}
             components={animatedComponents}
@@ -359,10 +375,14 @@ const SpaceSettings = () => {
           </BtnsGroup>
         </PanelWrapper>
         <PanelWrapper head={<h3>Settings</h3>}>
-          <p><b>Refresh</b> space list manually</p>
-          <BtnsGroup><Button primary onClick={fetchSpaces}>
-            Refresh Spaces List
-          </Button></BtnsGroup>
+          <p>
+            <b>Refresh</b> space list manually
+          </p>
+          <BtnsGroup>
+            <Button primary onClick={fetchSpaces}>
+              Refresh Spaces List
+            </Button>
+          </BtnsGroup>
         </PanelWrapper>
       </Wrapper>
     );

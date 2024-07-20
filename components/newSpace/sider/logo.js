@@ -1,3 +1,4 @@
+import Image from "next/image";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -15,7 +16,7 @@ export default function Logo({ imageFile }) {
   return (
     <Wrapper>
       {imageFile && (
-        <img
+        <Image
           style={{ objectFit: "cover" }}
           width="100%"
           height="100%"

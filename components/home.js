@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import SearchBar from "./searchBar";
-import useDropDown from "hooks/useDropDown";
-import { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { joinedSpacesSelector } from "store/reducers/accountSlice";
 import { switchedNetworkSelector } from "store/reducers/showConnectSlice";
+import useDropDown from "hooks/useDropDown";
 
+const SearchBar = dynamic(() => import("./searchBar"), {
+  ssr: false,
+});
 const Networks = dynamic(() => import("./network"), {
   ssr: true,
 });
@@ -28,7 +30,6 @@ const SearchBarWrapper = styled.div`
   align-items: center;
   gap: 30px;
   @media screen and (max-width: 800px) {
-    display: flex;
     flex-direction: column;
   }
 `;
@@ -61,12 +62,7 @@ const categoriesOptions = [
   { label: "grant", value: "grant", badge: "123" },
 ];
 
-export default function Home({
-  networks,
-  spaces,
-  hottestProposals,
-  userSpaces,
-}) {
+export default function Home({ networks, spaces, hottestProposals, userSpaces }) {
   const [allSpaces, setAllSpaces] = useState(spaces);
   const [allNetworks, setAllNetworks] = useState(networks);
   const [search, setSearch] = useState("");
@@ -75,35 +71,21 @@ export default function Home({
   const switchedNetwork = useSelector(switchedNetworkSelector);
   const joinedSpaces = useSelector(joinedSpacesSelector);
 
-  const {
-    options,
-    handleSelect,
-    selectedOption,
-    handleCategories,
-    selectedCategory,
-  } = useDropDown(searchOptions);
-
-  const isSpaces = selectedOption === "spaces";
-  const isNetworks = selectedOption === "networks";
+  const { options, handleSelect, selectedOption } = useDropDown(searchOptions);
+  const isSpaces = useMemo(() => selectedOption === "spaces", [selectedOption]);
+  const isNetworks = useMemo(() => selectedOption === "networks", [selectedOption]);
 
   const updateFilteredSpaces = useCallback(() => {
-    const filtered = spaces.filter(
-      (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
-    );
-
+    const filtered = spaces.filter(item => item?.space?.networks?.[0]?.network === switchedNetwork);
     setAllSpaces(filtered);
 
     if (search === "") {
       setOwnSpaces(userSpaces);
     } else {
       const searchVal = search.toLowerCase();
-      const result = filtered.filter(({ name }) =>
-        name.toLowerCase().includes(searchVal),
-      );
+      const result = filtered.filter(({ name }) => name.toLowerCase().includes(searchVal));
       setAllSpaces(result);
-      setOwnSpaces(
-        userSpaces.filter(({ name }) => name.toLowerCase().includes(searchVal)),
-      );
+      setOwnSpaces(userSpaces.filter(({ name }) => name.toLowerCase().includes(searchVal)));
     }
   }, [spaces, switchedNetwork, search, userSpaces]);
 
@@ -117,9 +99,7 @@ export default function Home({
         setAllNetworks(networks);
       } else {
         const searchVal = search.toLowerCase();
-        const result = networks.filter(({ name }) =>
-          name.toLowerCase().includes(searchVal),
-        );
+        const result = networks.filter(({ name }) => name.toLowerCase().includes(searchVal));
         setAllNetworks(result);
       }
     }
@@ -129,19 +109,11 @@ export default function Home({
     setSearch(event.target.value);
   };
 
-  const finalResult = allSpaces.filter((item) => {
-    return joinedSpaces.some(
-      (joinedItem) => joinedItem.space === item.space.id,
-    );
-  });
+  const finalResult = useMemo(() => allSpaces.filter(item => joinedSpaces.some(joinedItem => joinedItem.space === item.space.id)), [allSpaces, joinedSpaces]);
 
-  const getAllSpaces = () => {
-    return allSpaces.filter((item) => {
-      return joinedSpaces.every(
-        (joinedItem) => joinedItem.space !== item.space.id,
-      );
-    });
-  };
+  const getAllSpaces = useCallback(() => {
+    return allSpaces.filter(item => joinedSpaces.every(joinedItem => joinedItem.space !== item.space.id));
+  }, [allSpaces, joinedSpaces]);
 
   return (
     <Wrapper>

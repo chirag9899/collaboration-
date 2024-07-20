@@ -2,14 +2,12 @@ import Head from "next/head";
 import { Provider } from "react-redux";
 import NProgress from "nprogress";
 import Router from "next/router";
-
-import "nprogress/nprogress.css";
 import { store } from "../store";
 import "semantic-ui-css/semantic.min.css";
+import "nprogress/nprogress.css";
 import "../styles/globals.css";
 import "../styles/modern.scss";
 import "../styles/spaceListItem.scss";
-
 import "react-mde/lib/styles/css/react-mde-all.css";
 
 NProgress.configure({
