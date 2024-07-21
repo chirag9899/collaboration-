@@ -145,7 +145,11 @@ export const loginNetworkSelector = createSelector(
   availableNetworksSelector,
   accountSelector,
   (networks, account) => {
-    return networks.find((item) => item.network === account?.network);
+    // return networks.find((item) => item.network === account?.network);
+    if (!account?.network) {
+      console.warn('Network not found for account:', account);
+    }
+    return account?.network;
   },
 );
 
@@ -157,7 +161,9 @@ export const loginAccountSelector = createSelector(
       return null;
     }
 
-    let address = encodeAddressByChain(account.address, network.network);
+    // let address = encodeAddressByChain(account.address, network.network);
+    let address = encodeAddressByChain(account.address, account.network);
+
     return {
       ...network,
       ...account,
@@ -174,7 +180,9 @@ export const loginAddressSelector = createSelector(
       return null;
     }
   
-    let encodedAddress = encodeAddressByChain(account.address, network.network);
+    // let encodedAddress = encodeAddressByChain(account.address, network.network);
+    let encodedAddress = encodeAddressByChain(account.address, account?.network);
+
     return encodedAddress;
   },
 );
