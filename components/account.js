@@ -215,48 +215,48 @@ function Account({ networks, menu }) {
     return null;
   }
 
-  useEffect(() => {
-    const handleChainChange = async () => {
-      if (chainId && isConnected) {
-        const activeChain = getChainName("0x" + chainId.toString(16));
-        let finalAddress = address;
+  // useEffect(() => {
+  //   const handleChainChange = async () => {
+  //     if (chainId && isConnected) {
+  //       const activeChain = getChainName("0x" + chainId.toString(16));
+  //       let finalAddress = address;
 
-        if (activeChain === "bartio" || activeChain === "artio") {
-          dispatch(
-            setAccount({
-              address: finalAddress,
-              network: activeChain,
-            })
-          );
-          setCookie("addressV3", finalAddress);
-        } else {
-          try {
-            await switchChain("bartio");
-            dispatch(
-              setAccount({
-                address: finalAddress,
-                network: "bartio",
-              })
-            );
-            setCookie("addressV3", finalAddress);
-          } catch (error) {
-            console.error("Error switching chain:", error);
-            dispatch(newErrorToast("Failed to switch chain to bartio"));
-          }
-        }
-        dispatch(setConnectedWallet("walletConnect"));
-      }
+  //       if (activeChain === "bartio" || activeChain === "artio") {
+  //         dispatch(
+  //           setAccount({
+  //             address: finalAddress,
+  //             network: activeChain,
+  //           })
+  //         );
+  //         setCookie("addressV3", finalAddress);
+  //       } else {
+  //         try {
+  //           await switchChain("bartio");
+  //           dispatch(
+  //             setAccount({
+  //               address: finalAddress,
+  //               network: "bartio",
+  //             })
+  //           );
+  //           setCookie("addressV3", finalAddress);
+  //         } catch (error) {
+  //           console.error("Error switching chain:", error);
+  //           dispatch(newErrorToast("Failed to switch chain to bartio"));
+  //         }
+  //       }
+  //       dispatch(setConnectedWallet("walletConnect"));
+  //     }
 
-      if (
-        event.data.event === "MODAL_CLOSE" &&
-        connectedWallet === "walletConnect"
-      ) {
-        dispatch(closeConnect());
-      }
-    };
+  //     if (
+  //       event.data.event === "MODAL_CLOSE" &&
+  //       connectedWallet === "walletConnect"
+  //     ) {
+  //       dispatch(closeConnect());
+  //     }
+  //   };
 
-    handleChainChange();
-  }, [chainId, isConnected, address,account, dispatch, connectedWallet, event.data.event]);
+  //   handleChainChange();
+  // }, [chainId, isConnected, address,account, dispatch, connectedWallet, event.data.event]);
 
 
   const onSwitch = () => {
@@ -294,7 +294,8 @@ function Account({ networks, menu }) {
           onClick={() => dispatch(popUpConnect())}
           className="button button-modern"
         >
-        {connectedWallet && !isSpecificPage ? "Switch Chain" : "Connect Wallet"}
+        { "Connect Wallet"}
+        {/* {connectedWallet && !isSpecificPage ? "Switch Chain" : "Connect Wallet"} */}
           </DarkButton>}
     </div>
   );
@@ -315,19 +316,19 @@ function Account({ networks, menu }) {
     }
   };
 
-  const selectedNetworks = connectedWallet && supportedChains(connectedWallet);
-  const supportedAvailableNetworks = availableNetworks.filter((network) =>
-    selectedNetworks?.includes(network.network)
-  );
+  // const selectedNetworks = connectedWallet && supportedChains(connectedWallet);
+  // const supportedAvailableNetworks = availableNetworks.filter((network) =>
+  //   selectedNetworks?.includes(network.network)
+  // );
 
-  const dropdown = (
-    <MenuWrapper ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
-      <ChainSelector
-        chains={supportedAvailableNetworks}
-        onSelect={handleChainSelect}
-      />
-    </MenuWrapper>
-  );
+  // const dropdown = (
+  //   <MenuWrapper ref={dropdownRef} onClick={(e) => e.stopPropagation()}>
+  //     <ChainSelector
+  //       chains={supportedAvailableNetworks}
+  //       onSelect={handleChainSelect}
+  //     />
+  //   </MenuWrapper>
+  // );
 
   const Menu = (
     <MenuWrapper onClick={(e) => e.stopPropagation()}>
@@ -349,7 +350,7 @@ function Account({ networks, menu }) {
             <UserIcon />
           </AccountWrapper>
           <MenuDivider />
-          {account?.network !== "bartio" && account?.network !== "artio" && (
+          {/* {account?.network !== "bartio" && account?.network !== "artio" && (
             <MenuItem>
               <LogoutWrapper onClick={onSwitch}>
                 Switch Network
@@ -361,7 +362,7 @@ function Account({ networks, menu }) {
                 />
               </LogoutWrapper>
             </MenuItem>
-          )}
+          )} */}
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
@@ -405,7 +406,7 @@ function Account({ networks, menu }) {
           </div>
         </AccountWrapperPC>
         {!showNetwork && showMenu && Menu}
-        {showNetwork && dropdown}
+        {/* {showNetwork && dropdown} */}
       </Wrapper>
     );
   }

@@ -95,16 +95,16 @@ export default function Connect({ networks }) {
       return;
     }
 
-    else if (wallet) {
-      // Show chain selection options to the user
-      setElement(
-        <ChainSelector
-          chains={availableNetworks}
-          onSelect={handleChainSelect}
-        />
-      );
-      return;
-    }
+    // else if (wallet) {
+    //   // Show chain selection options to the user
+    //   setElement(
+    //     <ChainSelector
+    //       chains={availableNetworks}
+    //       onSelect={handleChainSelect}
+    //     />
+    //   );
+    //   return;
+    // }
 
 
     // Rest of your code...
@@ -113,7 +113,8 @@ export default function Connect({ networks }) {
 
   return (
     <Wrapper>
-      <Closeable open={!false} text={wallet ? "Switch Chain" : "Connect Wallet"}>
+      {/* <Closeable open={!false} text={wallet ? "Switch Chain" : "Connect Wallet"}> */}
+      <Closeable open={!false} text={"Connect Wallet"}>
         {element}
       </Closeable>
     </Wrapper>
