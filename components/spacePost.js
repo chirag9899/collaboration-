@@ -232,10 +232,12 @@ export default function SpacePost({ data, spaces, space, postNum }) {
   };
   const address = useSelector(addressSelector);
 
-  const { addBeraVoteRewardAmount } = useEthApis();
+  const { addBeraGovRewardAmount } = useEthApis();
 
   const handleAddIncentive = async (value) => {
-    await addBeraVoteRewardAmount(
+    // console.log(value)
+    // console.log(data)
+    await addBeraGovRewardAmount(
       data?.id,
       value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
       value.incentiveAmount,

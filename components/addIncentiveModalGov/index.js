@@ -22,8 +22,7 @@ import DropdownSelector from "../DropdownSelector";
 import useEthApis from "hooks/useEthApis";
 import Modal from "../Modal";
 import { ErrorMessage } from "../styled/errorMessage";
-import { useSelector } from "react-redux";
-import { addressSelector } from "store/reducers/accountSlice";
+import { getCookie } from "frontedUtils/cookie";
 import Loader from "../Button/Loader";
 import { ethers } from "ethers";
 import Tooltip from "../tooltip";
@@ -57,8 +56,7 @@ const AddIncentive = ({
     amountErr: null,
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const address = useSelector(addressSelector);
+  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
   const {
     tokenAddress,
@@ -81,6 +79,9 @@ const AddIncentive = ({
 
   const getTokenBalanceAndAllowance = async () => {
     const { result, error } = await getBalance(address, tokenAddress);
+    // console.log('test')
+    // console.log(address)
+    // console.log(tokenAddress)
     if (error) {
       setErrors((prev) => ({
         ...prev,
