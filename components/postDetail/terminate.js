@@ -45,7 +45,7 @@ export function useTerminate({ loginAddress, loginNetwork, proposal = {} }) {
       signedData = await viewfunc.signTerminate({
         address: loginAddress,
         proposalCid: proposal.cid,
-        terminatorNetwork: loginNetwork,
+        terminatorNetwork: proposal.proposerNetwork,
         connectedWallet: connectedWallet,
       });
     } catch (error) {
