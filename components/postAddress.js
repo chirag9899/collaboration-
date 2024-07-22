@@ -268,7 +268,7 @@ export default function PostAddress({ spaceId, proposalCid, size, snapshot }) {
               }
             }}
           />
-          <Image
+          <img
             width="100%"
             height="100%"
             src="/imgs/avatar-polkadot.png"
