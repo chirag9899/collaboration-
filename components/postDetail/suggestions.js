@@ -1,7 +1,7 @@
 import { addressEllipsis } from "frontedUtils";
 import { uniqWith } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import { fetchIdentity } from "services/identity";
+//import { fetchIdentity } from "services/identity";
 import Author from "../author";
 import { chainConfigsMap } from "../../frontedUtils/consts/chains";
 
@@ -26,7 +26,7 @@ export function useSuggestions(comments = []) {
       ).map(async (item) => {
         const configs = chainConfigsMap[item.network];
         const identityChain = (configs && configs.identity) || item.network;
-        const identity = await fetchIdentity(identityChain, item.address);
+        const identity = item.address;
         return {
           ...item,
           identity,

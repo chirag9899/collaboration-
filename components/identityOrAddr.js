@@ -3,7 +3,7 @@ import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import { addressEllipsis, getExplorerUrl } from "../frontedUtils";
 import { useIsMounted } from "frontedUtils/hooks";
 import { chainMap, getChainConfigs } from "../frontedUtils/consts/chains";
-import { fetchIdentity } from "services/identity";
+//import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { ExternalLink } from "@osn/common-ui";
 import encodeAddressByChain from "frontedUtils/chain/addr";
@@ -74,14 +74,9 @@ export default function IdentityOrAddr({
     const chainConfig = getChainConfigs(network);
     const identityNetwork = chainConfig?.identity || network;
     const identityAddr = encodeAddressByChain(address, identityNetwork);
-
-    fetchIdentity(identityNetwork, identityAddr)
-      .then((identity) => {
         if (isMounted.current) {
-          setIdentity(identity);
+          setIdentity(identityAddr);
         }
-      })
-      .catch(() => {});
   }, [network, address, isMounted]);
 
   let identityChild =

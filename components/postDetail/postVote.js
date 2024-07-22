@@ -152,7 +152,7 @@ export default function PostVote({ proposal }) {
     !voteDelegation;
 
   const supportProxy = useSelector(canUseProxySelector);
-  const snapshot = proposal.snapshotHeights[loginNetwork];
+  const snapshot = proposal.snapshotHeights[proposal.proposerNetwork];
 
   const reset = () => {
     setChoiceIndexes([]);
@@ -165,10 +165,10 @@ export default function PostVote({ proposal }) {
   ].includes(proposal?.status);
 
   useEffect(() => {
-    if (proposal && loginAddress && loginNetwork) {
+    if (proposal && loginAddress && proposal.proposerNetwork) {
       nextApi
         .fetch(
-          `${proposal.space}/proposal/${proposal.cid}/voterbalance/${loginNetwork}/${loginAddress}`,
+          `${proposal.space}/proposal/${proposal.cid}/voterbalance/${proposal.proposerNetwork}/${loginAddress}`,
           { snapshot },
         )
         .then((response) => {
@@ -183,7 +183,7 @@ export default function PostVote({ proposal }) {
     } else {
       setBalance(null);
     }
-  }, [proposal, loginNetwork, loginAddress, dispatch, snapshot]);
+  }, [proposal, proposal.proposerNetwork, loginAddress, dispatch, snapshot]);
 
   const onVote = async () => {
     if (isLoading) return;
@@ -215,7 +215,7 @@ export default function PostVote({ proposal }) {
         remark,
         loginAddress,
         useProxy ? proxyAddress : undefined,
-        loginNetwork,
+        proposal.proposerNetwork,
         connectedWallet,
       );
     } catch (error) {
@@ -276,7 +276,7 @@ export default function PostVote({ proposal }) {
       balanceInfo = (
         <DelegationInfo
           delegatee={voteDelegation?.delegatee}
-          network={loginNetwork}
+          network={proposal.proposerNetwork}
         />
       );
     } else {

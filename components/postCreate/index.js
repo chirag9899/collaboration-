@@ -82,8 +82,10 @@ export default function PostCreate({ space }) {
   const dispatch = useDispatch();
   const account = useSelector(loginAccountSelector);
   const loginAddress = useSelector(loginAddressSelector);
-  const loginNetworkSnapshot = useSelector(loginNetworkSnapshotSelector);
-
+  const loginNetwork = space.networks[0].network;
+  const loginNetworkSnapshot = useSelector((state) =>
+    loginNetworkSnapshotSelector(state, loginNetwork)
+  );
   const snapshotHeights = useSelector(snapshotHeightsSelector);
   const choiceTypeIndex = useSelector(choiceTypeIndexSelector);
   const connectedWallet = useSelector(connectedWalletSelector);
@@ -164,7 +166,7 @@ export default function PostCreate({ space }) {
     dispatch(setBalanceLoading(true));
     dispatch(setLoadBalanceError(""));
     delayLoading(
-      `${space.id}/${account?.network}/account/${loginAddress}/balance?snapshot=${loginNetworkSnapshot}`,
+      `${space.id}/${space.networks[0].network}/account/${loginAddress}/balance?snapshot=${loginNetworkSnapshot}`,
     )
       .then(([result]) => {
         if (!isNil(result?.result?.balance)) {
@@ -184,7 +186,7 @@ export default function PostCreate({ space }) {
       .finally(() => {
         dispatch(setBalanceLoading(false));
       });
-  }, [space, account?.network, dispatch, loginAddress, loginNetworkSnapshot]);
+  }, [space, space.networks[0].network, dispatch, loginAddress, loginNetworkSnapshot]);
 
   const onPublish = async () => {
     const address = account?.address ?? "";
@@ -200,6 +202,7 @@ export default function PostCreate({ space }) {
     snapshotHeights.forEach((snapshotHeight) => {
       proposalSnapshotHeights[snapshotHeight.network] = snapshotHeight.height;
     });
+    console.log(space.networks[0].network)
     const proposal = {
       space: space.id,
       networksConfig: {
@@ -215,9 +218,9 @@ export default function PostCreate({ space }) {
       startDate: startDate?.getTime(),
       endDate: endDate?.getTime(),
       snapshotHeights: proposalSnapshotHeights,
-      address: encodeAddressByChain(address, account?.network),
+      address: encodeAddressByChain(address, space.networks[0].network),
       realProposer: useProxy ? proxyAddress : null,
-      proposerNetwork: account.network,
+      proposerNetwork: space.networks[0].network,
       ...(isSetBanner && bannerUrl ? { banner: bannerUrl } : {}),
     };
 
