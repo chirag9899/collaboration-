@@ -180,7 +180,7 @@ export default function Popup({ data, space, isTop }) {
     <ResultWrapper isTop={isTop}>
       <TitleWrapper>
         Results
-        <Image
+        <img
           width="100%"
           height="100%"
           src="/imgs/icons/strategy.svg"

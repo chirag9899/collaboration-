@@ -172,7 +172,7 @@ function Uploader({ setBannerUrl }) {
           <>
             {currentBanner ? (
               <BannerPreview>
-                <Image width="100%" height="100%" src={currentBanner} alt="" />
+                <img width="100%" height="100%" src={currentBanner} alt="" />
                 <Delete onClick={handleRemoveBanner}>Delete</Delete>
               </BannerPreview>
             ) : (
