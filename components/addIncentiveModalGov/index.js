@@ -38,7 +38,7 @@ const AddIncentive = ({
   onSubmit,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState(1);
-  const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
+  const beravoteAddress = process.env.NEXT_PUBLIC_BERAGOV_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
     tokenPrice: 0,

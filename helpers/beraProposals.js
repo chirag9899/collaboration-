@@ -239,8 +239,11 @@ export async function getFilteredProposals(proposals) {
       totalVotes: formatNumber(votesCount),
       title: newlineIndex[0].replace("#", ""),
       description: description.replace(newlineIndex[0], ""),
+      id: proposal.proposalId,
       voteEnd: getDateFromTimestamp(voteEnd),
       voteStart: getDateFromTimestamp(voteStart),
+      voteEndOrg: proposal.voteEnd,
+      voteStartOrg: proposal.voteStart,
       quorumPer: Number(forVotesPer).toFixed(2) + "%",
       totalvotesPercentage: totalvotesPercentage,
       finalTallyResult: {

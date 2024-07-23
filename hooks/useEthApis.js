@@ -162,6 +162,9 @@ const useEthApis = () => {
     start,
     end,
   ) {
+    // console.log(option)
+    // console.log(id)
+    // console.log(rewardToken)
     try {
       // return;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -178,12 +181,12 @@ const useEthApis = () => {
         signer,
       );
       const tx = await bribeContract.add_reward_amount(
-        `beravote-${id}`,
+        `bera-${id}`,
         option,
         rewardToken,
         amount,
-        start,
-        end,
+        Number(start),
+        Number(end),
       );
       await tx.wait(1);
       console.log(tx);

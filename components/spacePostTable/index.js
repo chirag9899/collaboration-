@@ -71,6 +71,7 @@ export default function SpacePostTable({
   const { addBeraGovRewardAmount } = useEthApis();
   const [isSwitching, setIsSwitching] = useState(false);
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
+  const [incentiveData, setIncentiveData] = useState(null);
 
   const onCheckRewards = async () => {
     await router.push(`/space/beragov/rewards`);
@@ -144,8 +145,7 @@ export default function SpacePostTable({
     }
   };
 
-
-  const handleIncentive = async () => {
+  const handleIncentive = async (item) => {
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
@@ -153,11 +153,12 @@ export default function SpacePostTable({
       console.log(switched)
       setIsSwitching(false);
       if (switched) {
+        setIncentiveData(item);
         openModal();
       }
 
     } catch (error) {
-      closeModal()
+      closeModal();
     }
   };
 
@@ -177,14 +178,19 @@ export default function SpacePostTable({
   };
 
   const handleAddIncentive = async (value) => {
+    // console.log(incentiveData)
+    // console.log(incentiveData.id)
+    // console.log(incentiveData.voteStartOrg)
+    // console.log(incentiveData.voteEndOrg)
+    if (!incentiveData) return;
     try {
       await addBeraGovRewardAmount(
-        data?.id,
+        incentiveData.id,
         value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
         value.incentiveAmount,
         value.tokenAddress,
-        data?.startTime,
-        data?.endTime,
+        incentiveData.voteStartOrg,
+        incentiveData.voteEndOrg,
       );
     } catch (error) {
       console.error("Error adding incentive:", error);
@@ -312,7 +318,7 @@ export default function SpacePostTable({
                         }
                         primary
                         block
-                        onClick={handleIncentive}
+                        onClick={() => handleIncentive(item)}
                       >
                         Add incentive
                       </CustomBtn>
@@ -360,7 +366,7 @@ export default function SpacePostTable({
           choices={["For", "Abstain", "Against"]}
           open={open}
           closeModal={closeModal}
-          message="The proposal deletion is permanent.Are you sure you want to delete?"
+          message="The proposal deletion is permanent. Are you sure you want to delete?"
           onSubmit={handleAddIncentive}
         />
       )}
