@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import InternalLink from "./internalLink";
+// import InternalLink from "./internalLink";
 import { no_scroll_bar } from "../styles/globalCss";
 import { loginAddressSelector } from "store/reducers/accountSlice";
 // import SpaceListItem from "./spaceListItem";
@@ -13,9 +13,10 @@ import { h3_36_bold, p_16_semibold } from "./styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 const SpaceListItem = dynamic(() => import("./spaceListItem"), {
   ssr: false,
-  loading:"Loading...."
+  loading: "Loading....",
 });
 
 const Wrapper = styled.div``;
@@ -77,6 +78,17 @@ const TotalCountWrapper = styled.div`
   display: flex;
   gap: 40px;
   text-transform: capitalize;
+`;
+
+const InternalLink = styled(Link)`
+  cursor: pointer;
+
+  > a {
+    :hover {
+      color: inherit;
+      text-decoration: underline;
+    }
+  }
 `;
 
 export default function Space({ spaces, limit, title, totalCount }) {
