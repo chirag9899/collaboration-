@@ -13,6 +13,8 @@ import Modal from "../Modal";
 
 import Loader from "../Button/Loader";
 
+import useEthApis from "hooks/useEthApis";
+
 const DelegeteSpaceModal = ({
   open,
   closeModal,
@@ -20,8 +22,10 @@ const DelegeteSpaceModal = ({
   title = "Delegate Space",
   isLoading = false,
 }) => {
+  const {delegateVotes} = useEthApis();
   const onDelegateHandler = async () => {
     console.log("delegate handler click");
+    await delegateVotes();
   };
 
   return (
