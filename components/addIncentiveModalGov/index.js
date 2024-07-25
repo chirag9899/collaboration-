@@ -54,6 +54,8 @@ const AddIncentive = ({
   const [errors, setErrors] = useState({
     tokenErr: null,
     amountErr: null,
+    networkErr: null,
+
   });
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
@@ -66,7 +68,7 @@ const AddIncentive = ({
     allowance,
     tokenPrice,
   } = formdata;
-  const { tokenErr, amountErr } = errors;
+  const { tokenErr, amountErr, networkErr } = errors;
 
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
@@ -78,6 +80,7 @@ const AddIncentive = ({
   }));
 
   const getTokenBalanceAndAllowance = async () => {
+    validateChain()
     const { result, error } = await getBalance(address, tokenAddress);
     // console.log('test')
     // console.log(address)
@@ -122,9 +125,30 @@ const AddIncentive = ({
 
   useEffect(() => {
     if (open) {
+      validateChain()
       getTokenBalanceAndAllowance();
     }
   }, [open, address, tokenAddress]);
+
+
+  const validateChain = async() => {
+    const bartioNetwork = { network: 'berachain-b2' };
+
+    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      const bartioNetworkId = chainMap.get(bartioNetwork.network).id;
+
+      if (currentChainId !== bartioNetworkId) {
+        setErrors((prev) => ({
+          ...prev,
+          networkErr: "Please switch to the Bartio network to proceed.",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          networkErr: null,
+        }));
+      }
+  };
 
   const validateIncentiveAmount = (amount, availableBal, allowance) => {
     let amountError = null;
@@ -215,8 +239,8 @@ const AddIncentive = ({
       closeBar={false}
     >
       <HeadWrapper>
-        <StyledTitle>{title}</StyledTitle>
-        <CloseBar onClick={closeModal}>
+      <StyledTitle>{title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}</StyledTitle>
+      <CloseBar onClick={closeModal}>
           <Image
             src="/imgs/icons/close.svg"
             alt="close"

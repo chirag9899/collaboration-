@@ -31,6 +31,7 @@ const useEthApis = () => {
     const isValid = isValidEthereumAddress(tokenAddress);
 
     try {
+      console.log(walletAddress, tokenAddress)
       setIsLoading(true);
       if (isValid) {
         const token = new ethers.Contract(
@@ -48,6 +49,7 @@ const useEthApis = () => {
         throw new Error("Please enter a valid address");
       }
     } catch (error) {
+      console.log(error)
       setIsLoading(false);
       return { result: null, error: error.message };
     }
@@ -70,6 +72,7 @@ const useEthApis = () => {
         setIsLoading(false);
         return { result: etherString, error: null };
       } else {
+        console.log(error)
         setIsLoading(false);
         throw new Error("Please enter a valid address");
       }
@@ -149,7 +152,6 @@ const useEthApis = () => {
       return true;
     }catch(e){
       console.log(e);
-      dispatch(newErrorToast("Error adding incentive!"));
       return false;
     }
   }

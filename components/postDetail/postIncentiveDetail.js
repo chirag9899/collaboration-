@@ -77,10 +77,26 @@ export default function PostIncentive({ data, voteStatus, space }) {
     router.push(`/space/${space.id}/rewards?id=${space._id}`);
   };
 
+  useEffect(() => {
+    const updateAddress = () => {
+      const newAddress = getCookie("addressV3")?.split("/")[1] || "";
+      setAddress(newAddress);
+    };
+  
+    // Update address when the component mounts
+    updateAddress();
+  
+    // Optionally, you can set up an interval to periodically check for cookie updates
+    const intervalId = setInterval(updateAddress, 1000); // Check every second
+  
+    // Clean up the interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
   
   
   const handleChainSelect = async (chain) => {
     try {
+      console.log('address is',address)
       await _handleChainSelect(connectedWallet, dispatch, address, chainMap, chain);
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
       const bartioNetworkId = chainMap.get(chain.network).id;
@@ -91,13 +107,26 @@ export default function PostIncentive({ data, voteStatus, space }) {
       return true;
     } catch (error) {
       console.error("Error switching network:", error);
-      dispatch(newErrorToast(error.message));
+      // dispatch(newErrorToast(error.message));
       return false;
     }
   };
 
   const handleAddIncentive = async (value) => {
     try {
+
+      const bartioNetwork = { network: 'berachain-b2' };
+      setIsSwitching(true);
+      const switched = await handleChainSelect(bartioNetwork);
+
+    if (!switched) {
+      dispatch(newErrorToast(
+        <>
+          Please switch to the Bartio network to proceed. Visit the <span style={{ color: 'red', fontWeight: 'bold', cursor: 'pointer' }} onClick={() => window.open('https://quicksnap.gitbook.io/quicksnap-documentation/beravote/user-guide#connect-wallet-to-beravote', '_blank')}>user guide</span> for more info.
+        </>
+      ));
+      return;
+    }
       await addBeraVoteRewardAmount(
         data?.cid,
         value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
@@ -107,8 +136,11 @@ export default function PostIncentive({ data, voteStatus, space }) {
         data?.endTime,
       );
     } catch (error) {
-      console.error("Error adding incentive:", error);
-      dispatch(newErrorToast(error.message));
+      console.log('the error is',error)
+      // dispatch(newErrorToast(error.message));
+    } finally {
+      setIsSwitching(false);
+
     }
   };
 
@@ -146,6 +178,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
 
   const isProposalActive = data.status === "active";
 
+  console.log(!isProposalActive , isSwitching, data.status)
   return (
     <Panel>
       <SideSectionTitle title="Incentives" />
@@ -169,6 +202,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
           message="The proposal deletion is permanent. Are you sure you want to delete?"
           onSubmit={handleAddIncentive}
           choices={data.choices}
+          handleChainSelect={handleChainSelect}
         />
       )}
     </Panel>
