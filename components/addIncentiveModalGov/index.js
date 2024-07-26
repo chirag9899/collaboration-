@@ -27,6 +27,7 @@ import Loader from "../Button/Loader";
 import { ethers } from "ethers";
 import Tooltip from "../tooltip";
 import AssetDetail from "../newSpace/step2/asset/assetDetail";
+import { chainMap } from "frontedUtils/consts/chains";
 import { noop } from "utils";
 
 const AddIncentive = ({
@@ -75,7 +76,7 @@ const AddIncentive = ({
 
   const options = choices.map((item, i) => ({
     key: i,
-    value: i + 1,
+    value: i,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
 
