@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchIdentity } from "services/identity";
+//import { fetchIdentity } from "services/identity";
 import Avatar from "./avatar";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import { ReactComponent as Loading } from "public/imgs/icons/loading.svg";
@@ -191,13 +191,7 @@ export default function PostAddress({ spaceId, proposalCid, size, snapshot }) {
     }
 
     setIsLoading(true);
-    fetchIdentity(network, proxyAddress)
-      .then((response) => {
-        setIdentityInfo(response?.info);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    setIdentityInfo(proxyAddress);
   }, [proxyAddress, inputAddress, network]);
 
   useEffect(() => {

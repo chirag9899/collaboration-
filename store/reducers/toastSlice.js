@@ -56,11 +56,12 @@ export const newSuccessToast = (message) =>
     message,
   });
 
-export const newErrorToast = (message) =>
-  addToast({
-    type: TOAST_TYPES.ERROR,
-    message,
-  });
+  export const newErrorToast = (message, html = false) =>
+    addToast({
+      type: TOAST_TYPES.ERROR,
+      message,
+      html,
+    });
 
   export const newWarningToast = (message) =>
   addToast({

@@ -232,10 +232,12 @@ export default function SpacePost({ data, spaces, space, postNum }) {
   };
   const address = useSelector(addressSelector);
 
-  const { addBeraVoteRewardAmount } = useEthApis();
+  const { addBeraGovRewardAmount } = useEthApis();
 
   const handleAddIncentive = async (value) => {
-    await addBeraVoteRewardAmount(
+    // console.log(value)
+    // console.log(data)
+    await addBeraGovRewardAmount(
       data?.id,
       value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
       value.incentiveAmount,
@@ -295,7 +297,7 @@ export default function SpacePost({ data, spaces, space, postNum }) {
       {/* </HardLink> */}
       {open && (
         <AddIncentive
-          choices={["For", "Abstain", "Against"]}
+          choices={['For', 'Abstain', 'Against']}
           open={open}
           closeModal={closeModal}
           message="The proposal deletion is permanent.Are you sure you want to delete?"

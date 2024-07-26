@@ -3,12 +3,13 @@ import { loginNetworkSelector } from "../reducers/accountSlice";
 import { snapshotHeightsSelector } from "../reducers/authoringSlice";
 
 export const loginNetworkSnapshotSelector = createSelector(
-  loginNetworkSelector,
+  (state, loginNetwork) => loginNetwork,
   snapshotHeightsSelector,
   (loginNetwork, snapshotHeights) => {
+    console.log('loginNetwork:', snapshotHeights);
     return (
       (snapshotHeights || []).find(
-        (snapshotHeight) => loginNetwork?.network === snapshotHeight.network
+        (snapshotHeight) => loginNetwork === snapshotHeight.network
       )?.height || 0
     );
   }

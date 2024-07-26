@@ -136,16 +136,25 @@ export const initAccount = () => async (dispatch) => {
 };
 
 export const accountSelector = (state) => {
+  console.log('accountSelector state:', state);
   if (state.account.account) {
+    console.log('accountSelector account:', state.account.account);
     return state.account.account;
   }
+  console.warn('accountSelector: No account found in state');
+  return undefined;
 };
 
 export const loginNetworkSelector = createSelector(
   availableNetworksSelector,
   accountSelector,
   (networks, account) => {
-    return networks.find((item) => item.network === account?.network);
+    console.log('loginNetworkSelector networks:', networks);
+    console.log('loginNetworkSelector account:', account);
+    if (!account?.network) {
+      console.warn('Network not found for account:', account);
+    }
+    return account?.network;
   },
 );
 
@@ -153,16 +162,12 @@ export const loginAccountSelector = createSelector(
   loginNetworkSelector,
   accountSelector,
   (network, account) => {
+    console.log('loginAccountSelector network:', network);
+    console.log('loginAccountSelector account:', account);
     if (!network) {
-      return null;
+      console.warn('Network not found for account:', account);
     }
-
-    let address = encodeAddressByChain(account.address, network.network);
-    return {
-      ...network,
-      ...account,
-      address,
-    };
+    return account;
   },
 );
 
@@ -174,7 +179,9 @@ export const loginAddressSelector = createSelector(
       return null;
     }
   
-    let encodedAddress = encodeAddressByChain(account.address, network.network);
+    // let encodedAddress = encodeAddressByChain(account.address, network.network);
+    let encodedAddress = encodeAddressByChain(account.address, account?.network);
+
     return encodedAddress;
   },
 );

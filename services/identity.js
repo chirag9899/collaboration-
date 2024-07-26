@@ -84,11 +84,12 @@ export function fetchIdentity(chain, address) {
   if (!pending.has(idName)) {
     pending.set(idName, [
       new Promise((resolve, reject) =>
-        setTimeout(() => {
-          const promise = pending.get(idName);
-          promise.push(resolve, reject);
-          delayQuery();
-        }, 0)
+        // setTimeout(() => {
+        //   const promise = pending.get(idName);
+        //   promise.push(resolve, reject);
+        //   delayQuery();
+        // }, 0)
+        resolve(true)
       ),
     ]);
   }

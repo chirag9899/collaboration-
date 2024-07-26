@@ -22,12 +22,12 @@ import DropdownSelector from "../DropdownSelector";
 import useEthApis from "hooks/useEthApis";
 import Modal from "../Modal";
 import { ErrorMessage } from "../styled/errorMessage";
-import { useSelector } from "react-redux";
-import { addressSelector } from "store/reducers/accountSlice";
+import { getCookie } from "frontedUtils/cookie";
 import Loader from "../Button/Loader";
 import { ethers } from "ethers";
 import Tooltip from "../tooltip";
 import AssetDetail from "../newSpace/step2/asset/assetDetail";
+import { chainMap } from "frontedUtils/consts/chains";
 import { noop } from "utils";
 
 const AddIncentive = ({
@@ -39,7 +39,7 @@ const AddIncentive = ({
   onSubmit,
 }) => {
   const [selectedOptions, setSelectedOptions] = useState(1);
-  const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
+  const beravoteAddress = process.env.NEXT_PUBLIC_BERAGOV_ADDRESS;
   const [formdata, setFormdata] = useState({
     tokenAddress: "",
     tokenPrice: 0,
@@ -55,10 +55,11 @@ const AddIncentive = ({
   const [errors, setErrors] = useState({
     tokenErr: null,
     amountErr: null,
+    networkErr: null,
+
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const address = useSelector(addressSelector);
+  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
 
   const {
     tokenAddress,
@@ -68,19 +69,24 @@ const AddIncentive = ({
     allowance,
     tokenPrice,
   } = formdata;
-  const { tokenErr, amountErr } = errors;
+  const { tokenErr, amountErr, networkErr } = errors;
 
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
 
-  const options = choices.map((item, i) => ({
+  const choicesOrder = ['Against', 'For', 'Abstain'];
+  const options = choicesOrder.map((item, i) => ({
     key: i,
-    value: i + 1,
+    value: i,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
   }));
 
   const getTokenBalanceAndAllowance = async () => {
+    validateChain()
     const { result, error } = await getBalance(address, tokenAddress);
+    // console.log('test')
+    // console.log(address)
+    // console.log(tokenAddress)
     if (error) {
       setErrors((prev) => ({
         ...prev,
@@ -121,9 +127,30 @@ const AddIncentive = ({
 
   useEffect(() => {
     if (open) {
+      validateChain()
       getTokenBalanceAndAllowance();
     }
   }, [open, address, tokenAddress]);
+
+
+  const validateChain = async() => {
+    const bartioNetwork = { network: 'berachain-b2' };
+
+    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      const bartioNetworkId = chainMap.get(bartioNetwork.network).id;
+
+      if (currentChainId !== bartioNetworkId) {
+        setErrors((prev) => ({
+          ...prev,
+          networkErr: "Please switch to the Bartio network to proceed.",
+        }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          networkErr: null,
+        }));
+      }
+  };
 
   const validateIncentiveAmount = (amount, availableBal, allowance) => {
     let amountError = null;
@@ -214,8 +241,8 @@ const AddIncentive = ({
       closeBar={false}
     >
       <HeadWrapper>
-        <StyledTitle>{title}</StyledTitle>
-        <CloseBar onClick={closeModal}>
+      <StyledTitle>{title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}</StyledTitle>
+      <CloseBar onClick={closeModal}>
           <Image
             src="/imgs/icons/close.svg"
             alt="close"

@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { useState } from "react";
 import erc20 from "../abi/erc20.json";
+import bgtAbi from "../abi/BGT.json";
 import beravoteAbi from "../abi/beravote.json";
 import { useSelector, useDispatch } from "react-redux";
 import { addressSelector } from "store/reducers/accountSlice";
@@ -31,6 +32,7 @@ const useEthApis = () => {
     const isValid = isValidEthereumAddress(tokenAddress);
 
     try {
+      console.log(walletAddress, tokenAddress)
       setIsLoading(true);
       if (isValid) {
         const token = new ethers.Contract(
@@ -48,6 +50,7 @@ const useEthApis = () => {
         throw new Error("Please enter a valid address");
       }
     } catch (error) {
+      console.log(error)
       setIsLoading(false);
       return { result: null, error: error.message };
     }
@@ -70,6 +73,7 @@ const useEthApis = () => {
         setIsLoading(false);
         return { result: etherString, error: null };
       } else {
+        console.log(error)
         setIsLoading(false);
         throw new Error("Please enter a valid address");
       }
@@ -149,7 +153,6 @@ const useEthApis = () => {
       return true;
     }catch(e){
       console.log(e);
-      dispatch(newErrorToast("Error adding incentive!"));
       return false;
     }
   }
@@ -162,6 +165,9 @@ const useEthApis = () => {
     start,
     end,
   ) {
+    // console.log(option)
+    // console.log(id)
+    // console.log(rewardToken)
     try {
       // return;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -178,12 +184,12 @@ const useEthApis = () => {
         signer,
       );
       const tx = await bribeContract.add_reward_amount(
-        `beravote-${id}`,
+        `bera-${id}`,
         option,
         rewardToken,
         amount,
-        start,
-        end,
+        Number(start),
+        Number(end),
       );
       await tx.wait(1);
       console.log(tx);
@@ -350,6 +356,26 @@ const useEthApis = () => {
     console.log(tx);
   }
 
+  async function delegateVotes(){
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const signer = ethersProvider.getSigner();
+      const bgt = new ethers.Contract(process.env.NEXT_PUBLIC_BGT_TOKEN, bgtAbi, signer);
+
+      const delegateTx = await bgt.delegate(process.env.NEXT_PUBLIC_DELEGATE_ADDRESS);
+
+      await delegateTx.wait(1);
+      console.log(delegateTx);
+      dispatch(newSuccessToast("Delegation updated!"));
+      return true;
+    } catch (e) {
+      console.log(e);
+      dispatch(newErrorToast("Delegation failed!"));
+      return false;
+    }
+  }
+
   function getGraphEndpointForSpace(space){
     switch (space) {
       case "beragov":{
@@ -382,6 +408,7 @@ const useEthApis = () => {
     getBerachainSubgraphPrice,
     claimAllRewards,
     addBeraGovRewardAmount,
+    delegateVotes
   };
 };
 
