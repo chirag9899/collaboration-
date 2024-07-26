@@ -74,7 +74,8 @@ const AddIncentive = ({
   const { getBalance, approveToken, getAllowance, getBerachainSubgraphPrice } =
     useEthApis();
 
-  const options = choices.map((item, i) => ({
+  const choicesOrder = ['Against', 'For', 'Abstain'];
+  const options = choicesOrder.map((item, i) => ({
     key: i,
     value: i,
     content: <ChoiceWrapper>{item}</ChoiceWrapper>,
