@@ -1,11 +1,6 @@
 import Seo from "@/components/seo";
 import Layout from "@/components/layout";
 import { ssrNextApi } from "services/nextApi";
-import dynamic from "next/dynamic";
-const CheckRewards = dynamic(() => import("@/components/rewards"), {
-  ssr: false,
-  loading: "Loading....",
-});
 
 export default function Index({ allNetworks }) {
   const desc = "Rewards";
