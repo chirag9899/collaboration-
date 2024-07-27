@@ -228,7 +228,7 @@ export default function Header({ networks }) {
           </IconWrapper>
 
           <HeaderItemWrapper>
-            {showBeravoteBtn && (
+            {/* {showBeravoteBtn && (
               <Button
                 onClick={() => {
                   router.push({
@@ -239,7 +239,7 @@ export default function Header({ networks }) {
               >
                 Beravote space
               </Button>
-            )}
+            )} */}
 
             {isHomePage && (
               <>
