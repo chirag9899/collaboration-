@@ -29,43 +29,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.10.1":
-  version: 3.10.1
-  resolution: "@apollo/client@npm:3.10.1"
-  dependencies:
-    "@graphql-typed-document-node/core": ^3.1.1
-    "@wry/caches": ^1.0.0
-    "@wry/equality": ^0.5.6
-    "@wry/trie": ^0.5.0
-    graphql-tag: ^2.12.6
-    hoist-non-react-statics: ^3.3.2
-    optimism: ^0.18.0
-    prop-types: ^15.7.2
-    rehackt: ^0.1.0
-    response-iterator: ^0.2.6
-    symbol-observable: ^4.0.0
-    ts-invariant: ^0.10.3
-    tslib: ^2.3.0
-    zen-observable-ts: ^1.2.5
-  peerDependencies:
-    graphql: ^15.0.0 || ^16.0.0
-    graphql-ws: ^5.5.5
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-    subscriptions-transport-ws: ^0.9.0 || ^0.11.0
-  peerDependenciesMeta:
-    graphql-ws:
-      optional: true
-    react:
-      optional: true
-    react-dom:
-      optional: true
-    subscriptions-transport-ws:
-      optional: true
-  checksum: d54adac095ad182b863d3f899d68de13eb9b0da2c77cbfb3a8be8aad8aa2a1fe83ce69dfd036d015a2d68f8f8422d7dc1d90d78a4267377030207cbfe74e7781
-  languageName: node
-  linkType: hard
-
 "@babel/code-frame@npm:^7.0.0, @babel/code-frame@npm:^7.10.4, @babel/code-frame@npm:^7.12.13, @babel/code-frame@npm:^7.18.6, @babel/code-frame@npm:^7.22.13":
   version: 7.22.13
   resolution: "@babel/code-frame@npm:7.22.13"
@@ -491,17 +454,6 @@ __metadata:
     "@babel/traverse": ^7.18.9
     "@babel/types": ^7.18.9
   checksum: d0bd8255d36bfc65dc52ce75f7fea778c70287da2d64981db4c84fbdf9581409ecbd6433deff1c81da3a5acf26d7e4c364b3a4445efacf88f4f48e77c5b34d8d
-  languageName: node
-  linkType: hard
-
-"@babel/highlight@npm:^7.18.6":
-  version: 7.18.6
-  resolution: "@babel/highlight@npm:7.18.6"
-  dependencies:
-    "@babel/helper-validator-identifier": ^7.18.6
-    chalk: ^2.0.0
-    js-tokens: ^4.0.0
-  checksum: 92d8ee61549de5ff5120e945e774728e5ccd57fd3b2ed6eace020ec744823d4a98e242be1453d21764a30a14769ecd62170fba28539b211799bbaf232bbb2789
   languageName: node
   linkType: hard
 
@@ -1743,9 +1695,6 @@ __metadata:
     ethereum-blockies-base64: ^1.0.2
     ethers: ^5.6.1
     file-loader: ^6.2.0
-    graphql: ^16.8.1
-    graphql-tag: ^2.12.6
-    html-minifier: ^4.0.0
     http-proxy: ^1.18.1
     identity-obj-proxy: ^3.0.0
     jest: ^27.3.0
@@ -6357,7 +6306,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^2.0.0, chalk@npm:^2.4.2":
+"chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
   dependencies:
@@ -12782,28 +12731,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rehackt@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "rehackt@npm:0.1.0"
-  peerDependencies:
-    "@types/react": "*"
-    react: "*"
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-    react:
-      optional: true
-  checksum: 2c3bcd72524bf47672640265e79cba785e0e6837b9b385ccb0a3ea7d00f55a439d9aed3e0ae71e991d88e0d4b2b3158457c92e75fff5ebf99cd46e280068ddeb
-  languageName: node
-  linkType: hard
-
-"relateurl@npm:^0.2.7":
-  version: 0.2.7
-  resolution: "relateurl@npm:0.2.7"
-  checksum: 5891e792eae1dfc3da91c6fda76d6c3de0333a60aa5ad848982ebb6dccaa06e86385fb1235a1582c680a3d445d31be01c6bfc0804ebbcab5aaf53fa856fde6b6
-  languageName: node
-  linkType: hard
-
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
@@ -13975,7 +13902,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.3.1, tslib@npm:^2.4.0, tslib@npm:^2.5.3":
+"tslib@npm:^2.0.0, tslib@npm:^2.3.1, tslib@npm:^2.4.0":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
