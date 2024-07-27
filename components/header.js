@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useRef } from "react";
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useOnClickOutside } from "frontedUtils/hooks";
@@ -27,13 +27,6 @@ const Menu = dynamic(() => import("@/components/menu"), {
 const NotificationBell = dynamic(() => import("./notification/bell"), {
   ssr: false,
 });
-const Button = dynamic(() => import("./Button"), {
-  ssr: false,
-});
-const Switch = dynamic(() => import("./switchBtn"), {
-  ssr: false,
-});
-
 
 // Styled components
 const HeaderItemWrapper = styled.div`
