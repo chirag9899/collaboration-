@@ -53,7 +53,7 @@ export const chainConfigsMap = {
 export function getChainConfigs(chain) {
   const configs = chainConfigsMap[chain];
   if (!configs) {
-    throw new Error(`No chain configs for ${chain}`);
+    console.log(`No chain configs for ${chain}`);
   }
 
   return configs;

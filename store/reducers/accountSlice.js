@@ -12,7 +12,11 @@ export const setAccount = (payload) => async (dispatch) => {
   if (payload) {
     const accountAddress = payload.address;
     if (accountAddress && (ethers.utils.isAddress(accountAddress) || validate(accountAddress))) {
-      setCookie("addressV3", `${payload.network}/${payload.address}`, 7);
+      let payloadNetwork = payload.network;
+      if (!payloadNetwork && ethers.utils.isAddress(accountAddress)) {
+        payloadNetwork = 'ethereum';
+      }
+      setCookie("addressV3", `${payloadNetwork}/${payload.address}`, 7);
     } else {
       clearCookie("connectedWallet");
       clearCookie("addressV3");
