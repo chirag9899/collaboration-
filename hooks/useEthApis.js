@@ -1,10 +1,9 @@
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import erc20 from "../abi/erc20.json";
 import bgtAbi from "../abi/BGT.json";
 import beravoteAbi from "../abi/beravote.json";
-import { useSelector, useDispatch } from "react-redux";
-import { addressSelector } from "store/reducers/accountSlice";
+import { useDispatch } from "react-redux";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
 import { getTokenInfo, tokenData } from "helpers/methods";
@@ -12,13 +11,43 @@ import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const address = useSelector(addressSelector);
+  const [address, setAddress] = useState(null); 
+  const [updatedSigner, setSigner] = useState(null);
   const ethersProvider =
     typeof window !== "undefined" && window.ethereum
       ? new ethers.providers.Web3Provider(window.ethereum)
       : null;
 
   const dispatch = useDispatch();
+
+  // Function to fetch the current address from MetaMask
+  const fetchCurrentAddress = async () => {
+    try {
+      const signer = ethersProvider.getSigner();
+      const addr = await signer.getAddress();
+      setAddress(addr);
+      setSigner(signer);
+      return signer;
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
+  };
+
+  console.log(address)
+  useEffect(() => {
+    if (ethersProvider) {
+      fetchCurrentAddress();
+      window.ethereum.on('accountsChanged', fetchCurrentAddress);
+    }
+
+    // Cleanup subscription on unmount
+    return () => {
+      if (ethersProvider) {
+        window.ethereum.removeListener('accountsChanged', fetchCurrentAddress);
+      }
+    };
+  }, []);
+
   function isValidEthereumAddress(address) {
     try {
       const normalizedAddress = ethers.utils.getAddress(address);
@@ -28,11 +57,11 @@ const useEthApis = () => {
     }
   }
 
-  async function getBalance(walletAddress, tokenAddress) {
+  async function getBalance( tokenAddress) {
     const isValid = isValidEthereumAddress(tokenAddress);
 
     try {
-      console.log(walletAddress, tokenAddress)
+      console.log(address, tokenAddress)
       setIsLoading(true);
       if (isValid) {
         const token = new ethers.Contract(
@@ -40,7 +69,7 @@ const useEthApis = () => {
           erc20.abi,
           ethersProvider,
         );
-        const balance = await token.balanceOf(walletAddress);
+        const balance = await token.balanceOf(address);
         const decimals = await token.decimals();
         const etherString = ethers.utils.formatUnits(balance, decimals);
         setIsLoading(false);
@@ -56,7 +85,7 @@ const useEthApis = () => {
     }
   }
 
-  async function getAllowance(walletAddress, tokenAddress, beravoteAddress) {
+  async function getAllowance( tokenAddress, beravoteAddress) {
     const isValid = isValidEthereumAddress(tokenAddress);
 
     try {
@@ -67,7 +96,7 @@ const useEthApis = () => {
           erc20.abi,
           ethersProvider,
         );
-        const allowance = await token.allowance(walletAddress, beravoteAddress);
+        const allowance = await token.allowance(address, beravoteAddress);
         const decimals = await token.decimals();
         const etherString = ethers.utils.formatUnits(allowance, decimals);
         setIsLoading(false);
@@ -83,14 +112,14 @@ const useEthApis = () => {
     }
   }
 
-  async function approveToken(userAddress, tokenAddress, beravoteAddress, amountToApprove) {
+  async function approveToken( tokenAddress, beravoteAddress, amountToApprove) {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const signer = ethersProvider.getSigner();
       const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
 
-      const allowance = await token.allowance(userAddress, beravoteAddress);
+      const allowance = await token.allowance(address, beravoteAddress);
 
       // check allowance is bigger than 0 for USDT edge case where a user cannot set allowance if there's already an allowance
       if (
@@ -128,7 +157,11 @@ const useEthApis = () => {
       // return;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const signer = ethersProvider.getSigner();
+      // const signer = ethersProvider.getSigner();
+      const signer = updatedSigner.getSigner();
+      const addr = await signer.getAddress();
+      console.log("addraddraddr",addr)
+      return
       const token = new ethers.Contract(rewardToken, erc20.abi, signer);
       const decimals = await token.decimals();
       const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
@@ -351,7 +384,7 @@ const useEthApis = () => {
       merkle.abi,
       signer,
     );
-    const tx = await merkleContract.claimMulti(userAddress.value, claims);
+    const tx = await merkleContract.claimMulti(address, claims);
     await tx.wait(1);
     console.log(tx);
   }
