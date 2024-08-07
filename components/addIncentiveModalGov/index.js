@@ -83,7 +83,7 @@ const AddIncentive = ({
 
   const getTokenBalanceAndAllowance = async () => {
     validateChain()
-    const { result, error } = await getBalance(address, tokenAddress);
+    const { result, error } = await getBalance( tokenAddress);
     // console.log('test')
     // console.log(address)
     // console.log(tokenAddress)
@@ -100,7 +100,6 @@ const AddIncentive = ({
       }));
     } else {
       const allowanceResult = await getAllowance(
-        address,
         tokenAddress,
         beravoteAddress,
       );
@@ -226,7 +225,7 @@ const AddIncentive = ({
       incentiveAmount.toString(),
       18,
     );
-    await approveToken(address, tokenAddress, beravoteAddress, amountToApprove);
+    await approveToken( tokenAddress, beravoteAddress, amountToApprove);
     await getTokenBalanceAndAllowance(); // Refresh balance and allowance after approval
     setIsLoading(false); // Stop loading
   };

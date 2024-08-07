@@ -114,7 +114,9 @@ export default function Post({ data, showSpace, space, spaces }) {
     const spaceInfo = space ?? getSpaceFromId(data.space);
     const spaceIcon = getSpaceIconUrl(spaceInfo);
 
-    validateImageUrl(spaceIcon).then((validUrl) => setSpaceIconUrl(validUrl));
+    //validateImageUrl(spaceIcon).then((validUrl) => setSpaceIconUrl(validUrl));
+    console.log(spaceIcon)
+    setSpaceIconUrl(spaceIcon);
     if (windowSize.width <= 900) {
       setShowRichInfo(false);
     } else {

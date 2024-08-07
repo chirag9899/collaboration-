@@ -6,5 +6,5 @@ export function getSpaceIconUrl(space) {
     return `/imgs/icons/space/${spaceIcon}`;
   }
 
-  return `${process.env.NEXT_PUBLIC_IPFS_ENDPOINT}${spaceIcon}`;
+  return `${process.env.NEXT_PUBLIC_FILE}${spaceIcon}`;
 }
