@@ -184,7 +184,8 @@ export default function NotificationItem({ data, onMarkAsRead = () => { } }) {
     }
 
     const spaceIcon = getSpaceIconUrl(spaceInfo);
-    validateImageUrl(spaceIcon).then(validUrl => setSpaceIconUrl(validUrl));
+    //validateImageUrl(spaceIcon).then(validUrl => setSpaceIconUrl(validUrl));
+    setSpaceIconUrl(spaceIcon);
   }, [spaceInfo]);
 
   function handleMarkAsRead(data) {

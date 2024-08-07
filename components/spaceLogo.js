@@ -44,9 +44,10 @@ export default function SpaceLogo({ space }) {
     }
 
     const url = getSpaceIconUrl(space);
-    // console.log(`Loading image: ${url}`);
-    setSpaceIconUrl(DEFAULT_ICON_URL);
-    preloadImage(url);
+    //console.log(`Loading image: ${url}`);
+    //setSpaceIconUrl(DEFAULT_ICON_URL);
+    //preloadImage(url);
+    setSpaceIconUrl(url);
 
     return () => {
       isMounted = false;
