@@ -126,10 +126,21 @@ const AddIncentive = ({
   useEffect(() => {
     if (open) {
       getTokenBalanceAndAllowance();
-      validateChain()
-
+      validateChain();
     }
-  }, [open, address, tokenAddress]);
+  
+    // Setup an event listener for chain changes
+    const handleChainChanged = (_chainId) => {
+      validateChain();
+    };
+  
+    window.ethereum.on('chainChanged', handleChainChanged);
+  
+    // Cleanup the event listener when the component unmounts or dependencies change
+    return () => {
+      window.ethereum.removeListener('chainChanged', handleChainChanged);
+    };
+  }, [open, address, tokenAddress]); 
 
 
 
@@ -241,8 +252,7 @@ const AddIncentive = ({
       closeBar={false}
     >
       <HeadWrapper>
-        {/* <StyledTitle>{title} </StyledTitle> */}
-        <StyledTitle>{title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}</StyledTitle>
+        <StyledTitle style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>{title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}</StyledTitle>
 
         <CloseBar onClick={closeModal}>
           <Image
