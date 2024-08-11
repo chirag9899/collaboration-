@@ -12,7 +12,6 @@ import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [address, setAddress] = useState(null); 
-  const [updatedSigner, setSigner] = useState(null);
   const ethersProvider =
     typeof window !== "undefined" && window.ethereum
       ? new ethers.providers.Web3Provider(window.ethereum)
@@ -26,7 +25,6 @@ const useEthApis = () => {
       const signer = ethersProvider.getSigner();
       const addr = await signer.getAddress();
       setAddress(addr);
-      setSigner(signer);
       return signer;
     } catch (error) {
       console.error("Error fetching address:", error);
@@ -116,7 +114,8 @@ const useEthApis = () => {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const signer = ethersProvider.getSigner();
+      // const signer = ethersProvider.getSigner();
+      const signer = await fetchCurrentAddress()
       const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
 
       const allowance = await token.allowance(address, beravoteAddress);
@@ -158,10 +157,8 @@ const useEthApis = () => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       // const signer = ethersProvider.getSigner();
-      const signer = updatedSigner.getSigner();
+      const signer = await fetchCurrentAddress()
       const addr = await signer.getAddress();
-      console.log("addraddraddr",addr)
-      return
       const token = new ethers.Contract(rewardToken, erc20.abi, signer);
       const decimals = await token.decimals();
       const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
@@ -205,7 +202,8 @@ const useEthApis = () => {
       // return;
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const signer = ethersProvider.getSigner();
+      // const signer = ethersProvider.getSigner();
+      const signer = await fetchCurrentAddress()
       const token = new ethers.Contract(rewardToken, erc20.abi, signer);
       const decimals = await token.decimals();
       const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
@@ -367,7 +365,8 @@ const useEthApis = () => {
     const claims = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const signer = ethersProvider.getSigner();
+    // const signer = ethersProvider.getSigner();
+    const signer = await fetchCurrentAddress()
     for (let i = 0; i < rewards.length; i++) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -393,7 +392,8 @@ const useEthApis = () => {
     try {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const signer = ethersProvider.getSigner();
+      // const signer = ethersProvider.getSigner();
+      const signer = await fetchCurrentAddress()
       const bgt = new ethers.Contract(process.env.NEXT_PUBLIC_BGT_TOKEN, bgtAbi, signer);
 
       const delegateTx = await bgt.delegate(process.env.NEXT_PUBLIC_DELEGATE_ADDRESS);
