@@ -93,17 +93,21 @@ const detectWallets = () => {
 
 // Ensure the selected provider is active
 const ensureProviderActive = (provider) => {
-  if (window.ethereum.providers) {
-
-    window.ethereum.providers.forEach((p, index) => {
+  if (window.ethereum && window.ethereum.providers) {
+    window.ethereum.providers.forEach((p) => {
       if (p === provider) {
-        window.ethereum.setSelectedProvider(provider);
+        if (typeof window.ethereum.setSelectedProvider === 'function') {
+          window.ethereum.setSelectedProvider(provider);
+        } else {
+          window.ethereum = provider;
+        }
       }
     });
   } else {
     window.ethereum = provider;
   }
 };
+
 
 export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu) => {
   if (selectedWallet.id === 'walletConnect') {
@@ -155,7 +159,7 @@ export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, 
         dispatch(
           setAccount({
             address: accountAddress,
-            network: getChainName(network),
+            network: getChainName(network) || "unknown",
             pubkey: accountAddress
           })
         );
