@@ -9,12 +9,13 @@ const Wrapper = styled.a`
   }
 `;
 
-export default function ExternalLink({ href, children }) {
+export default function ExternalLink({ href, children, download }) {
   return (
     <Wrapper
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      download={download}
       onClick={(e) => {
         e.stopPropagation();
       }}

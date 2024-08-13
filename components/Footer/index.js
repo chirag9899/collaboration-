@@ -136,6 +136,8 @@ export default function Footer({ github }) {
                       href={
                         item.key === "github" && github ? github : item.link
                       }
+                      target="_blank"
+                      download={item.name === "BrandKit" ? true : false}
                       key={index}
                     >
                       <Item>

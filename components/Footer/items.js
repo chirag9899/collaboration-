@@ -17,6 +17,10 @@ const footerItems = [
         name: "Medium",
         link: "https://medium.com/@dvote_ai",
       },
+      {
+        name: "BrandKit",
+        link: "/BrandKit.pdf",
+      },
     ],
   },
   {
