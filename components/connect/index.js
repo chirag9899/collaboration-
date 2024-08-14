@@ -88,7 +88,6 @@ export default function Connect({ networks }) {
 
   useEffect(() => {
 
-
     if (wallet == null) {
       // Show all wallet options to the user
       setElement(<WalletSelector onSelect={handleWalletSelect} />);
@@ -106,9 +105,7 @@ export default function Connect({ networks }) {
     //   return;
     // }
 
-
-    // Rest of your code...
-  }, [wallet, chain, accounts, address, chain?.network, metaMaskNetworkChangeCount]);
+  }, [wallet, chain, accounts, address, chain?.network, metaMaskNetworkChangeCount, dispatch]);
 
 
   return (

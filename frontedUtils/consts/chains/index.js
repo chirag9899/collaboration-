@@ -71,7 +71,8 @@ export const chains = [
   { id: '0x1068', chainName: 'merlin', name: 'Merlin Mainnet', chainType: 'evm', blockExplorerUrl: 'https://scan.merlinchain.io', rpc: 'https://rpc.merlinchain.io', nativeCurrency: { name: 'BTC', symbol: 'BTC', decimals: 18 } },
   { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
   { id: '2f7c', chainName: 'ordcollection', chainType: 'btc' },
-  { id: '4f7d', chainName: 'runes', chainType: 'btc' }
+  { id: '4f7d', chainName: 'runes', chainType: 'btc' },
+
 ];
 
 export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, name: chain.name, id: chain.id, chainType: chain.chainType, rpc: chain.rpc, blockExplorerUrl: chain.blockExplorerUrl, nativeCurrency: chain.nativeCurrency }]));
