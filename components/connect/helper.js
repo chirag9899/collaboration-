@@ -159,7 +159,7 @@ export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, 
         dispatch(
           setAccount({
             address: accountAddress,
-            network: getChainName(network) || "unknown",
+            network: getChainName(network) || "ethereum",
             pubkey: accountAddress
           })
         );

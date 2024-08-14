@@ -72,14 +72,13 @@ export const chains = [
   { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
   { id: '2f7c', chainName: 'ordcollection', chainType: 'btc' },
   { id: '4f7d', chainName: 'runes', chainType: 'btc' },
-  { id: 'unknown', chainName: "unknown" , chainType: 'evm'}
 
 ];
 
 export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, name: chain.name, id: chain.id, chainType: chain.chainType, rpc: chain.rpc, blockExplorerUrl: chain.blockExplorerUrl, nativeCurrency: chain.nativeCurrency }]));
 
 const walletToChains = {
-  'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'berachain-b2', 'unknown'],
+  'metamask': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'berachain-b2'],
   'unisat': ['brc20', 'ordcollection', 'runes'],
   'xverse': ['brc20', 'ordcollection', 'runes'],
   'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'berachain-b2'],
