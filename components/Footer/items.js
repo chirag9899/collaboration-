@@ -42,11 +42,11 @@ const footerItems = [
         icon: "twitter.svg",
         link: "https://x.com/dvote_btc",
       },
-      {
-        name: "Discord",
-        icon: "discord.svg",
-        link: "https://discord.gg/ncsnrWN9VG",
-      },
+      // {
+      //   name: "Discord",
+      //   icon: "discord.svg",
+      //   link: "https://discord.gg/ncsnrWN9VG",
+      // },
     ],
   },
   // {
