@@ -7,6 +7,7 @@ import { ReactComponent as GithubSvg } from "../../public/imgs/icons/github.svg"
 import { ReactComponent as DiscordSvg } from "../../public/imgs/icons/discord.svg";
 import { ReactComponent as TwitterSvg } from "../../public/imgs/icons/twitter.svg";
 import { ReactComponent as MailSvg } from "../../public/imgs/icons/mail.svg";
+import { ReactComponent as TelegramSvg } from "../../public/imgs/icons/telegram.svg";
 import footerItems from "./items";
 import { bg_dark, text_light_major } from "../styles/colors";
 
@@ -15,11 +16,12 @@ const SvgMap = new Map([
   ["discord.svg", DiscordSvg],
   ["twitter.svg", TwitterSvg],
   ["mail.svg", MailSvg],
+  ["telegram.svg", TelegramSvg],
 ]);
 
 const Wrapper = styled.footer`
   flex: 0 0 auto;
-  background:var(--background);
+  background: var(--background);
 `;
 
 const ContentWrapper = styled.div`

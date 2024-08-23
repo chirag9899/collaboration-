@@ -32,11 +32,11 @@ const footerItems = [
       //   icon: "github.svg",
       //   link: "https://github.com/quicksnap-io/",
       // },
-      // {
-      //   name: "Telegram",
-      //   icon: "telegram.svg",
-      //   link: "https://dvote.ai",
-      // },
+      {
+        name: "Telegram",
+        icon: "telegram.svg",
+        link: "https://t.me/forgingblock",
+      },
       {
         name: "Twitter",
         icon: "twitter.svg",
