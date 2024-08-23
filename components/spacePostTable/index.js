@@ -149,7 +149,7 @@ export default function SpacePostTable({
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = await handleChainSelect(bartioNetwork);
+      const switched = true;
       console.log(switched)
       setIsSwitching(false);
       if (switched) {
@@ -166,7 +166,7 @@ export default function SpacePostTable({
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = await handleChainSelect(bartioNetwork);
+      const switched = true;
       console.log(switched);
       setIsSwitching(false);
       if (switched) {
