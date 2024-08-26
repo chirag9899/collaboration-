@@ -31,7 +31,9 @@ export default function Content({ modal = false }) {
   const { getRewards, claimAllRewards } = useEthApis();
 
   async function loadRewards() {
+    //console.log('loadRewards')
     const data = await getRewards(router.query.space);
+    //console.log(data)
     const { rewards, claimInfo } = data;
     setClaimInfo({
       totalBalance: formatAmount(claimInfo?.totalBalance ?? 0),

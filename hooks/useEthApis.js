@@ -8,6 +8,8 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
 import { getTokenInfo, tokenData } from "helpers/methods";
 import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
+import merkle from "../abi/merkle.json";
+import BigNumber from "bignumber.js";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +33,6 @@ const useEthApis = () => {
     }
   };
 
-  console.log(address)
   useEffect(() => {
     if (ethersProvider) {
       fetchCurrentAddress();
@@ -237,11 +238,17 @@ const useEthApis = () => {
   }
 
   async function getRewards(space) {
-    try {
+    console.log('test5')
+    // try {
       const claims = [];
       let claimInfo = { totalBalance: 0, totalClaimed: 0 };
-
+    console.log('test6')
+    const signer = await fetchCurrentAddress()
+    const address = await signer.getAddress();
+      console.log(address)
       if (address) {
+        console.log('testaddress')
+        console.log(address)
         const client = new ApolloClient({
           uri: `${getGraphEndpointForSpace(space)}/graphql`,
           cache: new InMemoryCache(),
@@ -265,10 +272,12 @@ const useEthApis = () => {
           query: claimsQuery,
           variables: {
             account: address,
-            chainId: 80085,
+            chainId: 1337,
           },
         });
+        console.log(data)
         claimInfo = data.claimInfo;
+        console.log(claimInfo)
 
         for (let i = 0; i < data.claims.length; i++) {
           const token = await getTokenInfo(data.claims[i].token);
@@ -279,7 +288,7 @@ const useEthApis = () => {
               claimable: parseFloat(
                 ethers.utils.formatUnits(data.claims[i].amount, token.decimals),
               ),
-              claimableRaw: BigNumber.from(data.claims[i].amount),
+              claimableRaw: data.claims[i].amount,
               canClaim: true,
               hasClaimed: false,
               rewardToken: token,
@@ -294,10 +303,10 @@ const useEthApis = () => {
         }
       }
       return { rewards: claims, claimInfo };
-    } catch (e) {
-      console.log(e);
-      return [];
-    }
+    // } catch (e) {
+    //   console.log(e);
+    //   return [];
+    // }
   }
 
   async function getBerachainSubgraphPrice(
@@ -364,6 +373,7 @@ const useEthApis = () => {
     }
   }
   async function claimAllRewards(rewards, space) {
+    console.log('executeclaim')
     //prepare array
     const claims = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -386,7 +396,10 @@ const useEthApis = () => {
       merkle.abi,
       signer,
     );
-    const tx = await merkleContract.claimMulti(address, claims);
+    const txOptions = {
+      gasLimit: 282886
+    }
+    const tx = await merkleContract.claimMulti(address, claims, txOptions);
     await tx.wait(1);
     console.log(tx);
   }
