@@ -122,20 +122,17 @@ const useEthApis = () => {
       const allowance = await token.allowance(address, beravoteAddress);
 
       // check allowance is bigger than 0 for USDT edge case where a user cannot set allowance if there's already an allowance
-      const txOptions = {
-        gasLimit: 282886
-      }
       if (
         allowance > 0 &&
         tokenAddress === "0xdAC17F958D2ee523a2206206994597C13D831ec7"
       ) {
         console.log("setting allowance back to 0 before updating allowance");
-        const resetAllowanceTx = await token.approve(beravoteAddress, 0, txOptions);
+        const resetAllowanceTx = await token.approve(beravoteAddress, 0);
         await resetAllowanceTx.wait(1);
       }
 
       // for max ethers.constants.MaxUint256
-      const approveTx = await token.approve(beravoteAddress, amountToApprove, txOptions);
+      const approveTx = await token.approve(beravoteAddress, amountToApprove);
 
       await approveTx.wait(1);
       console.log(approveTx);
@@ -396,10 +393,7 @@ const useEthApis = () => {
       merkle.abi,
       signer,
     );
-    const txOptions = {
-      gasLimit: 282886
-    }
-    const tx = await merkleContract.claimMulti(address, claims, txOptions);
+    const tx = await merkleContract.claimMulti(address, claims);
     await tx.wait(1);
     console.log(tx);
   }
