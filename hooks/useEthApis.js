@@ -9,7 +9,7 @@ import gql from "graphql-tag";
 import { getTokenInfo, tokenData } from "helpers/methods";
 import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import merkle from "../abi/merkle.json";
-import BigNumber from "bignumber.js";
+import BigNumber from 'bignumber.js';
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -235,7 +235,6 @@ const useEthApis = () => {
   }
 
   async function getRewards(space) {
-    console.log('test5')
     // try {
       const claims = [];
       let claimInfo = { totalBalance: 0, totalClaimed: 0 };
@@ -280,10 +279,12 @@ const useEthApis = () => {
           const token = await getTokenInfo(data.claims[i].token);
           const tokendata = await tokenData(data.claims[i].token);
           if (token) {
+            const amount = new BigNumber(data.claims[i].amount);
+            const claimable = ethers.utils.formatUnits(amount.toFixed(), token.decimals);
             const claim = {
               version: 3,
               claimable: parseFloat(
-                ethers.utils.formatUnits(data.claims[i].amount, token.decimals),
+                claimable,
               ),
               claimableRaw: data.claims[i].amount,
               canClaim: true,
