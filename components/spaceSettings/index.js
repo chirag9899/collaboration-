@@ -333,24 +333,34 @@ const SpaceSettings = () => {
 
   const uploadImageHandler = async () => {
     const spaceName = selectedSingleOption?.id;
-    const formData = new FormData();
-    formData.append("logo", imageFile);
-    formData.append("token", secretToken);
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/editImage`,
-        {
-          method: "POST",
-          body: formData,
+      const payload = {
+        data: {
+          logo: imageFile
         },
-      );
-      if (response.status === 200) {
-        dispatch(newSuccessToast(`${spaceName} space unverified successfully`));
+        token: secretToken
+      };
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/editImage`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        if (response.status === 200) {
+          dispatch(newSuccessToast(`${spaceName} space logo updated successfully`));
+        } else {
+          dispatch(newErrorToast('Logo update error!'));
+        }
+      } catch (error) {
+        dispatch(newErrorToast('Logo update error!'));
       }
-    } catch (error) {
-      dispatch(newErrorToast(`Something wrong!`));
-    }
   };
+
   if (!secretToken) {
     return (
       <Wrapper>
