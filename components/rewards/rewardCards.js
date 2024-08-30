@@ -21,7 +21,6 @@ const GridContainer = styled(TransitionGroup)`
     grid-template-columns: repeat(4, 1fr);
   }
 `;
-
 const Block = styled.div`
   display: flex;
   flex-direction: column;
@@ -29,34 +28,30 @@ const Block = styled.div`
   text-align: center;
   padding: 1.5rem;
   border-radius: 10px;
-  background-color: #2a2a2a;
-  color: #ffffff;
+  border: 1px solid var(--netural-11);
+  background-color: var(--background-0);
+  color: #FFFFFF;
   transition: all 0.3s ease-in-out;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   &:hover {
     transform: translateY(-5px);
   }
 `;
-
 const AvatarContainer = styled.div`
   margin-bottom: 1rem;
 `;
-
 const Avatar = styled.img`
   width: 60px;
   height: 60px;
 `;
-
 const InfoContainer = styled.div`
   margin-bottom: 1rem;
 `;
-
 const InfoText = styled.p`
   margin: 0;
   font-size: 1.2rem;
   font-weight: bold;
 `;
-
 const StatsContainer = styled.div`
   width: 100%;
   margin-bottom: 1.5rem;
@@ -65,9 +60,13 @@ const StatsContainer = styled.div`
   justify-content: space-between;
   flex-direction: column;
 `;
-
 const Stat = styled.div`
   text-align: left;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-weight:bold;
+  color:var(--netural-11);
 `;
 
 const ButtonWrapper = styled(Button)`
