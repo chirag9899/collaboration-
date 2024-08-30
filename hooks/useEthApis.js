@@ -376,8 +376,7 @@ const useEthApis = () => {
     const claims = [];
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    // const signer = ethersProvider.getSigner();
-    const signer = await fetchCurrentAddress()
+    const signer = await fetchCurrentAddress();
     for (let i = 0; i < rewards.length; i++) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -395,6 +394,22 @@ const useEthApis = () => {
       signer,
     );
     const tx = await merkleContract.claimMulti(address, claims);
+    await tx.wait(1);
+    console.log(tx);
+  }
+
+  async function claimReward(claim, space) {
+    console.log('executeclaim')
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const signer = await fetchCurrentAddress();
+
+    const merkleContract = new ethers.Contract(
+      getMerkleAddressForSpace(space),
+      merkle.abi,
+      signer,
+    );
+    const tx = await merkleContract.claim(claim.token, claim.index, address, claim.amount, claim.merkleProof);
     await tx.wait(1);
     console.log(tx);
   }
@@ -451,6 +466,7 @@ const useEthApis = () => {
     getRewards,
     getBerachainSubgraphPrice,
     claimAllRewards,
+    claimReward,
     addBeraGovRewardAmount,
     delegateVotes
   };

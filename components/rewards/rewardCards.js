@@ -85,8 +85,7 @@ const ButtonWrapper = styled(Button)`
 `;
 
 
-function RewardCards({rewards}) {
-  
+function RewardCards({rewards, claim}) {
 
   const shorten = (value, length) => value.toString().slice(0, length);
   const commify = (value, precision = 0) =>
@@ -97,7 +96,7 @@ function RewardCards({rewards}) {
   return (
     <Container>
       <GridContainer>
-        {rewards.length ? (
+        {rewards.length > 0 ? (
           rewards.map((reward) => (
             <CSSTransition
               key={reward.rewardToken.address}
@@ -123,16 +122,16 @@ function RewardCards({rewards}) {
                     <div>USD value</div>
                     <div>
                       {"$" +
-                        commify(reward.claimable * reward.rewardToken.price, 2)}
+                        commify(reward.claimable * reward.rewardTokenPrice, 2)}
                     </div>
                   </Stat>
                 </StatsContainer>
-                <ButtonWrapper>Claim</ButtonWrapper>
+                <ButtonWrapper onClick={()=> claim(reward.claimData)}>Claim</ButtonWrapper>
               </Block>
             </CSSTransition>
           ))
         ) : (
-          <NoData message="No Record found" />
+          <NoData message="No rewards available" />
         )}
       </GridContainer>
     </Container>
