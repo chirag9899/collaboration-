@@ -16,6 +16,7 @@ import { useRouter } from "next/router";
 import useEthApis from "hooks/useEthApis";
 import { useEffect, useState } from "react";
 import { formatAmount } from "helpers/methods";
+import RewardCards from "../rewardCards";
 
 export default function Content({ modal = false }) {
   const [claimInfo, setClaimInfo] = useState({
@@ -62,6 +63,25 @@ export default function Content({ modal = false }) {
       setClaiming("");
     }
   }
+
+  const rewards = [
+    {
+      rewardToken: { symbol: "USDT", address: "0x1", price: 1 },
+      rewardTokenLogo: "https://cryptologos.cc/logos/tether-usdt-logo.png",
+      claimable: 0.060245,
+    },
+    {
+      rewardToken: { symbol: "CRV", address: "0x2", price: 0.3 },
+      rewardTokenLogo:
+        "https://cryptologos.cc/logos/curve-dao-token-crv-logo.png",
+      claimable: 1.9,
+    },
+    {
+      rewardToken: { symbol: "GRT", address: "0x3", price: 0.15 },
+      rewardTokenLogo: "https://cryptologos.cc/logos/the-graph-grt-logo.png",
+      claimable: 4.75,
+    },
+  ];
 
   return (
     <Wrapper>
@@ -112,7 +132,7 @@ export default function Content({ modal = false }) {
         Once the vote closes, your rewards will be calculated and updated the
         next day at 1PM UTC.
       </TextWrapper>
-      <NoData message="No Record found" />
+      <RewardCards rewards={rewards}/>
     </Wrapper>
   );
 }
