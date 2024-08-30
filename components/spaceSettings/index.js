@@ -15,6 +15,9 @@ import Input from "../Input";
 import { ErrorMessage } from "../styled/errorMessage";
 import { useDispatch } from "react-redux";
 import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
+import styled from "styled-components";
+import LogoUploader from "../logoUploader";
+import { getSpaceIconUrl } from "frontedUtils/space";
 
 const animatedComponents = makeAnimated();
 
@@ -73,6 +76,16 @@ const customStyles = {
   }),
 };
 
+const SpaceLogoWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 25px 0px 25px 0px;
+`;
+
+const DEFAULT_ICON_URL = "/imgs/icons/pending.svg";
+
 const SpaceSettings = () => {
   const [spaces, setSpaces] = useState([]);
   const [selectedMultiOptions, setSelectedMultiOptions] = useState(null);
@@ -80,6 +93,9 @@ const SpaceSettings = () => {
   const [token, setToken] = useState(null);
   const [secretToken, setSecretToken] = useState(null);
   const [tokenErr, setTokenErr] = useState();
+  const [currentSpace, setCurrentSpace] = useState();
+  const [imageFile, setImageFile] = useState(null);
+  const [previewImg, setPreviewImg] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -88,6 +104,39 @@ const SpaceSettings = () => {
     setSecretToken(sessionToken);
     fetchSpaces();
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function preloadImage(url) {
+      try {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+          if (isMounted) {
+            setPreviewImg(url);
+          }
+        };
+        img.onerror = () => {
+          if (isMounted) {
+            setPreviewImg(DEFAULT_ICON_URL);
+          }
+        };
+      } catch (error) {
+        if (isMounted) {
+          setPreviewImg(DEFAULT_ICON_URL);
+        }
+      }
+    }
+
+    const url = getSpaceIconUrl(selectedSingleOption);
+    setPreviewImg(DEFAULT_ICON_URL);
+    preloadImage(url);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedSingleOption]);
 
   const fetchSpaces = async () => {
     try {
@@ -109,6 +158,7 @@ const SpaceSettings = () => {
   const handleOptionChange = (selectedOption, type) => {
     if (type === "single") {
       setSelectedSingleOption(selectedOption);
+      setCurrentSpace(selectedOption);
     } else {
       setSelectedMultiOptions(selectedOption);
     }
@@ -281,6 +331,36 @@ const SpaceSettings = () => {
     setToken(value);
   };
 
+  const uploadImageHandler = async () => {
+    const spaceName = selectedSingleOption?.id;
+      const payload = {
+        data: {
+          logo: imageFile
+        },
+        token: secretToken
+      };
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_END_POINT}api/spaces/${spaceName}/editImage`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+
+        if (response.status === 200) {
+          dispatch(newSuccessToast(`${spaceName} space logo updated successfully`));
+        } else {
+          dispatch(newErrorToast('Logo update error!'));
+        }
+      } catch (error) {
+        dispatch(newErrorToast('Logo update error!'));
+      }
+  };
+
   if (!secretToken) {
     return (
       <Wrapper>
@@ -381,6 +461,35 @@ const SpaceSettings = () => {
           <BtnsGroup>
             <Button primary onClick={fetchSpaces}>
               Refresh Spaces List
+            </Button>
+          </BtnsGroup>
+        </PanelWrapper>
+
+        <PanelWrapper head={<h3>Change Space Image</h3>}>
+          {currentSpace && (
+            <SpaceLogoWrapper>
+              <LogoUploader
+                imageFile={imageFile ? imageFile : previewImg}
+                setImageFile={setImageFile}
+              />
+            </SpaceLogoWrapper>
+          )}
+
+          <Select
+            components={animatedComponents}
+            placeholder="Select a space"
+            options={singleOptions}
+            styles={customStyles}
+            onChange={(value) => handleOptionChange(value, "single")}
+          />
+
+          <BtnsGroup>
+            <Button
+              disabled={!selectedSingleOption}
+              primary
+              onClick={uploadImageHandler}
+            >
+              Upload Image
             </Button>
           </BtnsGroup>
         </PanelWrapper>
