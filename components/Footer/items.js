@@ -35,7 +35,7 @@ const footerItems = [
       {
         name: "Telegram",
         icon: "telegram.svg",
-        link: "https://t.me/forgingblock",
+        link: "https://t.me/officialdvote",
       },
       {
         name: "Twitter",
