@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import NoData from "../NoData";
 import Button from "../Button";
 import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "../styles/colors";
@@ -96,7 +95,7 @@ function RewardCards({rewards, claim}) {
   return (
     <Container>
       <GridContainer>
-        {rewards.length > 0 ? (
+        {
           rewards.map((reward) => (
             <CSSTransition
               key={reward.rewardToken.address}
@@ -130,9 +129,7 @@ function RewardCards({rewards, claim}) {
               </Block>
             </CSSTransition>
           ))
-        ) : (
-          <NoData message="No rewards available" />
-        )}
+        }
       </GridContainer>
     </Container>
   );
