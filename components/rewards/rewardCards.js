@@ -4,6 +4,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import Button from "../Button";
 import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "../styles/colors";
+import {commify} from "../../utils/index";
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -87,10 +88,6 @@ const ButtonWrapper = styled(Button)`
 function RewardCards({rewards, claim}) {
 
   const shorten = (value, length) => value.toString().slice(0, length);
-  const commify = (value, precision = 0) =>
-    parseFloat(value)
-      .toFixed(precision)
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
   return (
     <Container>

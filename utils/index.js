@@ -69,3 +69,9 @@ export async function imageUrlToBase64(url) {
     return null;
   }
 }
+
+export function commify (value, precision = 0) {
+ return parseFloat(value)
+    .toFixed(precision)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

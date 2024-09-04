@@ -9,7 +9,6 @@ import {
   Amount,
   IconWrapper,
 } from "./styled";
-import NoData from "@/components/NoData";
 import Button from "@/components/Button";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { useRouter } from "next/router";
@@ -17,6 +16,7 @@ import useEthApis from "hooks/useEthApis";
 import { useEffect, useState } from "react";
 import { formatAmount } from "helpers/methods";
 import RewardCards from "../rewardCards";
+import {commify} from "../../../utils/index";
 
 export default function Content({ modal = false }) {
   const [claimInfo, setClaimInfo] = useState({
@@ -112,7 +112,7 @@ export default function Content({ modal = false }) {
 
       <Claim>
         <TextWrapper>
-          Yours to claim: <Amount>${totalClaimable}</Amount>
+          Yours to claim: <Amount>${commify(totalClaimable, 2)}</Amount>
         </TextWrapper>
         <Button
           data-v-4571bf26=""
