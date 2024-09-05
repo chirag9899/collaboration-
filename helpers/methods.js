@@ -1,6 +1,8 @@
 import moment from "moment";
 import { ethers } from "ethers";
 import erc20 from "../abi/erc20.json";
+import {whitelist} from "./constants";
+
 const ethersProvider =
   typeof window !== "undefined" && window.ethereum
     ? new ethers.providers.Web3Provider(window.ethereum)
@@ -46,14 +48,24 @@ export async function tokenData(token) {
   //     decimals: null,
   //   };
   // }
+
     return {
       success: true,
       price: 1,
-      logo: null,
+      logo: getBeraTokenLogo(token),
       name: null,
       symbol: null,
       decimals: null,
     };
+}
+
+function getBeraTokenLogo(token){
+  const result = whitelist.find(({address})=>address.toLowerCase() === token.toLowerCase());
+  if(result){
+    return result.logo;
+  }else{
+    return "https://img.cryptorank.io/coins/berachain1681996075164.png";
+  }
 }
 
 export async function getTokenInfo(tokenAddress) {

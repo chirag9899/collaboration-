@@ -29,6 +29,7 @@ import Tooltip from "../tooltip";
 import AssetDetail from "../newSpace/step2/asset/assetDetail";
 import { chainMap } from "frontedUtils/consts/chains";
 import { noop } from "utils";
+import {whitelist} from "../../helpers/constants";
 
 const AddIncentive = ({
   choices,
@@ -82,15 +83,51 @@ const AddIncentive = ({
   }));
 
   const getTokenBalanceAndAllowance = async () => {
-    validateChain()
-    const { result, error } = await getBalance( tokenAddress);
-    // console.log('test')
-    // console.log(address)
-    // console.log(tokenAddress)
-    if (error) {
+    if(tokenAddress === "" || whitelist.find(({address})=>address.toLowerCase() === tokenAddress.toLowerCase())) {
+      validateChain()
+      const { result, error } = await getBalance(tokenAddress);
+      // console.log('test')
+      // console.log(address)
+      // console.log(tokenAddress)
+      if (error) {
+        setErrors((prev) => ({
+          ...prev,
+          tokenErr: error,
+        }));
+        setFormdata((prev) => ({
+          ...prev,
+          availableBal: 0,
+          allowance: 0,
+          tokenPrice: 0,
+        }));
+      } else {
+        const allowanceResult = await getAllowance(
+          tokenAddress,
+          beravoteAddress,
+        );
+        //const price = await getBerachainSubgraphPrice(tokenAddress);
+        const price = 1;
+        const newAvailableBal = parseFloat(result);
+        const newAllowance = parseFloat(allowanceResult.result);
+        setFormdata((prev) => ({
+          ...prev,
+          availableBal: parseFloat(result),
+          allowance: parseFloat(allowanceResult.result),
+          tokenPrice: parseFloat(price),
+        }));
+        setErrors((prev) => ({
+          ...prev,
+          tokenErr: null,
+        }));
+
+        setSymbol(allowanceResult.symbol);
+        setDecimals(allowanceResult.decimals); // Revalidate incentive amount after getting new balance and allowance
+        validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
+      }
+    }else{
       setErrors((prev) => ({
         ...prev,
-        tokenErr: error,
+        tokenErr: "token is not whitelisted",
       }));
       setFormdata((prev) => ({
         ...prev,
@@ -98,29 +135,6 @@ const AddIncentive = ({
         allowance: 0,
         tokenPrice: 0,
       }));
-    } else {
-      const allowanceResult = await getAllowance(
-        tokenAddress,
-        beravoteAddress,
-      );
-      //const price = await getBerachainSubgraphPrice(tokenAddress);
-      const price = 1;
-      const newAvailableBal = parseFloat(result);
-      const newAllowance = parseFloat(allowanceResult.result);
-      setFormdata((prev) => ({
-        ...prev,
-        availableBal: parseFloat(result),
-        allowance: parseFloat(allowanceResult.result),
-        tokenPrice: parseFloat(price),
-      }));
-      setErrors((prev) => ({
-        ...prev,
-        tokenErr: null,
-      }));
-
-      setSymbol(allowanceResult.symbol);
-      setDecimals(allowanceResult.decimals); // Revalidate incentive amount after getting new balance and allowance
-      validateIncentiveAmount(incentiveAmount, newAvailableBal, newAllowance);
     }
   };
 
@@ -328,7 +342,7 @@ const AddIncentive = ({
             <>
               <BtnWrapper
                 className="action_btn"
-                disabled={!!amountErr || !address}
+                disabled={!!amountErr || !!tokenErr || !address}
                 primary
                 onClick={onSubmitHandler}
               >
@@ -337,7 +351,7 @@ const AddIncentive = ({
               <BtnWrapper
                 primary
                 className="action_btn"
-                disabled={!address}
+                disabled={!address || !!tokenErr}
                 onClick={onApproveTokenHandler}
               >
                 Approve Token
