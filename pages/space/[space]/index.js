@@ -33,6 +33,10 @@ const Breadcrumb = dynamic(() => import("components/breadcrumb"));
 const SpaceDetail = dynamic(() => import("@/components/spaceDetail"));
 const SpaceAbout = dynamic(() => import("@/components/spaceAbout"));
 
+const SearchBar = dynamic(() => import("@/components/searchBar"), {
+  ssr: false,
+});
+
 const Wrapper = styled.div`
   display: flex;
   align-items: flex-start;
@@ -105,6 +109,8 @@ export default function List({
   const [showContent, setShowContent] = useState("proposals-all");
   const [treasuryAddress, setTreasuryAddress] = useState(space?.treasury);
   const account = useSelector(loginAccountSelector);
+  const [proposalsData, setProposalsData] = useState([]);
+  const [search, setSearch] = useState("");
 
   const chain = chainMap.get(account?.network);
   const isEvm = chain?.chainType === "evm";
@@ -149,7 +155,7 @@ export default function List({
     items: data?.items.filter((item) => item.status === filterby),
   });
 
-  const proposalList = useMemo(() => {
+  let proposalList = useMemo(() => {
     switch (tab) {
       case "proposals-pending":
         return pendingProposals;
@@ -164,17 +170,17 @@ export default function List({
     }
   }, [tab, proposals, pendingProposals, activeProposals, closedProposals]);
 
-  if (!space) {
-    return null;
-  }
+  useEffect(() => {
+    // Apply search filter to the proposals list
+    const filteredProposals = proposalList?.items.filter((proposal) =>
+      proposal.title.toLowerCase().includes(search.toLowerCase()),
+    );
+    setProposalsData({ ...proposalList, items: filteredProposals });
+  }, [search, proposalList]);
 
-  const listTabs = useMemo(() => {
-    const tabs = [...LIST_TAB_ITEMS];
-    if (address !== space?.address) {
-      tabs.pop();
-    }
-    return tabs;
-  }, [address, space]);
+  const onSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
 
   const desc = `Space for ${space.name} Decentralized Governance Infrastructure. You can create, view, and vote proposals. Join ${space.name} Decentralized Governance Infrastructure!`;
 
@@ -226,7 +232,15 @@ export default function List({
                       )}
                     </>
                   )}
+
+                  <SearchBar
+                    placeholder="Search..."
+                    search={search}
+                    onSearchChange={onSearchChange}
+                    dropdown={false}
+                  />
                 </BreadcrumbWrapper>
+
                 <ListInfo spaceId={spaceId} space={space} />
                 <ListTab
                   loginAddress={address}
@@ -236,11 +250,11 @@ export default function List({
                   onActiveTab={setTab}
                   defaultPage={defaultPage}
                   network={space?.networks[0]?.network}
-                  listTabs={listTabs}
+                  listTabs={LIST_TAB_ITEMS}
                 />
               </HeaderWrapper>
               <PostWrapper>
-                <PostList posts={proposalList} space={space} />
+                <PostList posts={proposalsData} space={space} />
               </PostWrapper>
             </MainWrapper>
           )}
