@@ -1,6 +1,7 @@
 import { ReactComponent as BeraChainImg } from "/public/imgs/icons/bearchain.svg";
 import { useRouter } from "next/router";
 import DelegeteSpaceModal from "../delegateModal";
+import useEthApis from "hooks/useEthApis";
 import useModal from "hooks/useModal";
 import {
   Balance,
@@ -19,6 +20,7 @@ import Tooltip from "../tooltip";
 
 export default function ListInfo({ balance }) {
   const { open, openModal, closeModal } = useModal();
+  const { delegateVotes } = useEthApis();
 
   const router = useRouter();
 
@@ -67,7 +69,7 @@ export default function ListInfo({ balance }) {
           </BalanceSection>
           <DelegateSection>
             <p>Delegate to BeraVote to optimize voting rewards</p>
-            <ButtonWrapper onClick={openModal}>Delegate</ButtonWrapper>
+            <ButtonWrapper onClick={delegateVotes}>Delegate</ButtonWrapper>
           </DelegateSection>
         </BalanceWrapper>
       </Content>
