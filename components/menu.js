@@ -102,6 +102,17 @@ const ItemWrapper = styled(Link)`
   }
 `;
 
+const AccountAndBell = styled.div`
+  display: flex;
+  align-items: start !important;
+  gap: 10px;
+  justify-content: start;
+  padding: 0px !important;
+  margin: 0px !important;
+  height: 10px !important;
+`;
+
+
 function Menu({ networks }) {
   const showMenu = useSelector(showHeaderMenuSelector);
   const account = useSelector(loginAccountSelector);
