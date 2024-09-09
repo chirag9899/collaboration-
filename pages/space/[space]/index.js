@@ -27,6 +27,10 @@ const TransferSpaceModal = dynamic(
   () => import("@/components/transferSpace/TransSpaceModal"),
   { ssr: false },
 );
+const SpaceLeaderboard = dynamic(
+  () => import("@/components/spaceLeaderboard"),
+  { ssr: false },
+);
 const PostList = dynamic(() => import("components/postList"));
 const ListTab = dynamic(() => import("components/listTab"));
 const Breadcrumb = dynamic(() => import("components/breadcrumb"));
@@ -299,6 +303,26 @@ export default function List({
                 />
               </HeaderWrapper>
               <SpaceAbout space={space} />
+            </MainWrapper>
+          )}
+
+          {showContent === "leaderboard" && (
+            <MainWrapper>
+              <HeaderWrapper>
+                <Breadcrumb
+                  routes={[
+                    { name: "Home", link: "/" },
+                    {
+                      name: (
+                        <span style={{ textTransform: "capitalize" }}>
+                          {space.name}
+                        </span>
+                      ),
+                    },
+                  ]}
+                />
+              </HeaderWrapper>
+              <SpaceLeaderboard space={space} proposals={proposalsData} />
             </MainWrapper>
           )}
         </Wrapper>
