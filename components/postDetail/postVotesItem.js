@@ -24,6 +24,9 @@ const InfoWrapper = styled.div`
   .center {
     justify-content: center;
   }
+  > :last-child {
+    justify-content: end;
+  }
   @media screen and (max-width: 800px) {
     gap: 8px;
   }
@@ -132,6 +135,9 @@ const MobileOnly = styled.div`
   }
 `;
 
+const Choice = styled.div`
+`;
+
 const VoterWrapper = styled(EqualWrapper)``;
 
 function getChoiceIndex(choices, userChoice) {
@@ -181,9 +187,7 @@ export default function PostVotesItem({
               <div>
                 <Choices>
                   {data.choices.map((choice) => (
-                    <Ellipsis key={choice} width={189}>
-                      {choice}
-                    </Ellipsis>
+                    <Choice key={choice}>{choice}</Choice>
                   ))}
                 </Choices>
               </div>

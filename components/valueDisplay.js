@@ -34,7 +34,7 @@ export default function ValueDisplay({
           noTooltip ? "" : tooltipContent || `${precision} ${space?.symbol}`
         }
       >
-        <div className={className}>
+        <div className={className} style={{textAlign:"end"}}>
           {showAEM && lostPrecision && "≈"}{" "}
           {`${abbreviateBigNumber(precision)}${
             noSymbol ? "" : ` ${space?.symbol}`
