@@ -54,4 +54,9 @@ export const SPACE_SIDEBAR_TAB_ITEMS = [
     name: "About",
     type:"public"
   },
+  {
+    value: "leaderboard",
+    name: "Leaderboard",
+    type:"public"
+  },
 ];
