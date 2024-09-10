@@ -1,4 +1,4 @@
-export function noop() {}
+export function noop() { }
 
 // TODO: this should from @osn/common
 export function capitalize(string = "") {
@@ -68,4 +68,34 @@ export async function imageUrlToBase64(url) {
     console.error("Error converting image to base64:", error);
     return null;
   }
+}
+
+
+export const getTop3Votes = (votes) => {
+  const filteredVotes = votes.items.map((item) => item.choices).flat();
+
+  const countMap = filteredVotes.reduce((acc, num) => {
+    acc[num] = (acc[num] || 0) + 1;
+    return acc;
+  }, {});
+
+  const filteredNumbers = Object.entries(countMap).filter(
+    ([num, count]) => count > 10,
+  );
+
+  const top3Votes = filteredNumbers
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([num]) => num);
+
+  const filtredVotes = votes.items.filter((item) =>
+    item.choices.some((choice) => top3Votes.includes(choice)),
+  );
+
+  const uniqueVotes = filtredVotes.filter(
+    (item, index, self) =>
+      index === self.findIndex((t) => t.choices[0] === item.choices[0]),
+  );
+
+  return uniqueVotes
 }
