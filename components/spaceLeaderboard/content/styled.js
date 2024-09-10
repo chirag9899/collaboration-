@@ -1,7 +1,7 @@
 import Panel from "@/components/styled/panel";
 import { SectionTitle } from "@/components/styled/sectionTitle";
 import { Text } from "@/components/styled/text";
-import { primary_color } from "@/components/styles/colors";
+import { primary_color, white_text_color } from "@/components/styles/colors";
 import styled from "styled-components";
 
 export const Wrapper = styled.div``;
@@ -35,5 +35,58 @@ export const TextPlaceholder = styled(Text)`
 `;
 
 export const Title = styled(SectionTitle)`
+  color: ${primary_color};
+`;
+
+export const LeaderboardContainer = styled(Panel)`
+  width: 80%;
+  margin: 50px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+export const LeaderboardHeader = styled(SectionTitle)`
+  background-color: ${primary_color};
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+`;
+
+export const LeaderboardTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+`;
+
+export const TableHead = styled.thead`
+  /* background-color: ${primary_color}; */
+`;
+
+export const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: var(--peach);
+  }
+`;
+
+export const TableHeader = styled.th`
+  padding: 15px;
+  text-align: left;
+  font-size: 18px;
+  color: ${white_text_color};
+`;
+
+export const TableCell = styled.td`
+  padding: 15px;
+  text-align: left;
+  font-size: 16px;
+  color: ${white_text_color};
+`;
+
+export const RankCell = styled(TableCell)`
+  font-weight: bold;
   color: ${primary_color};
 `;

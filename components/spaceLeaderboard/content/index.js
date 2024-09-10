@@ -1,42 +1,44 @@
 import React from "react";
 import {
-  Container,
+  LeaderboardContainer,
+  LeaderboardHeader,
+  LeaderboardTable,
   PanelWrapper,
-  TextPlaceholder,
-  TextWrapper,
-  Title,
+  RankCell,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
   Wrapper,
 } from "./styled";
+import Address from "/components/address";
 
-const Content = ({ space,proposals }) => {
-  console.log(proposals,"proposals")
+const Content = ({ space, proposals }) => {
+  console.log(proposals, "proposals");
+
   return (
     <Wrapper>
       <PanelWrapper>
-        <Container>
-          <Title>Token Contract</Title>
-          {space?.networks?.[0]?.assets?.[0]?.contract ? (
-            <TextWrapper>{space.networks[0].assets[0].contract}</TextWrapper>
-          ) : (
-            <TextPlaceholder>No token found</TextPlaceholder>
-          )}
-        </Container>
-        <Container>
-          <Title>Owner</Title>
-          {space?.address ? (
-            <TextWrapper>{space?.address}</TextWrapper>
-          ) : (
-            <TextPlaceholder>No address found</TextPlaceholder>
-          )}
-        </Container>
-        <Container>
-          <Title>Description</Title>
-          {space?.description ? (
-            <TextWrapper>{space?.description}</TextWrapper>
-          ) : (
-            <TextPlaceholder>No description found</TextPlaceholder>
-          )}
-        </Container>
+        <LeaderboardTable>
+          <TableHead>
+            <TableRow>
+              <TableHeader>Proposal</TableHeader>
+              <TableHeader>Address</TableHeader>
+              <TableHeader>Votes</TableHeader>
+            </TableRow>
+          </TableHead>
+          <tbody>
+            {proposals?.items?.map((proposal, index) => (
+              <TableRow key={proposal._id}>
+                <RankCell>{proposal.title}</RankCell>
+                <TableCell>
+                <Address>{proposal?.address}</Address>
+                </TableCell>
+                <TableCell>{150}</TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </LeaderboardTable>
       </PanelWrapper>
     </Wrapper>
   );
