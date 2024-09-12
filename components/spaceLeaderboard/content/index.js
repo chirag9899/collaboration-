@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  AddressWrapper,
   LeaderboardContainer,
   LeaderboardHeader,
   LeaderboardTable,
@@ -12,29 +13,72 @@ import {
   Wrapper,
 } from "./styled";
 import Address from "/components/address";
+import { filterTopVoters } from "utils";
+import Avatar from "@/components/avatar";
 
-const Content = ({ space, proposals }) => {
-  console.log(proposals, "proposals");
+const Content = ({ space, spaceVoters }) => {
+  const { mostActiveVoters, richestVotersBySymbol } = spaceVoters || {};
+
+  const filteredActiveVoters = filterTopVoters(mostActiveVoters, "rank", 10);
+
+  const filteredRichestVoters = filterTopVoters(
+    richestVotersBySymbol,
+    "rank",
+    10,
+  );
 
   return (
     <Wrapper>
       <PanelWrapper>
+        <LeaderboardHeader>Top 10 Most active voters </LeaderboardHeader>
         <LeaderboardTable>
           <TableHead>
             <TableRow>
-              <TableHeader>Proposal</TableHeader>
-              <TableHeader>Address</TableHeader>
-              <TableHeader>Votes</TableHeader>
+              <TableHeader width="20%">Rank</TableHeader>
+              <TableHeader width="50%">Address</TableHeader>
+              <TableHeader width="30%">Votes</TableHeader>
             </TableRow>
           </TableHead>
           <tbody>
-            {proposals?.items?.map((proposal, index) => (
-              <TableRow key={proposal._id}>
-                <RankCell>{proposal.title}</RankCell>
-                <TableCell>
-                <Address>{proposal?.address}</Address>
+            {filteredActiveVoters?.map((voter, index) => (
+              <TableRow key={voter._id}>
+                <RankCell width="20%">{voter.rank}</RankCell>
+                <TableCell width="50%">
+                  <AddressWrapper>
+                    <Avatar address={voter?._id} size={24} />
+                    <Address>{voter?._id}</Address>
+                  </AddressWrapper>
                 </TableCell>
-                <TableCell>{150}</TableCell>
+                <TableCell width="30%">{voter?.voteCount}</TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </LeaderboardTable>
+      </PanelWrapper>
+      <PanelWrapper>
+        <LeaderboardHeader>Top 10 Richest voters </LeaderboardHeader>
+        <LeaderboardTable>
+          <TableHead>
+            <TableRow>
+              <TableHeader width="20%">Rank</TableHeader>
+              <TableHeader width="50%">Address</TableHeader>
+              <TableHeader width="30%">Total balance</TableHeader>
+            </TableRow>
+          </TableHead>
+          <tbody>
+            {filteredRichestVoters?.map((voter, index) => (
+              <TableRow key={voter._id}>
+                <RankCell width="20%">{voter.rank}</RankCell>
+                <TableCell width="50%">
+                  <AddressWrapper>
+                    <Avatar address={voter?._id?.voter} size={24} />
+                    <Address>{voter?._id?.voter}</Address>
+                  </AddressWrapper>
+                </TableCell>
+                <TableCell width="30%">
+                  <span>{voter?.totalBalance}</span>{" "}
+                  <span>{voter?._id?.symbol}</span>
+                </TableCell>
               </TableRow>
             ))}
           </tbody>
