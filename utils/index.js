@@ -1,4 +1,4 @@
-export function noop() { }
+export function noop() {}
 
 // TODO: this should from @osn/common
 export function capitalize(string = "") {
@@ -70,7 +70,6 @@ export async function imageUrlToBase64(url) {
   }
 }
 
-
 export const getTop3Votes = (votes) => {
   const filteredVotes = votes.items.map((item) => item.choices).flat();
 
@@ -97,5 +96,15 @@ export const getTop3Votes = (votes) => {
       index === self.findIndex((t) => t.choices[0] === item.choices[0]),
   );
 
-  return uniqueVotes
+  return uniqueVotes;
+};
+
+export function filterTopVoters(arr, prop, topN = 10) {
+  return arr
+    .sort((a, b) => a[prop] - b[prop]) 
+    .filter(
+      (obj, index, self) =>
+        index === self.findIndex((item) => item[prop] === obj[prop]),
+    )
+    .slice(0, topN);
 }

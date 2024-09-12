@@ -106,6 +106,7 @@ export default function List({
   closedProposals,
   activeTab,
   defaultPage,
+  spaceVoters
 }) {
   const address = useSelector(loginAddressSelector);
   const dispatch = useDispatch();
@@ -322,7 +323,7 @@ export default function List({
                   ]}
                 />
               </HeaderWrapper>
-              <SpaceLeaderboard space={space} proposals={proposalsData} />
+              <SpaceLeaderboard space={space} spaceVoters={spaceVoters} />
             </MainWrapper>
           )}
         </Wrapper>
@@ -345,6 +346,7 @@ export async function getServerSideProps(context) {
     { result: pendingProposals },
     { result: activeProposals },
     { result: closedProposals },
+    { result: spaceVoters },
   ] = await Promise.all([
     ssrNextApi.fetch(`spaces/${spaceId}`),
     ssrNextApi.fetch(`${spaceId}/proposals`, {
@@ -363,6 +365,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "proposals-closed" ? nPage : 1,
       pageSize,
     }),
+    ssrNextApi.fetch(`https://api.beravote.com/space/${spaceId}/stats`),
   ]);
 
   if (!space) {
@@ -373,6 +376,7 @@ export async function getServerSideProps(context) {
     props: {
       spaceId,
       space: space || null,
+      spaceVoters,
       activeTab,
       proposals: proposals ?? EmptyQuery,
       pendingProposals: pendingProposals ?? EmptyQuery,

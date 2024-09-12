@@ -20,9 +20,9 @@ export const TextWrapper = styled(Text)`
 export const PanelWrapper = styled(Panel)`
   width: 100% !important;
   margin-bottom: 20px;
-  @media screen and (max-width: 800px) {
+  /* @media screen and (max-width: 800px) {
     margin: auto;
-  }
+  } */
 `;
 
 export const TextPlaceholder = styled(Text)`
@@ -46,14 +46,12 @@ export const LeaderboardContainer = styled(Panel)`
 `;
 
 export const LeaderboardHeader = styled(SectionTitle)`
-  background-color: ${primary_color};
   color: #fff;
   padding: 20px;
   text-align: center;
   font-size: 24px;
   font-weight: bold;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-bottom: 2px solid;
 `;
 
 export const LeaderboardTable = styled.table`
@@ -67,9 +65,13 @@ export const TableHead = styled.thead`
 `;
 
 export const TableRow = styled.tr`
-  &:nth-child(even) {
+  border-bottom: 1px solid var(--border-color);
+  /* &:hover {
     background-color: var(--peach);
-  }
+  } */
+  /* &:nth-child(even) {
+    background-color: var(--peach);
+  } */
 `;
 
 export const TableHeader = styled.th`
@@ -77,6 +79,7 @@ export const TableHeader = styled.th`
   text-align: left;
   font-size: 18px;
   color: ${white_text_color};
+  width: ${({ width }) => (width ? width : "auto")};
 `;
 
 export const TableCell = styled.td`
@@ -84,6 +87,13 @@ export const TableCell = styled.td`
   text-align: left;
   font-size: 16px;
   color: ${white_text_color};
+  width: ${({ width }) => (width ? width : "auto")};
+`;
+
+export const AddressWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;
 
 export const RankCell = styled(TableCell)`
