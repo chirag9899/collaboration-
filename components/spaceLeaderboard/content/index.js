@@ -12,12 +12,15 @@ import {
   TableRow,
   Wrapper,
 } from "./styled";
-import Address from "/components/address";
 import { filterTopVoters } from "utils";
 import Avatar from "@/components/avatar";
+import IdentityOrAddr from "@/components/identityOrAddr";
+import { useSelector } from "react-redux";
+import { loginAccountSelector } from "store/reducers/accountSlice";
 
 const Content = ({ space, spaceVoters }) => {
   const { mostActiveVoters, richestVotersBySymbol } = spaceVoters || {};
+  const account = useSelector(loginAccountSelector);
 
   const filteredActiveVoters = filterTopVoters(mostActiveVoters, "rank", 10);
 
@@ -34,19 +37,22 @@ const Content = ({ space, spaceVoters }) => {
         <LeaderboardTable>
           <TableHead>
             <TableRow>
-              <TableHeader width="20%">Rank</TableHeader>
-              <TableHeader width="50%">Address</TableHeader>
+              <TableHeader width="30%">Rank</TableHeader>
+              <TableHeader width="40%">Address</TableHeader>
               <TableHeader width="30%">Voting Power</TableHeader>
             </TableRow>
           </TableHead>
           <tbody>
             {filteredRichestVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="20%">{"rank" + " " + voter.rank}</RankCell>
-                <TableCell width="50%">
+                <RankCell width="30%">{"rank" + " " + voter.rank}</RankCell>
+                <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id?.voter} size={24} />
-                    <Address>{voter?._id?.voter}</Address>
+                    <IdentityOrAddr
+                      network={account?.network}
+                      address={voter?._id?.voter}
+                    />
                   </AddressWrapper>
                 </TableCell>
                 <TableCell width="30%">
@@ -63,19 +69,22 @@ const Content = ({ space, spaceVoters }) => {
         <LeaderboardTable>
           <TableHead>
             <TableRow>
-              <TableHeader width="20%">Rank</TableHeader>
-              <TableHeader width="50%">Address</TableHeader>
+              <TableHeader width="30%">Rank</TableHeader>
+              <TableHeader width="40%">Address</TableHeader>
               <TableHeader width="30%">Votes</TableHeader>
             </TableRow>
           </TableHead>
           <tbody>
             {filteredActiveVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="20%">{"rank" + " " + voter.rank}</RankCell>
-                <TableCell width="50%">
+                <RankCell width="30%">{"rank" + " " + voter.rank}</RankCell>
+                <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id} size={24} />
-                    <Address>{voter?._id}</Address>
+                    <IdentityOrAddr
+                      network={account?.network}
+                      address={voter?._id}
+                    />
                   </AddressWrapper>
                 </TableCell>
                 <TableCell width="30%">{voter?.voteCount}</TableCell>
