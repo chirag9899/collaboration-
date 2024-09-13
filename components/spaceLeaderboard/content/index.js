@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
   AddressWrapper,
-  LeaderboardContainer,
   LeaderboardHeader,
   LeaderboardTable,
+  PaginationWrapper,
   PanelWrapper,
   RankCell,
   TableCell,
@@ -17,23 +17,65 @@ import Avatar from "@/components/avatar";
 import IdentityOrAddr from "@/components/identityOrAddr";
 import { useSelector } from "react-redux";
 import { loginAccountSelector } from "store/reducers/accountSlice";
+import Pagination from "@/components/pagination";
+import ClientPagination from "@/components/ClientPagination";
+import Switch from "@/components/switchBtn";
 
 const Content = ({ space, spaceVoters }) => {
   const { mostActiveVoters, richestVotersBySymbol } = spaceVoters || {};
   const account = useSelector(loginAccountSelector);
+  const [isChecked, setIsChecked] = useState(false);
 
-  const filteredActiveVoters = filterTopVoters(mostActiveVoters, "rank", 10);
+  // Pagination state
+  const [currentPageRichest, setCurrentPageRichest] = useState(1);
+  const [currentPageActive, setCurrentPageActive] = useState(1);
+  const pageSize = 10; // Set how many items per page
 
+  // Filter and paginate data
   const filteredRichestVoters = filterTopVoters(
     richestVotersBySymbol,
     "rank",
-    10,
+    100,
+  ); // Adjust based on total count
+  const paginatedRichestVoters = filteredRichestVoters.slice(
+    (currentPageRichest - 1) * pageSize,
+    currentPageRichest * pageSize,
   );
+
+  const filteredActiveVoters = filterTopVoters(mostActiveVoters, "rank", 100);
+  const paginatedActiveVoters = filteredActiveVoters.slice(
+    (currentPageActive - 1) * pageSize,
+    currentPageActive * pageSize,
+  );
+
+  // Handle page change
+  const handlePageChangeRichest = (page) => {
+    setCurrentPageRichest(page);
+  };
+
+  const handlePageChangeActive = (page) => {
+    setCurrentPageActive(page);
+  };
+
+  const onSwitchHandler = useCallback((e) => {
+    const { checked } = e.target;
+    setIsChecked(checked);
+  }, []);
 
   return (
     <Wrapper>
+      {/* Richest Voters */}
       <PanelWrapper>
-        <LeaderboardHeader>Top Richest Voters</LeaderboardHeader>
+        <LeaderboardHeader>
+          {/* <div> */}
+          Top Richest Voters
+          {/* </div> */}
+          {/* <Switch
+            onChange={onSwitchHandler}
+            checked={isChecked}
+            text={isChecked ? "BVTEST" : "BPPT"}
+          /> */}
+        </LeaderboardHeader>
         <LeaderboardTable>
           <TableHead>
             <TableRow>
@@ -43,9 +85,9 @@ const Content = ({ space, spaceVoters }) => {
             </TableRow>
           </TableHead>
           <tbody>
-            {filteredRichestVoters?.map((voter, index) => (
+            {paginatedRichestVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="30%">{"rank" + " " + voter.rank}</RankCell>
+                <RankCell width="30%">{"rank " + voter.rank}</RankCell>
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id?.voter} size={24} />
@@ -63,9 +105,19 @@ const Content = ({ space, spaceVoters }) => {
             ))}
           </tbody>
         </LeaderboardTable>
+        <PaginationWrapper>
+          <ClientPagination
+            page={currentPageRichest}
+            pageSize={pageSize}
+            total={filteredRichestVoters.length}
+            onPageChange={handlePageChangeRichest}
+          />
+        </PaginationWrapper>
       </PanelWrapper>
+
+      {/* Active Voters */}
       <PanelWrapper>
-        <LeaderboardHeader>Top Active Voters </LeaderboardHeader>
+        <LeaderboardHeader>Top Active Voters</LeaderboardHeader>
         <LeaderboardTable>
           <TableHead>
             <TableRow>
@@ -75,9 +127,9 @@ const Content = ({ space, spaceVoters }) => {
             </TableRow>
           </TableHead>
           <tbody>
-            {filteredActiveVoters?.map((voter, index) => (
+            {paginatedActiveVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="30%">{"rank" + " " + voter.rank}</RankCell>
+                <RankCell width="30%">{"rank " + voter.rank}</RankCell>
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id} size={24} />
@@ -92,6 +144,14 @@ const Content = ({ space, spaceVoters }) => {
             ))}
           </tbody>
         </LeaderboardTable>
+        <PaginationWrapper>
+          <ClientPagination
+            page={currentPageActive}
+            pageSize={pageSize}
+            total={filteredActiveVoters.length}
+            onPageChange={handlePageChangeActive}
+          />
+        </PaginationWrapper>
       </PanelWrapper>
     </Wrapper>
   );
