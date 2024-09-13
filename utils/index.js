@@ -102,9 +102,9 @@ export const getTop3Votes = (votes) => {
 export function filterTopVoters(arr, prop, topN = 10) {
   return arr
     .sort((a, b) => a[prop] - b[prop]) 
-    .filter(
-      (obj, index, self) =>
-        index === self.findIndex((item) => item[prop] === obj[prop]),
-    )
-    .slice(0, topN);
+    // .filter(
+    //   (obj, index, self) =>
+    //     index === self.findIndex((item) => item[prop] === obj[prop]),
+    // )
+    // .slice(0, topN);
 }

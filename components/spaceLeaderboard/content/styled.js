@@ -100,3 +100,11 @@ export const RankCell = styled(TableCell)`
   font-weight: bold;
   color: ${primary_color};
 `;
+
+
+export const PaginationWrapper = styled.div`
+padding: 20px 0;
+display: flex;
+align-items: center;
+justify-content: center;
+`;
