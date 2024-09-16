@@ -20,6 +20,7 @@ import { loginAccountSelector } from "store/reducers/accountSlice";
 import Pagination from "@/components/pagination";
 import ClientPagination from "@/components/ClientPagination";
 import Switch from "@/components/switchBtn";
+import NameFromAddress from "@/components/EnsName";
 
 const Content = ({ space, spaceVoters }) => {
   const { mostActiveVoters, richestVotersBySymbol } = spaceVoters || {};
@@ -91,10 +92,12 @@ const Content = ({ space, spaceVoters }) => {
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id?.voter} size={24} />
-                    <IdentityOrAddr
+                    {/* <IdentityOrAddr
                       network={account?.network}
                       address={voter?._id?.voter}
-                    />
+                    /> */}
+
+                    <NameFromAddress address={voter?._id?.voter}/>
                   </AddressWrapper>
                 </TableCell>
                 <TableCell width="30%">
