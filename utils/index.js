@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 export function noop() {}
 
 // TODO: this should from @osn/common
@@ -70,33 +71,21 @@ export async function imageUrlToBase64(url) {
   }
 }
 
-export const getTop3Votes = (votes) => {
-  const filteredVotes = votes.items.map((item) => item.choices).flat();
+export const getTop3VotersByBalance = (votes) => {
+  if (!votes.items || votes.items.length === 0) {
+    return null;
+  }
+  const sortedVotes = votes.items.sort((a, b) => {
+    const balanceA = new BigNumber(a.weights.balanceOf);
+    const balanceB = new BigNumber(b.weights.balanceOf);
+    return balanceB.minus(balanceA).toNumber();
+  });
 
-  const countMap = filteredVotes.reduce((acc, num) => {
-    acc[num] = (acc[num] || 0) + 1;
-    return acc;
-  }, {});
-
-  const filteredNumbers = Object.entries(countMap).filter(
-    ([num, count]) => count > 10,
-  );
-
-  const top3Votes = filteredNumbers
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([num]) => num);
-
-  const filtredVotes = votes.items.filter((item) =>
-    item.choices.some((choice) => top3Votes.includes(choice)),
-  );
-
-  const uniqueVotes = filtredVotes.filter(
-    (item, index, self) =>
-      index === self.findIndex((t) => t.choices[0] === item.choices[0]),
-  );
-
-  return uniqueVotes;
+  const top3Votes = sortedVotes.slice(0, 3);
+  if (top3Votes.length < 3 || top3Votes.every(vote => new BigNumber(vote.weights.balanceOf).isEqualTo(new BigNumber(top3Votes[0].weights.balanceOf)))) {
+    return null;
+  }
+  return top3Votes;
 };
 
 export function filterTopVoters(arr, prop, topN = 10) {

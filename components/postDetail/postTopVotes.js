@@ -3,8 +3,7 @@ import PostVotesItem from "./postVotesItem";
 import HeaderWithNumber from "@/components/postDetail/numberHeader";
 import AccordionPanel from "@/components/accordionPanel/panel";
 import NoData from "@osn/common-ui/es/NoData";
-import { getTop3Votes } from "utils";
-
+import { getTop3VotersByBalance } from "utils";
 
 const NoVoteWrapper = styled.div`
   height: 104px;
@@ -24,7 +23,14 @@ export default function PostVotes({
   myVote,
   isSafari = false,
 }) {
-  const top3Votes = getTop3Votes(votes);
+  if (votes?.items?.length < 10) {
+    return null; // Do not render the section if there are fewer than 10 votes
+  }
+
+  const top3Votes = getTop3VotersByBalance(votes);
+  if (top3Votes === null) {
+    return null; // Do not render the section if all the balance values are the same
+  }
 
   return (
     <AccordionPanel
@@ -46,11 +52,6 @@ export default function PostVotes({
             isDelegate={item.isDelegate}
           />
         ))}
-      {!votes?.items?.length > 0 && (
-        <NoVoteWrapper>
-          <NoData message="No current votes" />
-        </NoVoteWrapper>
-      )}
     </AccordionPanel>
   );
 }
