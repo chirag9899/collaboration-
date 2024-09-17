@@ -97,7 +97,9 @@ const Content = ({ space, spaceVoters }) => {
                       address={voter?._id?.voter}
                     /> */}
 
-                    <NameFromAddress address={voter?._id?.voter}/>
+                    <NameFromAddress address={voter?._id?.voter}
+                      network={space?.networks[0]?.network}
+                    />
                   </AddressWrapper>
                 </TableCell>
                 <TableCell width="30%">
@@ -136,9 +138,12 @@ const Content = ({ space, spaceVoters }) => {
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id} size={24} />
-                    <IdentityOrAddr
-                      network={account?.network}
+                    {/* <IdentityOrAddr
+                      network={space?.networks[0]?.network}
                       address={voter?._id}
+                    /> */}
+                    <NameFromAddress address={voter?._id}
+                      network={space?.networks[0]?.network}
                     />
                   </AddressWrapper>
                 </TableCell>
