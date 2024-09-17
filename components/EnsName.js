@@ -5,6 +5,71 @@ import { ExternalLink } from "@osn/common-ui";
 import { addressEllipsis, getExplorerUrl } from "../frontedUtils";
 import { chainMap } from "../frontedUtils/consts/chains";
 import { white_text_color } from "./styles/colors";
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import gql from "graphql-tag";
+
+const client = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_ENS,
+  cache: new InMemoryCache(),
+});
+
+const GET_ENS = gql`
+query getNamesForAddress($orderBy: Domain_orderBy, $orderDirection: OrderDirection, $first: Int, $whereFilter: Domain_filter) {
+  domains(
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+    first: $first
+    where: $whereFilter
+  ) {
+    ...DomainDetails
+    registration {
+      ...RegistrationDetails
+    }
+    wrappedDomain {
+      ...WrappedDomainDetails
+    }
+  }
+}
+
+fragment DomainDetails on Domain {
+  ...DomainDetailsWithoutParent
+  parent {
+    name
+    id
+  }
+}
+
+fragment DomainDetailsWithoutParent on Domain {
+  id
+  labelName
+  labelhash
+  name
+  isMigrated
+  createdAt
+  resolvedAddress {
+    id
+  }
+  owner {
+    id
+  }
+  registrant {
+    id
+  }
+  wrappedOwner {
+    id
+  }
+}
+
+fragment RegistrationDetails on Registration {
+  registrationDate
+  expiryDate
+}
+
+fragment WrappedDomainDetails on WrappedDomain {
+  expiryDate
+  fuses
+}
+`;
 
 const NameWrapper = styled.span`
   display: inline-flex;
@@ -30,53 +95,79 @@ const LoadingText = styled.p`
 
 export default function NameFromAddress({
   address,
-  noLink = false,
+  network,
   ellipsis = false,
 }) {
   const [ensName, setEnsName] = useState(null);
-  const [chainId, setChainId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [expLink,setExpLink] = useState("")
+  const [expLink, setExpLink] = useState("")
 
   useEffect(() => {
     const fetchChainIdAndEns = async () => {
       setIsLoading(true);
       try {
-        // Default to Ethereum mainnet (homestead) for ENS lookup
-        const provider = new ethers.providers.InfuraProvider("homestead");
-
-        // Get the network information which includes chainId
-        const network = await provider.getNetwork();
-        setChainId(network.chainId);
-
-        let link;
-        const chain = chainMap.get(network.chainId);
+        const variables = {
+          "orderBy": "expiryDate",
+          "orderDirection": "asc",
+          "first": 20,
+          "whereFilter": {
+            "and": [
+              {
+                "or": [
+                  {
+                    "owner": address.toString()
+                  },
+                  {
+                    "registrant": address.toString()
+                  },
+                  {
+                    "wrappedOwner": address.toString()
+                  }
+                ]
+              },
+              {
+                "or": [
+                  {
+                    "owner_not": "0x0000000000000000000000000000000000000000"
+                  },
+                  {
+                    "resolver_not": null
+                  },
+                  {
+                    "and": [
+                      {
+                        "registrant_not": "0x0000000000000000000000000000000000000000"
+                      },
+                      {
+                        "registrant_not": null
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        };
+        const { data } = await client.query({ query: GET_ENS , variables});
+        const name = data?.domains?.[0]?.name || addressEllipsis(address);
+        console.log(name)
+        const chain = chainMap.get(network);
         const isEvm = chain?.chainType === "evm";
         const isBtc = chain?.chainType === "btc";
+        let link;
 
         // Define the link based on the chain type
         if (chain?.chainName === "statemine") {
-          link = `${getExplorerUrl(network.chainId)}/#/accounts/${address}`;
+          link = `${getExplorerUrl(network)}/#/accounts/${address}`;
           setExpLink(link);
         } else if (isEvm || isBtc) {
-          link = `${getExplorerUrl(network.chainId)}/address/${address}`;
+          link = `${getExplorerUrl(network)}/address/${address}`;
           setExpLink(link);
         } else {
-          link = `${getExplorerUrl(network.chainId)}/account/${address}`;
+          link = `${getExplorerUrl(network)}/account/${address}`;
           setExpLink(link);
         }
-
-        // Fetch ENS name only if the address is on Ethereum Mainnet (chainId 1)
-        if (network.chainId === 1) {
-          const name = await provider.lookupAddress(address);
-          setEnsName(name);
-        } else {
-          setEnsName(null); // Handle non-EVM chains or non-ENS addresses
-        }
-
-        if (link && !noLink) {
-          setLink(link);
-        }
+        setEnsName(name);
       } catch (error) {
         console.error("Error fetching chainId or ENS name:", error);
       } finally {
@@ -85,21 +176,18 @@ export default function NameFromAddress({
     };
 
     if (address) {
-      fetchChainIdAndEns();
+      fetchChainIdAndEns(network);
     }
-  }, [address, noLink]);
+  }, [address]);
 
   let content = isLoading ? (
     <LoadingText>Loading...</LoadingText>
   ) : (
     <NameWrapper ellipsis={ellipsis}>
-      {ensName || addressEllipsis(address)}
+      {ensName}
     </NameWrapper>
   );
-
-  if (!noLink && chainId) {
-    content = <ExternalLink href={expLink}>{content}</ExternalLink>;
-  }
+  content = <ExternalLink href={expLink}>{content}</ExternalLink>;
 
   return content;
 }
