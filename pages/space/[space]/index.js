@@ -351,7 +351,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "proposals-closed" ? nPage : 1,
       pageSize,
     }),
-    ssrNextApi.fetch(`https://api.beravote.com/space/${spaceId}/stats`),
+    ssrNextApi.fetch(`/space/${spaceId}/stats`),
   ]);
 
   if (!space) {
