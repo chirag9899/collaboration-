@@ -22,27 +22,27 @@ const FeatureCard = ({ icon, title, text }) => (
 const FeatureCards = () => (
   <CardContainer>
     <FeatureCard
-      icon="/imgs/icons/global-network.svg"
+      icon="/imgs/icons/mainnet-testnet.png"
       title="Mainnet and Testnet Network Support"
       text="We support seamless integration with both Mainnet and Testnet environments.Whether you're launching on a test network or rolling out on the main network, our platform ensures full support to facilitate uninterrupted governance."
     />
     <FeatureCard
-      icon="/imgs/icons/global-network.svg"
+      icon="/imgs/icons/custom-domain.png"
       title="Custom Domain Registry"
       text="We provide custom domain registration to elevate your brand's identity. Align your voting space with your project's brand by using a custom domain. Personalize your governance platform and make it instantly recognizable."
     />
     <FeatureCard
-      icon="/imgs/icons/global-network.svg"
+      icon="/imgs/icons/support.png"
       title="Dedicated Customer Support"
       text="Provides you with a dedicated support group on Telegram/Discord. Receive specialized support from our team. Whether it's technical assistance or general inquiries, our team will be there to help you 24/7 via your preferred platform."
     />
      <FeatureCard
-      icon="/imgs/icons/global-network.svg"
+      icon="/imgs/icons/quick-setup.png"
       title="Quick Setup in 48 hours"
       text="Get your voting space live within 48 hours. We understand that time is critical for your community's decision-making process. Our team guarantees that your voting platform will be set up and ready for use in just two days."
     />
      <FeatureCard
-      icon="/imgs/icons/global-network.svg"
+      icon="/imgs/icons/marketing-support.png"
       title="Marketing support"
       text="As our valued partner, we provide marketing efforts to enhance the visibility of your voting process. We'll help you promote ongoing voting matters and ensure that your proposals receive the attention they deserve."
     />

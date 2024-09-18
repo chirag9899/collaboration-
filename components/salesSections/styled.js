@@ -185,11 +185,6 @@ export const Card = styled.div`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 
-  img {
-    filter: brightness(0) saturate(100%) invert(77%) sepia(87%) saturate(673%)
-      hue-rotate(351deg) brightness(102%) contrast(102%);
-  }
-
   &:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
