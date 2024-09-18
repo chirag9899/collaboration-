@@ -163,3 +163,61 @@ export const ButtonWrapper = styled(Button)`
     margin-right: 8px !important;
   }
 `;
+
+export const CardContainer = styled.div`
+  display: flex;
+  padding: 50px 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+`;
+
+export const Card = styled.div`
+  width: 30%;
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--background-0);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  img {
+    filter: brightness(0) saturate(100%) invert(77%) sepia(87%) saturate(673%)
+      hue-rotate(351deg) brightness(102%) contrast(102%);
+  }
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    width: 45%; /* Two cards per row on tablets */
+  }
+
+  @media (max-width: 480px) {
+    width: 100%; /* One card per row on mobile */
+  }
+`;
+
+export const CardIcon = styled.img`
+  height: 64px;
+  margin-bottom: 20px;
+  transition: filter 0.3s ease;
+`;
+
+export const CardTitle = styled.h2`
+  font-size: 18px;
+  color: #58a6ff;
+  margin-bottom: 20px;
+`;
+
+export const CardText = styled.p`
+  font-size: 16px;
+  color: #c9d1d9;
+  line-height: 1.5;
+`;

@@ -1,12 +1,54 @@
 import _ from "lodash";
 import React from "react";
 import {
+  Card,
+  CardContainer,
+  CardIcon,
+  CardText,
+  CardTitle,
   Eyebrow,
-  KeyFeatureIcon,
-  KeyFeatureItem,
   KeyFeaturesContainer,
   Section,
 } from "./styled";
+
+const FeatureCard = ({ icon, title, text }) => (
+  <Card>
+    <CardIcon src={icon} alt={title} />
+    <CardTitle>{title}</CardTitle>
+    <CardText>{text}</CardText>
+  </Card>
+);
+
+const FeatureCards = () => (
+  <CardContainer>
+    <FeatureCard
+      icon="/imgs/icons/global-network.svg"
+      title="Mainnet and Testnet Network Support"
+      text="We support seamless integration with both Mainnet and Testnet environments.Whether you're launching on a test network or rolling out on the main network, our platform ensures full support to facilitate uninterrupted governance."
+    />
+    <FeatureCard
+      icon="/imgs/icons/global-network.svg"
+      title="Custom Domain Registry"
+      text="We provide custom domain registration to elevate your brand's identity. Align your voting space with your project's brand by using a custom domain. Personalize your governance platform and make it instantly recognizable."
+    />
+    <FeatureCard
+      icon="/imgs/icons/global-network.svg"
+      title="Dedicated Customer Support"
+      text="Provides you with a dedicated support group on Telegram/Discord. Receive specialized support from our team. Whether it's technical assistance or general inquiries, our team will be there to help you 24/7 via your preferred platform."
+    />
+     <FeatureCard
+      icon="/imgs/icons/global-network.svg"
+      title="Quick Setup in 48 hours"
+      text="Get your voting space live within 48 hours. We understand that time is critical for your community's decision-making process. Our team guarantees that your voting platform will be set up and ready for use in just two days."
+    />
+     <FeatureCard
+      icon="/imgs/icons/global-network.svg"
+      title="Marketing support"
+      text="As our valued partner, we provide marketing efforts to enhance the visibility of your voting process. We'll help you promote ongoing voting matters and ensure that your proposals receive the attention they deserve."
+    />
+  </CardContainer>
+);
+
 export default function KeyFeaturesSection() {
   return (
     <Section>
@@ -32,147 +74,8 @@ export default function KeyFeaturesSection() {
           Our network plan is designed to provide the infrastructure and support
           needed for effective governance.
         </div>
-        <div
-          style={{
-            color: "var(--link-color)",
-            fontSize: "18px",
-            padding: "15px 20px",
-            border: "1px solid #5C5C5C",
-            textAlign: "left",
-            borderRadius: "8px",
-            maxWidth: "500px",
-            margin: "0 auto",
-          }}
-        >
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              {" "}
-              Mainnet network support
-            </p>
-          </KeyFeatureItem>
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              Testnet network support
-            </p>
-          </KeyFeatureItem>
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              Custom domain registry support
-            </p>
-          </KeyFeatureItem>
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              Dedicated customer support
-            </p>
-          </KeyFeatureItem>
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              {" "}
-              Quick setup (~48 hours)
-            </p>
-          </KeyFeatureItem>
-          <KeyFeatureItem style={{ marginBottom: "15px" }}>
-            <KeyFeatureIcon viewBox="0 0 24 24">
-              <path
-                fill="none"
-                stroke="#EBB600"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m5 13l4 4L19 7"
-              />
-            </KeyFeatureIcon>
-            <p
-              style={{
-                fontSize: "18px",
-                lineHeight: "1.3em",
-                color: "#BFBFBF",
-              }}
-            >
-              Co-marketing
-            </p>
-          </KeyFeatureItem>
-        </div>
+
+        <FeatureCards />
       </KeyFeaturesContainer>
     </Section>
   );

@@ -14,9 +14,7 @@ export default function GetStartSection() {
     <Section>
       <GetStartedContainer>
         <Eyebrow>Get started</Eyebrow>
-        <Heading1>
-          Start your integration
-        </Heading1>
+        <Heading1>Start your integration</Heading1>
         <a href="#" target="_blank" rel="noopener noreferrer">
           <ButtonWrapper title={"Talk to sales"}>
             Talk to sales
@@ -33,7 +31,7 @@ export default function GetStartSection() {
           </ButtonWrapper>
         </a>
       </GetStartedContainer>
-      <BorderBox >
+      {/* <BorderBox >
         <Heading1
           style={{
             textAlign: "left",
@@ -48,7 +46,7 @@ export default function GetStartSection() {
           to maintain support on Dvote. To ensure continuous service and
           avoid interruptions, please contact our team today.
         </div>
-      </BorderBox>
+      </BorderBox> */}
     </Section>
   );
 }
