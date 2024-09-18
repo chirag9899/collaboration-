@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from "react";
 import {
+  bigNumber2Locale,
+  abbreviateBigNumber,
+} from "frontedUtils";
+import {
   AddressWrapper,
   LeaderboardHeader,
   LeaderboardTable,
@@ -88,7 +92,7 @@ const Content = ({ space, spaceVoters }) => {
           <tbody>
             {paginatedRichestVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="30%">{"rank " + voter.rank}</RankCell>
+                <RankCell width="30%">{voter.rank}</RankCell>
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id?.voter} size={24} />
@@ -103,7 +107,7 @@ const Content = ({ space, spaceVoters }) => {
                   </AddressWrapper>
                 </TableCell>
                 <TableCell width="30%">
-                  <span>{voter?.totalBalance}</span>{" "}
+                  <span>{bigNumber2Locale(abbreviateBigNumber(voter?.totalBalance), 6)}</span>{" "}
                   <span>{voter?._id?.symbol}</span>
                 </TableCell>
               </TableRow>
@@ -134,7 +138,7 @@ const Content = ({ space, spaceVoters }) => {
           <tbody>
             {paginatedActiveVoters?.map((voter, index) => (
               <TableRow key={voter._id}>
-                <RankCell width="30%">{"rank " + voter.rank}</RankCell>
+                <RankCell width="30%">{voter.rank}</RankCell>
                 <TableCell width="40%">
                   <AddressWrapper>
                     <Avatar address={voter?._id} size={24} />
