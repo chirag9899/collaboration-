@@ -13,9 +13,9 @@ const Content = ({ space }) => {
     <Wrapper>
       <PanelWrapper>
         <Container>
-          <Title>Token Contract</Title>
-          {space?.networks?.[0]?.assets?.[0]?.contract ? (
-            <TextWrapper>{space.networks[0].assets[0].contract}</TextWrapper>
+          <Title>Information</Title>
+          {space?.networks?.[0]?.assets?.[0]?.type ? (
+            <TextWrapper>{space.networks[0].assets[0].symbol} ({space?.networks?.[0]?.assets?.[0]?.type})</TextWrapper>
           ) : (
             <TextPlaceholder>No token found</TextPlaceholder>
           )}
