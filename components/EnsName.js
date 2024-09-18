@@ -167,7 +167,7 @@ export default function NameFromAddress({
           link = `${getExplorerUrl(network)}/account/${address}`;
           setExpLink(link);
         }
-        setEnsName(name);
+        setEnsName(addressEllipsis(name, 20));
       } catch (error) {
         console.error("Error fetching chainId or ENS name:", error);
       } finally {
