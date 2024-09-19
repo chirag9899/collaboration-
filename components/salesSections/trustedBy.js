@@ -34,7 +34,7 @@ export default function TrustedBySection() {
       link: "#",
     },
     {
-      src: "/imgs/logos/daedalus.png",
+      src: "/imgs/logos/daedalus.svg",
       alt: "daedalus",
       link: "#",
     },
@@ -44,7 +44,7 @@ export default function TrustedBySection() {
       link: "#",
     },
     {
-      src: "/imgs/logos/digendao.png",
+      src: "/imgs/logos/degendao.svg",
       alt: "digendao",
       link: "#",
     },
