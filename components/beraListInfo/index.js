@@ -17,12 +17,28 @@ import {
   Wrapper,
 } from "./styled";
 import Tooltip from "../tooltip";
+import { commify } from "../../utils";
+import { Amount } from "@/components/rewards/content/styled";
+import { useEffect, useState } from "react";
 
 export default function ListInfo({ balance }) {
   const { open, openModal, closeModal } = useModal();
-  const { delegateVotes } = useEthApis();
-
+  const { getRewards, delegateVotes} = useEthApis();
+  const [totalClaimable, setTotalClaimable] = useState(0);
   const router = useRouter();
+
+  async function loadRewards() {
+    const data = await getRewards(router.query.space);
+    const { rewards, claimInfo } = data;
+    console.log("rewards", rewards);
+    setTotalClaimable(rewards.reduce((acc, curr)=>{
+      return acc + (curr.claimable * curr.rewardTokenPrice);
+    }, 0));
+  }
+
+  useEffect(() => {
+    loadRewards();
+  }, []);
 
   const handleGoBack = () => {
     router.push("/");
@@ -64,7 +80,7 @@ export default function ListInfo({ balance }) {
                   iconSize={16}
                 />
               </div>
-              <p>US$0.00</p>
+              <Amount>${commify(totalClaimable, 2)}</Amount>
             </Balance>
           </BalanceSection>
           <DelegateSection>
