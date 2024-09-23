@@ -78,8 +78,8 @@ export const TrustedByContainer = styled.div`
 `;
 // Logo images
 export const LogoImage = styled.img`
-  width: 54px;
-  height: 54px;
+  width: 140px;
+  height: 60px;
   border-radius: 8px;
 `;
 // Get started section

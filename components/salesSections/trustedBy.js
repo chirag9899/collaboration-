@@ -5,46 +5,46 @@ import { Eyebrow, LogoImage, Section, TrustedByContainer } from "./styled";
 export default function TrustedBySection() {
   const trustedByList = [
     {
-      src: "/imgs/logos/berachain.png",
+      src: "/imgs/logos/Berachain.svg",
       alt: "berachain",
       link: "#",
     },
     {
-      src: "/imgs/logos/taiko.png",
+      src: "/imgs/logos/Taiko.svg",
       alt: "taiko",
       link: "#",
     },
     {
-      src: "/imgs/logos/bitcoin.png",
+      src: "/imgs/logos/Bitcoin.svg",
       alt: "bitcoin",
       link: "#",
     },
     {
-      src: "/imgs/logos/rune.svg",
+      src: "/imgs/logos/Thorchain.svg",
       alt: "rune",
       link: "#",
     },
     {
-      src: "/imgs/logos/brc20.png",
+      src: "/imgs/logos/BRC20.svg",
       alt: "brc20",
     },
     {
-      src: "/imgs/logos/saltwater.png",
+      src: "/imgs/logos/Saltwater Lab.png",
       alt: "saltwater",
       link: "#",
     },
     {
-      src: "/imgs/logos/daedalus.svg",
+      src: "/imgs/logos/Daedalus.svg",
       alt: "daedalus",
       link: "#",
     },
     {
-      src: "/imgs/logos/owl.png",
+      src: "/imgs/logos/Owl Ventures.svg",
       alt: "Owl",
       link: "#",
     },
     {
-      src: "/imgs/logos/degendao.svg",
+      src: "/imgs/logos/DegenDAO.svg",
       alt: "digendao",
       link: "#",
     },
