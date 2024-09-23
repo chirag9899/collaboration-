@@ -7,12 +7,25 @@ export default function HeadSection() {
     <Section>
       <Container>
         <Heading1>
-          Unlock governance for <br /> your ecosystem.
+          Empower Your Ecosystem with <br /> Seamless Governance.
         </Heading1>
+
+        <div
+          style={{
+            fontSize: "20px",
+            lineHeight: "25px",
+            fontWeight:"bold",
+            maxWidth: "500px",
+            margin: "0 auto 30px",
+          }}
+        >
+          Strengthen decentralized governance and bring impactful
+          decisions-making with dVote
+        </div>
         <div>
           <a href="#" target="_blank" rel="noopener noreferrer">
             <ButtonWrapper title={"Talk to sales"}>
-              Talk to sales
+              Let's collaborate
               <Icon viewBox="0 0 24 24">
                 <path
                   fill="none"

@@ -169,6 +169,7 @@ export const CardContainer = styled.div`
   padding: 50px 20px;
   flex-wrap: wrap;
   gap: 20px;
+  justify-content: center;
 
   @media (max-width: 768px) {
     justify-content: center;

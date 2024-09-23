@@ -21,18 +21,18 @@ export default function FaqSection() {
 
   const faqData = [
     {
-      question: "What payment methods does Dvote accept?",
-      answer: "Dvote accepts payments in USDC, USDT, DAI, and GHO stablecoins.",
+      question: "What payment methods does dVote accept?",
+      answer: "dVote accepts payments via stablecoins such as USDC, USDT, and DAI",
     },
     {
-      question: "What are the requirements to add a network?",
+      question: "What are the requirements to integrate a network on dVote?",
       answer:
-        "To add a network on Snapshot, it must be EVM compatible. Additionally, a full archive node is required to calculate voting power at a specific block. Snapshot can use node providers to meet this requirement and ensure smooth integration and functionality.",
+        "To integrate a network with dVote, it must be EVM-compatible. A full archive node is necessary for calculating voting power at specific blocks. dVote can leverage node providers to meet these requirements, ensuring seamless network integration and functionality.",
     },
     {
-      question: "How to add a network that is not EVM compatible?",
+      question: "How can a non-EVM compatible network be integrated?",
       answer:
-        "Adding a non-EVM network is possible under certain conditions. Please contact us for more details.",
+        "Integration of non-EVM networks is feasible under specific conditions. Please reach out to our team for further guidance and details.",
     },
   ];
 

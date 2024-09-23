@@ -36,12 +36,12 @@ const FeatureCards = () => (
       title="Dedicated Customer Support"
       text="Provides you with a dedicated support group on Telegram/Discord. Receive specialized support from our team. Whether it's technical assistance or general inquiries, our team will be there to help you 24/7 via your preferred platform."
     />
-     <FeatureCard
+    <FeatureCard
       icon="/imgs/icons/quick-setup.png"
       title="Quick Setup in 48 hours"
       text="Get your voting space live within 48 hours. We understand that time is critical for your community's decision-making process. Our team guarantees that your voting platform will be set up and ready for use in just two days."
     />
-     <FeatureCard
+    <FeatureCard
       icon="/imgs/icons/marketing-support.png"
       title="Marketing support"
       text="As our valued partner, we provide marketing efforts to enhance the visibility of your voting process. We'll help you promote ongoing voting matters and ensure that your proposals receive the attention they deserve."
@@ -53,7 +53,7 @@ export default function KeyFeaturesSection() {
   return (
     <Section>
       <KeyFeaturesContainer>
-        <Eyebrow>Key features</Eyebrow>
+        {/* <Eyebrow>Key features</Eyebrow> */}
         <h1
           style={{
             fontSize: "34px",
@@ -61,7 +61,7 @@ export default function KeyFeaturesSection() {
             lineHeight: "1.3em",
           }}
         >
-          What the network plan offers
+          What our network plan offers
         </h1>
         <div
           style={{
@@ -71,8 +71,8 @@ export default function KeyFeaturesSection() {
             margin: "0 auto 30px",
           }}
         >
-          Our network plan is designed to provide the infrastructure and support
-          needed for effective governance.
+          Our network plan equips you with the infrastructure and guidance
+          essential for seamless and effective governance.
         </div>
 
         <FeatureCards />
