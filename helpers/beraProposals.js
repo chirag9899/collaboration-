@@ -1,42 +1,20 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ethers } from "ethers";
 import { formatNumber } from "utils";
 import { getDateFromTimestamp } from "./methods";
 import gql from "graphql-tag";
 import nextApi from "services/nextApi";
+import { GET_PROPOSALS, INCENTIVES_BY_PROPOSAL_QUERY } from "./queries";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
-// First Query to get proposals
-const GET_PROPOSALS = gql`
-  query proposals {
-    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
-      proposal {
-        proposalId
-        description
-        canceled
-        eta
-        executed
-        id
-        queued
-        voteEnd
-        voteStart
-        supports {
-          weight
-          support
-          id
-          votes {
-            id
-            reason
-            weight
-          }
-        }
-      }
-    }
-  }
-`;
+const incentivesClient = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_GRAPH_INCENTIVES_ENDPOINT,
+  cache: new InMemoryCache(),
+});
 
 function getProposalStatusDetails(
   executed,
@@ -156,6 +134,7 @@ export async function getFilteredProposals(proposals) {
   let passedProposalsCount = 0;
   let failedProposalsCount = 0;
   const standardChainHeightAndTime = await chainHeightAndTime('current');
+
   for (const proposal of proposals) {
     async function calculateFutureEpoch(blocknumber) {
       if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)){
@@ -233,6 +212,11 @@ export async function getFilteredProposals(proposals) {
     ) {
       quorumNotReached = '(Proposal executed)';
     }
+
+    // get total dollar amount of incentives for this proposal
+    const totalIncentivesAmount = await getIncentiveTotalsForProposal(proposal.proposalId);
+
+
     const proposalWithSupports = {
       ...proposal,
       supports: proposal.supports,
@@ -255,6 +239,8 @@ export async function getFilteredProposals(proposals) {
       status: statusDetails.status,
       statusDetails: statusDetails,
       quorumNotReached: quorumNotReached,
+      totalIncentivesAmount: totalIncentivesAmount,
+      // requiredQuorum: BigInt(Math.ceil(threshold * 1000000000000000000)), // 1000 billion in the contract
       // requiredQuorumPercentage:
       //   Number(requiredQuorumPercentage).toFixed() + "%",
     };
@@ -296,6 +282,25 @@ export async function getBerachainProposals() {
     return {
       proposals: result,
     };
+  } catch (e) {
+    console.error(e);
+    return [];
+  }
+}
+
+export async function getIncentiveTotalsForProposal(proposalId) {
+  try {
+    const {data} = await incentivesClient.query({ query: INCENTIVES_BY_PROPOSAL_QUERY , variables: { id: 'bera-'+ proposalId } });
+
+    let total = 0;
+
+    for(let i = 0; i < data.rewardAddeds.length; i++){
+      // ToDo get price for this token, using 1 for now since we're on testnet
+      const price = 1;
+      total += parseFloat(ethers.utils.formatEther(data.rewardAddeds[i].amount)) * price;
+    }
+    
+    return total;
   } catch (e) {
     console.error(e);
     return [];

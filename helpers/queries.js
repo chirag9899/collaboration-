@@ -33,3 +33,41 @@ export const All_PROPOSALS_LIST_QUERY = gql`
     }
   }
 `;
+
+export const GET_PROPOSALS = gql`
+  query proposals {
+    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
+            id
+            reason
+            weight
+          }
+        }
+      }
+    }
+  }
+`;
+
+// to be executed on the incentives graph
+export const INCENTIVES_BY_PROPOSAL_QUERY = gql`
+  query Incentives($id: String!) {
+    rewardAddeds(where: { proposal: $id }) {
+      reward_token
+      amount
+    }
+  }
+`;
