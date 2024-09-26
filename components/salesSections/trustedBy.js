@@ -7,46 +7,52 @@ export default function TrustedBySection() {
     {
       src: "/imgs/logos/Berachain.svg",
       alt: "berachain",
-      link: "#",
+      link: "https://www.berachain.com",
     },
     {
       src: "/imgs/logos/Taiko.svg",
       alt: "taiko",
-      link: "#",
+      link: "https://taiko.xyz",
     },
     {
       src: "/imgs/logos/Bitcoin.svg",
       alt: "bitcoin",
-      link: "#",
+      link: "https://bitcoin.org",
     },
     {
       src: "/imgs/logos/Thorchain.svg",
       alt: "rune",
-      link: "#",
+      link: "https://thorchain.org",
     },
     {
       src: "/imgs/logos/BRC20.svg",
       alt: "brc20",
+      link: "https://brc20.com",
     },
     {
       src: "/imgs/logos/Saltwater Lab.png",
       alt: "saltwater",
-      link: "#",
+      link: "https://saltwaterlab.io",
     },
     {
       src: "/imgs/logos/Daedalus.svg",
       alt: "daedalus",
-      link: "#",
+      link: "https://x.com/daedalus_angels",
     },
     {
       src: "/imgs/logos/Owl Ventures.svg",
       alt: "Owl",
-      link: "#",
+      link: "https://x.com/OwlVentures",
     },
     {
       src: "/imgs/logos/DegenDAO.svg",
       alt: "digendao",
-      link: "#",
+      link: "https://x.com/DegenCitadel",
+    },
+    {
+      src: "/imgs/logos/Sonic.svg",
+      alt: "sonic",
+      link: "https://x.com/sonic",
     },
   ];
   return (

@@ -99,6 +99,7 @@ const RightWrapper = styled.div`
   align-items: flex-end;
 
   > div {
+    margin-top: 20px;
     text-align: right;
     font-size: 16px;
     line-height: 24px;
@@ -158,6 +159,9 @@ export default function Footer({ github }) {
           </LeftWrapper>
           <RightWrapper>
             <FooterLogoSvg />
+            <div className="support_text">
+              Support W/<span>❤️</span> at the Taiko and Sonic   
+            </div>
           </RightWrapper>
         </ContentWrapper>
         <BottomWrapper>

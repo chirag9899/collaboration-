@@ -4,6 +4,7 @@ const footerItems = [
     items: [
       // { name: "QuickSnap Finance", link: "https://app.quicksnap.finance/" },
       { name: "Dvote.ai", link: "https://btc.dvote.ai/" },
+      { name: "Add network", link: "/networks" },
     ],
   },
   {
