@@ -1,8 +1,8 @@
+import { primary_color } from "@/components/styles/colors";
 import styled from "styled-components";
-import { primary_color } from "../styles/colors";
 
 const AnnouncementCard = styled.div`
-border: 1px solid ${primary_color};
+  border: 1px solid ${primary_color};
   border-radius: 8px;
   padding: 16px;
   background-color: var(--background-1);

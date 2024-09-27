@@ -9,7 +9,7 @@ export const Sidebar = styled(Panel)`
   flex-direction: column;
   border-right: 1px solid #e2e8f0;
   background-color: var(--background-0);
-  max-width: 400px;
+  min-width: 25%;
 
   .sidebar-content {
     display: flex;
@@ -37,7 +37,7 @@ export const Sidebar = styled(Panel)`
       background-color: transparent;
       padding: 0 0.5rem;
 
-      a {
+      span {
         display: flex;
         align-items: center;
         border-radius: 0.375rem;
@@ -46,6 +46,8 @@ export const Sidebar = styled(Panel)`
         font-weight: 500;
         justify-content: space-between;
         font-weight: bold;
+        margin-bottom: 5px;
+        cursor: pointer;
 
         &:hover {
           background-color: ${primary_color};
