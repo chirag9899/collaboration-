@@ -228,6 +228,8 @@ export function getExplorerUrl(network) {
       return `https://blastexplorer.io`;
     case "berachain":
       return `https://artio.beratrail.io`;
+    case "citrea-testnet":
+      return `https://explorer.testnet.citrea.xyz`;
     case "merlin":
       return `https://scan.merlinchain.io`;
     case "statemine":

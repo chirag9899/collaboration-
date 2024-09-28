@@ -22,6 +22,7 @@ import { ReactComponent as Brc20 } from "../../public/imgs/icons/chain/bitcoin.s
 import { ReactComponent as Merlin } from "../../public/imgs/icons/chain/merlin.svg";
 import { ReactComponent as Runes } from "../../public/imgs/icons/chain/runes.svg";
 import { ReactComponent as Ordcollection } from "../../public/imgs/icons/chain/ordcollection.svg";
+import { ReactComponent as CitreaTestnet } from "../../public/imgs/icons/chain/citrea.svg";
 import Westend from "../../public/imgs/icons/chain/westend.png";
 import Bifrost from "../../public/imgs/icons/chain/bifrost.png";
 import Kintsugi from "../../public/imgs/icons/chain/kintsugi.png";
@@ -72,7 +73,8 @@ const svgs = {
   Brc20,
   Merlin,
   Runes,
-  Ordcollection
+  Ordcollection,
+  CitreaTestnet,
 };
 const pngs = {
   Westend,

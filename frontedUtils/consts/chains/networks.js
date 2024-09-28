@@ -15,6 +15,7 @@ export const networks = Object.freeze({
   "taiko-mainnet": "taiko-mainnet",
   linea: "linea",
   blast: "blast",
+  "citrea-testnet": "citrea-testnet",
   berachain: "berachain",
   merlin: "merlin",
   acala: "acala",

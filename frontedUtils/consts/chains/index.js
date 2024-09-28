@@ -64,10 +64,10 @@ export const chains = [
   { id: '0x4fc', chainName: 'moonbeam', name: 'Moonbeam', chainType: 'evm', blockExplorerUrl: 'https://moonbeam.moonscan.io', rpc: 'https://rpc.api.moonbeam.network', nativeCurrency: { name: 'GLMR', symbol: 'GLMR', decimals: 18 } },
   { id: '0x505', chainName: 'moonriver', name: 'Moonriver', chainType: 'evm', blockExplorerUrl: 'https://moonriver.moonscan.io', rpc: 'https://moonriver.api.onfinality.io/public', nativeCurrency: { name: 'MOVR', symbol: 'MOVR', decimals: 18 } },
   { id: '0x28c60', chainName: 'taiko', name: 'Taiko Katla L2', chainType: 'evm', blockExplorerUrl: 'https://explorer.katla.taiko.xyz', rpc: 'https://rpc.katla.taiko.xyz', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
-  {
-    id: '0x28c58', chainName: 'taiko-mainnet', name: 'Taiko Mainnet', chainType: 'evm', blockExplorerUrl: 'https://taikoscan.io', rpc: 'https://rpc.taiko.xyz',nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
+  { id: '0x28c58', chainName: 'taiko-mainnet', name: 'Taiko Mainnet', chainType: 'evm', blockExplorerUrl: 'https://taikoscan.io', rpc: 'https://rpc.taiko.xyz',nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0xe708', chainName: 'linea', name: 'linea', chainType: 'evm', blockExplorerUrl: 'https://lineascan.build', rpc: 'https://linea.blockpi.network/v1/rpc/public', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
   { id: '0x13e31', chainName: 'blast', name: 'blast', chainType: 'evm', blockExplorerUrl: 'https://blastscan.io', rpc: 'https://rpc.blast.io', nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 } },
+  { id: '0x13fb', chainName: 'citrea-testnet', name: 'Citrea Testnet', chainType: 'evm', blockExplorerUrl: 'https://explorer.testnet.citrea.xyz', rpc: 'https://rpc.testnet.citrea.xyz', nativeCurrency: { name: 'cBTC', symbol: 'cBTC', decimals: 18 } },
   { id: '0x138d5', chainName: 'berachain', name: 'Berachain Artio', chainType: 'evm', blockExplorerUrl: 'https://artio.beratrail.io', rpc: 'https://artio.rpc.berachain.com', nativeCurrency: { name: 'BERA', symbol: 'BERA', decimals: 18 } },
   { id: '0x1068', chainName: 'merlin', name: 'Merlin Mainnet', chainType: 'evm', blockExplorerUrl: 'https://scan.merlinchain.io', rpc: 'https://rpc.merlinchain.io', nativeCurrency: { name: 'BTC', symbol: 'BTC', decimals: 18 } },
   { id: 'livenet', chainName: 'brc20', chainType: 'btc' },
@@ -78,10 +78,10 @@ export const chains = [
 export const chainMap = new Map(chains.map(chain => [chain.chainName, { chainName: chain.chainName, name: chain.name, id: chain.id, chainType: chain.chainType, rpc: chain.rpc, blockExplorerUrl: chain.blockExplorerUrl, nativeCurrency: chain.nativeCurrency }]));
 
 const walletToChains = {
-  'metamask': ['ethereum', 'moonbeam', 'taiko', 'taiko-mainnet', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
+  'metamask': ['ethereum', 'moonbeam', 'taiko', 'taiko-mainnet', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'citrea-testnet'],
   'unisat': ['brc20', 'ordcollection', 'runes'],
   'xverse': ['brc20', 'ordcollection', 'runes'],
-  'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'taiko-mainnet', 'linea', 'blast', 'merlin', 'berachain', 'moonriver'],
+  'walletConnect': ['ethereum', 'moonbeam', 'taiko', 'taiko-mainnet', 'linea', 'blast', 'merlin', 'berachain', 'moonriver', 'citrea-testnet'],
 }
 
 export function supportedChains(selectedWallet) {
