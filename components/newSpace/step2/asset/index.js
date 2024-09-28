@@ -11,7 +11,8 @@ import RunesTokenConfig from "./runesTokenConfig";
 import styled from "styled-components";
 import useStateChanged from "hooks/useStateChanged";
 import { AssetTypes } from "./constants";
-import ChainSelectorDrop from "@/components/ChainSelecDrop";
+// import ChainSelectorDrop from "@/components/ChainSelecDrop";
+import ChainSelector from "@/components/chainSelector";
 
 const Header = styled.div`
   display: flex;
@@ -201,11 +202,11 @@ export default function Asset({
         {filteredCains.length > 1 && (
           <>
             <Title>Chain</Title>
-            {/* <ChainSelector chains={filteredCains} onSelect={onSelectChain} /> */}
-            <ChainSelectorDrop
+            <ChainSelector chains={filteredCains} onSelect={onSelectChain} />
+            {/* <ChainSelectorDrop
               chains={filteredCains}
               onSelect={onSelectChain}
-            />
+            /> */}
           </>
         )}
         <Title>Network: {chainInfo?.name || asset?.name}</Title>
