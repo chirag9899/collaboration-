@@ -1,4 +1,5 @@
 import Layout from "@/components/layout";
+import OverviewSection from "@/components/votium/overview";
 import RewardsSection from "@/components/votium/rounds";
 import VotiumSidebar from "@/components/votium/votiumSidebar";
 import _ from "lodash";
@@ -44,7 +45,7 @@ export default function NetworksPage({ allNetworks }) {
               {selecetedOption === "rounds" ? (
                 <RewardsSection />
               ) : (
-                <h1>overview</h1>
+                <OverviewSection/>
               )}
             </ContentWrapper>
           </VotiumWrapper>
