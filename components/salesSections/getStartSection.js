@@ -15,7 +15,7 @@ export default function GetStartSection() {
       <GetStartedContainer>
         <Eyebrow>Get started</Eyebrow>
         <Heading1>Start your integration</Heading1>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <a href="https://tally.so/r/nrLe9L" target="_blank" rel="noopener noreferrer">
           <ButtonWrapper title={"Talk to sales"}>
             Talk to sales
             <Icon viewBox="0 0 24 24">

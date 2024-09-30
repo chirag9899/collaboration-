@@ -23,7 +23,7 @@ export default function HeadSection() {
           decisions-making with dVote
         </div>
         <div>
-          <a href="#" target="_blank" rel="noopener noreferrer">
+          <a href="https://tally.so/r/nrLe9L" target="_blank" rel="noopener noreferrer">
             <ButtonWrapper title={"Talk to sales"}>
               Let's collaborate
               <Icon viewBox="0 0 24 24">
