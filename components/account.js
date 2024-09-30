@@ -201,13 +201,12 @@ function Account({ networks, menu }) {
   const { chainId, isConnected } = useWeb3ModalAccount();
   const { open, close } = useWeb3Modal();
   const { disconnect } = useDisconnect();
-  const [cookieValue, setCookieValue] = useState(() => getCookie('addressV3'));
-
+  const [cookieValue, setCookieValue] = useState(() => getCookie("addressV3"));
 
   useMetaMaskEventHandlers();
 
   useEffect(() => setPageMounted(true), []);
-  
+
   if (!networks || networks.length === 0) {
     return null;
   }
@@ -217,13 +216,13 @@ function Account({ networks, menu }) {
       if (chainId && isConnected) {
         const activeChain = getChainName("0x" + chainId.toString(16));
         let finalAddress = address;
-          dispatch(
-            setAccount({
-              address: finalAddress,
-              network: activeChain,
-            })
-          );
-          setCookie("addressV3", finalAddress);
+        dispatch(
+          setAccount({
+            address: finalAddress,
+            network: activeChain,
+          }),
+        );
+        setCookie("addressV3", finalAddress);
         dispatch(setConnectedWallet("walletConnect"));
       }
 
@@ -236,8 +235,7 @@ function Account({ networks, menu }) {
     };
 
     handleChainChange();
-  }, [chainId, isConnected, address,account, dispatch, connectedWallet, event.data.event]);
-
+  }, [chainId, isConnected, address, dispatch, event.data.event]);
 
   const onSwitch = () => {
     dispatch(setShowNetworkSelector(!showNetwork));
@@ -266,16 +264,17 @@ function Account({ networks, menu }) {
     };
   }, [dispatch]);
 
-
   const ConnectWalletButton = (
     <div className="connect">
-      { <DarkButton
+      {
+        <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
           className="button button-modern"
         >
           {connectedWallet ? "Switch Chain" : "Connect Wallet"}
-          </DarkButton>}
+        </DarkButton>
+      }
     </div>
   );
 
@@ -286,7 +285,7 @@ function Account({ networks, menu }) {
         dispatch,
         account?.address,
         chainMap,
-        chain
+        chain,
       );
       dispatch(setShowNetworkSelector(false));
     } catch (error) {
@@ -297,7 +296,7 @@ function Account({ networks, menu }) {
 
   const selectedNetworks = connectedWallet && supportedChains(connectedWallet);
   const supportedAvailableNetworks = availableNetworks.filter((network) =>
-    selectedNetworks?.includes(network.network)
+    selectedNetworks?.includes(network.network),
   );
 
   const dropdown = (
@@ -311,7 +310,7 @@ function Account({ networks, menu }) {
 
   const Menu = (
     <MenuWrapper onClick={(e) => e.stopPropagation()}>
-      {account?.address == '' && windowSize.width <= 800 && ConnectWalletButton}
+      {account?.address == "" && windowSize.width <= 800 && ConnectWalletButton}
       {address && (
         <>
           <AccountWrapper>
@@ -329,17 +328,17 @@ function Account({ networks, menu }) {
             <UserIcon />
           </AccountWrapper>
           <MenuDivider />
-            <MenuItem>
-              <LogoutWrapper onClick={onSwitch}>
-                Switch Network
-                <Image
-                  src="/imgs/icons/switch.svg"
-                  alt="switch network"
-                  width={24}
-                  height={24}
-                />
-              </LogoutWrapper>
-            </MenuItem>
+          <MenuItem>
+            <LogoutWrapper onClick={onSwitch}>
+              Switch Network
+              <Image
+                src="/imgs/icons/switch.svg"
+                alt="switch network"
+                width={24}
+                height={24}
+              />
+            </LogoutWrapper>
+          </MenuItem>
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
