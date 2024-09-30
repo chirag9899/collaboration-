@@ -24,7 +24,7 @@ const FeatureCards = () => (
     <FeatureCard
       icon="/imgs/icons/mainnet-testnet.png"
       title="Mainnet and Testnet Network Support"
-      text="We support seamless integration with both Mainnet and Testnet environments.Whether you're launching on a test network or rolling out on the main network, our platform ensures full support to facilitate uninterrupted governance."
+      text="We support seamless integration with both Mainnet and Testnet environments. Whether you're launching on a test network or rolling out on the main network, our platform ensures full support to facilitate uninterrupted governance."
     />
     <FeatureCard
       icon="/imgs/icons/custom-domain.png"
