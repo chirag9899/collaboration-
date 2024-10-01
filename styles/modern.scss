@@ -219,7 +219,7 @@ ul {
     color: var(--neutral-2);
     opacity: 0;
     animation: menuIn 200ms ease forwards 1;
-    overflow: hidden;
+    // overflow: hidden;
     box-shadow: 0 20px 80px var(--black);
 
     li {
