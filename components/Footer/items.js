@@ -41,7 +41,7 @@ const footerItems = [
       {
         name: "Twitter",
         icon: "twitter.svg",
-        link: "https://x.com/dvote_btc",
+        link: "https://x.com/dvote_ai",
       },
       // {
       //   name: "Discord",
