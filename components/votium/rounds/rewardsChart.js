@@ -39,9 +39,23 @@ const data = {
     {
       label: "Volume",
       data: [1200, 1900, 3000, 5000, 2300, 4200], // Fake volume data
-      backgroundColor: "rgba(75, 192, 192, 0.6)",
-      borderColor: "rgba(75, 192, 192, 1)",
-      borderWidth: 1,
+      backgroundColor: [
+        "#FF5733", // Bright red
+        "#FFBD33", // Bright yellow-orange
+        "#75FF33", // Bright green
+        "#33FFBD", // Bright cyan
+        "#335BFF", // Bright blue
+        "#FF33A8", // Bright pink
+      ],
+      borderColor: [
+        "#FF5733",
+        "#FFBD33",
+        "#75FF33",
+        "#33FFBD",
+        "#335BFF",
+        "#FF33A8",
+      ],
+      borderWidth: 2,
     },
   ],
 };
