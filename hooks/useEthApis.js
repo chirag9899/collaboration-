@@ -24,14 +24,20 @@ const useEthApis = () => {
   // Function to fetch the current address from MetaMask
   const fetchCurrentAddress = async () => {
     try {
+      console.log('Attempting to fetch signer...');
       const signer = ethersProvider.getSigner();
+      console.log('Signer Object:', signer);
+
       const addr = await signer.getAddress();
-      setAddress(addr);
+      console.log('Address:', addr);
+
+      setAddress(addr);  // If you're using state to manage the address
       return signer;
     } catch (error) {
-      console.error("Error fetching address:", error);
+      console.error("Error fetching signer or address:", error);
     }
   };
+
 
   useEffect(() => {
     if (ethersProvider) {
@@ -159,7 +165,6 @@ const useEthApis = () => {
       // @ts-ignore
       // const signer = ethersProvider.getSigner();
       const signer = await fetchCurrentAddress()
-      const addr = await signer.getAddress();
       const token = new ethers.Contract(rewardToken, erc20.abi, signer);
       const decimals = await token.decimals();
       const amount = ethers.utils.parseUnits(rewardAmount.toString(), decimals);
@@ -235,76 +240,89 @@ const useEthApis = () => {
   }
 
   async function getRewards(space) {
-    // try {
-      const claims = [];
-      let claimInfo = { totalBalance: 0, totalClaimed: 0 };
-    console.log('test6')
-    const signer = await fetchCurrentAddress()
-    const address = await signer.getAddress();
-      console.log(address)
+    const claims = [];
+    let claimInfo = { totalBalance: 0, totalClaimed: 0 };
+
+    try {
+      console.log('Fetching current address...');
+      const signer = await fetchCurrentAddress();
+      const address = await signer.getAddress();
+      console.log('Resolved Address:', address);
+
       if (address) {
-        console.log('testaddress')
-        console.log(address)
         const client = new ApolloClient({
           uri: `${getGraphEndpointForSpace(space)}/graphql`,
           cache: new InMemoryCache(),
         });
+        console.log('GraphQL URI:', `${getGraphEndpointForSpace(space)}/graphql`);
 
         const claimsQuery = gql`
-          query rewarderewards($account: String!, $chainId: Int!) {
-            claims(account: $account, chainId: $chainId) {
-              token
-              index
-              amount
-              merkleProof
-            }
-            claimInfo {
-              totalBalance
-              totalClaimed
-            }
+        query rewarderewards($account: String!, $chainId: Int!) {
+          claims(account: $account, chainId: $chainId) {
+            token
+            index
+            amount
+            merkleProof
           }
-        `;
+          claimInfo {
+            totalBalance
+            totalClaimed
+          }
+        }
+      `;
+
         const { data } = await client.query({
           query: claimsQuery,
           variables: {
             account: address,
-            chainId: 1337,
+            chainId: 1337,  // Ensure this chainId is correct
           },
         });
-        console.log(data)
-        claimInfo = data.claimInfo;
-        console.log(claimInfo)
+
+        console.log('GraphQL Data:', data);
+
+        if (!data.claims || data.claims.length === 0) {
+          console.error('No claims data found');
+        } else {
+          console.log('Claims data:', data.claims);
+        }
+
+        claimInfo = data.claimInfo || claimInfo;
+        console.log('Claim Info:', claimInfo);
+        console.log('Claim Length:',  data.claims.length)
 
         for (let i = 0; i < data.claims.length; i++) {
-          const token = await getTokenInfo(data.claims[i].token);
-          const tokendata = await tokenData(data.claims[i].token);
-          if (token) {
-            const amount = new BigNumber(data.claims[i].amount);
-            const claimable = ethers.utils.formatUnits(amount.toFixed(), token.decimals);
-            const claim = {
-              version: 3,
-              claimable: parseFloat(
-                claimable,
-              ),
-              claimableRaw: data.claims[i].amount,
-              canClaim: true,
-              hasClaimed: false,
-              rewardToken: token,
-              claimData: data.claims[i],
-              rewardTokenPrice: tokendata.price,
-              rewardTokenLogo: tokendata.logo,
-            };
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            claims.push(claim);
-          }
+            const token = await getTokenInfo(data.claims[i].token);
+            const tokendata = await tokenData(data.claims[i].token);
+
+            console.log('Token Info:', token);
+            console.log('Token Data:', tokendata);
+
+            if (token) {
+              const amount = new BigNumber(data.claims[i].amount);
+              const claimable = ethers.utils.formatUnits(amount.toFixed(), token.decimals);
+
+              const claim = {
+                version: 3,
+                claimable: parseFloat(claimable),
+                claimableRaw: data.claims[i].amount,
+                canClaim: true,
+                hasClaimed: false,
+                rewardToken: token,
+                claimData: data.claims[i],
+                rewardTokenPrice: tokendata.price,
+                rewardTokenLogo: tokendata.logo,
+              };
+
+              claims.push(claim);
+            }
         }
       }
-      return { rewards: claims, claimInfo };
-    // } catch (e) {
-    //   console.log(e);
-    //   return [];
-    // }
+    } catch (error) {
+      console.error('Error in getRewards:', error);
+    }
+
+    return { rewards: claims, claimInfo };
   }
 
   async function getBerachainSubgraphPrice(
@@ -440,6 +458,9 @@ const useEthApis = () => {
       case "beragov":{
         return process.env.NEXT_PUBLIC_GRAPH_GOV_ENDPOINT;
       }
+      case "beravote-test-space": {
+        return process.env.NEXT_PUBLIC_GRAPH_GOV_ENDPOINT;
+      }
       default: {
         return process.env.NEXT_PUBLIC_GRAPH_ENDPOINT;
       }
@@ -449,6 +470,9 @@ const useEthApis = () => {
   function getMerkleAddressForSpace(space){
     switch (space) {
       case "beragov":{
+        return process.env.NEXT_PUBLIC_MERKLE_GOV_ADDRESS;
+      }
+      case "beravote-test-space": {
         return process.env.NEXT_PUBLIC_MERKLE_GOV_ADDRESS;
       }
       default: {

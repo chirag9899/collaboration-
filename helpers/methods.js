@@ -70,26 +70,29 @@ function getBeraTokenLogo(token){
 
 export async function getTokenInfo(tokenAddress) {
   try {
-    const signer = ethersProvider.getSigner();
-    const token = new ethers.Contract(
-      tokenAddress,
-      erc20.abi, signer);
+    console.log('Fetching token info for:', tokenAddress);
 
-    const [symbol, decimals] = await Promise.all([
-      token.symbol(),
-      token.decimals(),
-    ]);
+    // const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
+    // that methods stucked for me, about 9 times out of 10, no idea either that local rpc, or something else
+    // so i switched to using whitelist directly
+    const tokenInfo = whitelist.find(({ address }) => address.toLowerCase() === tokenAddress.toLowerCase());
 
-    return {
-      address: tokenAddress,
-      symbol,
-      decimals: parseInt(decimals),
-    };
+    if (tokenInfo) {
+      console.log('Token found in whitelist:', tokenInfo);
+      return {
+        address: tokenAddress,
+        symbol: tokenInfo.name,  // Using name as the symbol
+        decimals: tokenInfo.decimals,
+        logo: tokenInfo.logo,    // Additional logo info
+      };
+    } else {
+      console.log('Token not found in whitelist:', tokenAddress);
+      return null;
+    }
   } catch (ex) {
-    console.log("------------------------------------");
-    console.log(`exception thrown in _getTokenInfo(${tokenAddress})`);
-    console.log(ex);
-    console.log("------------------------------------");
+    console.log('Error fetching token info for:', tokenAddress);
+    console.error('Error details:', ex);
+    return null;
   }
 }
 

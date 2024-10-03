@@ -28,6 +28,7 @@ export default function ListInfo({ balance }) {
   const router = useRouter();
 
   async function loadRewards() {
+    console.log(router.query.space)
     const data = await getRewards(router.query.space);
     const { rewards, claimInfo } = data;
     console.log("rewards", rewards);
