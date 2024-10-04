@@ -64,10 +64,19 @@ export const GET_PROPOSALS = gql`
 
 // to be executed on the incentives graph
 export const INCENTIVES_BY_PROPOSAL_QUERY = gql`
-  query Incentives($id: String!) {
-    rewardAddeds(where: { proposal: $id }) {
+  query Incentives($end_gte: String!, $end_lte: String!, $skip: Int!) {
+    rewardAddeds(first: 1000, skip: $skip, where: { endTime_gte: $end_gte, endTime_lte: $end_lte }) {
+      id
+      time
+      rewarder
+      proposal
+      option
       reward_token
       amount
+      startTime
+      endTime
+      blockNumber
+      blockTimestamp
     }
   }
 `;

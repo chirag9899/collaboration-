@@ -2,9 +2,10 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { ethers } from "ethers";
 import { formatNumber } from "utils";
 import { getDateFromTimestamp } from "./methods";
-import gql from "graphql-tag";
+import { whitelist } from "./constants";
 import nextApi from "services/nextApi";
 import { GET_PROPOSALS, INCENTIVES_BY_PROPOSAL_QUERY } from "./queries";
+const chainHeightAndTimeCache = {};
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
@@ -90,8 +91,14 @@ function getProposalStatusDetails(
 }
 
 async function chainHeightAndTime(blocknumber) {
+  // TODO: need to figure out how to cache that on the client, its already cached on the server backend
+  if (chainHeightAndTimeCache[blocknumber]) {
+    return chainHeightAndTimeCache[blocknumber];
+  }
+
   try {
     const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/${blocknumber}`);
+    chainHeightAndTimeCache[blocknumber] = result;
     return result;
   } catch (error) {
     console.error("Failed to calculate future epoch:", error);
@@ -135,9 +142,12 @@ export async function getFilteredProposals(proposals) {
   let failedProposalsCount = 0;
   const standardChainHeightAndTime = await chainHeightAndTime('current');
 
+  const proposalIds = proposals.map(proposal => proposal.proposalId);
+  const incentivesTotals = await getIncentiveTotalsForAllProposals(proposalIds);
+
   for (const proposal of proposals) {
     async function calculateFutureEpoch(blocknumber) {
-      if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)){
+      if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)) {
         const exactHeightAndTime = await chainHeightAndTime(blocknumber);
         return exactHeightAndTime.time;
       } else {
@@ -146,6 +156,7 @@ export async function getFilteredProposals(proposals) {
         return targetTime;
       }
     }
+
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
@@ -177,11 +188,10 @@ export async function getFilteredProposals(proposals) {
       totalVotes > 0 ? Number((abstainCount * 100) / totalVotes) : 0;
 
     const quorum = 2000000000 * 1e18; // 2 billion in the contract
-    // const threshold = parseFloat(0.5); // create proposal threshold is 1000
+
     const forSupportsQuorumTotalWeight = forSupports[4];
     const againstSupportsQuorumTotalWeight = againstSupports[4];
-    const abstainSupportsQuorumTotalWeight = againstSupports[4];
-    // const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
+    const abstainSupportsQuorumTotalWeight = abstainSupports[4];
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
@@ -195,7 +205,7 @@ export async function getFilteredProposals(proposals) {
       voteStart,
     );
 
-    let quorumNotReached = ''
+    let quorumNotReached = '';
     if (
       forSupportsQuorumTotalWeight < quorum ||
       abstainSupportsQuorumTotalWeight >= quorum ||
@@ -213,9 +223,7 @@ export async function getFilteredProposals(proposals) {
       quorumNotReached = '(Proposal executed)';
     }
 
-    // get total dollar amount of incentives for this proposal
-    const totalIncentivesAmount = await getIncentiveTotalsForProposal(proposal.proposalId);
-
+    const totalIncentivesAmount = incentivesTotals[`bera-${proposal.proposalId}`] || 0;
 
     const proposalWithSupports = {
       ...proposal,
@@ -244,6 +252,7 @@ export async function getFilteredProposals(proposals) {
       // requiredQuorumPercentage:
       //   Number(requiredQuorumPercentage).toFixed() + "%",
     };
+    // console.log(proposalWithSupports)
 
     proposalsWithSupports.push(proposalWithSupports);
     if (
@@ -288,21 +297,54 @@ export async function getBerachainProposals() {
   }
 }
 
-export async function getIncentiveTotalsForProposal(proposalId) {
+export async function getIncentiveTotalsForAllProposals(proposalIds) {
+  const results = {};
+  console.log('Fetching all incentives data...');
   try {
-    const {data} = await incentivesClient.query({ query: INCENTIVES_BY_PROPOSAL_QUERY , variables: { id: 'bera-'+ proposalId } });
+    const { data } = await incentivesClient.query({
+      query: INCENTIVES_BY_PROPOSAL_QUERY,
+      variables: {
+        "end_gte": "0",
+        "end_lte": "50000019727", // just insane big last blocknumber (save a call on last blockheight)
+        "skip": 0
+      }
+    });
 
-    let total = 0;
-
-    for(let i = 0; i < data.rewardAddeds.length; i++){
-      // ToDo get price for this token, using 1 for now since we're on testnet
-      const price = 1;
-      total += parseFloat(ethers.utils.formatEther(data.rewardAddeds[i].amount)) * price;
+    if (!data || !data.rewardAddeds) {
+      console.log('No rewardAddeds found.');
+      proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0); // No incentives found for any proposal
+      return results;
     }
-    
-    return total;
+    proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0);
+
+    for (const rewardAdded of data.rewardAddeds) {
+      const formattedProposalId = rewardAdded.proposal;
+      const strippedProposalId = formattedProposalId.replace('bera-', '');
+
+      if (proposalIds.includes(strippedProposalId)) {
+        const tokenInfo = whitelist.find(token => token.address.toLowerCase() === rewardAdded.reward_token.toLowerCase());
+
+        if (!tokenInfo) {
+          console.log(`Token with address ${rewardAdded.reward_token} not found in the whitelist for proposal ${formattedProposalId}.`);
+          continue;
+        }
+
+        const decimals = tokenInfo.decimals;
+        const amountInWei = rewardAdded.amount; // Amount from the response
+        const formattedAmount = ethers.utils.formatUnits(amountInWei, decimals);
+        const price = 1;  // Placeholder for token price on testnet
+        results[formattedProposalId] += parseFloat(formattedAmount) * price;
+      }
+    }
+
+    for (const proposalId of proposalIds) {
+      console.log(`Total incentives calculated for proposal ${`bera-${proposalId}`}:`, results[`bera-${proposalId}`]);
+    }
+
   } catch (e) {
-    console.error(e);
-    return [];
+    console.error(`Error in getIncentiveTotalsForAllProposals:`, e.message, e);
+    proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0);
   }
+
+  return results;
 }
