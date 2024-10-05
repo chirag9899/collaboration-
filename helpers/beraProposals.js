@@ -5,7 +5,6 @@ import { getDateFromTimestamp } from "./methods";
 import { whitelist } from "./constants";
 import nextApi from "services/nextApi";
 import { GET_PROPOSALS, INCENTIVES_BY_PROPOSAL_QUERY } from "./queries";
-const chainHeightAndTimeCache = {};
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
@@ -90,18 +89,12 @@ function getProposalStatusDetails(
   return { status, color, backgroundColor, status };
 }
 
-async function chainHeightAndTime(blocknumber) {
-  // TODO: need to figure out how to cache that on the client, its already cached on the server backend
-  if (chainHeightAndTimeCache[blocknumber]) {
-    return chainHeightAndTimeCache[blocknumber];
-  }
-
+async function getFutureHeightsAndTimes(blocknumbers) {
   try {
-    const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/${blocknumber}`);
-    chainHeightAndTimeCache[blocknumber] = result;
+    const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheights/${JSON.stringify(blocknumbers)}`);
     return result;
   } catch (error) {
-    console.error("Failed to calculate future epoch:", error);
+    console.error('Failed to fetch future heights and times:', error);
     throw error;
   }
 }
@@ -140,22 +133,23 @@ export async function getFilteredProposals(proposals) {
   let totalVotersCount = 0;
   let passedProposalsCount = 0;
   let failedProposalsCount = 0;
-  const standardChainHeightAndTime = await chainHeightAndTime('current');
+
+  const blocknumbers = proposals.reduce((acc, proposal) => {
+    acc.push(proposal.voteStart, proposal.voteEnd);
+    return acc;
+  }, []);
+
+  const blockHeightsAndTimes = await getFutureHeightsAndTimes(blocknumbers);
+  // console.log(blockHeightsAndTimes)
 
   const proposalIds = proposals.map(proposal => proposal.proposalId);
   const incentivesTotals = await getIncentiveTotalsForAllProposals(proposalIds);
 
   for (const proposal of proposals) {
-    async function calculateFutureEpoch(blocknumber) {
-      if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)) {
-        const exactHeightAndTime = await chainHeightAndTime(blocknumber);
-        return exactHeightAndTime.time;
-      } else {
-        const blocksIntoFuture = blocknumber - standardChainHeightAndTime.height;
-        const targetTime = standardChainHeightAndTime.time + (blocksIntoFuture * (standardChainHeightAndTime.blocktime / 1000));
-        return targetTime;
-      }
-    }
+    const blockHeightsAndTimesStart = blockHeightsAndTimes.find(h => h.height === Number(proposal.voteStart));
+    const blockHeightsAndTimesEnd = blockHeightsAndTimes.find(h => h.height === Number(proposal.voteEnd));
+    const voteStartTime = blockHeightsAndTimesStart;
+    const voteEndTime = blockHeightsAndTimesEnd;
 
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
@@ -166,6 +160,7 @@ export async function getFilteredProposals(proposals) {
 
     const description = proposal.description;
     const newlineIndex = description.split("\n");
+
     const abstainSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       2,
@@ -195,8 +190,10 @@ export async function getFilteredProposals(proposals) {
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
-    const voteStart = await calculateFutureEpoch(proposal.voteStart);
-    const voteEnd = await calculateFutureEpoch(proposal.voteEnd);
+
+    const voteStart = voteStartTime.time;
+    const voteEnd = voteEndTime.time;
+
     const statusDetails = getProposalStatusDetails(
       proposal.executed,
       proposal.queued,
@@ -243,18 +240,14 @@ export async function getFilteredProposals(proposals) {
         abstainCount: Number(abstainVotesPer).toFixed(2) + "%",
         againstCount: Number(againstVotesPer).toFixed(2) + "%",
       },
-      // thresholdPercentage: Number(thresholdPercentage) + "%",
       status: statusDetails.status,
       statusDetails: statusDetails,
       quorumNotReached: quorumNotReached,
       totalIncentivesAmount: totalIncentivesAmount,
-      // requiredQuorum: BigInt(Math.ceil(threshold * 1000000000000000000)), // 1000 billion in the contract
-      // requiredQuorumPercentage:
-      //   Number(requiredQuorumPercentage).toFixed() + "%",
     };
-    // console.log(proposalWithSupports)
 
     proposalsWithSupports.push(proposalWithSupports);
+
     if (
       statusDetails.status === "closed" &&
       forSupportsQuorumTotalWeight >= quorum &&
@@ -263,6 +256,7 @@ export async function getFilteredProposals(proposals) {
     ) {
       passedProposalsCount++;
     }
+
     if (
       forSupportsQuorumTotalWeight < quorum ||
       statusDetails.status === "terminated" ||
@@ -272,6 +266,7 @@ export async function getFilteredProposals(proposals) {
       failedProposalsCount++;
     }
   }
+
   return {
     proposalsWithSupports,
     proposalInfo: {
@@ -281,6 +276,7 @@ export async function getFilteredProposals(proposals) {
     },
   };
 }
+
 
 export async function getBerachainProposals() {
   try {
