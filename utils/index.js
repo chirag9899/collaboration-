@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 export function noop() {}
 
 // TODO: this should from @osn/common
@@ -70,8 +71,36 @@ export async function imageUrlToBase64(url) {
   }
 }
 
+export const getTop3VotersByBalance = (votes) => {
+  if (!votes.items || votes.items.length === 0) {
+    return null;
+  }
+  const sortedVotes = votes.items.sort((a, b) => {
+    const balanceA = new BigNumber(a.weights.balanceOf);
+    const balanceB = new BigNumber(b.weights.balanceOf);
+    return balanceB.minus(balanceA).toNumber();
+  });
+
+  const top3Votes = sortedVotes.slice(0, 3);
+  if (top3Votes.length < 3 || top3Votes.every(vote => new BigNumber(vote.weights.balanceOf).isEqualTo(new BigNumber(top3Votes[0].weights.balanceOf)))) {
+    return null;
+  }
+  return top3Votes;
+};
+
+export function filterTopVoters(arr, prop, topN = 10) {
+  return arr
+    .sort((a, b) => a[prop] - b[prop]) 
+    // .filter(
+    //   (obj, index, self) =>
+    //     index === self.findIndex((item) => item[prop] === obj[prop]),
+    // )
+    // .slice(0, topN);
+}
+
 export function commify (value, precision = 0) {
  return parseFloat(value)
     .toFixed(precision)
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+

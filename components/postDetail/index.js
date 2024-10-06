@@ -3,6 +3,7 @@ import styled from "styled-components";
 import PostInfo from "./postInfo";
 import PostResults from "./postResults";
 import PostVotes from "@/components/postDetail/postVotes";
+import PostTopVotes from "@/components/postDetail/postTopVotes";
 import PostDiscussion from "@/components/postDetail/postDiscussion";
 import dynamic from "next/dynamic";
 import PostIncentive from "./postIncentiveDetail";
@@ -62,6 +63,14 @@ export default function PostDetail({
     <Wrapper>
       <MainWrapper>
         <PostContent data={data} space={space} />
+        <PostTopVotes
+          proposal={data}
+          votes={votes}
+          myVote={myVote}
+          discussionPage={defaultPage?.discussionPage}
+          isSafari={isSafari}
+          voteStatus={voteStatus}
+        />
         <PostVotes
           proposal={data}
           votes={votes}

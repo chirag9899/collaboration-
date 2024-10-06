@@ -157,6 +157,7 @@ const SpaceSettings = () => {
 
   const handleOptionChange = (selectedOption, type) => {
     if (type === "single") {
+      setImageFile(null)
       setSelectedSingleOption(selectedOption);
       setCurrentSpace(selectedOption);
     } else {

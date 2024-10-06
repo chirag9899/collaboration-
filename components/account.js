@@ -175,11 +175,24 @@ const DarkButton = styled(Button)`
   &:hover {
     color: ${black} !important;
   }
-  @media screen and (max-width: 800px) {
-    padding: 8px 22px;
-    margin: auto;
-    width: 100%;
-    text-align: center;
+    @media screen and (max-width: 800px) {
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: white !important;
+    border-radius: 0px !important;
+    background-color: transparent !important;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+
+    &:hover {
+      color: inherit !important;
+      text-decoration: none;
+    }
   }
 `;
 
@@ -292,8 +305,8 @@ function Account({ networks, menu }) {
       { <DarkButton
           primary
           onClick={() => dispatch(popUpConnect())}
-          className="button button-modern"
-        >
+          className={windowSize.width > 800 ? "button button-modern" : ""}
+          >
         { "Connect Wallet"}
         {/* {connectedWallet && !isSpecificPage ? "Switch Chain" : "Connect Wallet"} */}
           </DarkButton>}
@@ -335,34 +348,31 @@ function Account({ networks, menu }) {
       {account?.address == '' && windowSize.width <= 800 && ConnectWalletButton}
       {address && (
         <>
-          <AccountWrapper>
+          {windowSize.width > 800 ? (
+            <AccountWrapper>
+              <div>
+                <Avatar address={address} size={20} />
+                {spaceSupportMultiChain && (
+                  <NetworkLogo network={account?.network} size={16} />
+                )}
+                <IdentityOrAddr
+                  network={account?.network}
+                  address={address}
+                  noLink
+                />
+              </div>
+              <UserIcon />
+            </AccountWrapper>
+          ) : (
             <div>
-              <Avatar address={address} size={20} />
-              {spaceSupportMultiChain && (
-                <NetworkLogo network={account?.network} size={16} />
-              )}
               <IdentityOrAddr
                 network={account?.network}
                 address={address}
                 noLink
               />
             </div>
-            <UserIcon />
-          </AccountWrapper>
+          )}
           <MenuDivider />
-          {/* {account?.network !== "bartio" && account?.network !== "artio" && (
-            <MenuItem>
-              <LogoutWrapper onClick={onSwitch}>
-                Switch Network
-                <Image
-                  src="/imgs/icons/switch.svg"
-                  alt="switch network"
-                  width={24}
-                  height={24}
-                />
-              </LogoutWrapper>
-            </MenuItem>
-          )} */}
           <MenuItem>
             <LogoutWrapper onClick={onLogout}>
               Log out
@@ -378,48 +388,40 @@ function Account({ networks, menu }) {
       )}
     </MenuWrapper>
   );
-
   if (showConnect) {
     return <ConnectModal networks={networks} />;
   }
 
-  if (address && pageMounted) {
-    return (
-      <Wrapper className="account_modal">
-        <AccountWrapperPC
-          show={showMenu}
-          onClick={() => {
-            dispatch(setShowHeaderMenu(!showMenu));
-            dispatch(setShowNetworkSelector(false));
-          }}
-        >
-          <div>
-            <Avatar address={address} size={20} />
-            {spaceSupportMultiChain && (
-              <NetworkLogo network={account?.network} size={16} />
-            )}
-            <IdentityOrAddr
-              network={account?.network}
-              address={address}
-              noLink
-            />
-          </div>
-        </AccountWrapperPC>
-        {!showNetwork && showMenu && Menu}
-        {/* {showNetwork && dropdown} */}
-      </Wrapper>
-    );
-  }
-
-  if (windowSize.width > 800 && account != "") {
-    return ConnectWalletButton;
-  }
-
-  if (showMenu) {
-    return <Wrapper className="account">{Menu}</Wrapper>;
-  }
-
-  return null;
+  return (
+    <Wrapper className="account">
+      {address && pageMounted ? (
+        <>
+          <AccountWrapperPC
+            show={showMenu}
+            onClick={() => {
+              dispatch(setShowHeaderMenu(!showMenu));
+              dispatch(setShowNetworkSelector(false));
+            }}
+          >
+            <div>
+              <Avatar address={address} size={20} />
+              {spaceSupportMultiChain && (
+                <NetworkLogo network={account?.network} size={16} />
+              )}
+              <IdentityOrAddr
+                network={account?.network}
+                address={address}
+                noLink
+              />
+            </div>
+          </AccountWrapperPC>
+          {!showNetwork && showMenu && Menu}
+        </>
+      ) : (
+        ConnectWalletButton
+      )}
+    </Wrapper>
+  );
 }
 
 export default memo(Account);

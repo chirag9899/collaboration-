@@ -26,7 +26,7 @@ export default function OptionList({ optionList, strategy, space }) {
           <div key={index}>
             <ProgressItem>
               <Tooltip content={vote.choice}>
-                <OptionIndex>{vote.choice}</OptionIndex>
+                <OptionIndex title={vote.choice}>{vote.choice}</OptionIndex>
               </Tooltip>
               <FlexAround>
                 <Tooltip

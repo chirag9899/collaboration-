@@ -4,7 +4,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
   transpilePackages: ["@osn/common-ui", "@osn/common", "@osn/rich-text-editor"],
   images: {
-    domains: ['ipfs.beravote.com'],
+    domains: ['ipfs.beravote.com','https://beravote.com'],
   },
   webpack(config, { isServer }) {
     config.module.rules.push({
