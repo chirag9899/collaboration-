@@ -117,7 +117,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
 
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = true;
+      const switched = await handleChainSelect(bartioNetwork);
 
     if (!switched) {
       dispatch(newErrorToast(
@@ -148,7 +148,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = true;
+      const switched = await handleChainSelect(bartioNetwork);
       console.log(switched)
       setIsSwitching(false);
       if (switched) {
@@ -164,7 +164,7 @@ export default function PostIncentive({ data, voteStatus, space }) {
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = true;
+      const switched = await handleChainSelect(bartioNetwork);
       console.log(switched);
       setIsSwitching(false);
       if (switched) {
