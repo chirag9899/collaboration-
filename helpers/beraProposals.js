@@ -1,42 +1,20 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ethers } from "ethers";
 import { formatNumber } from "utils";
 import { getDateFromTimestamp } from "./methods";
-import gql from "graphql-tag";
+import { whitelist } from "./constants";
 import nextApi from "services/nextApi";
+import { GET_PROPOSALS, INCENTIVES_BY_PROPOSAL_QUERY } from "./queries";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BERACHAIN_GRAPH_ENDPOINT,
   cache: new InMemoryCache(),
 });
 
-// First Query to get proposals
-const GET_PROPOSALS = gql`
-  query proposals {
-    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
-      proposal {
-        proposalId
-        description
-        canceled
-        eta
-        executed
-        id
-        queued
-        voteEnd
-        voteStart
-        supports {
-          weight
-          support
-          id
-          votes {
-            id
-            reason
-            weight
-          }
-        }
-      }
-    }
-  }
-`;
+const incentivesClient = new ApolloClient({
+  uri: process.env.NEXT_PUBLIC_GRAPH_INCENTIVES_ENDPOINT,
+  cache: new InMemoryCache(),
+});
 
 function getProposalStatusDetails(
   executed,
@@ -111,12 +89,12 @@ function getProposalStatusDetails(
   return { status, color, backgroundColor, status };
 }
 
-async function chainHeightAndTime(blocknumber) {
+async function getFutureHeightsAndTimes(blocknumbers) {
   try {
-    const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheight/${blocknumber}`);
+    const { result } = await nextApi.fetch(`evm/chain/berachain-b2/futureheights/${JSON.stringify(blocknumbers)}`);
     return result;
   } catch (error) {
-    console.error("Failed to calculate future epoch:", error);
+    console.error('Failed to fetch future heights and times:', error);
     throw error;
   }
 }
@@ -155,18 +133,24 @@ export async function getFilteredProposals(proposals) {
   let totalVotersCount = 0;
   let passedProposalsCount = 0;
   let failedProposalsCount = 0;
-  const standardChainHeightAndTime = await chainHeightAndTime('current');
+
+  const blocknumbers = proposals.reduce((acc, proposal) => {
+    acc.push(proposal.voteStart, proposal.voteEnd);
+    return acc;
+  }, []);
+
+  const blockHeightsAndTimes = await getFutureHeightsAndTimes(blocknumbers);
+  // console.log(blockHeightsAndTimes)
+
+  const proposalIds = proposals.map(proposal => proposal.proposalId);
+  const incentivesTotals = await getIncentiveTotalsForAllProposals(proposalIds);
+
   for (const proposal of proposals) {
-    async function calculateFutureEpoch(blocknumber) {
-      if (parseInt(standardChainHeightAndTime.height) > parseInt(blocknumber)){
-        const exactHeightAndTime = await chainHeightAndTime(blocknumber);
-        return exactHeightAndTime.time;
-      } else {
-        const blocksIntoFuture = blocknumber - standardChainHeightAndTime.height;
-        const targetTime = standardChainHeightAndTime.time + (blocksIntoFuture * (standardChainHeightAndTime.blocktime / 1000));
-        return targetTime;
-      }
-    }
+    const blockHeightsAndTimesStart = blockHeightsAndTimes.find(h => h.height === Number(proposal.voteStart));
+    const blockHeightsAndTimesEnd = blockHeightsAndTimes.find(h => h.height === Number(proposal.voteEnd));
+    const voteStartTime = blockHeightsAndTimesStart;
+    const voteEndTime = blockHeightsAndTimesEnd;
+
     const votesCount = proposal.supports.reduce(
       (accumulator, currentValue) => +accumulator + +currentValue.votes.length,
       0,
@@ -176,6 +160,7 @@ export async function getFilteredProposals(proposals) {
 
     const description = proposal.description;
     const newlineIndex = description.split("\n");
+
     const abstainSupports = calculateSupportLengths(
       proposal?.supports ?? [],
       2,
@@ -198,16 +183,17 @@ export async function getFilteredProposals(proposals) {
       totalVotes > 0 ? Number((abstainCount * 100) / totalVotes) : 0;
 
     const quorum = 2000000000 * 1e18; // 2 billion in the contract
-    // const threshold = parseFloat(0.5); // create proposal threshold is 1000
+
     const forSupportsQuorumTotalWeight = forSupports[4];
     const againstSupportsQuorumTotalWeight = againstSupports[4];
-    const abstainSupportsQuorumTotalWeight = againstSupports[4];
-    // const thresholdPercentage = BigInt(Math.ceil(threshold * 100));
+    const abstainSupportsQuorumTotalWeight = abstainSupports[4];
 
     const totalvotesPercentage =
       againstVotesPer + forVotesPer + abstainVotesPer;
-    const voteStart = await calculateFutureEpoch(proposal.voteStart);
-    const voteEnd = await calculateFutureEpoch(proposal.voteEnd);
+
+    const voteStart = voteStartTime.time;
+    const voteEnd = voteEndTime.time;
+
     const statusDetails = getProposalStatusDetails(
       proposal.executed,
       proposal.queued,
@@ -216,7 +202,7 @@ export async function getFilteredProposals(proposals) {
       voteStart,
     );
 
-    let quorumNotReached = ''
+    let quorumNotReached = '';
     if (
       forSupportsQuorumTotalWeight < quorum ||
       abstainSupportsQuorumTotalWeight >= quorum ||
@@ -233,6 +219,9 @@ export async function getFilteredProposals(proposals) {
     ) {
       quorumNotReached = '(Proposal executed)';
     }
+
+    const totalIncentivesAmount = incentivesTotals[`bera-${proposal.proposalId}`] || 0;
+
     const proposalWithSupports = {
       ...proposal,
       supports: proposal.supports,
@@ -251,15 +240,14 @@ export async function getFilteredProposals(proposals) {
         abstainCount: Number(abstainVotesPer).toFixed(2) + "%",
         againstCount: Number(againstVotesPer).toFixed(2) + "%",
       },
-      // thresholdPercentage: Number(thresholdPercentage) + "%",
       status: statusDetails.status,
       statusDetails: statusDetails,
       quorumNotReached: quorumNotReached,
-      // requiredQuorumPercentage:
-      //   Number(requiredQuorumPercentage).toFixed() + "%",
+      totalIncentivesAmount: totalIncentivesAmount,
     };
 
     proposalsWithSupports.push(proposalWithSupports);
+
     if (
       statusDetails.status === "closed" &&
       forSupportsQuorumTotalWeight >= quorum &&
@@ -268,6 +256,7 @@ export async function getFilteredProposals(proposals) {
     ) {
       passedProposalsCount++;
     }
+
     if (
       forSupportsQuorumTotalWeight < quorum ||
       statusDetails.status === "terminated" ||
@@ -277,6 +266,7 @@ export async function getFilteredProposals(proposals) {
       failedProposalsCount++;
     }
   }
+
   return {
     proposalsWithSupports,
     proposalInfo: {
@@ -286,6 +276,7 @@ export async function getFilteredProposals(proposals) {
     },
   };
 }
+
 
 export async function getBerachainProposals() {
   try {
@@ -300,4 +291,56 @@ export async function getBerachainProposals() {
     console.error(e);
     return [];
   }
+}
+
+export async function getIncentiveTotalsForAllProposals(proposalIds) {
+  const results = {};
+  console.log('Fetching all incentives data...');
+  try {
+    const { data } = await incentivesClient.query({
+      query: INCENTIVES_BY_PROPOSAL_QUERY,
+      variables: {
+        "end_gte": "0",
+        "end_lte": "50000019727", // just insane big last blocknumber (save a call on last blockheight)
+        "skip": 0
+      }
+    });
+
+    if (!data || !data.rewardAddeds) {
+      console.log('No rewardAddeds found.');
+      proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0); // No incentives found for any proposal
+      return results;
+    }
+    proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0);
+
+    for (const rewardAdded of data.rewardAddeds) {
+      const formattedProposalId = rewardAdded.proposal;
+      const strippedProposalId = formattedProposalId.replace('bera-', '');
+
+      if (proposalIds.includes(strippedProposalId)) {
+        const tokenInfo = whitelist.find(token => token.address.toLowerCase() === rewardAdded.reward_token.toLowerCase());
+
+        if (!tokenInfo) {
+          console.log(`Token with address ${rewardAdded.reward_token} not found in the whitelist for proposal ${formattedProposalId}.`);
+          continue;
+        }
+
+        const decimals = tokenInfo.decimals;
+        const amountInWei = rewardAdded.amount; // Amount from the response
+        const formattedAmount = ethers.utils.formatUnits(amountInWei, decimals);
+        const price = 1;  // Placeholder for token price on testnet
+        results[formattedProposalId] += parseFloat(formattedAmount) * price;
+      }
+    }
+
+    for (const proposalId of proposalIds) {
+      console.log(`Total incentives calculated for proposal ${`bera-${proposalId}`}:`, results[`bera-${proposalId}`]);
+    }
+
+  } catch (e) {
+    console.error(`Error in getIncentiveTotalsForAllProposals:`, e.message, e);
+    proposalIds.forEach(proposalId => results[`bera-${proposalId}`] = 0);
+  }
+
+  return results;
 }

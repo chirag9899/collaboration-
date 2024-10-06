@@ -9,7 +9,6 @@ import {
   Amount,
   IconWrapper,
 } from "./styled";
-import NoData from "@/components/NoData";
 import Button from "@/components/Button";
 import { ReactComponent as ArrowLeft } from "/public/imgs/icons/arrow-left.svg";
 import { useRouter } from "next/router";
@@ -17,6 +16,7 @@ import useEthApis from "hooks/useEthApis";
 import { useEffect, useState } from "react";
 import { formatAmount } from "helpers/methods";
 import RewardCards from "../rewardCards";
+import {commify} from "../../../utils/index";
 
 export default function Content({ modal = false }) {
   const [claimInfo, setClaimInfo] = useState({
@@ -29,16 +29,19 @@ export default function Content({ modal = false }) {
   const [rewardClaimedMsg, setRewardClaimedMsg] = useState("");
   const { totalBalance, totalClaimed } = claimInfo;
   const router = useRouter();
-  const { getRewards, claimAllRewards } = useEthApis();
+  const { getRewards, claimAllRewards, claimReward } = useEthApis();
 
   async function loadRewards() {
+    console.log('loadRewards')
     const data = await getRewards(router.query.space);
+    console.log(data)
     const { rewards, claimInfo } = data;
     setClaimInfo({
       totalBalance: formatAmount(claimInfo?.totalBalance ?? 0),
       totalClaimed: formatAmount(claimInfo?.totalClaimed ?? 0),
     });
     setClaimableRewards(rewards);
+    console.log("rewards", rewards);
     setTotalClaimable(rewards.reduce((acc, curr)=>{
       return acc + (curr.claimable * curr.rewardTokenPrice);
     }, 0));
@@ -64,24 +67,18 @@ export default function Content({ modal = false }) {
     }
   }
 
-  const rewards = [
-    {
-      rewardToken: { symbol: "USDT", address: "0x1", price: 1 },
-      rewardTokenLogo: "https://cryptologos.cc/logos/tether-usdt-logo.png",
-      claimable: 0.060245,
-    },
-    {
-      rewardToken: { symbol: "CRV", address: "0x2", price: 0.3 },
-      rewardTokenLogo:
-        "https://cryptologos.cc/logos/curve-dao-token-crv-logo.png",
-      claimable: 1.9,
-    },
-    {
-      rewardToken: { symbol: "GRT", address: "0x3", price: 0.15 },
-      rewardTokenLogo: "https://cryptologos.cc/logos/the-graph-grt-logo.png",
-      claimable: 4.75,
-    },
-  ];
+  async function claim(claimData) {
+    try {
+      setClaiming("single");
+      await claimReward(claimData, router.query.space);
+      setRewardClaimedMsg("single");
+      setClaiming("");
+      await loadRewards();
+    } catch (e) {
+      setClaiming("");
+    }
+  }
+
 
   return (
     <Wrapper>
@@ -115,7 +112,7 @@ export default function Content({ modal = false }) {
 
       <Claim>
         <TextWrapper>
-          Yours to claim: <Amount>${totalClaimable}</Amount>
+          Yours to claim: <Amount>${commify(totalClaimable, 2)}</Amount>
         </TextWrapper>
         <Button
           data-v-4571bf26=""
@@ -132,7 +129,7 @@ export default function Content({ modal = false }) {
         Once the vote closes, your rewards will be calculated and updated the
         next day at 1PM UTC.
       </TextWrapper>
-      <RewardCards rewards={rewards}/>
+      <RewardCards rewards={claimableRewards} claim={claim}/>
     </Wrapper>
   );
 }

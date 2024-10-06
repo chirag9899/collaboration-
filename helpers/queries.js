@@ -33,3 +33,50 @@ export const All_PROPOSALS_LIST_QUERY = gql`
     }
   }
 `;
+
+export const GET_PROPOSALS = gql`
+  query proposals {
+    proposalCreateds(orderBy: timestamp, orderDirection: desc) {
+      proposal {
+        proposalId
+        description
+        canceled
+        eta
+        executed
+        id
+        queued
+        voteEnd
+        voteStart
+        supports {
+          weight
+          support
+          id
+          votes {
+            id
+            reason
+            weight
+          }
+        }
+      }
+    }
+  }
+`;
+
+// to be executed on the incentives graph
+export const INCENTIVES_BY_PROPOSAL_QUERY = gql`
+  query Incentives($end_gte: String!, $end_lte: String!, $skip: Int!) {
+    rewardAddeds(first: 1000, skip: $skip, where: { endTime_gte: $end_gte, endTime_lte: $end_lte }) {
+      id
+      time
+      rewarder
+      proposal
+      option
+      reward_token
+      amount
+      startTime
+      endTime
+      blockNumber
+      blockTimestamp
+    }
+  }
+`;

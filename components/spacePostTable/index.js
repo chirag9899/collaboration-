@@ -30,11 +30,10 @@ import AddIncentive from "../addIncentiveModalGov";
 import { formatNumber } from "utils";
 import Tooltip from "../tooltip";
 import CheckRewardsModal from "../checkRewardsModal";
-import USDC from "cryptocurrency-icons/svg/color/usdc.svg";
-import Image from "next/image";
 import NoData from "../NoData";
 import { chainMap } from "frontedUtils/consts/chains";
 import { newErrorToast } from "store/reducers/toastSlice";
+import { commify } from "../../utils";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
@@ -149,7 +148,7 @@ export default function SpacePostTable({
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = await handleChainSelect(bartioNetwork);
+      const switched = true;
       console.log(switched)
       setIsSwitching(false);
       if (switched) {
@@ -166,7 +165,7 @@ export default function SpacePostTable({
     try {
       const bartioNetwork = { network: 'berachain-b2' };
       setIsSwitching(true);
-      const switched = await handleChainSelect(bartioNetwork);
+      const switched = true;
       console.log(switched);
       setIsSwitching(false);
       if (switched) {
@@ -254,38 +253,9 @@ export default function SpacePostTable({
                       <DateSection>{item.voteStart}</DateSection>
                     </StatusWrapper>
                   </TableCell>
-                  <TableCell colWidth={15} data-label="Rewards">
-                    <div className="rewards">
-                      <span className="fw_bold">USD 12112</span>
-                      <Tooltip
-                        content={
-                          <div className="rewards_popup">
-                            <div className="popup_title">
-                              <p>Ethereum</p>
-                            </div>
-                            <div className="popup_body">
-                              <Image
-                                src={USDC}
-                                alt="Bitcoin"
-                                width={32}
-                                height={32}
-                              />
-                              <span>$9,576.37 USDC</span>
-                            </div>
-                            <div className="popup_body">
-                              <Image
-                                src={USDC}
-                                alt="Bitcoin"
-                                width={32}
-                                height={32}
-                              />
-                              <span>$3,682.31 RPL</span>
-                            </div>
-                          </div>
-                        }
-                        icon={"/imgs/icons/tooltip-info.svg"}
-                        iconSize={14}
-                      />
+                  <TableCell colWidth={15} data-label="Total incentives">
+                    <div className="incentives">
+                      <span className="fw_bold">${commify(item.totalIncentivesAmount, 2)}</span>
                     </div>
                   </TableCell>
                   <TableCell colWidth={15} data-label="Vote For">

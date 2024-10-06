@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import NoData from "../NoData";
 import Button from "../Button";
 import { p_16_semibold } from "styles/textStyles";
 import { primary_color } from "../styles/colors";
+import {commify} from "../../utils/index";
 
 const Container = styled.div`
   margin-top: 1rem;
@@ -85,19 +85,14 @@ const ButtonWrapper = styled(Button)`
 `;
 
 
-function RewardCards({rewards}) {
-  
+function RewardCards({rewards, claim}) {
 
   const shorten = (value, length) => value.toString().slice(0, length);
-  const commify = (value, precision = 0) =>
-    parseFloat(value)
-      .toFixed(precision)
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
   return (
     <Container>
       <GridContainer>
-        {rewards.length ? (
+        {
           rewards.map((reward) => (
             <CSSTransition
               key={reward.rewardToken.address}
@@ -123,17 +118,15 @@ function RewardCards({rewards}) {
                     <div>USD value</div>
                     <div>
                       {"$" +
-                        commify(reward.claimable * reward.rewardToken.price, 2)}
+                        commify(reward.claimable * reward.rewardTokenPrice, 2)}
                     </div>
                   </Stat>
                 </StatsContainer>
-                <ButtonWrapper>Claim</ButtonWrapper>
+                <ButtonWrapper onClick={()=> claim(reward.claimData)}>Claim</ButtonWrapper>
               </Block>
             </CSSTransition>
           ))
-        ) : (
-          <NoData message="No Record found" />
-        )}
+        }
       </GridContainer>
     </Container>
   );

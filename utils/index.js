@@ -97,3 +97,10 @@ export function filterTopVoters(arr, prop, topN = 10) {
     // )
     // .slice(0, topN);
 }
+
+export function commify (value, precision = 0) {
+ return parseFloat(value)
+    .toFixed(precision)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
