@@ -266,6 +266,9 @@ export async function getFilteredProposals(proposals) {
       failedProposalsCount++;
     }
   }
+  while (proposalsWithSupports.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 30000));
+  }
 
   return {
     proposalsWithSupports,
@@ -276,7 +279,6 @@ export async function getFilteredProposals(proposals) {
     },
   };
 }
-
 
 export async function getBerachainProposals() {
   try {
