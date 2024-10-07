@@ -1,10 +1,14 @@
-const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 
 /** @type {import('next').NextConfig} */
 module.exports = {
   transpilePackages: ["@osn/common-ui", "@osn/common", "@osn/rich-text-editor"],
   images: {
-    domains: ['ipfs.beravote.com','https://beravote.com'],
+    domains: [
+      "ipfs.beravote.com",
+      "https://beravote.com",
+      "artio-static-asset-public.s3.ap-southeast-1.amazonaws.com",
+    ],
   },
   webpack(config, { isServer }) {
     config.module.rules.push({

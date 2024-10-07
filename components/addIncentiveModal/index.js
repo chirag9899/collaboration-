@@ -30,6 +30,8 @@ import Tooltip from "../tooltip";
 import AssetDetail from "../newSpace/step2/asset/assetDetail";
 import { noop } from "utils";
 import { chainMap } from "frontedUtils/consts/chains";
+import TokenSelectorDrop from "../tokenSelectorDrop";
+import { whitelist } from "helpers/constants";
 
 const AddIncentive = ({
   choices,
@@ -82,9 +84,9 @@ const AddIncentive = ({
   }));
 
   const getTokenBalanceAndAllowance = async () => {
-    validateChain()
-    const { result, error } = await getBalance( tokenAddress);
-    console.log('result',result)
+    validateChain();
+    const { result, error } = await getBalance(tokenAddress);
+    console.log("result", result);
     if (error) {
       setErrors((prev) => ({
         ...prev,
@@ -97,15 +99,12 @@ const AddIncentive = ({
         tokenPrice: 0,
       }));
     } else {
-      const allowanceResult = await getAllowance(
-        tokenAddress,
-        beravoteAddress,
-      );
+      const allowanceResult = await getAllowance(tokenAddress, beravoteAddress);
       //const price = await getBerachainSubgraphPrice(tokenAddress);
       const price = 1;
       const newAvailableBal = parseFloat(result);
       const newAllowance = parseFloat(allowanceResult.result);
-      console.log(newAvailableBal)
+      console.log(newAvailableBal);
       setFormdata((prev) => ({
         ...prev,
         availableBal: parseFloat(result),
@@ -128,41 +127,41 @@ const AddIncentive = ({
       getTokenBalanceAndAllowance();
       validateChain();
     }
-  
+
     // Setup an event listener for chain changes
     const handleChainChanged = (_chainId) => {
       validateChain();
     };
-  
-    window.ethereum.on('chainChanged', handleChainChanged);
-  
+
+    window.ethereum.on("chainChanged", handleChainChanged);
+
     // Cleanup the event listener when the component unmounts or dependencies change
     return () => {
-      window.ethereum.removeListener('chainChanged', handleChainChanged);
+      window.ethereum.removeListener("chainChanged", handleChainChanged);
     };
-  }, [open, address, tokenAddress]); 
+  }, [open, address, tokenAddress]);
 
+  const validateChain = async () => {
+    const bartioNetwork = { network: "berachain-b2" };
 
+    const currentChainId = await window.ethereum.request({
+      method: "eth_chainId",
+    });
+    const bartioNetworkId = chainMap.get(bartioNetwork.network).id;
 
-  const validateChain = async() => {
-    const bartioNetwork = { network: 'berachain-b2' };
-
-    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
-      const bartioNetworkId = chainMap.get(bartioNetwork.network).id;
-
-      if (currentChainId !== bartioNetworkId) {
-        setErrors((prev) => ({
-          ...prev,
-          networkErr: "Please switch to the Bartio network to proceed.",
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          networkErr: null,
-        }));
-      }
+    if (currentChainId !== bartioNetworkId) {
+      setErrors((prev) => ({
+        ...prev,
+        networkErr: "Please switch to the Bartio network to proceed.",
+      }));
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        networkErr: null,
+      }));
+    }
   };
-  
+
   const validateIncentiveAmount = (amount, availableBal, allowance) => {
     let amountError = null;
     if (amount <= 0) {
@@ -237,9 +236,23 @@ const AddIncentive = ({
       incentiveAmount.toString(),
       18,
     );
-    await approveToken( tokenAddress, beravoteAddress, amountToApprove);
+    await approveToken(tokenAddress, beravoteAddress, amountToApprove);
     await getTokenBalanceAndAllowance(); // Refresh balance and allowance after approval
     setIsLoading(false); // Stop loading
+  };
+
+  const onSelectToken = (value) => {
+    setFormdata((prev) => ({
+      ...prev,
+      tokenAddress: value,
+    }));
+
+    setErrors((prev) => {
+      return {
+        ...prev,
+        tokenErr: null,
+      };
+    });
   };
 
   return (
@@ -252,7 +265,11 @@ const AddIncentive = ({
       closeBar={false}
     >
       <HeadWrapper>
-        <StyledTitle style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>{title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}</StyledTitle>
+        <StyledTitle
+          style={{ display: "flex", alignItems: "center", gap: "4px" }}
+        >
+          {title} {networkErr && <Tooltip content={networkErr} iconSize={20} />}
+        </StyledTitle>
 
         <CloseBar onClick={closeModal}>
           <Image
@@ -266,14 +283,15 @@ const AddIncentive = ({
       <ModalBodyWrapper>
         <InputWrapper>
           <SectionTitle>Token Address</SectionTitle>
-          <Input
+          {/* <Input
             type="text"
             placeholder="Address"
             value={tokenAddress}
             name="tokenAddress"
             onBlur={getTokenBalanceAndAllowance}
             onChange={onChangeHandler}
-          />
+          /> */}
+          <TokenSelectorDrop tokenList={whitelist} onSelect={onSelectToken} />
           {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
 

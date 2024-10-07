@@ -27,7 +27,7 @@ export const HeadWrapper = styled.div`
 export const ModalBodyWrapper = styled.div`
   margin-top: 20px;
   overflow-y: auto;
-  max-height: 406px;
+  max-height: 430px;
   overflow-x: hidden;
 `;
 export const Text = styled.p`
@@ -75,7 +75,7 @@ export const ActionsWrapper = styled.div`
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 10px;
   > span {
     margin-bottom: 5px;
