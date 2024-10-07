@@ -30,6 +30,7 @@ import AssetDetail from "../newSpace/step2/asset/assetDetail";
 import { chainMap } from "frontedUtils/consts/chains";
 import { noop } from "utils";
 import {whitelist} from "../../helpers/constants";
+import TokenSelectorDrop from "../tokenSelectorDrop";
 
 const AddIncentive = ({
   choices,
@@ -83,7 +84,7 @@ const AddIncentive = ({
   }));
 
   const getTokenBalanceAndAllowance = async () => {
-    if(tokenAddress === "" || whitelist.find(({address})=>address.toLowerCase() === tokenAddress.toLowerCase())) {
+    if(tokenAddress === "" || whitelist.find(({address})=>address?.toLowerCase() === tokenAddress?.toLowerCase())) {
       validateChain()
       const { result, error } = await getBalance(tokenAddress);
       // console.log('test')
@@ -211,6 +212,20 @@ const AddIncentive = ({
     }
   };
 
+  const onSelectToken = (value) => {
+    setFormdata((prev) => ({
+      ...prev,
+      tokenAddress: value.address,
+    }));
+
+    setErrors((prev) => {
+      return {
+        ...prev,
+        tokenErr: null,
+      };
+    });
+  };
+
   const maxIncentiveHandler = () => {
     setFormdata((prev) => ({
       ...prev,
@@ -267,14 +282,15 @@ const AddIncentive = ({
       <ModalBodyWrapper>
         <InputWrapper>
           <SectionTitle>Token Address</SectionTitle>
-          <Input
+          {/* <Input
             type="text"
             placeholder="Address"
             value={tokenAddress}
             name="tokenAddress"
             onBlur={getTokenBalanceAndAllowance}
             onChange={onChangeHandler}
-          />
+          /> */}
+          <TokenSelectorDrop tokenList={whitelist} onSelect={onSelectToken} />
           {tokenErr && <ErrorMessage>{tokenErr}</ErrorMessage>}
         </InputWrapper>
 

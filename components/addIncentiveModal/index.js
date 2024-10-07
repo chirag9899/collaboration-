@@ -244,7 +244,7 @@ const AddIncentive = ({
   const onSelectToken = (value) => {
     setFormdata((prev) => ({
       ...prev,
-      tokenAddress: value,
+      tokenAddress: value.address,
     }));
 
     setErrors((prev) => {
