@@ -2,17 +2,24 @@ import { useEffect, useState } from "react";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 import { ssrNextApi } from "services/nextApi";
 import { to404 } from "../../../frontedUtils/serverSideUtil";
-import { getBerachainProposals } from "helpers/beraProposals";
+import {
+  getBerachainProposals,
+  getIncentiveTotalsForAllProposals,
+} from "helpers/beraProposals";
 import Layout from "components/layout";
 import Seo from "@/components/seo";
 import dynamic from "next/dynamic";
-import SpacePostTable from "@/components/spacePostTable";
+// import SpacePostTable from "@/components/spacePostTable";
 import { _handleChainSelect } from "@/components/connect/helper";
 import { getCookie } from "frontedUtils/cookie";
 import styled from "styled-components";
 import { ethers } from "ethers";
 
 const BeraListInfo = dynamic(() => import("components/beraListInfo"), {
+  ssr: false,
+});
+
+const SpacePostTable = dynamic(() => import("@/components/spacePostTable"), {
   ssr: false,
 });
 
@@ -64,7 +71,37 @@ const GET_BGT_BALANCE = gql`
 export default function List({ spaceId, space, allProposalList }) {
   const [showContent, setShowContent] = useState("proposals-all");
   const [balance, setBalance] = useState("0");
-  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
+  const [address, setAddress] = useState(
+    getCookie("addressV3")?.split("/")[1] || "",
+  );
+
+  const [proposals, setProposals] = useState(allProposalList);
+
+  const fetchTotalIncentives = async (proposalIds) => {
+    const result = await getIncentiveTotalsForAllProposals(proposalIds);
+    const proposalsWithTotalBal = proposals.proposalsWithSupports.map(
+      (proposal) => {
+        return {
+          ...proposal,
+          totalIncentivesAmount: result[`bera-${proposal.proposalId}`] || 0,
+        };
+      },
+    );
+
+    setProposals((prev) => {
+      return {
+        ...prev,
+        proposalsWithSupports: proposalsWithTotalBal,
+      };
+    });
+  };
+
+  useEffect(() => {
+    const proposalIds = allProposalList.proposalsWithSupports.map(
+      (proposal) => proposal.proposalId,
+    );
+    fetchTotalIncentives(proposalIds);
+  }, [allProposalList]);
 
   useEffect(() => {
     const handleAddressChange = () => {
@@ -91,15 +128,17 @@ export default function List({ spaceId, space, allProposalList }) {
             variables: { address },
           });
 
-          const fetchedBalance = data.holders.length > 0 ? data.holders[0].balance : "0";
-          const formattedBalance = parseFloat(ethers.utils.formatUnits(fetchedBalance, 18)).toFixed(4);
+          const fetchedBalance =
+            data.holders.length > 0 ? data.holders[0].balance : "0";
+          const formattedBalance = parseFloat(
+            ethers.utils.formatUnits(fetchedBalance, 18),
+          ).toFixed(4);
           setBalance(formattedBalance);
         } catch (error) {
           console.error("Error fetching balance:", error);
           setBalance("0");
         }
       }
-
     };
 
     validateAndFetchBalance();
@@ -130,8 +169,8 @@ export default function List({ spaceId, space, allProposalList }) {
                 />
               </HeaderWrapper>
               <SpacePostTable
-                posts={allProposalList.proposalsWithSupports}
-                proposalInfo={allProposalList.proposalInfo}
+                posts={proposals?.proposalsWithSupports}
+                proposalInfo={proposals?.proposalInfo}
                 space={space}
                 status={""}
                 title={"Proposals"}
