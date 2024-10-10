@@ -44,7 +44,7 @@ const AddIncentive = ({
   const [selectedOptions, setSelectedOptions] = useState(1);
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAVOTE_ADDRESS;
   const [formdata, setFormdata] = useState({
-    tokenAddress: "",
+    tokenAddress: whitelist[0].address,
     tokenPrice: 0,
     incentiveAmount: 0,
     addIncentive: false,

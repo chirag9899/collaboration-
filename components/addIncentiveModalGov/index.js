@@ -31,6 +31,8 @@ import { chainMap } from "frontedUtils/consts/chains";
 import { noop } from "utils";
 import {whitelist} from "../../helpers/constants";
 import TokenSelectorDrop from "../tokenSelectorDrop";
+import { addressSelector } from "store/reducers/accountSlice";
+import { useSelector } from "react-redux";
 
 const AddIncentive = ({
   choices,
@@ -43,7 +45,7 @@ const AddIncentive = ({
   const [selectedOptions, setSelectedOptions] = useState(1);
   const beravoteAddress = process.env.NEXT_PUBLIC_BERAGOV_ADDRESS;
   const [formdata, setFormdata] = useState({
-    tokenAddress: "",
+    tokenAddress: whitelist[0].address,
     tokenPrice: 0,
     incentiveAmount: 0,
     addIncentive: false,
@@ -61,7 +63,8 @@ const AddIncentive = ({
 
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
+  const address = useSelector(addressSelector);
+
 
   const {
     tokenAddress,
@@ -87,9 +90,6 @@ const AddIncentive = ({
     if(tokenAddress === "" || whitelist.find(({address})=>address?.toLowerCase() === tokenAddress?.toLowerCase())) {
       validateChain()
       const { result, error } = await getBalance(tokenAddress);
-      // console.log('test')
-      // console.log(address)
-      // console.log(tokenAddress)
       if (error) {
         setErrors((prev) => ({
           ...prev,

@@ -34,6 +34,7 @@ import NoData from "../NoData";
 import { chainMap } from "frontedUtils/consts/chains";
 import { newErrorToast } from "store/reducers/toastSlice";
 import { commify } from "../../utils";
+import { addressSelector } from "store/reducers/accountSlice";
 
 const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BGT_GRAPH_ENDPOINT,
@@ -69,8 +70,9 @@ export default function SpacePostTable({
   const { open, openModal, closeModal } = useModal();
   const { addBeraGovRewardAmount } = useEthApis();
   const [isSwitching, setIsSwitching] = useState(false);
-  const [address, setAddress] = useState(getCookie("addressV3")?.split("/")[1] || "");
   const [incentiveData, setIncentiveData] = useState(null);
+  const address = useSelector(addressSelector);
+
 
   const onCheckRewards = async () => {
     await router.push(`/space/beragov/rewards`);

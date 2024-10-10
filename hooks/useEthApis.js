@@ -3,17 +3,18 @@ import { useState, useEffect } from "react";
 import erc20 from "../abi/erc20.json";
 import bgtAbi from "../abi/BGT.json";
 import beravoteAbi from "../abi/beravote.json";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import gql from "graphql-tag";
 import { getTokenInfo, tokenData } from "helpers/methods";
 import { newErrorToast, newSuccessToast } from "store/reducers/toastSlice";
 import merkle from "../abi/merkle.json";
 import BigNumber from 'bignumber.js';
+import { addressSelector } from "store/reducers/accountSlice";
 
 const useEthApis = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [address, setAddress] = useState(null); 
+  const [address, setAddress] = useState(useSelector(addressSelector)); 
   const ethersProvider =
     typeof window !== "undefined" && window.ethereum
       ? new ethers.providers.Web3Provider(window.ethereum)
@@ -126,6 +127,18 @@ const useEthApis = () => {
       const token = new ethers.Contract(tokenAddress, erc20.abi, signer);
 
       const allowance = await token.allowance(address, beravoteAddress);
+      // const availableBalInWei = ethers.utils.parseUnits(availableBal.toString(), 18);
+      const balance = await token.balanceOf(address);
+
+      if (amountToApprove.lte(0)) {
+        dispatch(newErrorToast("Approval amount must be greater than 0!"));
+        return false;
+      }
+      
+      if (amountToApprove.gt(balance)) {
+        dispatch(newErrorToast("Approval amount exceeds available balance!"));
+        return false;
+      }
 
       // check allowance is bigger than 0 for USDT edge case where a user cannot set allowance if there's already an allowance
       if (
