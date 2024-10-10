@@ -140,10 +140,9 @@ export async function getFilteredProposals(proposals) {
   }, []);
 
   const blockHeightsAndTimes = await getFutureHeightsAndTimes(blocknumbers);
-  // console.log(blockHeightsAndTimes)
 
-  const proposalIds = proposals.map(proposal => proposal.proposalId);
-  const incentivesTotals = await getIncentiveTotalsForAllProposals(proposalIds);
+  // const proposalIds = proposals.map(proposal => proposal.proposalId);
+  // const incentivesTotals = await getIncentiveTotalsForAllProposals(proposalIds);
 
   for (const proposal of proposals) {
     const blockHeightsAndTimesStart = blockHeightsAndTimes.find(h => h.height === Number(proposal.voteStart));
@@ -220,7 +219,7 @@ export async function getFilteredProposals(proposals) {
       quorumNotReached = '(Proposal executed)';
     }
 
-    const totalIncentivesAmount = incentivesTotals[`bera-${proposal.proposalId}`] || 0;
+    // const totalIncentivesAmount = incentivesTotals[`bera-${proposal.proposalId}`] || 0;
 
     const proposalWithSupports = {
       ...proposal,
@@ -243,7 +242,7 @@ export async function getFilteredProposals(proposals) {
       status: statusDetails.status,
       statusDetails: statusDetails,
       quorumNotReached: quorumNotReached,
-      totalIncentivesAmount: totalIncentivesAmount,
+      // totalIncentivesAmount: totalIncentivesAmount,
     };
 
     proposalsWithSupports.push(proposalWithSupports);
@@ -297,7 +296,6 @@ export async function getBerachainProposals() {
 
 export async function getIncentiveTotalsForAllProposals(proposalIds) {
   const results = {};
-  console.log('Fetching all incentives data...');
   try {
     const { data } = await incentivesClient.query({
       query: INCENTIVES_BY_PROPOSAL_QUERY,
@@ -335,9 +333,9 @@ export async function getIncentiveTotalsForAllProposals(proposalIds) {
       }
     }
 
-    for (const proposalId of proposalIds) {
-      console.log(`Total incentives calculated for proposal ${`bera-${proposalId}`}:`, results[`bera-${proposalId}`]);
-    }
+    // for (const proposalId of proposalIds) {
+    //   console.log(`Total incentives calculated for proposal ${`bera-${proposalId}`}:`, results[`bera-${proposalId}`]);
+    // }
 
   } catch (e) {
     console.error(`Error in getIncentiveTotalsForAllProposals:`, e.message, e);

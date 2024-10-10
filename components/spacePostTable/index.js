@@ -79,7 +79,7 @@ export default function SpacePostTable({
   };
 
   const { failedProposalsCount, passedProposalsCount, totalVotersCount } =
-    proposalInfo;
+    proposalInfo || {};
 
   // Fetch holders count on mount
   useEffect(() => {
@@ -95,12 +95,16 @@ export default function SpacePostTable({
     fetchHoldersCount();
   }, []);
 
-  const fetchProposals = async (from, to) => {
+  const fetchProposals = async (from, to, btnClick) => {
     const result = posts?.length > 0 ? posts?.slice(from, to) : [];
     setIsLoading(true);
     setTotalCount(posts.length);
-    setData((prev) => [...prev, ...result]);
     setIsLoading(false);
+    if (btnClick) {
+      setData((prev) => [...prev, ...result]);
+    } else {
+      setData(result);
+    }
   };
 
   useEffect(() => {
@@ -117,7 +121,7 @@ export default function SpacePostTable({
     if (to < totalCount) {
       setFrom(from + limit);
       setTo(to + limit);
-      fetchProposals(from + limit, to + limit);
+      fetchProposals(from + limit, to + limit,true);
     }
   };
 
@@ -131,12 +135,20 @@ export default function SpacePostTable({
 
   const handleChainSelect = async (chain) => {
     try {
-      await _handleChainSelect(connectedWallet, dispatch, address, chainMap, chain);
-      const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      await _handleChainSelect(
+        connectedWallet,
+        dispatch,
+        address,
+        chainMap,
+        chain,
+      );
+      const currentChainId = await window.ethereum.request({
+        method: "eth_chainId",
+      });
       const bartioNetworkId = chainMap.get(chain.network).id;
 
       if (currentChainId !== bartioNetworkId) {
-        return false
+        return false;
       }
       return true;
     } catch (error) {
@@ -148,16 +160,15 @@ export default function SpacePostTable({
 
   const handleIncentive = async (item) => {
     try {
-      const bartioNetwork = { network: 'berachain-b2' };
+      const bartioNetwork = { network: "berachain-b2" };
       setIsSwitching(true);
       const switched = await handleChainSelect(bartioNetwork);
-      console.log(switched)
+      console.log(switched);
       setIsSwitching(false);
       if (switched) {
         setIncentiveData(item);
         openModal();
       }
-
     } catch (error) {
       closeModal();
     }
@@ -165,7 +176,7 @@ export default function SpacePostTable({
 
   const handleCheckRewards = async () => {
     try {
-      const bartioNetwork = { network: 'berachain-b2' };
+      const bartioNetwork = { network: "berachain-b2" };
       setIsSwitching(true);
       const switched = await handleChainSelect(bartioNetwork);
       console.log(switched);
@@ -187,7 +198,9 @@ export default function SpacePostTable({
     try {
       await addBeraGovRewardAmount(
         incentiveData.id,
-        value.addIncentive ? ethers.constants.MaxUint256 : value.selectedOptions,
+        value.addIncentive
+          ? ethers.constants.MaxUint256
+          : value.selectedOptions,
         value.incentiveAmount,
         value.tokenAddress,
         incentiveData.voteStartOrg,
@@ -203,7 +216,7 @@ export default function SpacePostTable({
     <>
       <ProposalsCount>
         <div>
-          <p>{formatNumber(posts.length)}</p>
+          <p>{formatNumber(posts?.length)}</p>
           <span>Proposals</span>
         </div>
         <div>
@@ -257,7 +270,9 @@ export default function SpacePostTable({
                   </TableCell>
                   <TableCell colWidth={15} data-label="Total incentives">
                     <div className="incentives">
-                      <span className="fw_bold">${commify(item.totalIncentivesAmount, 2)}</span>
+                      <span className="fw_bold">
+                        ${commify(item.totalIncentivesAmount, 2)}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell colWidth={15} data-label="Vote For">
@@ -285,7 +300,8 @@ export default function SpacePostTable({
                     <ButtonsGroup>
                       <CustomBtn
                         disabled={
-                          process.env.NEXT_PUBLIC_SHOW_BERA_VOTE_BUTTON !== "true" &&
+                          process.env.NEXT_PUBLIC_SHOW_BERA_VOTE_BUTTON !==
+                            "true" &&
                           (!address || item.statusDetails.status !== "active")
                         }
                         primary
