@@ -116,7 +116,7 @@ export const TableCell = styled.td`
     width: 100%;
     text-align: right;
     position: relative;
-    padding-left: 50%;
+    padding-left: 40%;
     height: fit-content;
     &:first-child {
       border-radius: 15px 15px 0px 0px;
@@ -301,12 +301,21 @@ export const StatusWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-top: 10px;
+  >div{
+    width: 250px;
+  }
+
+  @media (max-width: 768px) {
+    >div{
+    width: 200px;
+  }
+  }
 `;
 
 export const Status = styled.div`
   margin-right: 15px;
   padding: 3px 10px;
-  font-size: 12px;
+  font-size: 10px;
   border-radius: 50px;
   text-transform: capitalize;
   color: ${(props) => props.statusDetails.color};

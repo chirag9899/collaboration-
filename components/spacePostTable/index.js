@@ -262,9 +262,11 @@ export default function SpacePostTable({
                       <Title>{item.title}</Title>
                     </TitleWrapper>
                     <StatusWrapper>
-                      <Status statusDetails={item.statusDetails}>
+                     <div>
+                     <Status statusDetails={item.statusDetails}>
                         {item.statusDetails.status} {item.quorumNotReached}
                       </Status>
+                     </div>
                       <DateSection>{item.voteStart}</DateSection>
                     </StatusWrapper>
                   </TableCell>

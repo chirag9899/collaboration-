@@ -7,6 +7,7 @@ import NetworkLogo from "./network/networkLogo";
 import { black } from "./styles/colors";
 import { ReactComponent as CaretDown } from "../public/imgs/icons/caret-down.svg";
 import Image from "next/image";
+import { addressEllipsis } from "frontedUtils";
 
 const Text = styled.p`
   ${p_14_medium};
@@ -46,11 +47,8 @@ const DropdownHeader = styled.div`
     align-items: center;
     justify-content: center;
     gap: 15px;
-    >p{
-    max-width: 250px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    > div {
+      min-width: 280px;
     }
   }
 `;
@@ -91,12 +89,13 @@ const DropdownItem = styled.li`
   &:hover {
     background-color: var(--plum) !important;
   }
-  >p{
-    max-width: 310px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+`;
+
+const AddressWrapper = styled.div`
+  display: flex;
+  width: 75%;
+  align-items: center;
+  gap: 15px;
 `;
 
 const IconWrapper = styled(CaretDown)`
@@ -104,11 +103,10 @@ const IconWrapper = styled(CaretDown)`
 `;
 
 const TokenSelectorDrop = ({ tokenList = [], onSelect }) => {
-  console.log(tokenList, "tokenList")
+  console.log(tokenList, "tokenList");
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedToken, setSelectedToken] = useState(tokenList[0]);
-
 
   const dropdownRef = useRef(null);
 
@@ -143,8 +141,15 @@ const TokenSelectorDrop = ({ tokenList = [], onSelect }) => {
           {selectedToken ? (
             <>
               {/* <NetworkLogo network={selectedToken.network} /> */}
-              <Image src={selectedToken.logo} alt="logo" width={24} height={24} />
-              <Text>{selectedToken.address}</Text>
+              <AddressWrapper title={selectedToken.address}>
+                <Image
+                  src={selectedToken.logo}
+                  alt="logo"
+                  width={24}
+                  height={24}
+                />
+                <Text>{addressEllipsis(selectedToken.address)}</Text>
+              </AddressWrapper>
               <Text>{selectedToken.name}</Text>
             </>
           ) : (
@@ -163,7 +168,10 @@ const TokenSelectorDrop = ({ tokenList = [], onSelect }) => {
               onClick={() => handleSelect(index)}
             >
               {/* <NetworkLogo network={item.network} /> */}
-              <Text>{item.address}</Text>
+              <AddressWrapper title={item.address}>
+                <Image src={item.logo} alt="logo" width={24} height={24} />
+                <Text>{addressEllipsis(item.address)}</Text>
+              </AddressWrapper>
               <Text>{item.name}</Text>
             </DropdownItem>
           ))}
