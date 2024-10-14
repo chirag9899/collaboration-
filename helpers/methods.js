@@ -15,7 +15,7 @@ export function getDecimals(amount) {
 }
 
 export function formatAmount(value) {
-  return parseInt(value).toFixed(2);
+  return value.toFixed(2);
 }
 
 export async function tokenData(token) {

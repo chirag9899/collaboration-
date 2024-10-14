@@ -288,7 +288,7 @@ const useEthApis = () => {
           query: claimsQuery,
           variables: {
             account: address,
-            chainId: 1337,  // Ensure this chainId is correct
+            chainId: 80084,  // Ensure this chainId is correct
           },
         });
 
