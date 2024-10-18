@@ -13,9 +13,10 @@ import { h3_36_bold, p_16_semibold } from "./styles/textStyles";
 import { text_light_major } from "./styles/colors";
 import { formatNumber } from "utils";
 import dynamic from "next/dynamic";
+import Switch from "./switchBtn";
 const SpaceListItem = dynamic(() => import("./spaceListItem"), {
   ssr: false,
-  loading:"Loading...."
+  loading: "Loading....",
 });
 
 const Wrapper = styled.div``;
@@ -79,7 +80,15 @@ const TotalCountWrapper = styled.div`
   text-transform: capitalize;
 `;
 
-export default function Space({ spaces, limit, title, totalCount }) {
+export default function Space({
+  spaces,
+  limit,
+  title,
+  totalCount,
+  onSwitchHandler,
+  isChecked,
+  switchedNetwork,
+}) {
   const [showCount, setShowCount] = useState(limit);
 
   const dispatch = useDispatch();
@@ -108,7 +117,17 @@ export default function Space({ spaces, limit, title, totalCount }) {
         <TitleWrapper>
           <Title>{title}</Title>
         </TitleWrapper>
+
         <TotalCountWrapper>
+          <Switch
+            onChange={onSwitchHandler}
+            checked={isChecked}
+            text={
+              switchedNetwork === "berachain"
+                ? "Berachain Artio"
+                : "Berachain bArtio B2"
+            }
+          />
           <TotalCount>{`(${formatNumber(totalCount)}) ${title}`}</TotalCount>
         </TotalCountWrapper>
       </SubTitleWrapper>

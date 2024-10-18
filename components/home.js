@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import dynamic from "next/dynamic";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { joinedSpacesSelector } from "store/reducers/accountSlice";
-import { switchedNetworkSelector } from "store/reducers/showConnectSlice";
+import { setSwitchednetwork, switchedNetworkSelector } from "store/reducers/showConnectSlice";
 import useDropDown from "hooks/useDropDown";
 
 const SearchBar = dynamic(() => import("./searchBar"), {
@@ -62,30 +62,65 @@ const categoriesOptions = [
   { label: "grant", value: "grant", badge: "123" },
 ];
 
-export default function Home({ networks, spaces, hottestProposals, userSpaces }) {
+export default function Home({
+  networks,
+  spaces,
+  hottestProposals,
+  userSpaces,
+}) {
   const [allSpaces, setAllSpaces] = useState(spaces);
   const [allNetworks, setAllNetworks] = useState(networks);
   const [search, setSearch] = useState("");
   const [ownSpaces, setOwnSpaces] = useState(userSpaces);
+  const [isChecked, setIsChecked] = useState(false);
 
   const switchedNetwork = useSelector(switchedNetworkSelector);
   const joinedSpaces = useSelector(joinedSpacesSelector);
 
+  const dispatch=useDispatch();
+
   const { options, handleSelect, selectedOption } = useDropDown(searchOptions);
   const isSpaces = useMemo(() => selectedOption === "spaces", [selectedOption]);
-  const isNetworks = useMemo(() => selectedOption === "networks", [selectedOption]);
+  const isNetworks = useMemo(
+    () => selectedOption === "networks",
+    [selectedOption],
+  );
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedValue = localStorage.getItem("isChecked");
+
+      if (storedValue !== null) {
+        setIsChecked(storedValue === "true");
+      } else {
+        localStorage.setItem("spacesFilterBy", "berachain-b2");
+        localStorage.setItem("isChecked", JSON.stringify(false));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const filterBy = localStorage.getItem("spacesFilterBy");
+    dispatch(setSwitchednetwork(filterBy));
+  }, [isChecked, dispatch]);
 
   const updateFilteredSpaces = useCallback(() => {
-    const filtered = spaces.filter(item => item?.space?.networks?.[0]?.network === switchedNetwork);
+    const filtered = spaces.filter(
+      (item) => item?.space?.networks?.[0]?.network === switchedNetwork,
+    );
     setAllSpaces(filtered);
 
     if (search === "") {
       setOwnSpaces(userSpaces);
     } else {
       const searchVal = search.toLowerCase();
-      const result = filtered.filter(({ name }) => name.toLowerCase().includes(searchVal));
+      const result = filtered.filter(({ name }) =>
+        name.toLowerCase().includes(searchVal),
+      );
       setAllSpaces(result);
-      setOwnSpaces(userSpaces.filter(({ name }) => name.toLowerCase().includes(searchVal)));
+      setOwnSpaces(
+        userSpaces.filter(({ name }) => name.toLowerCase().includes(searchVal)),
+      );
     }
   }, [spaces, switchedNetwork, search, userSpaces]);
 
@@ -99,7 +134,9 @@ export default function Home({ networks, spaces, hottestProposals, userSpaces })
         setAllNetworks(networks);
       } else {
         const searchVal = search.toLowerCase();
-        const result = networks.filter(({ name }) => name.toLowerCase().includes(searchVal));
+        const result = networks.filter(({ name }) =>
+          name.toLowerCase().includes(searchVal),
+        );
         setAllNetworks(result);
       }
     }
@@ -109,11 +146,30 @@ export default function Home({ networks, spaces, hottestProposals, userSpaces })
     setSearch(event.target.value);
   };
 
-  const finalResult = useMemo(() => allSpaces.filter(item => joinedSpaces.some(joinedItem => joinedItem.space === item.space.id)), [allSpaces, joinedSpaces]);
+  const finalResult = useMemo(
+    () =>
+      allSpaces.filter((item) =>
+        joinedSpaces.some((joinedItem) => joinedItem.space === item.space.id),
+      ),
+    [allSpaces, joinedSpaces],
+  );
 
   const getAllSpaces = useCallback(() => {
-    return allSpaces.filter(item => joinedSpaces.every(joinedItem => joinedItem.space !== item.space.id));
+    return allSpaces.filter((item) =>
+      joinedSpaces.every((joinedItem) => joinedItem.space !== item.space.id),
+    );
   }, [allSpaces, joinedSpaces]);
+
+  const onSwitchHandler = useCallback((e) => {
+    const { checked } = e.target;
+    const value = {
+      network: checked ? "berachain" : "berachain-b2",
+      switchChecked: checked,
+    };
+    localStorage.setItem("spacesFilterBy", value.network);
+    localStorage.setItem("isChecked", JSON.stringify(value.switchChecked));
+    setIsChecked(checked);
+  }, []);
 
   return (
     <Wrapper>
@@ -149,6 +205,9 @@ export default function Home({ networks, spaces, hottestProposals, userSpaces })
           limit={30}
           title="All Spaces"
           totalCount={allSpaces.length}
+          onSwitchHandler={onSwitchHandler}
+          isChecked={isChecked}
+          switchedNetwork={switchedNetwork}
         />
       )}
       {isNetworks && (

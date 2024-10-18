@@ -3,7 +3,7 @@ import { Text } from "../styled/text";
 
 export const Wrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   p {
     margin-left: 10px;
   }
@@ -12,8 +12,8 @@ export const Wrapper = styled.div`
 export const SwitchContainer = styled.label`
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 25px;
 `;
 
 export const Slider = styled.span`
@@ -30,9 +30,9 @@ export const Slider = styled.span`
   &:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
+    height: 18px;
+    width: 18px;
+    left: 3px;
     bottom: 4px;
     background-color: white;
     transition: 0.4s;
@@ -56,4 +56,8 @@ export const CheckboxInput = styled.input.attrs({ type: "checkbox" })`
 
 export const TextWrapper = styled(Text)`
   min-width: 180px;
+  font-size: 12px;
+  text-align: start;
+  padding:0px;
+  min-width: 125px;
 `;

@@ -228,7 +228,7 @@ export default function Header({ networks }) {
           </IconWrapper>
 
           <HeaderItemWrapper>
-            {/* {showBeravoteBtn && (
+            {showBeravoteBtn && (
               <Button
                 onClick={() => {
                   router.push({
@@ -237,13 +237,13 @@ export default function Header({ networks }) {
                   });
                 }}
               >
-                Beravote space
+                Bera VoteMarket
               </Button>
-            )} */}
+            )}
 
             {isHomePage && (
               <>
-                <Switch
+                {/* <Switch
                   onChange={onSwitchHandler}
                   checked={isChecked}
                   text={
@@ -251,7 +251,7 @@ export default function Header({ networks }) {
                       ? "Berachain Artio"
                       : "Berachain bArtio B2"
                   }
-                />
+                /> */}
                 <ExternalLinkWrapper>
                   <Link href="/space/new" passHref legacyBehavior>
                     <InternalLink>
