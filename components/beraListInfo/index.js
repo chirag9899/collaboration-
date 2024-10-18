@@ -70,7 +70,7 @@ export default function ListInfo({ balance }) {
                   iconSize={16}
                 />
               </div>
-              <p>{balance} BGT</p>
+              <Amount>{balance} BGT</Amount>
             </Balance>
             <Balance>
               <div>
