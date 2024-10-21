@@ -21,7 +21,7 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
     const chainID = chainMap.get(chain.network).id;
     let chainType = chainMap.get(chain.network).chainType;
 
-    if (connectedWallet === "metamask") {
+    if (connectedWallet === "metamask" || connectedWallet === "coinbaseWallet" || connectedWallet === "trustWallet") {
       try {
         if (chainType === "btc") {
           throw new Error("Chain not supported on this wallet"); // Create a new error object
@@ -53,10 +53,12 @@ export const _handleChainSelect = async (connectedWallet, dispatch, address, cha
           throw new Error("Chain not supported on this wallet"); // Create a new error object
         }
         await walletConnectSwitchNetworkWc(parseInt(chainID, 16));
+        
       } catch (error) {
         dispatch(newErrorToast(error.message));
       }
-    } else {
+    } 
+    else {
       dispatch(newErrorToast("No wallet connected"));
     }
   } catch (error) {
@@ -93,11 +95,14 @@ const detectWallets = () => {
 
 // Ensure the selected provider is active
 const ensureProviderActive = (provider) => {
-  if (window.ethereum.providers) {
-
-    window.ethereum.providers.forEach((p, index) => {
+  if (window.ethereum && window.ethereum.providers) {
+    window.ethereum.providers.forEach((p) => {
       if (p === provider) {
-        window.ethereum.setSelectedProvider(provider);
+        if (typeof window.ethereum.setSelectedProvider === 'function') {
+          window.ethereum.setSelectedProvider(provider);
+        } else {
+          window.ethereum = provider;
+        }
       }
     });
   } else {
@@ -105,7 +110,9 @@ const ensureProviderActive = (provider) => {
   }
 };
 
+
 export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, setChain, open, closeConnect, setShowHeaderMenu) => {
+  console.log('enter _wallet connect', selectedWallet.id)
   if (selectedWallet.id === 'walletConnect') {
     await open();
     dispatch(closeConnect());
@@ -144,7 +151,7 @@ export const _handleWalletSelect = async (selectedWallet, dispatch, setAddress, 
 
   try {
     
-    if (selectedWallet.id === 'metamask' || selectedWallet.id === 'coinbaseWallet' || selectedWallet.id === 'trustWallet') {
+    if (selectedWallet.id === 'metamask' || selectedWallet.id === 'coinbaseWallet' || selectedWallet.id === 'trustWallet' ) {
       const accounts = await provider.request({ method: 'eth_requestAccounts' });
       const network = await provider.request({ method: 'eth_chainId' });
       const accountAddress = accounts[0];
