@@ -140,7 +140,7 @@ export default function PostDiscussion({
         content,
         "markdown",
         encodeAddressByChain(account?.address, account?.network),
-        account?.network,
+        proposal?.proposerNetwork,
         connectedWallet,
       );
     } catch (e) {
