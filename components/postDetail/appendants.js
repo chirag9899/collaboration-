@@ -116,7 +116,7 @@ export default function Appendants({ proposal, appendants, editable }) {
         content,
         contentType,
         account.address,
-        account.network,
+        proposal?.proposerNetwork,
         connectedWallet
       );
     } catch (error) {
